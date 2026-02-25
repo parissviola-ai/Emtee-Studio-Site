@@ -9,18 +9,17 @@ export default function PrivacyPolicyPage() {
     <main className="min-h-[100svh] bg-white text-black">
       {/* Top nav (simple, clean) */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-black/10">
-        <div className="mx-auto max-w-5xl px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-semibold tracking-wide">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
+          <Link href="/" className="shrink-0 text-sm font-semibold tracking-wide sm:text-base">
             EMTEE
           </Link>
 
-          <nav className="flex items-center gap-6 text-sm font-semibold">
+          <nav className="flex items-center gap-3 overflow-x-auto whitespace-nowrap text-[11px] font-semibold [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:gap-6 sm:text-sm">
             <Link href="/about" className="hover:opacity-70">
               ABOUT
             </Link>
 
-            {/* simple Projects + Apply */}
-            <div className="relative group">
+            <div className="relative hidden sm:block group">
               <Link href="/emteeprojects" className="hover:opacity-70">
                 EMTEE PROJECTS
               </Link>
@@ -33,6 +32,12 @@ export default function PrivacyPolicyPage() {
                 </Link>
               </div>
             </div>
+            <Link href="/emteeprojects" className="sm:hidden hover:opacity-70">
+              PROJECTS
+            </Link>
+            <Link href="/apply" className="sm:hidden hover:opacity-70">
+              APPLY
+            </Link>
 
             <Link href="/news" className="hover:opacity-70">
               NEWS
@@ -50,7 +55,7 @@ export default function PrivacyPolicyPage() {
           P R I V A C Y&nbsp;&nbsp;P O L I C Y
         </h1>
 
-        <div className="mt-10 space-y-5 leading-relaxed text-black/80">
+        <div className="accent-card-soft mt-10 space-y-5 rounded-2xl border border-black/10 bg-white p-6 leading-relaxed text-black/80">
           <p>
             The Emtee Group, Emtee Music Group and Emtee Projects receives,
             collects and stores any information only entered by a user on our
@@ -123,7 +128,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Contact section (simple replica) */}
-        <section className="mt-16">
+        <section className="accent-card-soft mt-16 rounded-2xl border border-black/10 bg-white p-6">
           <h2 className="text-lg font-semibold tracking-wide uppercase">CONTACT US</h2>
 
           <form className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -139,7 +144,7 @@ export default function PrivacyPolicyPage() {
             />
             <button
               type="button"
-              className="md:col-span-2 inline-flex items-center justify-center rounded-full bg-black text-white px-6 py-3 text-sm font-semibold hover:opacity-90"
+              className="md:col-span-2 inline-flex items-center justify-center rounded-full bg-black px-6 py-3 text-sm font-semibold text-white hover:opacity-90"
             >
               Submit
             </button>

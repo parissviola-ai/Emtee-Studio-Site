@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EMTEE Studio Site
 
-## Getting Started
+Interactive room-based website built with Next.js 16, React 19, and Tailwind CSS.
 
-First, run the development server:
+## Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Core Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/rooms/[slug]/page.tsx`: room route entry.
+- `components/RoomScene.tsx`: room interaction system (hotspots, cards, overlays, mobile pan).
+- `data/rooms.ts`: room definitions, hotspot coordinates, room-to-room links.
+- `components/ConditionalExploreBar.tsx`: non-room explore launcher.
+- `components/Footer.tsx`: shared site footer.
 
-## Learn More
+## Room Card System
 
-To learn more about Next.js, take a look at the following resources:
+Current interaction tiers to keep consistent across rooms:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `compact`: minimized icon state.
+- `expanded`: in-room content card state.
+- `modal`: full overlay detail state.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+When adding/changing cards, keep these stable:
 
-## Deploy on Vercel
+- Use one minimized pattern (`w-12` compact control) unless intentionally overridden.
+- Keep CTA order consistent: primary action first, secondary next.
+- Keep text overflow in long cards scrollable inside card body.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## QA Matrix (Required Before Publish)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Test each room on:
+
+- Desktop (>=1280px)
+- Mobile portrait (<=767px)
+- Mobile landscape
+
+Checklist for each:
+
+- Title + pins do not overlap.
+- Next-room and back-room pins are both tappable/clickable.
+- Content cards do not clash with explore bar/footer.
+- Minimize/expand controls remain visible.
+- Long text areas are scrollable and do not clip CTA rows.
+- Explore drawer opens/closes reliably and does not overlap bottom browser chrome.
+
+## Performance Budget
+
+Targets:
+
+- Hero/room background assets: prefer <= 700KB optimized source.
+- Critical above-the-fold LCP image request: <= 450KB whenever possible.
+- Avoid raw multi-MB PNG/JPG in active routes; use optimized `-opt` assets.
+
+Current rule of thumb:
+
+- Room and booking backgrounds should reference optimized files in `public/rooms/*-opt.jpg` or equivalent compressed assets.
+- Avoid eager preloading too many room images at once.
+
+## Accessibility Baseline
+
+Required checks:
+
+- Keyboard `Tab` navigation reaches all actionable elements.
+- Visible focus ring on links/buttons.
+- Overlay close controls reachable with keyboard.
+- Hover-only affordances should have tap/keyboard equivalents.
+- Respect reduced motion:
+  - marquee/pulse/shimmer should disable when `prefers-reduced-motion` is enabled.
+
+## Useful Commands
+
+```bash
+# lint full project
+npm run lint
+
+# lint a specific file
+npm run lint -- components/RoomScene.tsx
+
+# find room hotspots
+rg "slug:|id: \"next-room\"|x:|y:" data/rooms.ts
+```
+

@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <main className="min-h-[100svh] bg-white text-black grid place-items-center p-8">
-      <div className="max-w-lg text-center flex flex-col items-center">
+      <div className="accent-card-soft max-w-lg rounded-3xl border border-black/10 bg-white/90 px-8 py-10 text-center flex flex-col items-center">
         
         {/* Logo */}
         <Image
@@ -17,15 +17,9 @@ export default function Home() {
           className="mb-10"
         />
 
-        {/* Optional subtitle */}
-        <p className="text-black/60 text-sm tracking-wide">
-             Interactive studio experience
-        </p>
-
-        {/* Enter button */}
         <Link
           href="/rooms/front"
-          className="inline-block mt-10 rounded-full border border-black px-8 py-3 text-sm font-medium hover:bg-black hover:text-white transition"
+          className="inline-block mt-2 rounded-full border border-black px-8 py-3 text-sm font-medium transition hover:bg-black hover:text-white"
         >
           Enter
         </Link>
@@ -33,4 +27,3 @@ export default function Home() {
     </main>
   );
 }
-

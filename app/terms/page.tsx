@@ -4,7 +4,7 @@ export default function TermsOfServicePage() {
   return (
     <main className="min-h-[100svh] bg-white text-black">
       {/* Page header */}
-      <section className="mx-auto max-w-4xl px-6 pt-16 pb-10">
+      <section className="accent-card-soft mx-auto mt-10 max-w-4xl rounded-2xl border border-black/10 bg-white px-6 pb-10 pt-16">
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-[0.35em] uppercase">
           Terms of Service
         </h1>
@@ -62,7 +62,7 @@ export default function TermsOfServicePage() {
       {/* Content sections */}
       <section className="mx-auto max-w-4xl px-6 pb-20">
         <div className="space-y-10">
-          <article>
+          <article className="accent-card-soft rounded-2xl border border-black/10 bg-white p-5">
             <h2 className="text-xl font-semibold">Cookies</h2>
             <p className="mt-3 text-sm leading-relaxed text-black/70">
               We employ the use of cookies. By accessing Emtee Music Group, you agreed
@@ -78,7 +78,7 @@ export default function TermsOfServicePage() {
             </p>
           </article>
 
-          <article>
+          <article className="accent-card-soft rounded-2xl border border-black/10 bg-white p-5">
             <h2 className="text-xl font-semibold">License</h2>
             <p className="mt-3 text-sm leading-relaxed text-black/70">
               Unless otherwise stated, The Emtee Group, Emtee Music Group and Emtee
@@ -149,7 +149,7 @@ export default function TermsOfServicePage() {
             </p>
           </article>
 
-          <article>
+          <article className="accent-card-soft rounded-2xl border border-black/10 bg-white p-5">
             <h2 className="text-xl font-semibold">Hyperlinking to our Content</h2>
             <p className="mt-3 text-sm leading-relaxed text-black/70">
               The following organizations may link to our Website without prior written approval:
@@ -202,7 +202,7 @@ export default function TermsOfServicePage() {
             </p>
           </article>
 
-          <article>
+          <article className="accent-card-soft rounded-2xl border border-black/10 bg-white p-5">
             <h2 className="text-xl font-semibold">iFrames</h2>
             <p className="mt-3 text-sm leading-relaxed text-black/70">
               Without prior approval and written permission, you may not create frames around our Webpages that
@@ -210,7 +210,7 @@ export default function TermsOfServicePage() {
             </p>
           </article>
 
-          <article>
+          <article className="accent-card-soft rounded-2xl border border-black/10 bg-white p-5">
             <h2 className="text-xl font-semibold">Content Liability</h2>
             <p className="mt-3 text-sm leading-relaxed text-black/70">
               We shall not be hold responsible for any content that appears on your Website. You agree to protect

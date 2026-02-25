@@ -1,0 +1,228 @@
+import type { Room } from "./types";
+
+export const liveRoom: Room = {
+    slug: "live",
+    title: "Live Performance",
+    backgroundImage: "/rooms/live-opt.jpg",
+    backgroundVideo: "/rooms/tentenbg.mp4?v=1",
+    hotspots: [
+      { id: "next-room", label: "Board Room", href: "/rooms/EMTEEBusinessDept", x: 90, y:  17, direction: "right" },
+      {
+        id: "ten-ten-showcase",
+        label: "Ten Ten Showcase",
+        x: 52,
+        y: 59,
+        positions: {
+          laptop: { x: 50, y: 56 },
+          tablet: { x: 50, y: 57 },
+          mobile: { x: 52, y: 58 },
+        },
+        allowLargeResponsiveShift: true,
+        direction: "up",
+        variant: "dot",
+        modal: {
+          title: "Ten Ten Showcase",
+          body:
+            "Ten Ten supports motivation + self-development while helping creatives and entrepreneurs achieve their dreams.",
+          primaryLabel: "Apply to Perform at Ten Ten Showcase",
+          primaryHref: "/ten-ten-showcase-apply",
+          links: [
+            { label: "Ten Ten Website", href: "https://www.mikecannzentertainment.com/" },
+            { label: "Ten Ten IG", href: "https://www.instagram.com/tenten_ent/" },
+          ],
+        },
+      },
+      {
+        id: "mike-cannz-youtube",
+        label: "YouTube",
+        x: 15,
+        y: 27,
+        positions: {
+          laptop: { x: 15, y: 27 },
+          tablet: { x: 14, y: 28 },
+          mobile: { x: 13, y: 29 },
+        },
+        direction: "right",
+        variant: "dot",
+        href: "https://www.youtube.com/@mikecannz",
+      },
+      {
+        id: "mike-cannz-spotify",
+        label: "Spotify",
+        x:  84,
+        y: 27,
+        positions: {
+          laptop: { x: 84, y: 27 },
+          tablet: { x: 83, y: 28 },
+          mobile: { x: 82, y: 29 },
+        },
+        direction: "left",
+        variant: "dot",
+        href: "https://open.spotify.com/playlist/5Usj5DLi7RstSUHG6kw0ul",
+      },
+      {
+        id: "live-packages",
+        label: "Packages",
+        x: 25,
+        y: 33,
+        positions: {
+          laptop: { x: 18, y: 45 },
+          tablet: { x: 17, y: 48 },
+          mobile: { x: 28, y: 20 },
+        },
+        allowLargeResponsiveShift: true,
+        direction: "up",
+        variant: "dot",
+        modal: {
+          title: "Packages",
+          body:
+            "Choose a package to view full details.",
+          links: [
+            { label: "Up & Coming Artist Package", href: "modal:up-and-coming-artist-package" },
+            { label: "Rising Star Showcase Package", href: "modal:rising-star-showcase-package" },
+          ],
+        },
+      },
+      {
+        id: "up-and-coming-artist-package",
+        label: "Up & Coming Artist Package",
+        x: 15,
+        y: 22,
+        hidden: true,
+        positions: {
+          laptop: { x: 18, y: 45 },
+          tablet: { x: 17, y: 48 },
+          mobile: { x: 16, y: 51 },
+        },
+        direction: "right",
+        variant: "dot",
+        modal: {
+          title: "Up & Coming Artist Package",
+          body:
+            "Designed for artists ready to build stage confidence and audience conversion in a real showcase environment.",
+          highlightsTitle: "Package Includes:",
+          highlights: [
+            "10 minute set (8 minute music duration + dialogue)",
+            "Soundcheck + Music Provided by Ten Ten",
+            "Flyer + Personalized Ticket link provided by Ten Ten",
+            "Make $20 per ticket for the first 15 & 50/50 split after with no limitations",
+            "Access to networking event",
+            "1 song placement on Ten Ten Playlist for 7 days",
+          ],
+          primaryLabel: "Apply to Perform",
+          primaryHref: "/ten-ten-showcase-apply",
+        },
+      },
+      {
+        id: "rising-star-showcase-package",
+        label: "Rising Star Showcase Package",
+        x:  84,
+        y: 22,
+        hidden: true,
+        positions: {
+          laptop: { x: 79, y: 45 },
+          tablet: { x: 80, y: 48 },
+          mobile: { x: 81, y: 51 },
+        },
+        direction: "right",
+        variant: "dot",
+        modal: {
+          title: "Rising Star Showcase Package",
+          body:
+            "Expanded showcase lane for artists ready for deeper support, stronger promo, and elevated live execution.",
+          highlightsTitle: "Package Includes:",
+          highlights: [
+            "10 minute set (8 minute music duration + dialogue)",
+            "Soundcheck + Music Provided by Ten Ten",
+            "Flyer + Personalized Ticket link provided by Ten Ten",
+            "Make $20 per ticket for the first 23 & 50/50 split after with no limitations",
+            "Access to networking event",
+            "1 song placement on Ten Ten Playlist for 14 days",
+            "Content Package included (Raw Performance Video + Pictures)",
+            "Personal Driver (Drop off in GTA only)",
+            "Free one month trial for Ten Ten Membership (valued at $35 +tax per month)",
+            "Cities: Toronto, London, Barrie, Montreal, Vancouver, DC",
+          ],
+          primaryLabel: "Apply to Perform",
+          primaryHref: "/ten-ten-showcase-apply",
+        },
+      },
+      {
+        id: "live-set-performance-development",
+        label: "Live Set Performance Development",
+        x: 50,
+        y: 80,
+        positions: {
+          laptop: { x: 50, y: 79 },
+          tablet: { x: 50, y: 78 },
+          mobile: { x: 50, y: 76 },
+        },
+        direction: "right",
+        variant: "dot",
+        modal: {
+          title: "Live Set Performance Development",
+          body:
+            "Make your performance stand out.\n\nGet development support to tighten your live set, pacing, transitions, stage presence, and audience engagement before showcase day.",
+          primaryLabel: "Apply for Live Set Development",
+          primaryHref: "/live-set-development-apply",
+        },
+      },
+      {
+        id: "ten-ten-community",
+        label: "Ten Ten Community",
+        x: 74,
+        y:  63,
+        positions: {
+          laptop: { x: 73, y: 63 },
+          tablet: { x: 72, y: 62 },
+          mobile: { x: 70, y: 61 },
+        },
+        direction: "up",
+        variant: "dot",
+        modal: {
+          title: "Ten Ten Community",
+          body:
+            "For Motivation & Self-Development + Helping Each Other Achieve Their Dreams.\n\nMonthly Membership: $35/month",
+          highlightsTitle: "Membership Includes",
+          highlights: [
+            "Monthly Community Call w/ Mike Cannz + A&R Executives",
+            "Special Guests quarterly (10 artist-business questions/topics for 1 hour per month)",
+            "1 song placement on The Ten Ten Playlist for 15 days",
+            "Weekly motivational texts",
+            "Prize access (studio session, free show, shoots, etc.)",
+            "Free admission to monthly Ten Ten Showcases",
+            "Access to monthly networking event",
+            "VIP access to yearly Ten Ten private parties",
+          ],
+          primaryLabel: "Join Community",
+          primaryHref: "/ten-ten-community-join",
+          links: [
+            { label: "Ten Ten IG", href: "https://www.instagram.com/tenten_ent/" },
+            { label: "Ten Ten Website", href: "https://www.mikecannzentertainment.com/" },
+          ],
+        },
+      },
+      {
+        id: "mike-cannz",
+        label: "Mike Cannz",
+        x: 52,
+        y: 35,
+        positions: {
+          laptop: { x: 50, y: 36 },
+          tablet: { x: 50, y: 37 },
+          mobile: { x: 52, y: 39 },
+        },
+        direction: "left",
+        variant: "dot",
+        modal: {
+          title: "Mike Cannz",
+          body:
+            "Mike Cannz Entertainment is a Canadian, multi-faceted, multi-disciplinary entertainment parent company based in Mississauga, Ontario, and one of the leading spearheads of the independent music industry in the Greater Toronto Area. The group is home to multiple companies across the music, event, and culinary industries, including Xperience Projects (X-Projects), Ten Ten Entertainment, and Peppered By PERI. Mike Cannz Entertainment was founded and developed by music and entertainment entrepreneur and musician Michael \"Mike Cannz\" Cannataro. As founder of Mike Cannz Entertainment and builder of Ten Ten Entertainment, his work supports artist performance opportunities, motivation, and long-term creative growth.",
+          links: [
+            { label: "IG", href: "https://www.instagram.com/mikecannz/" },
+            { label: "Bio", href: "https://www.mikecannzentertainment.com/" },
+          ],
+        },
+      },
+    ],
+  };

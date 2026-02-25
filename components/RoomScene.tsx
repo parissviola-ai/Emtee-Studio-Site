@@ -66,7 +66,6 @@ const EXPLORE_ROOMS = [
   { label: "Media Room", href: "/rooms/EMTEEMarketingDept" },
   { label: "Yanchan Produced", href: "/rooms/orange" },
   { label: "Publishing and Distro", href: "/rooms/EMTEEPublishingandDistroDept" },
-  { label: "Website Design", href: "/rooms/EMTEEWebDesign" },
   { label: "The Strategy Suite", href: "/rooms/EMTEEARSalesDept" },
   { label: "Ten Ten Entertainment", href: "/rooms/live" },
   { label: "Steeped Dreams Studio", href: "/rooms/quiet" },
@@ -144,8 +143,7 @@ const PREVIOUS_ROOM_LINKS: Record<string, { href: string; label: string }> = {
   EMTEEMusicDept: { href: "/rooms/EMTEEBusinessDept", label: "Back to Board Room" },
   EMTEEMarketingDept: { href: "/rooms/EMTEEMusicDept", label: "Back to Studio" },
   EMTEEPublishingandDistroDept: { href: "/rooms/EMTEEMarketingDept", label: "Back to Media Room" },
-  "EMTEEWebDesign": { href: "/rooms/EMTEEPublishingandDistroDept", label: "Back to Publishing and Distro" },
-  EMTEEARSalesDept: { href: "/rooms/EMTEEWebDesign", label: "Back to Website Design" },
+  EMTEEARSalesDept: { href: "/rooms/EMTEEPublishingandDistroDept", label: "Back to Publishing and Distro" },
   quiet: { href: "/rooms/EMTEEARSalesDept", label: "Back to The Strategy Suite" },
   orange: { href: "/rooms/quiet", label: "Back to Steeped Dreams Studio" },
   live: { href: "/rooms/orange", label: "Back to Orange Room" },
@@ -564,6 +562,9 @@ export default function RoomScene({ room }: { room: Room }) {
   const isJoinCommunityModal = activeModal?.title === "Join Community";
   const isCustomProductionModal = activeModal?.title === "Apply For Custom Production";
   const isLivePackagesModal = room.slug === "live" && activeModal?.title === "Packages";
+  const isWebsiteDesignMainModal =
+    room.slug === "EMTEEMarketingDept" && activeModal?.title === "Website Design";
+  const isPackageGridModal = isLivePackagesModal || isWebsiteDesignMainModal;
   const isLivePackageDetailModal =
     room.slug === "live" &&
     (
@@ -944,7 +945,6 @@ export default function RoomScene({ room }: { room: Room }) {
 
   useEffect(() => {
     if (room.slug !== "EMTEEWebDesign" && room.slug !== "EMTEEPublishingandDistroDept") return;
-    router.prefetch("/website-design");
     router.prefetch("/website-design-consultation");
   }, [room.slug, router]);
 
@@ -2153,7 +2153,7 @@ export default function RoomScene({ room }: { room: Room }) {
                   {activeResourceContext ? (
                     <aside
                       className={[
-                        "rounded-2xl border p-4 transition-all duration-700 ease-out md:sticky md:top-0",
+                        "rounded-2xl border px-4 py-3 transition-all duration-700 ease-out md:sticky md:top-28",
                         "border-white/45 bg-white/[0.08]",
                         "shadow-[0_0_0_1px_rgba(255,255,255,0.24),0_0_10px_rgba(255,255,255,0.16),0_12px_24px_rgba(0,0,0,0.24)]",
                         revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
@@ -2165,7 +2165,7 @@ export default function RoomScene({ room }: { room: Room }) {
                         </div>
                         <p className="mt-1 text-sm leading-relaxed text-white/88">{activeResourceContext.what}</p>
                       </div>
-                      <div className="mt-4">
+                      <div className="mt-3">
                         <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#d6ae66] [text-shadow:0_0_10px_rgba(214,174,102,0.35)]">
                           Why It Matters for Artists
                         </div>
@@ -2202,7 +2202,7 @@ export default function RoomScene({ room }: { room: Room }) {
 
             <div
               className={[
-                isLivePackagesModal
+                isPackageGridModal
                   ? "shrink-0 grid w-full gap-3 px-6 pb-6 sm:grid-cols-2 transition-all duration-600 ease-out"
                   : "shrink-0 flex flex-wrap items-center gap-3 px-6 pb-6 transition-all duration-600 ease-out",
                 revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
@@ -2256,8 +2256,10 @@ export default function RoomScene({ room }: { room: Room }) {
                             openModal(targetSpot.modal!);
                           }}
                           className={
-                            isLivePackagesModal
-                              ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-orange-300/40 hover:bg-black/45 hover:text-white"
+                            isPackageGridModal
+                              ? isWebsiteDesignMainModal
+                                ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
+                                : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-orange-300/40 hover:bg-black/45 hover:text-white"
                               : isYanchanMusicModal
                               ? isOrangeModal
                                 ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-orange-200/28 bg-black/35 text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
@@ -2280,8 +2282,10 @@ export default function RoomScene({ room }: { room: Room }) {
                         aria-label={link.label}
                         title={link.label}
                         className={
-                          isLivePackagesModal
-                            ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-orange-300/40 hover:bg-black/45 hover:text-white"
+                          isPackageGridModal
+                            ? isWebsiteDesignMainModal
+                              ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
+                              : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-orange-300/40 hover:bg-black/45 hover:text-white"
                             : isYanchanMusicModal
                             ? isOrangeModal
                               ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-orange-200/28 bg-black/35 text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"

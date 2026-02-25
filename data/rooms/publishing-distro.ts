@@ -5,7 +5,7 @@ export const publishingDistroRoom: Room = {
     title: "Distribution / Publishing",
     backgroundImage: "/rooms/cdshop.png",
     hotspots: [
-      { id: "next-room", label: "Website Design", href: "/rooms/EMTEEWebDesign", x: 90, y: 17, direction: "right" },
+      { id: "next-room", label: "The Strategy Suite", href: "/rooms/EMTEEARSalesDept", x: 90, y: 17, direction: "right" },
       {
     id: "publishing-distro-workshop",
     label: "Publishing/Distro Workshop",

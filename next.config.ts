@@ -36,12 +36,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/rooms/website-design",
-        destination: "/rooms/EMTEEWebDesign",
+        destination: "/rooms/EMTEEARSalesDept",
         permanent: true,
       },
       {
         source: "/rooms/EMTEEWebDesignDept",
-        destination: "/rooms/EMTEEWebDesign",
+        destination: "/rooms/EMTEEARSalesDept",
         permanent: true,
       },
     ];

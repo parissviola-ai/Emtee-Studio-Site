@@ -8,6 +8,8 @@ import { getResourceContext } from "@/data/resource-context";
 type ResourceCard = {
   department: string;
   summary: string;
+  artistCaseStudy: string;
+  artistCaseStudyHref?: string;
   items: {
     name: string;
     notes: string[];
@@ -19,6 +21,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Business Department",
     summary: "Operational setup, finance clarity, and rollout planning resources.",
+    artistCaseStudy: "Artist Name (Placeholder)",
     items: [
       {
         name: "Consultation",
@@ -62,6 +65,8 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Music Department",
     summary: "Single, multi-song, and project creation resources.",
+    artistCaseStudy: "Fame Holiday",
+    artistCaseStudyHref: "/case-studies/fame-holiday",
     items: [
       {
         name: "Single Creation",
@@ -98,6 +103,8 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Marketing Department",
     summary: "Brand, content, tour, and live development resources.",
+    artistCaseStudy: "Kisaki",
+    artistCaseStudyHref: "/case-studies/kisaki",
     items: [
       {
         name: "Content Creation",
@@ -203,6 +210,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Publishing / Distribution Department",
     summary: "Publishing and distro setup resources.",
+    artistCaseStudy: "Artist Name (Placeholder)",
     items: [
       {
         name: "Publishing/Distro Workshop",
@@ -216,6 +224,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "A&R / Sales Department",
     summary: "CRM and audience monetization resources.",
+    artistCaseStudy: "Artist Name (Placeholder)",
     items: [
       {
         name: "CRM Set-Up",
@@ -380,6 +389,21 @@ export default function ResourcesPage() {
                       )}
                     </div>
                   ))}
+                  <div className="border-t border-zinc-200 pt-3">
+                    <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8b6a2f]">
+                      Artist Case Study
+                    </div>
+                    {item.artistCaseStudyHref ? (
+                      <Link
+                        href={item.artistCaseStudyHref}
+                        className="mt-1 inline-flex text-sm font-medium text-zinc-900 underline decoration-[#d6ae66]/60 decoration-2 underline-offset-4 transition hover:text-[#7a5a24] hover:[text-shadow:0_0_14px_rgba(214,174,102,0.75)]"
+                      >
+                        {item.artistCaseStudy}
+                      </Link>
+                    ) : (
+                      <p className="mt-1 text-sm font-medium text-zinc-800">{item.artistCaseStudy}</p>
+                    )}
+                  </div>
                 </div>
               ) : null}
             </article>

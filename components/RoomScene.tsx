@@ -149,6 +149,15 @@ const PREVIOUS_ROOM_LINKS: Record<string, { href: string; label: string }> = {
   live: { href: "/rooms/orange", label: "Back to Orange Room" },
 };
 const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-orange-room-session";
+const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
+  { src: "/news/aruljuno-opt.jpg", label: "ARUL", isJunoNominated: true, objectPosition: "center 20%" },
+  { src: "/news/thinkyouglowed-opt.jpg", label: "Lil Durk - Think You Glowed", objectPosition: "center 18%" },
+  { src: "/rooms/yanchanbiopic-opt.jpg", label: "Russ - The Wind" },
+  { src: "/rooms/yanchancrowd-opt.jpg", label: "Shruti Hassan - Inimel" },
+  { src: "/news/jonitabeparwai-opt.jpg", label: "Jonita - Beparwai" },
+  { src: "/news/chaisunshinechart-opt.jpg", label: "Chai & Sunshine", objectPosition: "center 18%" },
+  { src: "/rooms/yanchanbiopic-opt.jpg", label: "SVDP - mrdgm raps" },
+];
 
 function getArrow(direction?: "left" | "right" | "up" | "down") {
   switch (direction) {
@@ -478,6 +487,25 @@ export default function RoomScene({ room }: { room: Room }) {
     setIsOrangePreviewMuted(false);
   }, []);
 
+  const toggleOrangePreviewMute = useCallback(() => {
+    const video = orangePreviewVideoRef.current;
+    if (!video) return;
+    const nextMuted = !isOrangePreviewMuted;
+    video.muted = nextMuted;
+    video.defaultMuted = nextMuted;
+    if (nextMuted) {
+      video.setAttribute("muted", "true");
+    } else {
+      video.removeAttribute("muted");
+      video.volume = Math.max(video.volume, 0.2);
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {});
+      }
+    }
+    setIsOrangePreviewMuted(nextMuted);
+  }, [isOrangePreviewMuted]);
+
   const startOrangeMobileSessionAudio = useCallback(() => {
     const video = orangeMobileAudioRef.current;
     if (!video) return;
@@ -571,6 +599,13 @@ export default function RoomScene({ room }: { room: Room }) {
       activeModal?.title === "Up & Coming Artist Package" ||
       activeModal?.title === "Rising Star Showcase Package" ||
       activeModal?.title === "Ten Ten Community"
+    );
+  const isWebsiteDesignTierModal =
+    room.slug === "EMTEEMarketingDept" &&
+    (
+      activeModal?.title === "Tier 1: Starter Site" ||
+      activeModal?.title === "Tier 2: Growth Site" ||
+      activeModal?.title === "Tier 3: Artist World"
     );
   const isOrangeModal = isOrangeRoom && !!activeModal;
   const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Apply For An Orange Room Session";
@@ -1311,17 +1346,6 @@ export default function RoomScene({ room }: { room: Room }) {
               isOrangePreviewMinimized ? "h-12 w-12" : "h-[411px] w-[232px]",
             ].join(" ")}
           >
-            <button
-              type="button"
-              onClick={() => setIsOrangePreviewMinimized((v) => !v)}
-              className={[
-                "absolute z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/65 text-xs font-semibold text-white/90 backdrop-blur-md transition hover:bg-black/80",
-                isOrangePreviewMinimized ? "left-2 top-2" : "right-2 top-2",
-              ].join(" ")}
-              aria-label={isOrangePreviewMinimized ? "Maximize preview video" : "Minimize preview video"}
-            >
-              {isOrangePreviewMinimized ? ">" : "<"}
-            </button>
             <video
               ref={orangePreviewVideoRef}
               className={[
@@ -1331,11 +1355,7 @@ export default function RoomScene({ room }: { room: Room }) {
               loop
               muted={isOrangePreviewMuted}
               playsInline
-              controls
-              controlsList="nofullscreen noremoteplayback nodownload"
-              disablePictureInPicture
-              preload="none"
-              poster="/rooms/yanchanbiopic-opt.jpg"
+              preload="auto"
               onVolumeChange={(e) => {
                 setIsOrangePreviewMuted(e.currentTarget.muted);
               }}
@@ -1349,36 +1369,6 @@ export default function RoomScene({ room }: { room: Room }) {
             >
               <source src="/rooms/yanchanvibes.mp4" type="video/mp4" />
             </video>
-            {!isOrangePreviewMinimized ? (
-              <a
-                href="https://www.instagram.com/p/DTac5MCDsVx/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute top-3 left-3 z-20 inline-flex items-center justify-center rounded-full border border-white/30 bg-black/65 px-3 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-md transition hover:bg-black/80"
-              >
-                Open Instagram
-              </a>
-            ) : null}
-            {!isOrangePreviewMinimized ? (
-              <button
-                type="button"
-                onClick={() => {
-                  if (isOrangePreviewMuted) {
-                    forcePlayOrangePreviewWithSound();
-                    return;
-                  }
-                  const video = orangePreviewVideoRef.current;
-                  if (!video) return;
-                  video.muted = true;
-                  video.defaultMuted = true;
-                  video.setAttribute("muted", "true");
-                  setIsOrangePreviewMuted(true);
-                }}
-                className="absolute bottom-3 right-3 z-20 inline-flex items-center justify-center rounded-full border border-white/30 bg-black/65 px-3 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-md transition hover:bg-black/80"
-              >
-                {isOrangePreviewMuted ? "Unmute" : "Mute"}
-              </button>
-            ) : null}
           </div>
           {isOrangePreviewMinimized ? (
             <div className="relative h-40 w-40 overflow-hidden rounded-xl border border-white/25 bg-black/25 shadow-[0_12px_28px_rgba(0,0,0,0.4)]">
@@ -1932,7 +1922,7 @@ export default function RoomScene({ room }: { room: Room }) {
             ].join(" ")}
           >
             <div className="flex-1 overflow-y-auto p-6">
-            <div className="flex items-start justify-between gap-6">
+            <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 w-full">
                 <h2
                   className={[
@@ -2042,7 +2032,11 @@ export default function RoomScene({ room }: { room: Room }) {
                 <div
                   className={[
                     "mt-4 grid gap-5",
-                    activeResourceContext ? "md:grid-cols-[minmax(0,1fr)_420px] md:items-start" : "",
+                    activeResourceContext
+                      ? isWebsiteDesignTierModal
+                        ? "md:grid-cols-1"
+                        : "md:grid-cols-[minmax(0,1fr)_420px] md:items-start"
+                      : "",
                   ].join(" ")}
                 >
                   <div className="min-w-0">
@@ -2071,9 +2065,15 @@ export default function RoomScene({ room }: { room: Room }) {
                         >
                           Includes:
                         </div>
-                        <ul className={["mt-2 space-y-1.5 text-sm", isOrangeModal ? "text-white/90" : "text-white/84"].join(" ")}>
+                        <ul
+                          className={[
+                            "mt-2 text-sm",
+                            isWebsiteDesignTierModal ? "columns-1 gap-x-6 space-y-1 sm:columns-2" : "space-y-1.5",
+                            isOrangeModal ? "text-white/90" : "text-white/84",
+                          ].join(" ")}
+                        >
                           {(parsedModalBody.includes.length ? parsedModalBody.includes : activeModal.highlights ?? []).map((item) => (
-                            <li key={item} className="flex gap-2 leading-relaxed">
+                            <li key={item} className={isWebsiteDesignTierModal ? "mb-1 break-inside-avoid flex gap-2 leading-snug" : "flex gap-2 leading-relaxed"}>
                               <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-orange-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
                               <span>{item}</span>
                             </li>
@@ -2107,45 +2107,65 @@ export default function RoomScene({ room }: { room: Room }) {
                             {activeModal.highlightsTitle ?? "Package Includes"}
                           </div>
                         </div>
-                        <ul className={isLivePackageDetailModal ? "mt-2 space-y-1.5 text-sm text-white/84" : "grid gap-2 sm:grid-cols-2"}>
-                          {activeModal.highlights.map((item) => {
-                            const parts = item.split("::");
-                            const isFeaturedMilestone = parts.length === 2 && parts[0] === "FEATURE";
-                            const label = isFeaturedMilestone ? parts[1] : item;
-                            return (
-                              <li
-                                key={item}
-                                className={[
-                                  isLivePackageDetailModal
-                                    ? "flex gap-2 leading-relaxed"
-                                    : "group rounded-xl px-3 py-2 text-sm leading-relaxed shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition",
-                                  isLivePackageDetailModal
-                                    ? ""
-                                    : isOrangeModal
-                                      ? "border border-orange-200/18 bg-black/35 text-white/90 hover:border-orange-200/42 hover:bg-[#1a120b]"
-                                      : "border border-white/10 bg-black/35 text-white/84 hover:border-orange-300/40 hover:bg-black/45",
-                                  !isLivePackageDetailModal && isYanchanDiscographyModal && isFeaturedMilestone
-                                    ? "sm:col-span-2 border-orange-200/46 bg-gradient-to-r from-[#3a2414]/90 to-[#1e140d]/90 shadow-[0_0_0_1px_rgba(251,191,118,0.2),0_14px_30px_rgba(0,0,0,0.38)]"
-                                    : "",
-                                ].join(" ")}
-                              >
-                                {isYanchanDiscographyModal && isFeaturedMilestone ? (
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <span className="inline-flex items-center rounded-full border border-[#f7c48a]/45 bg-[#f7c48a]/20 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#ffe6c6]">
+                        {isYanchanDiscographyModal ? (
+                          <>
+                            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                              {YANCHAN_DISCOGRAPHY_SPOTLIGHT.map((item, index) => (
+                                <figure
+                                  key={`${item.label}-${item.src}-${index}`}
+                                  className="group relative overflow-hidden rounded-xl border border-orange-200/24 bg-black/45 shadow-[0_10px_24px_rgba(0,0,0,0.34)]"
+                                >
+                                  {item.isJunoNominated ? (
+                                    <span className="absolute right-1.5 top-1.5 z-10 inline-flex items-center rounded-md border border-[#f7c48a]/55 bg-black/65 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#ffd8a4] backdrop-blur-sm">
                                       JUNO Nominated
                                     </span>
-                                    <span className="text-white">{label}</span>
+                                  ) : null}
+                                  <div className="relative aspect-[4/3]">
+                                    <NextImage
+                                      src={item.src}
+                                      alt={item.label}
+                                      fill
+                                      sizes="(max-width: 640px) 50vw, 33vw"
+                                      className="object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                                      style={{ objectPosition: item.objectPosition ?? "center" }}
+                                    />
+                                    <figcaption className="absolute inset-x-0 bottom-0 border-t border-orange-200/14 bg-gradient-to-t from-black/90 to-black/45 px-2 py-1 text-[10px] font-medium leading-snug text-orange-50/92">
+                                      {item.label}
+                                    </figcaption>
                                   </div>
-                                ) : (
+                                </figure>
+                              ))}
+                            </div>
+                          </>
+                        ) : (
+                          <ul className={isLivePackageDetailModal ? "mt-2 space-y-1.5 text-sm text-white/84" : "grid gap-2 sm:grid-cols-2"}>
+                            {activeModal.highlights.map((item) => {
+                              const parts = item.split("::");
+                              const isFeaturedMilestone = parts.length === 2 && parts[0] === "FEATURE";
+                              const label = isFeaturedMilestone ? parts[1] : item;
+                              return (
+                                <li
+                                  key={item}
+                                  className={[
+                                    isLivePackageDetailModal
+                                      ? "flex gap-2 leading-relaxed"
+                                      : "group rounded-xl px-3 py-2 text-sm leading-relaxed shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition",
+                                    isLivePackageDetailModal
+                                      ? ""
+                                      : isOrangeModal
+                                        ? "border border-orange-200/18 bg-black/35 text-white/90 hover:border-orange-200/42 hover:bg-[#1a120b]"
+                                        : "border border-white/10 bg-black/35 text-white/84 hover:border-orange-300/40 hover:bg-black/45",
+                                  ].join(" ")}
+                                >
                                   <span className="inline-flex items-center gap-2">
                                     <span className="h-1.5 w-1.5 rounded-full bg-orange-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
                                     <span>{label}</span>
                                   </span>
-                                )}
-                              </li>
-                            );
-                          })}
-                        </ul>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                )}
                       </div>
                     ) : null}
                   </div>
@@ -2196,6 +2216,15 @@ export default function RoomScene({ room }: { room: Room }) {
   </div>
 )}
               </div>
+              {isOrangeSessionModalOpen ? (
+                <button
+                  type="button"
+                  onClick={toggleOrangePreviewMute}
+                  className="mt-1 inline-flex shrink-0 items-center justify-center rounded-full border border-orange-200/30 bg-black/45 px-4 py-2 text-xs font-semibold text-orange-100/90 transition hover:border-orange-200/50 hover:bg-black/60"
+                >
+                  {isOrangePreviewMuted ? "Unmute Music" : "Mute Music"}
+                </button>
+              ) : null}
             </div>
 
             </div>
@@ -2362,7 +2391,6 @@ export default function RoomScene({ room }: { room: Room }) {
                   </Link>
                 )
               ) : null}
-
               <button
                 type="button"
                 onClick={() => {

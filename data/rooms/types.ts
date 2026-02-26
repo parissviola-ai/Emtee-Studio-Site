@@ -10,14 +10,18 @@ export type Hotspot = {
   action?: "explore";
   direction?: "left" | "right" | "up" | "down";
   variant?: "pill" | "dot";
+  tier?: "core" | "secondary";
   modal?: {
     title: string;
     body: string;
     primaryLabel?: string;
     primaryHref?: string;
+    primaryAction?: "openExplore";
     secondaryLabel?: string;
     secondaryHref?: string;
     links?: Array<{ label: string; href: string }>;
+    topImage?: string;
+    topImageAlt?: string;
     image?: string;
     videoEmbed?: string;
     highlightsTitle?: string;

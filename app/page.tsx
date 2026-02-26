@@ -17,6 +17,13 @@ export default function Home() {
           className="mb-10"
         />
 
+        <div className="mb-6 max-w-sm text-center">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-black/55">How to Navigate</div>
+          <p className="mt-2 text-xs leading-relaxed text-black/70">
+            Tap dots to explore rooms. Use Explore <span className="inline-block align-middle text-[13px]">⌕</span> to switch departments. Open resource cards to learn more, then book consultation.
+          </p>
+        </div>
+
         <Link
           href="/rooms/front"
           className="inline-block mt-2 rounded-full border border-black px-8 py-3 text-sm font-medium transition hover:bg-black hover:text-white"

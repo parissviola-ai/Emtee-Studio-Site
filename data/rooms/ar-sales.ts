@@ -5,11 +5,12 @@ export const arSalesRoom: Room = {
     title: "A&R / Sales",
     backgroundImage: "/rooms/8.png",
     hotspots: [
-      { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/quiet", x: 90, y: 17, direction: "right" },
+      { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/quiet", x: 90, y: 17, direction: "right", tier: "core" },
 
       {
         id: "ar-sales-crm-set-up",
         label: "CRM Set-Up",
+        tier: "core",
         x: 70,
         y: 13,
         positions: {
@@ -31,6 +32,7 @@ export const arSalesRoom: Room = {
       {
         id: "ar-sales-community-building",
         label: "Community Building",
+        tier: "core",
         x: 45,
         y: 49,
         positions: {
@@ -52,6 +54,7 @@ export const arSalesRoom: Room = {
       {
         id: "ar-sales-crm-retainer",
         label: "CRM Fee/Retainer",
+        tier: "secondary",
         x: 15,
         y: 67,
         positions: {
@@ -73,6 +76,7 @@ export const arSalesRoom: Room = {
       {
         id: "ar-sales-merchandise",
         label: "Merchandise",
+        tier: "secondary",
         x: 84,
         y: 58,
         positions: {
@@ -94,6 +98,7 @@ export const arSalesRoom: Room = {
       {
         id: "ar-sales-event-planning",
         label: "Event Planning",
+        tier: "core",
         x: 69,
         y: 65,
         positions: {
@@ -115,6 +120,7 @@ export const arSalesRoom: Room = {
       {
         id: "ar-sales-event-planner",
         label: "Event Planner",
+        tier: "secondary",
         x: 42,
         y: 77,
         positions: {

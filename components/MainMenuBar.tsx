@@ -31,10 +31,21 @@ export default function MainMenuBar() {
   function navLinkClass(href: string) {
     const isActive = pathname === href;
     return [
-      "relative whitespace-nowrap rounded-full px-2 py-1 text-[11px] sm:px-3 sm:py-1.5 sm:text-sm transition-all duration-200",
+      "relative whitespace-nowrap px-2 py-1 text-[11px] sm:px-0 sm:py-0 sm:text-sm transition-all duration-200",
+      "sm:group-hover/menu:opacity-45 sm:hover:opacity-100 sm:focus-visible:opacity-100",
       isActive
-        ? "bg-white/14 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.22)]"
-        : "text-white/80 hover:bg-white/10 hover:text-white",
+        ? "text-white sm:group-hover/menu:opacity-100"
+        : "text-white/68 sm:hover:text-white",
+    ].join(" ");
+  }
+
+  function desktopMenuLinkClass(isActive: boolean) {
+    return [
+      "relative whitespace-nowrap px-0 py-0 text-sm transition-all duration-200",
+      "sm:group-hover/menu:opacity-45 sm:hover:opacity-100 sm:focus-visible:opacity-100",
+      isActive
+        ? "text-white sm:group-hover/menu:opacity-100"
+        : "text-white/68 sm:hover:text-white",
     ].join(" ");
   }
 
@@ -52,7 +63,7 @@ export default function MainMenuBar() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/18" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/12" />
 
-        <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-2.5 sm:px-6 sm:py-3.5">
+        <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-2.5 sm:px-6 sm:py-3.5 sm:group/menu">
           <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto text-sm font-semibold text-white/85 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-none sm:overflow-visible sm:gap-4 md:gap-8">
             {LEFT_LINKS.map((item) => (
               <Link key={item.label} href={item.href} className={navLinkClass(item.href)}>
@@ -64,17 +75,12 @@ export default function MainMenuBar() {
             <div className="relative hidden sm:block group">
               <Link
                 href="/artist-roster-releases"
-                className={[
-                  "relative whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-all duration-200",
-                  artistsActive
-                    ? "bg-white/14 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.22)]"
-                    : "text-white/80 hover:bg-white/10 hover:text-white",
-                ].join(" ")}
+                className={desktopMenuLinkClass(artistsActive)}
               >
                 Artist Roster & Releases
               </Link>
 
-              <div className="pointer-events-none absolute left-0 top-full pt-2 opacity-0 transition group-hover:pointer-events-auto group-hover:opacity-100">
+              <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
                 <div className="w-48 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
                   {ARTIST_LINKS.map((item) => (
                     <Link
@@ -97,12 +103,7 @@ export default function MainMenuBar() {
             <div className="hidden sm:block">
               <Link
                 href="/connect"
-                className={[
-                  "relative whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-all duration-200",
-                  bookingsActive
-                    ? "bg-white/14 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.22)]"
-                    : "text-white/80 hover:bg-white/10 hover:text-white",
-                ].join(" ")}
+                className={desktopMenuLinkClass(bookingsActive)}
               >
                 Resources
               </Link>

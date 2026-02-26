@@ -59,6 +59,7 @@ export default function ConsultationPage() {
   const [multiResource1, setMultiResource1] = useState("Not Sure Yet");
   const [multiResource2, setMultiResource2] = useState("Not Sure Yet");
   const [multiResource3, setMultiResource3] = useState("Not Sure Yet");
+  const [showBookingFlow, setShowBookingFlow] = useState(false);
 
   const departmentOptions = useMemo(
     () => Object.keys(PACKAGE_OPTIONS_BY_DEPARTMENT),
@@ -141,6 +142,38 @@ export default function ConsultationPage() {
               Please complete all required fields and try again.
             </div>
           ) : null}
+
+          <div className="mt-8 rounded-2xl border border-black/10 bg-[#faf8f2] p-4 sm:p-5">
+            <button
+              type="button"
+              onClick={() => setShowBookingFlow((prev) => !prev)}
+              className="flex w-full items-center justify-between text-left"
+              aria-expanded={showBookingFlow}
+              aria-controls="booking-flow-panel"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-black/55">
+                What Happens After You Book
+              </p>
+              <span className="text-lg leading-none text-black/60">{showBookingFlow ? "−" : "+"}</span>
+            </button>
+            {showBookingFlow ? (
+              <div id="booking-flow-panel" className="mt-3">
+                <p className="text-sm text-black/65">
+                  Here is the consultation flow so you know exactly what to expect after submitting your intake.
+                </p>
+                <div className="mt-4 overflow-hidden rounded-xl border border-black/10 bg-white">
+                  <Image
+                    src="/rooms-misc/how-you-start.avif"
+                    alt="Consultation process overview"
+                    width={1200}
+                    height={840}
+                    className="h-auto w-full object-contain"
+                    sizes="(max-width: 1024px) 100vw, 960px"
+                  />
+                </div>
+              </div>
+            ) : null}
+          </div>
 
           <form
             className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2"

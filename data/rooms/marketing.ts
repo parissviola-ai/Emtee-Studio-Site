@@ -183,6 +183,10 @@ export const marketingRoom: Room = {
           title: "Tier 1: Starter Site",
           body:
             "Starter website package focused on launch-ready essentials for artist presence and discoverability.",
+          links: [
+            { label: "Tier 2: Growth Site", href: "modal:marketing-website-design-tier-2-growth-site" },
+            { label: "Tier 3: Artist World", href: "modal:marketing-website-design-tier-3-artist-world" },
+          ],
           highlightsTitle: "Includes:",
           highlights: [
             "1-page professional artist website",
@@ -194,8 +198,6 @@ export const marketingRoom: Room = {
             "Mobile-ready layout",
             "Basic search visibility setup",
           ],
-          primaryLabel: "Request a Consultation",
-          primaryHref: "/consultation",
           secondaryLabel: "Website Design Consultation",
           secondaryHref: "/website-design-consultation",
         },
@@ -212,6 +214,10 @@ export const marketingRoom: Room = {
           title: "Tier 2: Growth Site",
           body:
             "Expanded website package for artists scaling release cadence, media readiness, and audience touchpoints.",
+          links: [
+            { label: "Tier 1: Starter Site", href: "modal:marketing-website-design-tier-1-starter-site" },
+            { label: "Tier 3: Artist World", href: "modal:marketing-website-design-tier-3-artist-world" },
+          ],
           highlightsTitle: "Includes:",
           highlights: [
             "Everything in Tier 1",
@@ -222,8 +228,6 @@ export const marketingRoom: Room = {
             "Press/booking + EPK section",
             "Expanded SEO + share preview optimization",
           ],
-          primaryLabel: "Request a Consultation",
-          primaryHref: "/consultation",
           secondaryLabel: "Website Design Consultation",
           secondaryHref: "/website-design-consultation",
         },
@@ -240,6 +244,10 @@ export const marketingRoom: Room = {
           title: "Tier 3: Artist World",
           body:
             "Premium website package designed for immersive fan journeys and long-term release ecosystem growth.",
+          links: [
+            { label: "Tier 1: Starter Site", href: "modal:marketing-website-design-tier-1-starter-site" },
+            { label: "Tier 2: Growth Site", href: "modal:marketing-website-design-tier-2-growth-site" },
+          ],
           highlightsTitle: "Includes:",
           highlights: [
             "Everything in Tier 2",
@@ -250,8 +258,6 @@ export const marketingRoom: Room = {
             "Designed to evolve with future releases",
             "Priority visual polish",
           ],
-          primaryLabel: "Request a Consultation",
-          primaryHref: "/consultation",
           secondaryLabel: "Website Design Consultation",
           secondaryHref: "/website-design-consultation",
         },

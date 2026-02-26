@@ -45,11 +45,11 @@ export default function LabelsPartnersPage() {
               </div>
               <div className="mt-2 h-px w-24 bg-gradient-to-r from-[#d6ae66]/80 via-white/45 to-transparent" />
               <Image
-                src="/Logo2.png"
+                src="/logotransparent.png"
                 alt="EMTEE logo"
-                width={44}
-                height={44}
-                className="mt-4 h-9 w-9 rounded-md object-contain opacity-70 sm:h-11 sm:w-11"
+                width={168}
+                height={52}
+                className="mt-4 h-9 w-auto object-contain brightness-0 invert opacity-85 sm:h-10"
               />
             </div>
 

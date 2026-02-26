@@ -8,6 +8,7 @@ import { getResourceContext } from "@/data/resource-context";
 type ResourceCard = {
   department: string;
   summary: string;
+  roomHref: string;
   artistCaseStudy: string;
   artistCaseStudyHref?: string;
   items: {
@@ -21,6 +22,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Business Department",
     summary: "Operational setup, finance clarity, and rollout planning resources.",
+    roomHref: "/rooms/EMTEEBusinessDept",
     artistCaseStudy: "Artist Name (Placeholder)",
     items: [
       {
@@ -65,6 +67,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Music Department",
     summary: "Single, multi-song, and project creation resources.",
+    roomHref: "/rooms/EMTEEMusicDept",
     artistCaseStudy: "Fame Holiday",
     artistCaseStudyHref: "/case-studies/fame-holiday",
     items: [
@@ -103,6 +106,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Marketing Department",
     summary: "Brand, content, tour, and live development resources.",
+    roomHref: "/rooms/EMTEEMarketingDept",
     artistCaseStudy: "Kisaki",
     artistCaseStudyHref: "/case-studies/kisaki",
     items: [
@@ -210,6 +214,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Publishing / Distribution Department",
     summary: "Publishing and distro setup resources.",
+    roomHref: "/rooms/EMTEEPublishingandDistroDept",
     artistCaseStudy: "Artist Name (Placeholder)",
     items: [
       {
@@ -224,6 +229,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "A&R / Sales Department",
     summary: "CRM and audience monetization resources.",
+    roomHref: "/rooms/EMTEEARSalesDept",
     artistCaseStudy: "Artist Name (Placeholder)",
     items: [
       {
@@ -285,6 +291,13 @@ export default function ResourcesPage() {
     name: string;
     notes: string[];
   } | null>(null);
+  const toggleDepartment = (department: string) => {
+    setOpenDepartments((prev) =>
+      prev.includes(department)
+        ? prev.filter((dep) => dep !== department)
+        : [...prev, department]
+    );
+  };
 
   return (
     <main className="relative min-h-[100svh] overflow-hidden bg-white text-zinc-900">
@@ -316,6 +329,8 @@ export default function ResourcesPage() {
 
         <div className="accent-card relative z-10 mt-4 max-w-3xl rounded-xl border border-[#d6ae66]/35 bg-white/90 px-5 py-4 text-sm text-zinc-700 shadow-[0_0_0_1px_rgba(214,174,102,0.12),0_12px_36px_rgba(0,0,0,0.10)]">
           Browse each department to see available resources, package options, and what each one includes.
+          <br />
+          Click the department card or the <span className="font-semibold text-[#8b6a2f]">+</span> to view resources in each department.
         </div>
 
         <div className="relative z-10 mt-8 grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -331,28 +346,33 @@ export default function ResourcesPage() {
                   : "border-zinc-200 shadow-[0_14px_46px_rgba(0,0,0,0.12)]",
               ].join(" ")}
             >
-              <button
-                type="button"
-                onClick={() =>
-                  setOpenDepartments((prev) =>
-                    prev.includes(item.department)
-                      ? prev.filter((dep) => dep !== item.department)
-                      : [...prev, item.department]
-                  )
-                }
-                className="flex w-full items-start justify-between gap-3 px-1 py-1 text-left transition"
-                aria-expanded={openDepartments.includes(item.department)}
+              <div
+                className="flex w-full cursor-pointer items-start justify-between gap-3 px-1 py-1 text-left"
+                onClick={() => toggleDepartment(item.department)}
               >
                 <div>
-                  <div className="text-lg font-semibold uppercase tracking-[0.08em] text-[#8b6a2f]">
+                  <Link
+                    href={item.roomHref}
+                    onClick={(event) => event.stopPropagation()}
+                    className="text-lg font-semibold uppercase tracking-[0.08em] text-[#8b6a2f] underline decoration-[#d6ae66]/55 decoration-2 underline-offset-4 transition hover:text-[#6f511a]"
+                  >
                     {item.department}
-                  </div>
+                  </Link>
                   <p className="mt-2 text-sm text-zinc-700">{item.summary}</p>
                 </div>
-                <span className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#d6ae66]/45 bg-white text-[#8b6a2f]">
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleDepartment(item.department);
+                  }}
+                  className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#d6ae66]/45 bg-white text-[#8b6a2f] transition hover:bg-[#fff7eb]"
+                  aria-label={openDepartments.includes(item.department) ? `Collapse ${item.department}` : `Expand ${item.department}`}
+                  aria-expanded={openDepartments.includes(item.department)}
+                >
                   {openDepartments.includes(item.department) ? "−" : "+"}
-                </span>
-              </button>
+                </button>
+              </div>
 
               {openDepartments.includes(item.department) ? (
                 <div className="mt-4 space-y-4">

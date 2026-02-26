@@ -100,7 +100,7 @@ export default function NewsFeedDropdown({ href, navLinkClass }: Props) {
           News
         </Link>
 
-        <div className="pointer-events-none absolute right-0 top-full pt-2 opacity-0 transition group-hover:pointer-events-auto group-hover:opacity-100">
+        <div className="pointer-events-none absolute right-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
           <div className="w-[430px] max-h-[62svh] overflow-auto rounded-2xl border border-white/15 bg-black/82 p-3 backdrop-blur-2xl shadow-[0_20px_55px_rgba(0,0,0,0.55),0_0_0_1px_rgba(214,174,102,0.14)]">
             <div className="mb-2 flex items-center justify-between px-2">
               <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#d6ae66]/85">News Feed</div>

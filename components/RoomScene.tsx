@@ -754,8 +754,7 @@ export default function RoomScene({ room }: { room: Room }) {
   const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && isMobileViewport ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
-  const useContainedBackground = hasHydrated && isLobbyRoom && !isMobileViewport;
-  const useArDesktopNoCropFill = isArSalesRoom && !isMobileViewport;
+  const useContainedBackground = false;
   const shouldRenderStaticBackgroundImage = !(isLiveRoom && !!room.backgroundVideo);
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
@@ -1484,11 +1483,7 @@ export default function RoomScene({ room }: { room: Room }) {
             quality={70}
             className={[
               "absolute inset-0 h-full w-full",
-              useArDesktopNoCropFill
-                ? "object-fill"
-                : useContainedBackground
-                  ? "object-contain"
-                  : "object-cover",
+              useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
             style={{
               objectPosition: isMarketingRoom && !isMobileViewport

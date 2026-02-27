@@ -754,7 +754,8 @@ export default function RoomScene({ room }: { room: Room }) {
   const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && isMobileViewport ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
-  const useContainedBackground = hasHydrated && (isLobbyRoom || isArSalesRoom) && !isMobileViewport;
+  const useContainedBackground = hasHydrated && isLobbyRoom && !isMobileViewport;
+  const useArDesktopNoCropFill = isArSalesRoom && !isMobileViewport;
   const shouldRenderStaticBackgroundImage = !(isLiveRoom && !!room.backgroundVideo);
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
@@ -1466,20 +1467,10 @@ export default function RoomScene({ room }: { room: Room }) {
             priority={eagerBackgroundLoad}
             quality={60}
             className={[
-              "absolute inset-0 h-full w-full object-cover scale-[1.04] blur-[10px]",
-              isLobbyRoom ? "opacity-36" : "opacity-45",
+              "absolute inset-0 h-full w-full object-cover scale-[1.12] blur-[18px]",
+              isLobbyRoom ? "opacity-62" : "opacity-58",
             ].join(" ")}
-            style={
-              isLobbyRoom
-                ? {
-                    objectPosition: "50% 24%",
-                    WebkitMaskImage:
-                      "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 45%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0) 100%)",
-                    maskImage:
-                      "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 45%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0) 100%)",
-                  }
-                : undefined
-            }
+            style={{ objectPosition: `50% ${backgroundObjectPositionY}%` }}
             draggable={false}
           />
         ) : null}
@@ -1493,7 +1484,11 @@ export default function RoomScene({ room }: { room: Room }) {
             quality={70}
             className={[
               "absolute inset-0 h-full w-full",
-              useContainedBackground ? "object-contain" : "object-cover",
+              useArDesktopNoCropFill
+                ? "object-fill"
+                : useContainedBackground
+                  ? "object-contain"
+                  : "object-cover",
             ].join(" ")}
             style={{
               objectPosition: isMarketingRoom && !isMobileViewport

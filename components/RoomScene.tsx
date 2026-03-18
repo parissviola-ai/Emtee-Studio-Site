@@ -1706,7 +1706,7 @@ export default function RoomScene({ room }: { room: Room }) {
               room.slug === "orange"
                 ? "text-[#ff9f3f] [text-shadow:0_0_10px_rgba(255,159,63,0.75),0_0_24px_rgba(255,159,63,0.45)]"
                 : room.slug === "quiet"
-                  ? "text-emerald-300/88 [text-shadow:0_0_8px_rgba(110,231,183,0.42),0_0_18px_rgba(16,185,129,0.22)]"
+                  ? "text-[#8fbf7a] [text-shadow:0_0_8px_rgba(143,191,122,0.32),0_0_18px_rgba(74,124,67,0.18)]"
                   : room.slug === "EMTEEARSalesDept"
                     ? "rounded-xl border border-white/10 bg-black/20 px-3 py-1.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm [text-shadow:0_0_8px_rgba(255,255,255,0.18)]"
                   : "",

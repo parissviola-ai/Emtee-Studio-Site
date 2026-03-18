@@ -2,7 +2,7 @@ import type { Room } from "./types";
 
 export const quietRoom: Room = {
     slug: "quiet",
-    title: "Steeped Dream Studio",
+    title: "Steeped Dream\nStudio",
     backgroundImage: "/rooms/kymteastudio1.png",
     hotspots: [
       { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/orange", x: 90, y: 17, direction: "right" },

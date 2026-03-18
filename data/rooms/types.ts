@@ -22,6 +22,7 @@ export type Hotspot = {
     links?: Array<{ label: string; href: string }>;
     topImage?: string;
     topImageAlt?: string;
+    imageGallery?: Array<{ src: string; alt: string }>;
     image?: string;
     videoEmbed?: string;
     highlightsTitle?: string;

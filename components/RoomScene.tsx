@@ -33,6 +33,7 @@ export type Hotspot = {
     links?: Array<{ label: string; href: string }>;
     topImage?: string;
     topImageAlt?: string;
+    imageGallery?: Array<{ src: string; alt: string }>;
     image?: string;
     videoEmbed?: string;
     highlightsTitle?: string;
@@ -1394,7 +1395,7 @@ export default function RoomScene({ room }: { room: Room }) {
             "opacity-100 translate-y-0",
             "transition-all duration-200",
             isQuietAccentDot
-              ? "border-emerald-200/35 bg-emerald-300/12 text-emerald-50 shadow-[0_0_0_1px_rgba(110,231,183,0.22),0_14px_40px_rgba(0,0,0,0.52),0_0_22px_rgba(16,185,129,0.26)] group-hover:border-emerald-200/55 group-hover:bg-emerald-300/18 group-hover:text-white group-hover:[text-shadow:0_0_10px_rgba(110,231,183,0.58)] group-hover:shadow-[0_0_0_1px_rgba(110,231,183,0.28),0_14px_40px_rgba(0,0,0,0.52),0_0_24px_rgba(16,185,129,0.34)]"
+              ? "border-emerald-200/24 bg-emerald-300/8 text-emerald-50/88 shadow-[0_0_0_1px_rgba(110,231,183,0.14),0_14px_40px_rgba(0,0,0,0.52),0_0_18px_rgba(16,185,129,0.16)] group-hover:border-emerald-200/38 group-hover:bg-emerald-300/12 group-hover:text-emerald-50 group-hover:[text-shadow:0_0_8px_rgba(110,231,183,0.36)] group-hover:shadow-[0_0_0_1px_rgba(110,231,183,0.2),0_14px_40px_rgba(0,0,0,0.52),0_0_20px_rgba(16,185,129,0.24)]"
               : "group-hover:border-white/40 group-hover:bg-black/72 group-hover:text-white group-hover:[text-shadow:0_0_10px_rgba(255,255,255,0.48)] group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.16),0_14px_40px_rgba(0,0,0,0.52),0_0_22px_rgba(255,255,255,0.16)]",
             isClickedLabelVisible
               ? "pointer-events-auto cursor-pointer opacity-100 translate-y-0 border-white/45 bg-black/75 text-white [text-shadow:0_0_12px_rgba(255,255,255,0.52)] shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_16px_44px_rgba(0,0,0,0.55),0_0_24px_rgba(255,255,255,0.18)]"
@@ -1673,11 +1674,13 @@ export default function RoomScene({ room }: { room: Room }) {
         <div className="mt-1 flex items-center gap-3">
           <div
             className={[
-              "text-3xl font-semibold",
+              "text-3xl font-semibold whitespace-pre-line",
               room.slug === "orange"
                 ? "text-[#ff9f3f] [text-shadow:0_0_10px_rgba(255,159,63,0.75),0_0_24px_rgba(255,159,63,0.45)]"
                 : room.slug === "quiet"
-                  ? "text-emerald-300 [text-shadow:0_0_10px_rgba(110,231,183,0.72),0_0_24px_rgba(16,185,129,0.44)]"
+                  ? "text-emerald-300/88 [text-shadow:0_0_8px_rgba(110,231,183,0.42),0_0_18px_rgba(16,185,129,0.22)]"
+                  : room.slug === "EMTEEARSalesDept"
+                    ? "rounded-xl border border-white/10 bg-black/20 px-3 py-1.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm [text-shadow:0_0_8px_rgba(255,255,255,0.18)]"
                   : "",
             ].join(" ")}
           >
@@ -2441,7 +2444,30 @@ export default function RoomScene({ room }: { room: Room }) {
                   ].join(" ")}
                 >
                   <div className="min-w-0">
-                    {activeModal.topImage ? (
+                    {activeModal.imageGallery?.length ? (
+                      <div
+                        className={[
+                          "mb-4 grid gap-3 sm:grid-cols-3 transition-all duration-700 ease-out",
+                          revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                        ].join(" ")}
+                      >
+                        {activeModal.imageGallery.map((image) => (
+                          <div
+                            key={image.src}
+                            className="relative overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]"
+                          >
+                            <NextImage
+                              src={image.src}
+                              alt={image.alt}
+                              width={1200}
+                              height={1600}
+                              sizes="(max-width: 640px) 100vw, 33vw"
+                              className="h-full max-h-[320px] w-full object-cover"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ) : activeModal.topImage ? (
                       <div
                         className={[
                           "mb-4 transition-all duration-700 ease-out",

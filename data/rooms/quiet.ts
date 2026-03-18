@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const quietRoom: Room = {
     slug: "quiet",
     title: "Quiet Room",
-    backgroundImage: "/rooms/newqrbg.png",
+    backgroundImage: "/rooms/kymteastudio1.png",
     hotspots: [
       { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/orange", x: 90, y: 17, direction: "right" },
       {
@@ -20,6 +20,11 @@ export const quietRoom: Room = {
         variant: "dot",
         modal: {
           title: "Kym Tea Music",
+          imageGallery: [
+            { src: "/rooms/kymtea4.jpg", alt: "Kym Tea portrait 1" },
+            { src: "/rooms/kymtea1.jpg", alt: "Kym Tea portrait 2" },
+            { src: "/rooms/kymtea3.jpg", alt: "Kym Tea portrait 3" },
+          ],
           body:
             "Kym Tea is the founder of Steeped Dreams Studio. Through her artist project and community work, she is building sensory-friendly music experiences that support people who need calmer, more flexible environments.",
           links: [

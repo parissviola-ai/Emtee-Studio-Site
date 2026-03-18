@@ -1669,7 +1669,11 @@ export default function RoomScene({ room }: { room: Room }) {
         ].join(" ")}
       >
         <div className="flex items-center gap-2">
-          <div className="text-xs tracking-widest text-white/60">ROOM</div>
+          <div className="text-xs tracking-widest text-white/60">
+            {room.slug === "front" || room.slug === "orange" || room.slug === "quiet" || room.slug === "live"
+              ? "ROOM"
+              : "DEPARTMENT"}
+          </div>
         </div>
         <div className="mt-1 flex items-center gap-3">
           <div

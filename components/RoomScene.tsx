@@ -31,6 +31,11 @@ export type Hotspot = {
     secondaryLabel?: string;
     secondaryHref?: string;
     links?: Array<{ label: string; href: string }>;
+    headerLogo?: string;
+    headerLogoAlt?: string;
+    cornerLogo?: string;
+    cornerLogoAlt?: string;
+    hideTitle?: boolean;
     topImage?: string;
     topImageAlt?: string;
     imageGallery?: Array<{ src: string; alt: string }>;
@@ -75,7 +80,7 @@ const EXPLORE_ROOMS = [
   { label: "A&R / Sales Department", href: "/rooms/EMTEEARSalesDept" },
   { label: "Yanchan Produced", href: "/rooms/orange" },
   { label: "Ten Ten Entertainment", href: "/rooms/live" },
-  { label: "Steeped Dreams Studio", href: "/rooms/quiet" },
+  { label: "Steeped Dream Studio", href: "/rooms/quiet" },
 ];
 const LOBBY_HOVER_ROOMS = EXPLORE_ROOMS.filter(
   (item) => item.href.startsWith("/rooms/") && item.href !== "/rooms/front"
@@ -172,15 +177,15 @@ const WEBSITE_DESIGN_OVERVIEW_CARD: InfoCard = {
   eyebrow: "Website Design",
 };
 
-const PREVIOUS_ROOM_LINKS: Record<string, { href: string; label: string }> = {
-  EMTEEBusinessDept: { href: "/rooms/front", label: "Back to Lobby" },
-  EMTEEMusicDept: { href: "/rooms/EMTEEBusinessDept", label: "Back to Board Room" },
-  EMTEEMarketingDept: { href: "/rooms/EMTEEMusicDept", label: "Back to Studio" },
-  EMTEEPublishingandDistroDept: { href: "/rooms/EMTEEMarketingDept", label: "Back to Media Room" },
-  EMTEEARSalesDept: { href: "/rooms/EMTEEPublishingandDistroDept", label: "Back to Publishing and Distro" },
-  quiet: { href: "/rooms/EMTEEARSalesDept", label: "Back to The Strategy Suite" },
-  orange: { href: "/rooms/quiet", label: "Back to Steeped Dreams Studio" },
-  live: { href: "/rooms/orange", label: "Back to Orange Room" },
+const PREVIOUS_ROOM_LINKS: Record<string, string> = {
+  EMTEEBusinessDept: "/rooms/front",
+  EMTEEMusicDept: "/rooms/EMTEEBusinessDept",
+  EMTEEMarketingDept: "/rooms/EMTEEMusicDept",
+  EMTEEPublishingandDistroDept: "/rooms/EMTEEMarketingDept",
+  EMTEEARSalesDept: "/rooms/EMTEEPublishingandDistroDept",
+  quiet: "/rooms/EMTEEARSalesDept",
+  orange: "/rooms/quiet",
+  live: "/rooms/orange",
 };
 const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-orange-room-session";
 const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
@@ -658,7 +663,10 @@ export default function RoomScene({ room }: { room: Room }) {
         : showWebsiteDesignCard
           ? WEBSITE_DESIGN_OVERVIEW_CARD
           : null;
-  const previousRoomLink = PREVIOUS_ROOM_LINKS[room.slug];
+  const previousRoomHref = PREVIOUS_ROOM_LINKS[room.slug];
+  const previousRoomExploreEntry = previousRoomHref
+    ? ROOM_SEQUENCE.find((item) => item.href === previousRoomHref)
+    : null;
   const [mobilePanByContext, setMobilePanByContext] = useState<Record<string, { x: number; y: number }>>({});
   const viewportKeyRaw = useSyncExternalStore(
     (onStoreChange) => {
@@ -681,7 +689,7 @@ export default function RoomScene({ room }: { room: Room }) {
   const isCardCompact = isCardMinimized || !isCardContentVisible;
   const isYoutubeEmbed = !!activeModal?.videoEmbed?.includes("youtube.com/embed");
   const isYanchanMusicModal = activeModal?.title === "Yanchan Produced Music";
-  const isYanchanDiscographyModal = activeModal?.title === "Yanchan Produced Discography";
+  const isYanchanDiscographyModal = activeModal?.title === "Discography";
   const isJoinCommunityModal = activeModal?.title === "Join Community";
   const isCustomProductionModal = activeModal?.title === "Apply For Custom Production";
   const isLivePackagesModal = room.slug === "live" && activeModal?.title === "Packages";
@@ -710,6 +718,20 @@ export default function RoomScene({ room }: { room: Room }) {
   const shouldShowOrangeSessionPreview = isOrangeRoom && !isMobileViewport && (isOrangeSessionPreviewVisible || isOrangeSessionModalOpen);
   const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
   const isQuietModal = room.slug === "quiet" && !!activeModal;
+  const isDepartmentRoom =
+    room.slug === "EMTEEBusinessDept" ||
+    room.slug === "EMTEEMusicDept" ||
+    room.slug === "EMTEEMarketingDept" ||
+    room.slug === "EMTEEPublishingandDistroDept" ||
+    room.slug === "EMTEEARSalesDept";
+  const shouldShowDefaultEmteeCornerLogo =
+    !!activeModal &&
+    (
+      isDepartmentRoom ||
+      (room.slug === "front" && (activeModal.title === "Who We Are" || activeModal.title === "Departments"))
+    );
+  const resolvedCornerLogo = activeModal?.cornerLogo ?? (shouldShowDefaultEmteeCornerLogo ? "/logotransparent.png" : undefined);
+  const resolvedCornerLogoAlt = activeModal?.cornerLogoAlt ?? (shouldShowDefaultEmteeCornerLogo ? "EMTEE logo" : undefined);
   const [viewportW, viewportH] = viewportKey.split("x").map((n) => Number(n) || 0);
   const viewportKnown = viewportW > 0 && viewportH > 0;
   const hotspotBreakpoint = getHotspotBreakpoint(viewportW);
@@ -836,7 +858,9 @@ export default function RoomScene({ room }: { room: Room }) {
     !isMobileViewport;
   const nextRoomHotspot = room.hotspots.find((spot) => spot.id === "next-room");
   const nextRoomHotspotHref = nextRoomHotspot?.href;
-  const nextRoomHotspotLabel = nextRoomHotspot?.label;
+  const nextRoomExploreEntry = nextRoomHotspotHref
+    ? ROOM_SEQUENCE.find((item) => item.href === nextRoomHotspotHref)
+    : null;
   const currentRoomHref = `/rooms/${room.slug}`;
   const currentExploreIndex = ROOM_SEQUENCE.findIndex((item) => item.href === currentRoomHref);
   const fallbackNextExploreEntry =
@@ -848,9 +872,9 @@ export default function RoomScene({ room }: { room: Room }) {
       ? ROOM_SEQUENCE[(currentExploreIndex - 1 + ROOM_SEQUENCE.length) % ROOM_SEQUENCE.length]
       : ROOM_SEQUENCE[ROOM_SEQUENCE.length - 1];
   const exploreArrowHref = nextRoomHotspotHref ?? fallbackNextExploreEntry.href;
-  const exploreArrowLabel = nextRoomHotspotLabel ?? fallbackNextExploreEntry.label;
-  const explorePrevHref = previousRoomLink?.href ?? fallbackPrevExploreEntry.href;
-  const explorePrevLabel = previousRoomLink?.label ?? fallbackPrevExploreEntry.label;
+  const exploreArrowLabel = nextRoomExploreEntry?.label ?? fallbackNextExploreEntry.label;
+  const explorePrevHref = previousRoomHref ?? fallbackPrevExploreEntry.href;
+  const explorePrevLabel = previousRoomExploreEntry?.label ?? fallbackPrevExploreEntry.label;
 
   function clamp(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));
@@ -2332,23 +2356,98 @@ export default function RoomScene({ room }: { room: Room }) {
             <div className="flex-1 overflow-y-auto p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 w-full">
-                <h2
+                {activeModal.headerLogo ? (
+                  <div
+                    className={[
+                      "mb-2 transition-all duration-700 ease-out",
+                      revealStep >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                    ].join(" ")}
+                  >
+                    <NextImage
+                      src={activeModal.headerLogo}
+                      alt={activeModal.headerLogoAlt ?? activeModal.title}
+                      width={activeModal.headerLogo === "/rooms/sdslogo2.png" ? 96 : 220}
+                      height={activeModal.headerLogo === "/rooms/sdslogo2.png" ? 96 : 60}
+                      sizes={activeModal.headerLogo === "/rooms/sdslogo2.png" ? "96px" : "220px"}
+                      className={[
+                        activeModal.headerLogo === "/rooms/sdslogo2.png"
+                          ? "h-20 w-20 object-contain"
+                          : "h-auto w-auto max-w-[180px] object-contain",
+                        activeModal.headerLogo === "/rooms/yanchanblack6-removebg.png" ? "invert" : "",
+                      ].join(" ")}
+                    />
+                  </div>
+                ) : null}
+
+                {!activeModal.hideTitle ? (
+                  <h2
+                    className={[
+                      "text-2xl font-semibold tracking-wide whitespace-pre-line transition-all duration-700 ease-out",
+                      isOrangeModal ? "text-[#ffd9ab] [text-shadow:0_0_20px_rgba(251,191,118,0.28)]" : "",
+                      revealStep >= 1
+                        ? "opacity-100 translate-y-0 drop-shadow-[0_0_18px_rgba(255,255,255,0.18)]"
+                        : "opacity-0 translate-y-2",
+                    ].join(" ")}
+                  >
+                    {activeModal.title.split("\n").map((line, index, lines) => (
+                      <Fragment key={`${line}-${index}`}>
+                        {line}
+                        {index < lines.length - 1 ? <br /> : null}
+                      </Fragment>
+                    ))}
+                  </h2>
+                ) : null}
+              </div>
+
+              {resolvedCornerLogo ? (
+                <div
                   className={[
-                    "text-2xl font-semibold tracking-wide whitespace-pre-line transition-all duration-700 ease-out",
-                    isOrangeModal ? "text-[#ffd9ab] [text-shadow:0_0_20px_rgba(251,191,118,0.28)]" : "",
-                    revealStep >= 1
-                      ? "opacity-100 translate-y-0 drop-shadow-[0_0_18px_rgba(255,255,255,0.18)]"
-                      : "opacity-0 translate-y-2",
+                    "shrink-0 transition-all duration-700 ease-out",
+                    revealStep >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                   ].join(" ")}
                 >
-                  {activeModal.title.split("\n").map((line, index, lines) => (
-                    <Fragment key={`${line}-${index}`}>
-                      {line}
-                      {index < lines.length - 1 ? <br /> : null}
-                    </Fragment>
-                  ))}
-                </h2>
+                  <NextImage
+                    src={resolvedCornerLogo}
+                    alt={resolvedCornerLogoAlt ?? activeModal.title}
+                    width={
+                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                        ? 144
+                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                          ? 120
+                          : 66
+                    }
+                    height={
+                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                        ? 72
+                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                          ? 48
+                          : 26
+                    }
+                    sizes={
+                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                        ? "144px"
+                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                          ? "120px"
+                          : "66px"
+                    }
+                    className={[
+                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                        ? "h-auto w-auto max-w-[132px] object-contain"
+                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                          ? "h-auto w-auto max-w-[110px] object-contain"
+                          : "h-auto w-auto max-w-[60px] object-contain",
+                      resolvedCornerLogo === "/logotransparent.png" ? "invert" : "",
+                      resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ||
+                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                        ? "invert"
+                        : "",
+                    ].join(" ")}
+                  />
+                </div>
+              ) : null}
 
+            </div>
+            <div className="min-w-0 w-full">
                 {activeModal.videoEmbed && (
                   <div
                     className={[
@@ -2688,7 +2787,7 @@ export default function RoomScene({ room }: { room: Room }) {
                               );
                             })}
                           </ul>
-                )}
+                        )}
                       </div>
                     ) : null}
                   </div>
@@ -2748,8 +2847,6 @@ export default function RoomScene({ room }: { room: Room }) {
                   {isOrangePreviewMuted ? "Unmute Music" : "Mute Music"}
                 </button>
               ) : null}
-            </div>
-
             </div>
 
             <div

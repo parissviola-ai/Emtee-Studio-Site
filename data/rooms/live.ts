@@ -22,6 +22,8 @@ export const liveRoom: Room = {
         variant: "dot",
         modal: {
           title: "Ten Ten Showcase",
+          cornerLogo: "/rooms/TenTenlogo.png",
+          cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Ten Ten supports motivation + self-development while helping creatives and entrepreneurs achieve their dreams.",
           primaryLabel: "Apply to Perform",
@@ -75,6 +77,8 @@ export const liveRoom: Room = {
         variant: "dot",
         modal: {
           title: "Packages",
+          cornerLogo: "/rooms/TenTenlogo.png",
+          cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Choose a package to view full details.",
           links: [
@@ -98,6 +102,8 @@ export const liveRoom: Room = {
         variant: "dot",
         modal: {
           title: "Up & Coming Artist Package",
+          cornerLogo: "/rooms/TenTenlogo.png",
+          cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Designed for artists ready to build stage confidence and audience conversion in a real showcase environment.",
           highlightsTitle: "Package Includes:",
@@ -128,6 +134,8 @@ export const liveRoom: Room = {
         variant: "dot",
         modal: {
           title: "Rising Star Showcase Package",
+          cornerLogo: "/rooms/TenTenlogo.png",
+          cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Expanded showcase lane for artists ready for deeper support, stronger promo, and elevated live execution.",
           highlightsTitle: "Package Includes:",
@@ -161,6 +169,8 @@ export const liveRoom: Room = {
         variant: "dot",
         modal: {
           title: "Live Set Performance Development",
+          cornerLogo: "/rooms/TenTenlogo.png",
+          cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Make your performance stand out.\n\nGet development support to tighten your live set, pacing, transitions, stage presence, and audience engagement before showcase day.",
           primaryLabel: "Apply for Live Set Development",
@@ -181,6 +191,8 @@ export const liveRoom: Room = {
         variant: "dot",
         modal: {
           title: "Ten Ten Community",
+          cornerLogo: "/rooms/TenTenlogo.png",
+          cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "For Motivation & Self-Development + Helping Each Other Achieve Their Dreams.\n\nMonthly Membership: $35/month",
           highlightsTitle: "Membership Includes",
@@ -216,6 +228,11 @@ export const liveRoom: Room = {
         variant: "dot",
         modal: {
           title: "Mike Cannz",
+          headerLogo: "/rooms/mike cannz_white.png",
+          headerLogoAlt: "Mike Cannz logo",
+          hideTitle: true,
+          topImage: "/case-studies/mikecannz.png",
+          topImageAlt: "Mike Cannz portrait",
           body:
             "Mike Cannz Entertainment is a Canadian, multi-faceted, multi-disciplinary entertainment parent company based in Mississauga, Ontario, and one of the leading spearheads of the independent music industry in the Greater Toronto Area. The group is home to multiple companies across the music, event, and culinary industries, including Xperience Projects (X-Projects), Ten Ten Entertainment, and Peppered By PERI. Mike Cannz Entertainment was founded and developed by music and entertainment entrepreneur and musician Michael \"Mike Cannz\" Cannataro. As founder of Mike Cannz Entertainment and builder of Ten Ten Entertainment, his work supports artist performance opportunities, motivation, and long-term creative growth.",
           links: [

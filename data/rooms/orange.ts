@@ -20,6 +20,8 @@ export const orangeRoom: Room = {
         variant: "dot",
         modal: {
           title: "Apply For Custom Production",
+          cornerLogo: "/rooms/yanchanblack6-removebg.png",
+          cornerLogoAlt: "Yanchan Produced logo",
           body:
             "Use the short form to submit your name and a link to your music so we can review fit for custom production.",
           primaryLabel: "Apply",
@@ -45,6 +47,9 @@ export const orangeRoom: Room = {
         variant: "dot",
         modal: {
           title: "Yanchan Produced Music",
+          headerLogo: "/rooms/yanchanblack6-removebg.png",
+          headerLogoAlt: "Yanchan Produced logo",
+          hideTitle: true,
           body:
             "Yanchan is one of EMTEE Music Group's flagship artists, known for strong output, creative identity, and consistent momentum. Orange Room Sessions highlights his producer-led process and artist development approach.\n\nYanchan Produced is a Canadian-Tamil producer, mixing engineer, songwriter, and Mridangist. His solo and collaborative releases have earned 12M+ Spotify streams, with affiliations across reputable labels and collaborators including Russ, SVDP, Shruthi Hassan, Pressa, Kristina Maria, Yung Tory, and Charle$.",
           image: "/rooms/yanchanbiopic-opt.jpg",
@@ -69,7 +74,9 @@ export const orangeRoom: Room = {
         direction: "up",
         variant: "dot",
         modal: {
-          title: "Yanchan Produced Discography",
+          title: "Discography",
+          cornerLogo: "/rooms/yanchanblack6-removebg.png",
+          cornerLogoAlt: "Yanchan Produced logo",
           body:
             "Selected credits from Yanchan Produced's catalog, including award-recognized work and key collaborations.",
           highlightsTitle: "Credits & Milestones",
@@ -98,6 +105,8 @@ export const orangeRoom: Room = {
         variant: "dot",
         modal: {
           title: "Apply For An Orange Room Session",
+          cornerLogo: "/rooms/yanchanblack6-removebg.png",
+          cornerLogoAlt: "Yanchan Produced logo",
           body:
             "Submit a short application to request an Orange Room Session slot.\n\nUse the preview link below to see the format and performance style.",
           primaryLabel: "Apply (Short Form)",
@@ -134,6 +143,8 @@ export const orangeRoom: Room = {
         variant: "dot",
         modal: {
           title: "Yanchan Produced Live",
+          cornerLogo: "/rooms/yanchanblack6-removebg.png",
+          cornerLogoAlt: "Yanchan Produced logo",
           body:
             "Live performance hub for show previews, upcoming dates, and ticket access.",
           videoEmbed:
@@ -165,6 +176,8 @@ export const orangeRoom: Room = {
         variant: "dot",
         modal: {
           title: "Join Community",
+          cornerLogo: "/rooms/yanchanblack6-removebg.png",
+          cornerLogoAlt: "Yanchan Produced logo",
           body:
             "Choose your preferred community lane to connect directly with Yanchan and other producers.",
           image: "/rooms/yanchancrowd-opt.jpg",

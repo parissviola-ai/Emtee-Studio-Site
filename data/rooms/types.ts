@@ -20,6 +20,11 @@ export type Hotspot = {
     secondaryLabel?: string;
     secondaryHref?: string;
     links?: Array<{ label: string; href: string }>;
+    headerLogo?: string;
+    headerLogoAlt?: string;
+    cornerLogo?: string;
+    cornerLogoAlt?: string;
+    hideTitle?: boolean;
     topImage?: string;
     topImageAlt?: string;
     imageGallery?: Array<{ src: string; alt: string }>;

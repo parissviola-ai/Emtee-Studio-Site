@@ -4,14 +4,14 @@ export const liveRoom: Room = {
     slug: "live",
     title: "Live Performance",
     backgroundImage: "/rooms/live-opt.jpg",
-    backgroundVideo: "/rooms/tentenbg.mp4?v=1",
+    backgroundVideo: "/rooms/updatetenten.mp4?v=1",
     hotspots: [
-      { id: "next-room", label: "Board Room", href: "/rooms/EMTEEBusinessDept", x: 90, y:  17, direction: "right" },
+      { id: "next-room", label: "Lobby", href: "/rooms/front", x: 90, y:  17, direction: "right" },
       {
         id: "ten-ten-showcase",
         label: "Ten Ten Showcase",
-        x: 52,
-        y: 59,
+        x: 50,
+        y: 53,
         positions: {
           laptop: { x: 50, y: 56 },
           tablet: { x: 50, y: 57 },
@@ -24,7 +24,7 @@ export const liveRoom: Room = {
           title: "Ten Ten Showcase",
           body:
             "Ten Ten supports motivation + self-development while helping creatives and entrepreneurs achieve their dreams.",
-          primaryLabel: "Apply to Perform at Ten Ten Showcase",
+          primaryLabel: "Apply to Perform",
           primaryHref: "/ten-ten-showcase-apply",
           links: [
             { label: "Ten Ten Website", href: "https://www.mikecannzentertainment.com/" },
@@ -35,7 +35,7 @@ export const liveRoom: Room = {
       {
         id: "mike-cannz-youtube",
         label: "YouTube",
-        x: 15,
+        x: 24,
         y: 27,
         positions: {
           laptop: { x: 15, y: 27 },
@@ -49,7 +49,7 @@ export const liveRoom: Room = {
       {
         id: "mike-cannz-spotify",
         label: "Spotify",
-        x:  84,
+        x:  79,
         y: 27,
         positions: {
           laptop: { x: 84, y: 27 },
@@ -64,7 +64,7 @@ export const liveRoom: Room = {
         id: "live-packages",
         label: "Packages",
         x: 25,
-        y: 33,
+        y: 26,
         positions: {
           laptop: { x: 18, y: 45 },
           tablet: { x: 17, y: 48 },
@@ -151,7 +151,7 @@ export const liveRoom: Room = {
         id: "live-set-performance-development",
         label: "Live Set Performance Development",
         x: 50,
-        y: 80,
+        y: 78,
         positions: {
           laptop: { x: 50, y: 79 },
           tablet: { x: 50, y: 78 },
@@ -171,7 +171,7 @@ export const liveRoom: Room = {
         id: "ten-ten-community",
         label: "Ten Ten Community",
         x: 74,
-        y:  63,
+        y:  65,
         positions: {
           laptop: { x: 73, y: 63 },
           tablet: { x: 72, y: 62 },

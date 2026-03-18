@@ -96,9 +96,24 @@ export const frontRoom: Room = {
             "Learn about EMTEE, identify your best-fit department, review resources, and book a consultation.\n\n1) WHO WE ARE\nStart by clicking Who We Are below to learn about EMTEE, our approach, and why we may be the right long-term fit for your goals.\n\n2) EXPLORE DEPARTMENT\nFrom the lobby, open Explore ⌕ and choose the department that matches your current goal.\n\n3) VIEW RESOURCES\nIn a department room, open package dots to view resources that fit your current needs, or use the Resources tab in the menu to browse all resources by department.\n\n4) BOOK CONSULTATION\nWhen you find the right fit, request a consultation to map rollout, timeline, and execution.",
           links: [
             { label: "View Who We Are", href: "modal:About" },
+            { label: "How You Start", href: "modal:how-you-start" },
           ],
           secondaryLabel: "View Resources",
           secondaryHref: "/connect",
+        },
+      },
+      {
+        id: "how-you-start",
+        label: "How You Start",
+        tier: "core",
+        hidden: true,
+        x: 50,
+        y: 50,
+        modal: {
+          title: "How You Start",
+          topImage: "/rooms-misc/how-you-start.avif",
+          topImageAlt: "How you start diagram",
+          body: "",
         },
       },
 

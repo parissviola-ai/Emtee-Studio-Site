@@ -297,6 +297,7 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
 
           </div>
         </div>
+
       </div>
     </main>
   );

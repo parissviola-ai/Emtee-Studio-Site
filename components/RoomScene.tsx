@@ -55,6 +55,8 @@ type InfoCard = {
   primaryHref: string;
   secondaryCta?: string;
   secondaryHref?: string;
+  exampleCta?: string;
+  exampleHref?: string;
   eyebrow?: string;
   imageSrc?: string;
   imageAlt?: string;
@@ -100,6 +102,8 @@ const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
   primaryHref: "/consultation",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
+  exampleCta: "Case Study Example",
+  exampleHref: "/artist-roster-releases/case-studies-2?example=mike-ar-sales",
   eyebrow: "A&R / Sales",
 };
 
@@ -111,6 +115,8 @@ const STUDIO_OVERVIEW_CARD: InfoCard = {
   primaryHref: "/consultation",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
+  exampleCta: "Case Study Example",
+  exampleHref: "/artist-roster-releases/case-studies-2?example=fame-music",
   eyebrow: "Music Department",
 };
 
@@ -122,6 +128,8 @@ const MEDIA_OVERVIEW_CARD: InfoCard = {
   primaryHref: "/consultation",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
+  exampleCta: "Case Study Example",
+  exampleHref: "/artist-roster-releases/case-studies-2?example=kisaki-marketing",
   eyebrow: "Marketing Department",
 };
 
@@ -133,6 +141,8 @@ const BOARDROOM_OVERVIEW_CARD: InfoCard = {
   primaryHref: "/consultation",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
+  exampleCta: "Case Study Example",
+  exampleHref: "/artist-roster-releases/case-studies-2?example=yanchan-business",
   eyebrow: "Business Department",
 };
 
@@ -145,6 +155,8 @@ const ARTISTS_OVERVIEW_CARD: InfoCard = {
   primaryHref: "/consultation",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
+  exampleCta: "Case Study Example",
+  exampleHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
   eyebrow: "Distribution / Publishing",
 };
 
@@ -692,6 +704,8 @@ export default function RoomScene({ room }: { room: Room }) {
   const isOrangeModal = isOrangeRoom && !!activeModal;
   const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Apply For An Orange Room Session";
   const isStartHereModal = activeModal?.title === "Start Here";
+  const howYouStartModalTarget = isStartHereModal ? room.hotspots.find((spot) => spot.id === "how-you-start") : undefined;
+  const isLiveRoomModal = room.slug === "live" && !!activeModal && !isPackageGridModal;
   const shouldShowOrangeSessionPreview = isOrangeRoom && !isMobileViewport && (isOrangeSessionPreviewVisible || isOrangeSessionModalOpen);
   const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
   const isQuietModal = room.slug === "quiet" && !!activeModal;
@@ -751,7 +765,7 @@ export default function RoomScene({ room }: { room: Room }) {
         : room.slug === "front" && !isMobileViewport
           ? 58
           : 50;
-  const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : 0;
+  const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "live" ? 50 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && isMobileViewport ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const useContainedBackground = false;
@@ -1542,7 +1556,6 @@ export default function RoomScene({ room }: { room: Room }) {
             />
           </div>
         ) : null}
-
       </div>
 
       {shouldShowOrangeSessionPreview ? (
@@ -1867,6 +1880,25 @@ export default function RoomScene({ room }: { room: Room }) {
                             className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 hover:text-white"
                           >
                             {activeOverviewCard.secondaryCta}
+                          </Link>
+                        )
+                      ) : null}
+                      {activeOverviewCard.exampleHref && activeOverviewCard.exampleCta ? (
+                        activeOverviewCard.exampleHref.startsWith("http") ? (
+                          <a
+                            href={activeOverviewCard.exampleHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center rounded-full border border-emerald-200/35 bg-emerald-300/10 px-4 py-2 text-sm font-semibold text-emerald-100/92 transition hover:bg-emerald-300/18 hover:text-white"
+                          >
+                            {activeOverviewCard.exampleCta}
+                          </a>
+                        ) : (
+                          <Link
+                            href={activeOverviewCard.exampleHref}
+                            className="inline-flex items-center justify-center rounded-full border border-emerald-200/35 bg-emerald-300/10 px-4 py-2 text-sm font-semibold text-emerald-100/92 transition hover:bg-emerald-300/18 hover:text-white"
+                          >
+                            {activeOverviewCard.exampleCta}
                           </Link>
                         )
                       ) : null}
@@ -2698,6 +2730,20 @@ export default function RoomScene({ room }: { room: Room }) {
                 revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
               ].join(" ")}
             >
+              {isStartHereModal && howYouStartModalTarget?.modal ? (
+                <button
+                  type="button"
+                  aria-label="How You Start"
+                  title="How You Start"
+                  onClick={() => {
+                    setModalBackModal(activeModal);
+                    openModal(howYouStartModalTarget.modal!);
+                  }}
+                  className="inline-flex items-center justify-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+                >
+                  How You Start
+                </button>
+              ) : null}
               {isCustomProductionModal && activeModal.primaryHref ? (
                 activeModal.primaryHref.startsWith("http") ? (
                   <a
@@ -2708,7 +2754,7 @@ export default function RoomScene({ room }: { room: Room }) {
                     className={[
                       "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
                       isOrangeModal
-                        ? "border border-[#f7c48a]/45 bg-[#f7c48a]/18 text-white shadow-[0_0_0_1px_rgba(247,196,138,0.22),0_10px_24px_rgba(0,0,0,0.36)] hover:bg-[#f7c48a]/28"
+                        ? "border border-orange-200/28 bg-black/35 text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
                         : "bg-white text-black hover:bg-white/90",
                     ].join(" ")}
                   >
@@ -2721,7 +2767,7 @@ export default function RoomScene({ room }: { room: Room }) {
                     className={[
                       "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
                       isOrangeModal
-                        ? "border border-[#f7c48a]/45 bg-[#f7c48a]/18 text-white shadow-[0_0_0_1px_rgba(247,196,138,0.22),0_10px_24px_rgba(0,0,0,0.36)] hover:bg-[#f7c48a]/28"
+                        ? "border border-orange-200/28 bg-black/35 text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
                         : "bg-white text-black hover:bg-white/90",
                     ].join(" ")}
                   >
@@ -2731,6 +2777,9 @@ export default function RoomScene({ room }: { room: Room }) {
               ) : null}
               {activeModal.links?.length
                 ? activeModal.links.map((link) => {
+                    if (isStartHereModal && link.href === "modal:how-you-start") {
+                      return null;
+                    }
                     const modalLinkId = link.href.startsWith("modal:") ? link.href.slice(6) : null;
                     if (modalLinkId) {
                       const targetSpot = room.hotspots.find((spot) => spot.id === modalLinkId);
@@ -2756,6 +2805,8 @@ export default function RoomScene({ room }: { room: Room }) {
                               ? isOrangeModal
                                 ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-orange-200/28 bg-black/35 text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
                                 : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
+                              : isOrangeModal
+                                ? "inline-flex items-center justify-center rounded-full border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
                               : isQuietModal
                                 ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                               : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
@@ -2784,6 +2835,8 @@ export default function RoomScene({ room }: { room: Room }) {
                             ? isOrangeModal
                               ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-orange-200/28 bg-black/35 text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
                               : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
+                            : isOrangeModal
+                              ? "inline-flex items-center justify-center rounded-full border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
                             : isQuietModal
                               ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                             : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
@@ -2807,8 +2860,12 @@ export default function RoomScene({ room }: { room: Room }) {
                       isStartHereModal
                         ? "border border-white/18 bg-white/9 px-4 py-1.5 text-xs font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
                         : isOrangeModal
-                        ? "border border-[#f7c48a]/45 bg-[#f7c48a]/18 text-white shadow-[0_0_0_1px_rgba(247,196,138,0.22),0_10px_24px_rgba(0,0,0,0.36)] hover:bg-[#f7c48a]/28"
-                        : "bg-white text-black hover:bg-white/90",
+                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : isLiveRoomModal
+                        ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
+                        : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
                     ].join(" ")}
                   >
                     {activeModal.primaryLabel ?? "Open Explore"} →
@@ -2824,8 +2881,12 @@ export default function RoomScene({ room }: { room: Room }) {
                       isStartHereModal
                         ? "border border-white/18 bg-white/9 px-4 py-1.5 text-xs font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
                         : isOrangeModal
-                        ? "border border-[#f7c48a]/45 bg-[#f7c48a]/18 text-white shadow-[0_0_0_1px_rgba(247,196,138,0.22),0_10px_24px_rgba(0,0,0,0.36)] hover:bg-[#f7c48a]/28"
-                        : "bg-white text-black hover:bg-white/90",
+                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : isLiveRoomModal
+                        ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
+                        : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
                     ].join(" ")}
                   >
                     {activeModal.primaryLabel ?? "View Details"} →
@@ -2839,8 +2900,12 @@ export default function RoomScene({ room }: { room: Room }) {
                       isStartHereModal
                         ? "border border-white/18 bg-white/9 px-4 py-1.5 text-xs font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
                         : isOrangeModal
-                        ? "border border-[#f7c48a]/45 bg-[#f7c48a]/18 text-white shadow-[0_0_0_1px_rgba(247,196,138,0.22),0_10px_24px_rgba(0,0,0,0.36)] hover:bg-[#f7c48a]/28"
-                        : "bg-white text-black hover:bg-white/90",
+                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : isLiveRoomModal
+                        ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
+                        : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
                     ].join(" ")}
                   >
                     {activeModal.primaryLabel ?? "View Details"} →
@@ -2859,8 +2924,12 @@ export default function RoomScene({ room }: { room: Room }) {
                       isStartHereModal
                         ? "border border-white/18 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
-                        : "border border-white/25 bg-white/10 text-white/90 hover:bg-white/18 hover:text-white",
+                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : isLiveRoomModal
+                        ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
+                        : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
                     ].join(" ")}
                   >
                     {activeModal.secondaryLabel} →
@@ -2874,8 +2943,12 @@ export default function RoomScene({ room }: { room: Room }) {
                       isStartHereModal
                         ? "border border-white/18 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
-                        : "border border-white/25 bg-white/10 text-white/90 hover:bg-white/18 hover:text-white",
+                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : isLiveRoomModal
+                        ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
+                        : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
                     ].join(" ")}
                   >
                     {activeModal.secondaryLabel} →
@@ -2898,9 +2971,9 @@ export default function RoomScene({ room }: { room: Room }) {
                   isStartHereModal
                     ? "border border-white/18 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
                     : isOrangeModal
-                    ? "border border-orange-200/24 bg-black/30 text-orange-50/88 hover:border-orange-200/42 hover:bg-black/50"
+                    ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
                     : isQuietModal
-                      ? "border border-emerald-200/32 bg-emerald-300/10 text-emerald-50/90 hover:border-emerald-200/55 hover:bg-emerald-300/18"
+                      ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                     : "border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 hover:text-white",
                 ].join(" ")}
               >

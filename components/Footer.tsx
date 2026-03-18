@@ -44,7 +44,7 @@ export default function Footer() {
               <Link href="/news" className="text-white/75 transition hover:text-white">News</Link>
               <Link href="/labels-partners" className="text-white/75 transition hover:text-white">Partners</Link>
               <Link href="/connect" className="text-white/75 transition hover:text-white">Resource Packages</Link>
-              <Link href="/artist-roster-releases" className="text-white/75 transition hover:text-white">Artists & Releases</Link>
+              <Link href="/artist-roster-releases" className="text-white/75 transition hover:text-white">Artists</Link>
               <Link href="/consultation" className="text-white/75 transition hover:text-white">Consultation</Link>
             </div>
           </div>

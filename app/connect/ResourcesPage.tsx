@@ -105,7 +105,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   },
   {
     department: "Marketing Department",
-    summary: "Brand, content, tour, and live development resources.",
+    summary: "Brand, content, tour, live development, and web design resources.",
     roomHref: "/rooms/EMTEEMarketingDept",
     artistCaseStudy: "Kisaki",
     artistCaseStudyHref: "/case-studies/kisaki",

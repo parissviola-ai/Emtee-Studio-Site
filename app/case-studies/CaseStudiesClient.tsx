@@ -428,7 +428,7 @@ export default function CaseStudiesClient() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-semibold tracking-tight [text-shadow:0_1px_0_rgba(255,255,255,0.8),0_8px_26px_rgba(214,174,102,0.2)]">
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl [text-shadow:0_1px_0_rgba(255,255,255,0.8),0_8px_26px_rgba(214,174,102,0.2)]">
                 Case Studies
               </h1>
               <Image

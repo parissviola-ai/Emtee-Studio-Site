@@ -77,7 +77,7 @@ export default function MainMenuBar() {
                 href="/artist-roster-releases"
                 className={desktopMenuLinkClass(artistsActive)}
               >
-                Artist Roster & Releases
+                Artist
               </Link>
 
               <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
@@ -110,7 +110,7 @@ export default function MainMenuBar() {
             </div>
 
             <Link href="/artist-roster-releases" className={[navLinkClass("/artist-roster-releases"), "sm:hidden"].join(" ")}>
-              Artists
+              Artist
             </Link>
             {ARTIST_LINKS.map((item) => (
               <Link key={item.label} href={item.href} className={[navLinkClass(item.href), "sm:hidden"].join(" ")}>

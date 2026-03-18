@@ -91,8 +91,8 @@ export default function ArtistRosterReleasesPage() {
           </div>
           <div className="mt-3 flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">
-                Artist Roster & Releases
+              <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+                Artist Supported Through Our Resources
               </h1>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-700 sm:text-base">
                 Two categories are shown below: direct EMTEE roster artists, and artists supported through
@@ -113,12 +113,20 @@ export default function ArtistRosterReleasesPage() {
           <div className="rounded-full border border-black/12 bg-white px-4 py-2 text-xs font-semibold tracking-[0.14em] text-black/65">
             Direct Roster + Resource-Supported Artists
           </div>
-          <Link
-            href="/rooms/front"
-            className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
-          >
-            Back to Lobby
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/artist-roster-releases/case-studies-2"
+              className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/12 px-5 py-2 text-sm font-semibold text-[#6f511a] transition hover:bg-[#d6ae66]/20"
+            >
+              Case Study 2
+            </Link>
+            <Link
+              href="/rooms/front"
+              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
+            >
+              Back to Lobby
+            </Link>
+          </div>
         </div>
 
         <section className="mt-8">

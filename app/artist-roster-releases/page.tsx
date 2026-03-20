@@ -19,6 +19,9 @@ type SupportedArtist = {
   supportLane: string;
   note: string;
   caseStudyHref?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  imagePosition?: string;
 };
 
 const DIRECT_ROSTER: RosterItem[] = [
@@ -52,25 +55,275 @@ const DIRECT_ROSTER: RosterItem[] = [
 
 const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
   {
+    artist: "Lil Durk",
+    supportLane: "Music Department",
+    note: "Co-production on “Think You Glowed.”",
+    imageSrc: "/news/thinkyouglowed-opt.jpg",
+    imageAlt: "Lil Durk - Think You Glowed artwork",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "50 Cent",
+    supportLane: "Live Performance",
+    note: "Yanchan Produced opened up for him during the “Final Lap” tour in Mumbai.",
+    imageSrc: "https://images.lifestyleasia.com/wp-content/uploads/sites/7/2023/07/10141737/50-Cent-Final-Lap-tour-1600x900.jpg?tr=w-1600",
+    imageAlt: "50 Cent Final Lap tour artwork",
+    imagePosition: "center 22%",
+  },
+  {
+    artist: "Russ",
+    supportLane: "Music Department",
+    note: "Co-production on “The Wind.”",
+    imageSrc: "https://yt3.googleusercontent.com/f16R_n3YKPthxphDOdHNX9qE1c8-1gN67Ax4uARDL_n0K0nCqMTdNroE-fBhbuA_ouU48wE9yBY=s900-c-k-c0x00ffffff-no-rj",
+    imageAlt: "Russ artwork",
+    imagePosition: "center 20%",
+  },
+  {
+    artist: "Shruti Hassan",
+    supportLane: "Music Department",
+    note: "Production + writing on “Inimel.”",
+    imageSrc: "https://i.ytimg.com/vi/IIat8oxEIbE/maxresdefault.jpg",
+    imageAlt: "Shruti Haasan artwork",
+    imagePosition: "center 24%",
+  },
+  {
+    artist: "Hanumankind",
+    supportLane: "Music Department",
+    note: "Collaborated in the studio.",
+    imageSrc: "https://commons.wikimedia.org/wiki/Special:FilePath/2025%20cover%20photo%20Hanumankind.jpg",
+    imageAlt: "Hanumankind portrait",
+    imagePosition: "center top",
+  },
+  {
+    artist: "Killy",
+    supportLane: "Music Department",
+    note: "Collaborated in the studio.",
+    imageSrc: "https://i.scdn.co/image/ab676161000051745e7e0070e0e8ab2e3e44917f",
+    imageAlt: "Killy portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Pressa",
+    supportLane: "Music Department",
+    note: "Collaborated in the studio.",
+    imageSrc: "https://shiftermagazine.com/wp-content/uploads/2022/09/Pressa-featured.jpg",
+    imageAlt: "Pressa portrait",
+    imagePosition: "center 20%",
+  },
+  {
+    artist: "Charlie B",
+    supportLane: "Music Department",
+    note: "Released a collaboration project.",
+    imageSrc: "https://i.scdn.co/image/ab67616d0000b27389a4cc45a9b423e83ffda3f2",
+    imageAlt: "Charlie B artwork",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Bugus",
+    supportLane: "Live Performance",
+    note: "EMG roster artist toured with him as opening act during his first Canadian tour.",
+    imageSrc: "https://www.melodicmag.com/wp-content/uploads/2019/05/Bugus-Diemon-Color-hires-web-2-683x1024.jpg.webp",
+    imageAlt: "Bugus portrait",
+    imagePosition: "center 16%",
+  },
+  {
+    artist: "Karl Wolf",
+    supportLane: "Live Performance",
+    note: "EMG roster artists toured with him as opening act during his “DIY Tour.”",
+    imageSrc: "https://i.ytimg.com/vi/k6ARKKvNaRg/sddefault.jpg?v=6339cf8c",
+    imageAlt: "Karl Wolf artwork",
+    imagePosition: "center 22%",
+  },
+  {
+    artist: "Yung Tory",
+    supportLane: "Music Department",
+    note: "Collaborated in the studio.",
+    imageSrc: "https://hiphopcanada.com/wp-content/uploads/2021/07/yung-tory-1200x675-1.jpg",
+    imageAlt: "Yung Tory portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Kristina Maria",
+    supportLane: "Music Department",
+    note: "6-month sound development alongside her manager Vito Luprano, Celine Dion’s former manager.",
+    imageSrc: "https://r2.theaudiodb.com/images/media/artist/widethumb/qpquvu1545303993.jpg/medium",
+    imageAlt: "Kristina Maria portrait",
+    imagePosition: "center 20%",
+  },
+  {
+    artist: "Birdman",
+    supportLane: "Business Department",
+    note: "Signed an artist for Birdman to executive produce for an EMG artist.",
+    imageSrc: "https://preview.redd.it/jokes-aside-how-good-a-rapper-would-you-say-baby-birdman-is-v0-i8yuz03q2mn81.jpg?auto=webp&s=14e3bafe57ef32c64edb8e831bf23a91b0d875e1",
+    imageAlt: "Birdman portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Caskey",
+    supportLane: "Music Department",
+    note: "Collaborated in the studio.",
+    imageSrc: "https://s1.ticketm.net/dam/a/8de/c4a53e1e-6eec-497e-a203-b1b2c05908de_RETINA_PORTRAIT_3_2.jpg",
+    imageAlt: "Caskey portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Jacquees",
+    supportLane: "A&R / Sales Department",
+    note: "Assistant A&R support.",
+    imageSrc: "https://theshaderoom.com/wp-content/uploads/2025/05/Jacquees-Baby-Snow-Twin-It-Up-In-Icy-Chains-For-His-9-Month-Milestone-Flicks-e1746844020106.jpg",
+    imageAlt: "Jacquees portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Austin Mahone",
+    supportLane: "A&R / Sales Department",
+    note: "Assistant A&R support.",
+    imageSrc: "https://m.media-amazon.com/images/M/MV5BNjg4NTUwNDgtNWY2Mi00ZTIzLThiZDEtYWI3NDY0NjY2MDU3XkEyXkFqcGc@._V1_.jpg",
+    imageAlt: "Austin Mahone portrait",
+    imagePosition: "center 14%",
+  },
+  {
+    artist: "London On Da Track",
+    supportLane: "Business Department",
+    note: "Business management support, assistant A&R support, and label deal negotiation.",
+    imageSrc: "https://m.media-amazon.com/images/M/MV5BMjlkMWZhYzktOWEwOS00YTEzLTgxOGItYzZkZDNhNmJjN2Y1XkEyXkFqcGc@._V1_.jpg",
+    imageAlt: "London On Da Track portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Rich Homie Quan",
+    supportLane: "A&R / Sales Department",
+    note: "Assistant A&R support.",
+    imageSrc: "https://www.rollingstone.com/wp-content/uploads/2024/09/rich-homie-quan-obit.jpg?w=1581&h=1054&crop=1",
+    imageAlt: "Rich Homie Quan portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Yung Thug",
+    supportLane: "A&R / Sales Department",
+    note: "Assistant A&R support.",
+    imageSrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjJSHhUY0pvkgVZfBvGyVF2sH5_prNXEvetA&s",
+    imageAlt: "Young Thug portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Charle$ (WolfieRaps)",
+    supportLane: "Music Department",
+    note: "Production + writing on “Personal.”",
+    imageSrc: "https://i.ytimg.com/vi/XdJRxrdB66o/maxresdefault.jpg",
+    imageAlt: "Charle$ artwork",
+    imagePosition: "center 22%",
+  },
+  {
+    artist: "Dom Vallie",
+    supportLane: "Orange Room",
+    note: "Orange Room Session.",
+    imageSrc: "https://images.genius.com/b5bebe5fb2a22e2dbe6937168283cd6c.1000x1000x1.jpg",
+    imageAlt: "Dom Vallie artwork",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Omega",
+    supportLane: "Orange Room",
+    note: "Orange Room Session.",
+    imageSrc: "https://r2.theaudiodb.com/images/media/artist/thumb/ytrqry1429549354.jpg",
+    imageAlt: "Omega portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Kwazii",
+    supportLane: "Orange Room",
+    note: "Orange Room Session, with a single coming soon.",
+    imageSrc: "https://www.socanmagazine.ca/wp-content/uploads/2025/03/Kwazii_2025_Banner.jpg",
+    imageAlt: "Kwazii artwork",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "TOME",
+    supportLane: "Music Department",
+    note: "Production on “Have Fun.”",
+    imageSrc: "https://www.shedoesthecity.com/wp-content/uploads/files/2021/09/Tome-copy.jpg",
+    imageAlt: "TOME portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Aqyila",
+    supportLane: "Music Department",
+    note: "Production on “Believe.”",
+    imageSrc: "https://static.wixstatic.com/media/ec807a_21e69783cd104aed8e2c05bfd9e9a2d0~mv2.jpg/v1/fill/w_980,h_980,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ec807a_21e69783cd104aed8e2c05bfd9e9a2d0~mv2.jpg",
+    imageAlt: "Aqyila portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Trey Joshua",
+    supportLane: "Music Department",
+    note: "Production on “Need a Friend.”",
+    imageSrc: "https://static.wixstatic.com/media/d759fc_ccc2ac10428b498d98d2d1aa1134b385~mv2.jpg/v1/fill/w_980,h_1470,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/d759fc_ccc2ac10428b498d98d2d1aa1134b385~mv2.jpg",
+    imageAlt: "Trey Joshua portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Saukrates",
+    supportLane: "Music Department",
+    note: "Production on “Shine On.”",
+    imageSrc: "https://welcometothemusic.com/wp-content/uploads/2025/01/Saukrates-Toronto-vs-Everybody-promo-pic.jpg",
+    imageAlt: "Saukrates portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Pilla B",
+    supportLane: "Music Department",
+    note: "Production on “I Seen It.”",
+    imageSrc: "https://hiphopcanada.com/wp-content/uploads/2018/10/pilla-b-1200w-1.jpg",
+    imageAlt: "Pilla B portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "Jonita Gandhi",
+    supportLane: "Music Department",
+    note: "Production on “Beprwai.”",
+    imageSrc: "/news/jonitabeparwai-opt.jpg",
+    imageAlt: "Jonita Gandhi - Beparwai artwork",
+  },
+  {
+    artist: "Anjulie",
+    supportLane: "Music Department",
+    note: "Production on “Chai & Sunshine.”",
+    imageSrc: "https://i.ytimg.com/vi/lH3SdlkeudA/mqdefault.jpg",
+    imageAlt: "Chai & Sunshine artwork",
+    imagePosition: "center 20%",
+  },
+  {
+    artist: "Zach Zoya",
+    supportLane: "Music Department",
+    note: "Production on “Hard to Love.”",
+    imageSrc: "https://readrange.com/wp-content/uploads/elementor/thumbs/ZZ-hero-2-1-rgg6zplx91a7gfdyzq0hcilhpf4n1dkato0i15bnyo.jpg",
+    imageAlt: "Zach Zoya portrait",
+    imagePosition: "center 18%",
+  },
+  {
+    artist: "SVDP",
+    supportLane: "Music Department",
+    note: "Production on multiple releases + Mridangam Raps.",
+    imageSrc: "https://g5afoundation.org/culture/wp-content/uploads/2023/08/SVDP-by-Gajan-Balan-1-1-474x324.jpg",
+    imageAlt: "SVDP portrait",
+    imagePosition: "center 18%",
+  },
+  {
     artist: "Fame Holiday",
     supportLane: "Music Department",
-    note: "Resource-supported artist case study through EMTEE department workflows.",
+    note: "Won Song of the Year for “Letter to My Dad” (production + writing), plus production + writing on multiple releases.",
     caseStudyHref: "/case-studies/fame-holiday",
+    imageSrc: "/case-studies/fh-opt.jpg",
+    imageAlt: "Fame Holiday artwork",
   },
   {
-    artist: "Artist Name (Placeholder)",
-    supportLane: "Business Department",
-    note: "Artist supported through strategy, operations, and rollout planning resources.",
-  },
-  {
-    artist: "Artist Name (Placeholder)",
-    supportLane: "Publishing / Distribution Department",
-    note: "Artist supported through publishing and distribution setup resources.",
-  },
-  {
-    artist: "Artist Name (Placeholder)",
-    supportLane: "A&R / Sales Department",
-    note: "Artist supported through CRM, community-building, and conversion resources.",
+    artist: "King Cruff",
+    supportLane: "Orange Room",
+    note: "Collaboration in studio + Orange Room Session.",
+    imageSrc: "https://www.socanmagazine.ca/wp-content/uploads/2025/01/KingCruff_CourtesyUMC_Banner_Scaled.jpg",
+    imageAlt: "King Cruff portrait",
+    imagePosition: "center 18%",
   },
 ];
 
@@ -244,6 +497,20 @@ export default function ArtistRosterReleasesPage() {
                     key={`${item.artist}-${item.supportLane}-${index}`}
                     className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_34px_rgba(0,0,0,0.08)]"
                   >
+                    {item.imageSrc ? (
+                      <div className="overflow-hidden rounded-lg border border-black/8 bg-black/[0.02]">
+                        <Image
+                          src={item.imageSrc}
+                          alt={item.imageAlt ?? `${item.artist} image`}
+                          width={1200}
+                          height={720}
+                          className="aspect-[16/9] w-full object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
+                          draggable={false}
+                        />
+                      </div>
+                    ) : null}
                     <div className="inline-flex rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7c5b20]">
                       {item.supportLane}
                     </div>

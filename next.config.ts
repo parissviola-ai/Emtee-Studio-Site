@@ -6,6 +6,128 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [70, 75],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "commons.wikimedia.org",
+        pathname: "/wiki/Special:FilePath/**",
+      },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.lifestyleasia.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "static.wixstatic.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "yt3.googleusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "shiftermagazine.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.melodicmag.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "hiphopcanada.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "r2.theaudiodb.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "preview.redd.it",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "s1.ticketm.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "theshaderoom.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "m.media-amazon.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.rollingstone.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.genius.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.socanmagazine.ca",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.shedoesthecity.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "welcometothemusic.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "readrange.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "g5afoundation.org",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "bookingagentinfo.com",
+        pathname: "/**",
+      },
+    ],
   },
   async redirects() {
     return [

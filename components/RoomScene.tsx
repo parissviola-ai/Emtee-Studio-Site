@@ -191,11 +191,23 @@ const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-orange-room-session";
 const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
   { src: "/news/aruljuno-opt.jpg", label: "ARUL", isJunoNominated: true, objectPosition: "center 20%" },
   { src: "/news/thinkyouglowed-opt.jpg", label: "Lil Durk - Think You Glowed", objectPosition: "center 18%" },
-  { src: "/rooms/yanchanbiopic-opt.jpg", label: "Russ - The Wind" },
-  { src: "/rooms/yanchancrowd-opt.jpg", label: "Shruti Hassan - Inimel" },
+  {
+    src: "https://yt3.googleusercontent.com/f16R_n3YKPthxphDOdHNX9qE1c8-1gN67Ax4uARDL_n0K0nCqMTdNroE-fBhbuA_ouU48wE9yBY=s900-c-k-c0x00ffffff-no-rj",
+    label: "Russ - The Wind",
+    objectPosition: "center 20%",
+  },
+  {
+    src: "https://i.ytimg.com/vi/IIat8oxEIbE/maxresdefault.jpg",
+    label: "Shruti Hassan - Inimel",
+    objectPosition: "center 24%",
+  },
   { src: "/news/jonitabeparwai-opt.jpg", label: "Jonita - Beparwai" },
   { src: "/news/chaisunshinechart-opt.jpg", label: "Chai & Sunshine", objectPosition: "center 18%" },
-  { src: "/rooms/yanchanbiopic-opt.jpg", label: "SVDP - mrdgm raps" },
+  {
+    src: "https://g5afoundation.org/culture/wp-content/uploads/2023/08/SVDP-by-Gajan-Balan-1-1-474x324.jpg",
+    label: "SVDP - mrdgm raps",
+    objectPosition: "center 18%",
+  },
 ];
 
 function getArrow(direction?: "left" | "right" | "up" | "down") {

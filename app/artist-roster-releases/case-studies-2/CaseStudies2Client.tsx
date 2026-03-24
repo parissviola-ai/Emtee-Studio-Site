@@ -27,7 +27,7 @@ const DEPARTMENT_CASE_CARDS: DepartmentCaseCard[] = [
     lane: "Publishing / Distribution Department",
     imageSrc: "/rooms/Yanchan- Distro Publishing.png",
     imageAlt: "Yanchan publishing and distribution department case card",
-    note: "Publishing and distro lane",
+    note: "Publishing And Distro Lane",
     yearTag: "CS2-01",
     snapshot:
       "Yanchan used EMTEE publishing and distribution support to tighten release structure and set up cleaner catalog operations.",
@@ -45,7 +45,7 @@ const DEPARTMENT_CASE_CARDS: DepartmentCaseCard[] = [
     lane: "Business Department",
     imageSrc: "/rooms/Yanchan- Business .png",
     imageAlt: "Yanchan business department case card",
-    note: "Business strategy lane",
+    note: "Business Strategy Lane",
     yearTag: "CS2-02",
     snapshot:
       "Business support focused on operations setup and decision structure so creative momentum could convert into repeatable execution.",
@@ -63,7 +63,7 @@ const DEPARTMENT_CASE_CARDS: DepartmentCaseCard[] = [
     lane: "A&R / Sales Department",
     imageSrc: "/rooms/Mike Cannz- A&R Sales.png",
     imageAlt: "Mike Cannz A&R and sales department case card",
-    note: "A&R and sales lane",
+    note: "A&R And Sales Lane",
     yearTag: "CS2-03",
     snapshot:
       "Mike Cannz received CRM and community-building support to improve conversion flow, campaign coordination, and partner readiness.",
@@ -82,7 +82,7 @@ const DEPARTMENT_CASE_CARDS: DepartmentCaseCard[] = [
     lane: "Marketing Department",
     imageSrc: "/rooms/Kisaki -Marketing.png",
     imageAlt: "Kisaki marketing department case card",
-    note: "Marketing lane",
+    note: "Marketing Lane",
     yearTag: "CS2-04",
     snapshot:
       "KISAKI's marketing lane emphasized stronger campaign presentation, structured content output, and live set positioning.",
@@ -101,7 +101,7 @@ const DEPARTMENT_CASE_CARDS: DepartmentCaseCard[] = [
     lane: "Music Department",
     imageSrc: "/rooms/Fame-Music.png",
     imageAlt: "Fame Holiday music department case card",
-    note: "Music development lane",
+    note: "Music Development Lane",
     yearTag: "CS2-05",
     snapshot:
       "Fame Holiday's music lane focused on song development and tighter creative direction, backed by cross-department campaign support.",
@@ -297,6 +297,13 @@ export default function CaseStudies2Client() {
                 ))}
               </ul>
               <div className="mt-5 flex flex-wrap gap-2">
+                <Link
+                  href="/case-studies"
+                  onClick={closeCard}
+                  className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
+                >
+                  View All Case Studies
+                </Link>
                 <Link
                   href={activeCard.departmentHref}
                   className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"

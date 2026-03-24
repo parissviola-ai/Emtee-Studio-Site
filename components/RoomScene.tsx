@@ -2430,6 +2430,12 @@ export default function RoomScene({ room }: { room: Room }) {
                       ) : null}
                     </>
                   )}
+                  <Link
+                    href="/case-studies"
+                    className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 hover:text-white"
+                  >
+                    View All Case Studies
+                  </Link>
                 </div>
               </div>
             ) : (

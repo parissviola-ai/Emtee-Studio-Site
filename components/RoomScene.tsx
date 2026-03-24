@@ -517,7 +517,6 @@ export default function RoomScene({ room }: { room: Room }) {
   const [tiltStatus, setTiltStatus] = useState<"idle" | "listening" | "active" | "blocked">("idle");
   const [isSecureContextState, setIsSecureContextState] = useState(false);
   const [mobileTiltPan, setMobileTiltPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [mobileMotionPan, setMobileMotionPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const prefetchedExploreRoutesRef = useRef<Set<string>>(new Set());
   const isMobileViewportRaw = useSyncExternalStore(
     (onStoreChange) => {
@@ -548,9 +547,6 @@ export default function RoomScene({ room }: { room: Room }) {
   const panNextRef = useRef<{ x: number; y: number } | null>(null);
   const tiltPanFrameRef = useRef<number | undefined>(undefined);
   const tiltPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const motionPanFrameRef = useRef<number | undefined>(undefined);
-  const motionPanRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const motionVelocityRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const desktopPanFrameRef = useRef<number | undefined>(undefined);
   const desktopPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
@@ -1035,9 +1031,6 @@ export default function RoomScene({ room }: { room: Room }) {
 
     tiltBaselineRef.current = null;
     tiltFilteredReadingRef.current = null;
-    motionPanRef.current = { x: 0, y: 0 };
-    motionVelocityRef.current = { x: 0, y: 0 };
-    setMobileMotionPan({ x: 0, y: 0 });
     tiltSignalSeenRef.current = false;
     setTiltPermissionNeeded(false);
     setTiltStatus("listening");
@@ -1132,47 +1125,6 @@ export default function RoomScene({ room }: { room: Room }) {
     tiltPanFrameRef.current = window.requestAnimationFrame(animateTiltPan);
   }
 
-  const animateMotionPan = useCallback(() => {
-    const velocity = motionVelocityRef.current;
-    const current = motionPanRef.current;
-    const next = {
-      x: clamp((current.x + velocity.x) * 0.9, -18, 18),
-      y: clamp((current.y + velocity.y) * 0.9, -14, 14),
-    };
-    const nextVelocity = {
-      x: velocity.x * 0.82,
-      y: velocity.y * 0.82,
-    };
-
-    motionPanRef.current = next;
-    motionVelocityRef.current = nextVelocity;
-    setMobileMotionPan(next);
-
-    if (
-      Math.abs(next.x) < 0.15 &&
-      Math.abs(next.y) < 0.15 &&
-      Math.abs(nextVelocity.x) < 0.04 &&
-      Math.abs(nextVelocity.y) < 0.04
-    ) {
-      motionPanFrameRef.current = undefined;
-      motionPanRef.current = { x: 0, y: 0 };
-      motionVelocityRef.current = { x: 0, y: 0 };
-      setMobileMotionPan({ x: 0, y: 0 });
-      return;
-    }
-
-    motionPanFrameRef.current = window.requestAnimationFrame(animateMotionPan);
-  }, []);
-
-  function scheduleMotionPanImpulse(impulse: { x: number; y: number }) {
-    motionVelocityRef.current = {
-      x: clamp(motionVelocityRef.current.x + impulse.x, -2.4, 2.4),
-      y: clamp(motionVelocityRef.current.y + impulse.y, -1.8, 1.8),
-    };
-    if (motionPanFrameRef.current) return;
-    motionPanFrameRef.current = window.requestAnimationFrame(animateMotionPan);
-  }
-
   function isInteractiveTarget(target: EventTarget | null) {
     if (!(target instanceof Element)) return false;
     return !!target.closest("a,button,input,textarea,select,iframe,[data-no-pan]");
@@ -1192,14 +1144,14 @@ export default function RoomScene({ room }: { room: Room }) {
   const maxPanY = rawMaxPanY;
   const displayedPan = isMobileViewport
     ? {
-        x: clamp(mobilePan.x + mobileTiltPan.x + mobileMotionPan.x, -maxPanX, maxPanX),
-        y: clamp(mobilePan.y + mobileTiltPan.y + mobileMotionPan.y, -maxPanY, maxPanY),
+        x: clamp(mobilePan.x + mobileTiltPan.x, -maxPanX, maxPanX),
+        y: clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
   const displayedHotspotPan = isMobileViewport
     ? {
-        x: clamp(mobilePan.x + mobileTiltPan.x * 0.82 + mobileMotionPan.x * 0.58, -maxPanX, maxPanX),
-        y: clamp(mobilePan.y + mobileTiltPan.y * 0.86 + mobileMotionPan.y * 0.62, -maxPanY, maxPanY),
+        x: clamp(mobilePan.x + mobileTiltPan.x * 0.82, -maxPanX, maxPanX),
+        y: clamp(mobilePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
 
@@ -1255,9 +1207,6 @@ export default function RoomScene({ room }: { room: Room }) {
       }
       if (tiltPanFrameRef.current) {
         window.cancelAnimationFrame(tiltPanFrameRef.current);
-      }
-      if (motionPanFrameRef.current) {
-        window.cancelAnimationFrame(motionPanFrameRef.current);
       }
       if (desktopPanFrame) {
         window.cancelAnimationFrame(desktopPanFrame);
@@ -1381,20 +1330,13 @@ export default function RoomScene({ room }: { room: Room }) {
   useEffect(() => {
     if (!isMobileViewport || !tiltEnabled || !canPanRoom) {
       setMobileTiltPan({ x: 0, y: 0 });
-      setMobileMotionPan({ x: 0, y: 0 });
       tiltBaselineRef.current = null;
       tiltFilteredReadingRef.current = null;
       tiltSignalSeenRef.current = false;
       tiltPanTargetRef.current = { x: 0, y: 0 };
-      motionPanRef.current = { x: 0, y: 0 };
-      motionVelocityRef.current = { x: 0, y: 0 };
       if (tiltPanFrameRef.current) {
         window.cancelAnimationFrame(tiltPanFrameRef.current);
         tiltPanFrameRef.current = undefined;
-      }
-      if (motionPanFrameRef.current) {
-        window.cancelAnimationFrame(motionPanFrameRef.current);
-        motionPanFrameRef.current = undefined;
       }
       setTiltStatus((prev) => (prev === "blocked" ? prev : "idle"));
       return;
@@ -1463,29 +1405,12 @@ export default function RoomScene({ room }: { room: Room }) {
       }
     }, 1500);
 
-    function handleDeviceMotion(event: DeviceMotionEvent) {
-      const acceleration = event.acceleration ?? event.accelerationIncludingGravity;
-      if (!acceleration) return;
-
-      const rawX = acceleration.x ?? 0;
-      const rawY = acceleration.y ?? 0;
-      const impulseScale = 0.16;
-      const deadZone = 0.18;
-      const impulseX = Math.abs(rawX) < deadZone ? 0 : clamp(rawX * impulseScale, -0.75, 0.75);
-      const impulseY = Math.abs(rawY) < deadZone ? 0 : clamp(rawY * impulseScale, -0.55, 0.55);
-
-      if (impulseX === 0 && impulseY === 0) return;
-      scheduleMotionPanImpulse({ x: impulseX, y: impulseY });
-    }
-
     window.addEventListener("deviceorientation", handleDeviceOrientation, true);
     window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
-    window.addEventListener("devicemotion", handleDeviceMotion, true);
     return () => {
       window.clearTimeout(blockTimer);
       window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
       window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
-      window.removeEventListener("devicemotion", handleDeviceMotion, true);
     };
   }, [canPanRoom, isMobileViewport, maxPanX, maxPanY, mobilePan.x, mobilePan.y, tiltEnabled]);
 
@@ -2075,11 +2000,8 @@ export default function RoomScene({ room }: { room: Room }) {
               onClick={() => {
                 setTiltEnabled(false);
                 setMobileTiltPan({ x: 0, y: 0 });
-                setMobileMotionPan({ x: 0, y: 0 });
                 tiltBaselineRef.current = null;
                 tiltFilteredReadingRef.current = null;
-                motionPanRef.current = { x: 0, y: 0 };
-                motionVelocityRef.current = { x: 0, y: 0 };
                 tiltSignalSeenRef.current = false;
                 setTiltStatus("idle");
               }}

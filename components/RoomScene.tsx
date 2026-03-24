@@ -1346,14 +1346,19 @@ export default function RoomScene({ room }: { room: Room }) {
       }
 
       const baseline = tiltBaselineRef.current;
+      const baselineDrift = 0.035;
+      tiltBaselineRef.current = {
+        beta: baseline.beta + (nextReading.beta - baseline.beta) * baselineDrift,
+        gamma: baseline.gamma + (nextReading.gamma - baseline.gamma) * baselineDrift,
+      };
       const deltaGamma = nextReading.gamma - baseline.gamma;
       const deltaBeta = nextReading.beta - baseline.beta;
-      const normalizedGamma = clamp(deltaGamma / 18, -1, 1);
+      const normalizedGamma = clamp(deltaGamma / 14, -1, 1);
       const normalizedBeta = clamp(deltaBeta / 16, -1, 1);
-      const shapedGamma = Math.sign(normalizedGamma) * Math.pow(Math.abs(normalizedGamma), 1.15);
+      const shapedGamma = Math.sign(normalizedGamma) * Math.pow(Math.abs(normalizedGamma), 1.08);
       const shapedBeta = Math.sign(normalizedBeta) * Math.pow(Math.abs(normalizedBeta), 1.15);
-      const xRange = maxPanX * 0.82;
-      const yRange = maxPanY * 0.72;
+      const xRange = maxPanX * 0.98;
+      const yRange = maxPanY * 0.86;
       const nextX = clamp(
         clamp(-shapedGamma * xRange, -xRange, xRange),
         -maxPanX - mobilePan.x,

@@ -41,6 +41,23 @@ export const publishingDistroRoom: Room = {
       secondaryHref: "/connect",
     },
   },
+  {
+    id: "split-sheet-set-up",
+    label: "Split Sheet Set Up",
+    x: 52,
+    y: 38,
+    direction: "down",
+    variant: "dot",
+    modal: {
+      title: "Split Sheet Set Up",
+      body:
+        "Includes:\n• Split sheet development for your releases\n• Everyone involved in the project gets their share of the song",
+      primaryLabel: "Request a Consultation",
+      primaryHref: "/consultation",
+      secondaryLabel: "Resource Packages",
+      secondaryHref: "/connect",
+    },
+  },
 
     ],
     

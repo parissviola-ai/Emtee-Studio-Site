@@ -2,13 +2,14 @@
 
 import NextImage from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { getResourceContext } from "@/data/resource-context";
 
 export type Hotspot = {
   id: string;
   label: string;
+  hoverLabel?: string;
   x: number;
   y: number;
   positions?: Partial<Record<"mobile" | "tablet" | "laptop" | "desktop", { x: number; y: number }>>;
@@ -51,6 +52,7 @@ type Room = {
   title?: string;
   backgroundImage: string;
   backgroundVideo?: string;
+  backgroundVideoMobile?: string;
   hotspots: Hotspot[];
 };
 
@@ -71,14 +73,14 @@ type InfoCard = {
 
 const EXPLORE_ROOMS = [
   { label: "Request A Consultation", href: "/consultation" },
-  { label: "Labels and Partners", href: "/labels-partners" },
+  { label: "Labels and Partners", href: "/artist-roster-releases#partners" },
   { label: "Lobby", href: "/rooms/front" },
   { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
   { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
   { label: "Marketing Department", href: "/rooms/EMTEEMarketingDept" },
   { label: "Publishing / Distribution Department", href: "/rooms/EMTEEPublishingandDistroDept" },
   { label: "A&R / Sales Department", href: "/rooms/EMTEEARSalesDept" },
-  { label: "Yanchan Produced", href: "/rooms/orange" },
+  { label: "Dirty Elephant Studio", href: "/rooms/orange" },
   { label: "Ten Ten Entertainment", href: "/rooms/live" },
   { label: "Steeped Dream Studio", href: "/rooms/quiet" },
 ];
@@ -92,6 +94,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/cdshop.png": { w: 3840, h: 2160 },
   "/rooms/marketing1.png": { w: 3840, h: 2160 },
+  "/rooms/finalfinalmarketing.png": { w: 4320, h: 2430 },
   "/rooms/front.jpg": { w: 2048, h: 1365 },
   "/rooms/live-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/kymteabg-opt.jpg": { w: 1536, h: 1024 },
@@ -222,6 +225,39 @@ function getArrow(direction?: "left" | "right" | "up" | "down") {
     default:
       return "←";
   }
+}
+
+function HotspotLabelText({
+  spot,
+  showHoverLabel,
+}: {
+  spot: Hotspot;
+  showHoverLabel: boolean;
+}) {
+  if (!spot.hoverLabel) {
+    return <>{spot.label}</>;
+  }
+
+  return (
+    <span className="relative inline-flex items-center">
+      <span
+        className={[
+          "transition-all duration-200",
+          showHoverLabel ? "opacity-0" : "opacity-100",
+        ].join(" ")}
+      >
+        {spot.label}
+      </span>
+      <span
+        className={[
+          "absolute inset-0 transition-all duration-200",
+          showHoverLabel ? "opacity-100" : "opacity-0",
+        ].join(" ")}
+      >
+        {spot.hoverLabel}
+      </span>
+    </span>
+  );
 }
 
 function tooltipPosition(
@@ -454,6 +490,7 @@ function parseIncludesFromModalBody(text: string) {
 
 export default function RoomScene({ room }: { room: Room }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const isLiveRoom = room.slug === "live";
   const hasHydrated = useSyncExternalStore(
     () => () => {},
@@ -474,6 +511,12 @@ export default function RoomScene({ room }: { room: Room }) {
   const [isLobbyExploreHoverOpen, setIsLobbyExploreHoverOpen] = useState(false);
   const [showMoreHotspotsByRoom, setShowMoreHotspotsByRoom] = useState<Record<string, boolean>>({});
   const [expandedPackageIncludesByModal, setExpandedPackageIncludesByModal] = useState<Record<string, boolean>>({});
+  const [tiltEnabled, setTiltEnabled] = useState(false);
+  const [tiltAvailable, setTiltAvailable] = useState(false);
+  const [tiltPermissionNeeded, setTiltPermissionNeeded] = useState(false);
+  const [tiltStatus, setTiltStatus] = useState<"idle" | "listening" | "active" | "blocked">("idle");
+  const [isSecureContextState, setIsSecureContextState] = useState(false);
+  const [mobileTiltPan, setMobileTiltPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const prefetchedExploreRoutesRef = useRef<Set<string>>(new Set());
   const isMobileViewportRaw = useSyncExternalStore(
     (onStoreChange) => {
@@ -502,6 +545,8 @@ export default function RoomScene({ room }: { room: Room }) {
   const touchPanStartRef = useRef<{ x: number; y: number; panX: number; panY: number; dragging: boolean } | null>(null);
   const panFrameRef = useRef<number | undefined>(undefined);
   const panNextRef = useRef<{ x: number; y: number } | null>(null);
+  const desktopPanFrameRef = useRef<number | undefined>(undefined);
+  const desktopPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const imageNaturalSizeCacheRef = useRef<Record<string, { w: number; h: number }>>({});
   const imageMetricsCacheRef = useRef<Record<string, CoverImageMetrics>>({});
@@ -510,7 +555,10 @@ export default function RoomScene({ room }: { room: Room }) {
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
   const orangePreviewHideTimerRef = useRef<number | undefined>(undefined);
   const lobbyExploreHoverCloseTimerRef = useRef<number | undefined>(undefined);
+  const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
+  const tiltBaselineRef = useRef<{ beta: number; gamma: number } | null>(null);
+  const tiltSignalSeenRef = useRef(false);
 
   // video audio state
   const [videoMuted, setVideoMuted] = useState(true);
@@ -533,6 +581,13 @@ export default function RoomScene({ room }: { room: Room }) {
   }
 
   function closeModal() {
+    if (room.slug === "front" && typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has("modal")) {
+        url.searchParams.delete("modal");
+        router.replace(`${url.pathname}${url.search}${url.hash}`, { scroll: false });
+      }
+    }
     if (room.slug === "front" && lobbyStartHereOpenedRef.current) {
       lobbyStartHereOpenedRef.current = false;
       setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: true }));
@@ -547,6 +602,17 @@ export default function RoomScene({ room }: { room: Room }) {
     setRevealStep(0);
     setVideoMuted(true);
   }
+
+  useEffect(() => {
+    if (room.slug !== "front") return;
+    const modalId = searchParams.get("modal");
+    if (!modalId) return;
+    const targetSpot = room.hotspots.find((spot) => spot.id === modalId);
+    if (!targetSpot?.modal) return;
+    if (activeModal?.title === targetSpot.modal.title) return;
+    setModalBackModal(null);
+    openModal(targetSpot.modal);
+  }, [activeModal?.title, room.hotspots, room.slug, searchParams]);
 
   // YouTube IFrame Player API (postMessage) unmute
   function unmuteYoutube() {
@@ -575,6 +641,23 @@ export default function RoomScene({ room }: { room: Room }) {
       video.removeAttribute("muted");
     });
     setIsOrangePreviewMuted(false);
+  }, []);
+
+  const setBackgroundVideoNode = useCallback((node: HTMLVideoElement | null) => {
+    backgroundVideoRef.current = node;
+    if (!node) return;
+    node.defaultMuted = true;
+    node.muted = true;
+    node.autoplay = true;
+    node.loop = true;
+    node.playsInline = true;
+    node.preload = "auto";
+    node.setAttribute("autoplay", "");
+    node.setAttribute("muted", "");
+    node.setAttribute("loop", "");
+    node.setAttribute("playsinline", "");
+    node.setAttribute("webkit-playsinline", "");
+    node.setAttribute("preload", "auto");
   }, []);
 
   const toggleOrangePreviewMute = useCallback(() => {
@@ -680,6 +763,7 @@ export default function RoomScene({ room }: { room: Room }) {
     ? ROOM_SEQUENCE.find((item) => item.href === previousRoomHref)
     : null;
   const [mobilePanByContext, setMobilePanByContext] = useState<Record<string, { x: number; y: number }>>({});
+  const [desktopCursorPan, setDesktopCursorPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const viewportKeyRaw = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -725,7 +809,6 @@ export default function RoomScene({ room }: { room: Room }) {
   const isOrangeModal = isOrangeRoom && !!activeModal;
   const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Apply For An Orange Room Session";
   const isStartHereModal = activeModal?.title === "Start Here";
-  const howYouStartModalTarget = isStartHereModal ? room.hotspots.find((spot) => spot.id === "how-you-start") : undefined;
   const isLiveRoomModal = room.slug === "live" && !!activeModal && !isPackageGridModal;
   const shouldShowOrangeSessionPreview = isOrangeRoom && !isMobileViewport && (isOrangeSessionPreviewVisible || isOrangeSessionModalOpen);
   const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
@@ -746,7 +829,10 @@ export default function RoomScene({ room }: { room: Room }) {
   const resolvedCornerLogoAlt = activeModal?.cornerLogoAlt ?? (shouldShowDefaultEmteeCornerLogo ? "EMTEE logo" : undefined);
   const [viewportW, viewportH] = viewportKey.split("x").map((n) => Number(n) || 0);
   const viewportKnown = viewportW > 0 && viewportH > 0;
-  const hotspotBreakpoint = getHotspotBreakpoint(viewportW);
+  const hotspotBreakpoint =
+    room.slug === "front" && viewportW >= 1024 && viewportW < 1728
+      ? "laptop"
+      : getHotspotBreakpoint(viewportW);
   const resolvedHotspots = useMemo(
     () =>
       room.hotspots.map((spot) => {
@@ -780,6 +866,11 @@ export default function RoomScene({ room }: { room: Room }) {
       }),
     [hotspotBreakpoint, room.hotspots, room.slug]
   );
+  const lobbyWhoWeAreSpot = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "About") : undefined;
+  const lobbyStartHereSpot =
+    isLobbyRoom && lobbyWhoWeAreSpot
+      ? { ...lobbyWhoWeAreSpot, id: "start-here-floating", x: lobbyWhoWeAreSpot.x, y: Math.min(lobbyWhoWeAreSpot.y + 15, 92) }
+      : undefined;
   const isPortraitViewport = viewportH >= viewportW;
   const mobileOrientationKey = isPortraitViewport ? "portrait" : "landscape";
   const panContextKey = `${room.slug}:${isMobileViewport ? mobileOrientationKey : "desktop"}`;
@@ -789,8 +880,17 @@ export default function RoomScene({ room }: { room: Room }) {
   const navPillClass = "inline-flex h-9 sm:h-7 items-center whitespace-nowrap rounded-full border border-white/85 bg-black/10 px-4 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/30 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.2)] group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.52)]";
   const compactHotspotUi = viewportW > 0 && viewportW < 1280;
   const eagerBackgroundLoad = room.slug === "front" || room.slug === "live";
+  const isMusicRoom = room.slug === "EMTEEMusicDept";
+  const isMarketingRoomZoomedOut = room.slug === "EMTEEMarketingDept";
   const mobileSceneScale = 1;
-  const desktopSceneScale = room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom ? 1 : 1.06;
+  const desktopSceneScale =
+    room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom
+      ? 1
+        : isMusicRoom
+          ? 1
+        : isMarketingRoomZoomedOut
+          ? 1
+        : 1.06;
   const sceneScale = isMobileViewport ? mobileSceneScale : desktopSceneScale;
   const backgroundObjectPositionY =
     room.slug === "EMTEEWebDesign"
@@ -803,8 +903,9 @@ export default function RoomScene({ room }: { room: Room }) {
   const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "live" ? 50 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && isMobileViewport ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
+  const activeBackgroundVideo = isMobileViewport && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const useContainedBackground = false;
-  const shouldRenderStaticBackgroundImage = !(isLiveRoom && !!room.backgroundVideo);
+  const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
   const parsedModalBody = useMemo(
@@ -843,6 +944,13 @@ export default function RoomScene({ room }: { room: Room }) {
     [backgroundImageSrc, imageNaturalSize, isMobileViewport, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
   );
   const requiresMetricBasedHotspots = isMobileViewport || useContainedBackground;
+  const desktopCoverMetrics = useMemo(
+    () =>
+      !isMobileViewport && imageNaturalSize
+        ? getCoverImageMetrics(viewportW, viewportH, imageNaturalSize.w, imageNaturalSize.h, sceneScale, "cover")
+        : null,
+    [imageNaturalSize, isMobileViewport, sceneScale, viewportH, viewportW]
+  );
   const sceneReady =
     hasHydrated && viewportKnown && !!imageNaturalSize && (!requiresMetricBasedHotspots || !!mobileImageMetrics);
   const hotspotsReady =
@@ -853,11 +961,13 @@ export default function RoomScene({ room }: { room: Room }) {
       resolvedHotspots.filter((spot) => {
         if (spot.hidden) return false;
         if (spot.id === "next-room") return false;
+        if (isLobbyRoom && isMobileViewport && spot.id === "explore") return false;
+        if (isLobbyRoom && !showAllRoomHotspots) return false;
         if (!isHotspotTierPilotRoom) return true;
         if (showAllRoomHotspots) return true;
         return (spot.tier ?? "core") === "core";
       }),
-    [isHotspotTierPilotRoom, resolvedHotspots, showAllRoomHotspots]
+    [isHotspotTierPilotRoom, isLobbyRoom, isMobileViewport, resolvedHotspots, showAllRoomHotspots]
   );
   const connectableDots = visibleHotspots.filter((spot) => spot.variant === "dot");
   const showDotConnectors =
@@ -890,6 +1000,37 @@ export default function RoomScene({ room }: { room: Room }) {
 
   function clamp(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  async function enableTiltPan() {
+    if (typeof window === "undefined") return;
+    if (!("DeviceOrientationEvent" in window)) {
+      setTiltStatus("blocked");
+      return;
+    }
+
+    const DeviceOrientationEventWithPermission = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+      requestPermission?: () => Promise<"granted" | "denied">;
+    };
+
+    if (typeof DeviceOrientationEventWithPermission.requestPermission === "function") {
+      try {
+        const permission = await DeviceOrientationEventWithPermission.requestPermission();
+        if (permission !== "granted") {
+          setTiltStatus("blocked");
+          return;
+        }
+      } catch {
+        setTiltStatus("blocked");
+        return;
+      }
+    }
+
+    tiltBaselineRef.current = null;
+    tiltSignalSeenRef.current = false;
+    setTiltPermissionNeeded(false);
+    setTiltStatus("listening");
+    setTiltEnabled(true);
   }
 
   const clickedHotspotId = clickedHotspotIdByRoom[room.slug] ?? null;
@@ -966,16 +1107,23 @@ export default function RoomScene({ room }: { room: Room }) {
   }
 
   const canPanRoom = isMobileViewport && !isModalOpen && !exploreOpen;
+  const canDesktopCursorPan =
+    !isMobileViewport &&
+    room.slug === "front" &&
+    !isModalOpen &&
+    !exploreOpen &&
+    !!desktopCoverMetrics &&
+    desktopCoverMetrics.maxPanX > 0;
   const rawMaxPanX = mobileImageMetrics?.maxPanX ?? 0;
   const rawMaxPanY = mobileImageMetrics?.maxPanY ?? 0;
   const maxPanX = rawMaxPanX;
   const maxPanY = rawMaxPanY;
   const displayedPan = isMobileViewport
     ? {
-        x: clamp(mobilePan.x, -maxPanX, maxPanX),
-        y: clamp(mobilePan.y, -maxPanY, maxPanY),
+        x: clamp(mobilePan.x + mobileTiltPan.x, -maxPanX, maxPanX),
+        y: clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
       }
-    : mobilePan;
+    : { x: 0, y: 0 };
 
   function getMobileHotspotStyle(spot: Hotspot) {
     const shiftConversationBlueprintRight =
@@ -1014,6 +1162,7 @@ export default function RoomScene({ room }: { room: Room }) {
     const timers = cardToggleTimerRef.current;
     const clickedHotspotTimer = clickedHotspotTimerRef.current;
     const panFrame = panFrameRef.current;
+    const desktopPanFrame = desktopPanFrameRef.current;
     return () => {
       Object.values(timers).forEach((t) => {
         if (t) window.clearTimeout(t);
@@ -1024,8 +1173,37 @@ export default function RoomScene({ room }: { room: Room }) {
       if (panFrame) {
         window.cancelAnimationFrame(panFrame);
       }
+      if (desktopPanFrame) {
+        window.cancelAnimationFrame(desktopPanFrame);
+      }
     };
   }, []);
+
+  const animateDesktopPan = useCallback(() => {
+    const target = desktopPanTargetRef.current;
+    setDesktopCursorPan((prev) => {
+      const nextX = prev.x + (target.x - prev.x) * 0.16;
+      const nextY = prev.y + (target.y - prev.y) * 0.16;
+      if (Math.abs(nextX - target.x) < 0.25 && Math.abs(nextY - target.y) < 0.25) {
+        desktopPanFrameRef.current = undefined;
+        return { x: target.x, y: target.y };
+      }
+      desktopPanFrameRef.current = window.requestAnimationFrame(animateDesktopPan);
+      return { x: nextX, y: nextY };
+    });
+  }, []);
+
+  function scheduleDesktopPan(nextPan: { x: number; y: number }) {
+    desktopPanTargetRef.current = nextPan;
+    if (desktopPanFrameRef.current) return;
+    desktopPanFrameRef.current = window.requestAnimationFrame(animateDesktopPan);
+  }
+
+  useEffect(() => {
+    if (canDesktopCursorPan) return;
+    desktopPanTargetRef.current = { x: 0, y: 0 };
+    setDesktopCursorPan({ x: 0, y: 0 });
+  }, [canDesktopCursorPan, room.slug]);
 
   useEffect(() => {
     if (room.slug === "front") return;
@@ -1075,6 +1253,84 @@ export default function RoomScene({ room }: { room: Room }) {
       setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: raw === "1" }));
     } catch {}
   }, [hasHydrated, isHotspotTierPilotRoom, room.slug]);
+
+  useEffect(() => {
+    if (!isLobbyRoom || !isLobbyExploreHoverOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (lobbyHeaderRef.current?.contains(target)) return;
+      closeLobbyExploreHover();
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [closeLobbyExploreHover, isLobbyExploreHoverOpen, isLobbyRoom]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hasDeviceOrientation = "DeviceOrientationEvent" in window;
+    setIsSecureContextState(window.isSecureContext);
+    setTiltAvailable(hasDeviceOrientation);
+    if (!hasDeviceOrientation) return;
+
+    const DeviceOrientationEventWithPermission = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+      requestPermission?: () => Promise<"granted" | "denied">;
+    };
+    setTiltPermissionNeeded(typeof DeviceOrientationEventWithPermission.requestPermission === "function");
+  }, []);
+
+  useEffect(() => {
+    if (!isMobileViewport || !tiltEnabled || !canPanRoom) {
+      setMobileTiltPan({ x: 0, y: 0 });
+      tiltBaselineRef.current = null;
+      tiltSignalSeenRef.current = false;
+      setTiltStatus((prev) => (prev === "blocked" ? prev : "idle"));
+      return;
+    }
+    if (typeof window === "undefined" || !("DeviceOrientationEvent" in window)) return;
+
+    tiltSignalSeenRef.current = false;
+    setTiltStatus("listening");
+
+    function handleDeviceOrientation(event: DeviceOrientationEvent) {
+      if (event.beta == null || event.gamma == null) return;
+      tiltSignalSeenRef.current = true;
+      setTiltStatus("active");
+
+      const nextReading = { beta: event.beta, gamma: event.gamma };
+      if (!tiltBaselineRef.current) {
+        tiltBaselineRef.current = nextReading;
+      }
+
+      const baseline = tiltBaselineRef.current;
+      const deltaGamma = nextReading.gamma - baseline.gamma;
+      const deltaBeta = nextReading.beta - baseline.beta;
+      const xRange = Math.min(maxPanX, 34);
+      const yRange = Math.min(maxPanY, 22);
+      const nextX = clamp((-deltaGamma / 18) * xRange, -xRange, xRange);
+      const nextY = clamp((-deltaBeta / 22) * yRange, -yRange, yRange);
+
+      setMobileTiltPan({ x: nextX, y: nextY });
+    }
+
+    const blockTimer = window.setTimeout(() => {
+      if (!tiltSignalSeenRef.current) {
+        setTiltStatus("blocked");
+      }
+    }, 1500);
+
+    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+    window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
+    return () => {
+      window.clearTimeout(blockTimer);
+      window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
+      window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
+    };
+  }, [canPanRoom, isMobileViewport, maxPanX, maxPanY, tiltEnabled]);
 
   useEffect(() => {
     if (!isOrangeRoom) return;
@@ -1146,8 +1402,8 @@ export default function RoomScene({ room }: { room: Room }) {
     setIsOrangeMobileSessionAudioActive(false);
   }, [isMobileViewport, isOrangeSessionModalOpen]);
 
-  useEffect(() => {
-    if (!isMobileViewport || !room.backgroundVideo) return;
+  useLayoutEffect(() => {
+    if (!isMobileViewport || !activeBackgroundVideo) return;
     const video = backgroundVideoRef.current;
     if (!video) return;
 
@@ -1157,12 +1413,13 @@ export default function RoomScene({ room }: { room: Room }) {
     video.loop = true;
     video.autoplay = true;
     video.playsInline = true;
-    video.setAttribute("autoplay", "true");
-    video.setAttribute("muted", "true");
-    video.setAttribute("loop", "true");
-    video.setAttribute("playsinline", "true");
-    video.setAttribute("webkit-playsinline", "true");
-    video.load();
+    video.preload = "auto";
+    video.setAttribute("preload", "auto");
+    video.setAttribute("autoplay", "");
+    video.setAttribute("muted", "");
+    video.setAttribute("loop", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
 
     const tryPlay = () => {
       if (cancelled) return;
@@ -1173,11 +1430,16 @@ export default function RoomScene({ room }: { room: Room }) {
     };
 
     tryPlay();
+    requestAnimationFrame(tryPlay);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(tryPlay);
+    });
     const retryInterval = window.setInterval(() => {
       if (video.paused && !cancelled) tryPlay();
-    }, 800);
+    }, 250);
     video.addEventListener("loadedmetadata", tryPlay);
     video.addEventListener("canplay", tryPlay);
+    video.addEventListener("canplaythrough", tryPlay);
     video.addEventListener("loadeddata", tryPlay);
     const handleVisibilityOrFocus = () => {
       if (document.visibilityState === "hidden") return;
@@ -1198,6 +1460,7 @@ export default function RoomScene({ room }: { room: Room }) {
       window.clearInterval(retryInterval);
       video.removeEventListener("loadedmetadata", tryPlay);
       video.removeEventListener("canplay", tryPlay);
+      video.removeEventListener("canplaythrough", tryPlay);
       video.removeEventListener("loadeddata", tryPlay);
       document.removeEventListener("visibilitychange", handleVisibilityOrFocus);
       window.removeEventListener("focus", handleVisibilityOrFocus);
@@ -1206,7 +1469,7 @@ export default function RoomScene({ room }: { room: Room }) {
       window.removeEventListener("pointerdown", handleFirstInteraction);
       window.removeEventListener("keydown", handleFirstInteraction);
     };
-  }, [isMobileViewport, room.backgroundVideo, room.slug]);
+  }, [activeBackgroundVideo, isMobileViewport, room.slug]);
 
   useEffect(() => {
     const known = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
@@ -1246,27 +1509,46 @@ export default function RoomScene({ room }: { room: Room }) {
     const isLobbyPill = room.slug === "front" && !isNavigationSpot;
     const isExpanded = true;
     const isWhoWeArePin = room.slug === "front" && spot.id === "About";
+    const isLobbyExplorePin = room.slug === "front" && spot.id === "explore";
+    const isLeftLabelLobbyPill =
+      room.slug === "front" &&
+      (
+        spot.id === "Board Rooms" ||
+        spot.id === "departments" ||
+        spot.id === "Ten Ten Entertainment" ||
+        spot.id === "Dirty Elephant Studios" ||
+        spot.id === "Steeped Dream Studio"
+      );
+    const showLabelOnLeft = isLeftLabelLobbyPill && !isMobileNavigationSpot;
     return (
-      <span className={["group inline-flex items-center", isMobileNavigationSpot ? "flex-row-reverse" : ""].join(" ")}>
+      <span
+        className={[
+          "group inline-flex items-center",
+          isMobileNavigationSpot ? "flex-row-reverse" : "",
+          showLabelOnLeft ? "flex-row-reverse" : "",
+        ].join(" ")}
+      >
         {/* Circle */}
-        <span
-          className={[
-            isNavigationSpot
-              ? `relative ${navCircleClass}`
-              : [
-                  "relative flex items-center justify-center rounded-full border bg-black/10 backdrop-blur-sm",
-                  compactHotspotUi ? "h-7 w-7 sm:h-6 sm:w-6" : "h-8 w-8 sm:h-7 sm:w-7",
-                ].join(" "),
-            isWhoWeArePin
-              ? "border-[#d6ae66]/90 shadow-[0_0_0_2px_rgba(214,174,102,0.28),0_0_22px_rgba(214,174,102,0.6)]"
-              : "border-white/85",
-          ].join(" ")}
-        >
-          <span className="text-xs leading-none">{getArrow(spot.direction)}</span>
-        </span>
+        {!isLobbyExplorePin ? (
+          <span
+            className={[
+              isNavigationSpot
+                ? `relative ${navCircleClass}`
+                : [
+                    "relative flex items-center justify-center rounded-full border bg-black/10 backdrop-blur-sm",
+                    compactHotspotUi ? "h-7 w-7 sm:h-6 sm:w-6" : "h-8 w-8 sm:h-7 sm:w-7",
+                  ].join(" "),
+              isWhoWeArePin
+                ? "border-[#d6ae66]/90 shadow-[0_0_0_2px_rgba(214,174,102,0.28),0_0_22px_rgba(214,174,102,0.6)]"
+                : "border-white/85",
+            ].join(" ")}
+          >
+            <span className="text-xs leading-none">{getArrow(spot.direction)}</span>
+          </span>
+        ) : null}
 
         {/* Label */}
-        <span className={`${isMobileNavigationSpot ? "mr-2" : "ml-2"} ${isNavigationSpot ? navPillClass : "overflow-hidden rounded-full border border-white/85 bg-black/10 text-white backdrop-blur-sm transition-all duration-300 ease-out"} ${
+        <span className={`${isMobileNavigationSpot || showLabelOnLeft ? "mr-2" : "ml-2"} ${isNavigationSpot ? navPillClass : "overflow-hidden rounded-full border border-white/85 bg-black/10 text-white backdrop-blur-sm transition-all duration-300 ease-out"} ${
           isExpanded ? "max-w-[300px]" : "max-w-0 group-hover:max-w-[260px]"
         } ${
           isClickedLabelVisible
@@ -1282,7 +1564,7 @@ export default function RoomScene({ room }: { room: Room }) {
           } ${
             isClickedLabelVisible ? "[text-shadow:0_0_12px_rgba(255,255,255,0.55)]" : ""
           }`}>
-            {spot.label}
+            <HotspotLabelText spot={spot} showHoverLabel={false} />
           </span>
         </span>
       </span>
@@ -1293,6 +1575,7 @@ export default function RoomScene({ room }: { room: Room }) {
     const isClickedLabelVisible = clickedHotspotId === spot.id;
     const isOrangeSessionDot = spot.id === "orange-room-sessions";
     const isMediaRoom = room.slug === "EMTEEMarketingDept";
+    const isBrandDealsDot = room.slug === "EMTEEMarketingDept" && spot.id === "marketing-brand-deals";
     const isLobbyDot = room.slug === "front";
     const isLiveRoomSocialDot =
       room.slug === "live" &&
@@ -1323,6 +1606,8 @@ export default function RoomScene({ room }: { room: Room }) {
       room.slug === "EMTEEWebDesign" && spot.id === "website-design-enter-website";
     const dotBase = isOrangeRoom
       ? "rounded-full bg-[#ff9f3f] shadow-[0_0_0_2px_rgba(255,159,63,0.35),0_0_22px_rgba(255,159,63,0.7)]"
+      : isBrandDealsDot
+        ? "rounded-full bg-black shadow-[0_0_0_2px_rgba(0,0,0,0.34),0_0_18px_rgba(0,0,0,0.45)]"
       : isWebsiteDesignEnterDot
         ? "rounded-full bg-[#d6ae66] shadow-[0_0_0_2px_rgba(214,174,102,0.45),0_0_24px_rgba(214,174,102,0.8)]"
         : isMediaRoom
@@ -1330,6 +1615,8 @@ export default function RoomScene({ room }: { room: Room }) {
         : "rounded-full bg-white shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_18px_rgba(255,255,255,0.55)]";
     const haloBase = isOrangeRoom
       ? "bg-[#ff9f3f]/35"
+      : isBrandDealsDot
+        ? "bg-black/28"
       : isWebsiteDesignEnterDot
         ? "bg-[#d6ae66]/40"
       : isMediaRoom
@@ -1337,6 +1624,8 @@ export default function RoomScene({ room }: { room: Room }) {
           : "bg-white/20";
     const ringBase = isOrangeRoom
       ? "border-[#ff9f3f]/70"
+      : isBrandDealsDot
+          ? "border-black/70"
       : isWebsiteDesignEnterDot
           ? "border-[#d6ae66]/85"
       : isMediaRoom
@@ -1349,29 +1638,22 @@ export default function RoomScene({ room }: { room: Room }) {
         <span className="group relative inline-flex items-center">
           <span
             className={[
-              "relative inline-flex items-center justify-center gap-2 rounded-full px-2.5 py-1.5 text-white",
-              "border border-white/22 bg-black/42 backdrop-blur-sm",
-              "drop-shadow-[0_0_14px_rgba(255,255,255,0.6)] transition-transform duration-200 group-hover:scale-105",
-              isYoutube ? "pr-3" : "pr-2.5",
+              "relative inline-flex items-center justify-center rounded-full text-white",
+              isMobileViewport ? "h-8 w-8" : "h-9 w-9",
+              "border border-white/14 bg-black/24 backdrop-blur-[3px]",
+              "shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_0_16px_rgba(255,255,255,0.14),0_6px_18px_rgba(0,0,0,0.24)] transition-all duration-200",
+              "group-hover:border-white/28 group-hover:bg-black/34 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.18),0_0_22px_rgba(255,255,255,0.22),0_8px_22px_rgba(0,0,0,0.28)]",
             ].join(" ")}
           >
             {isYoutube ? (
-              <span className="inline-flex h-5 w-7 items-center justify-center rounded-[6px] bg-[#FF0033]">
-                <span className="ml-0.5 h-0 w-0 border-y-[5px] border-y-transparent border-l-[8px] border-l-white" />
+              <span className="inline-flex h-4 w-5.5 items-center justify-center rounded-[5px] bg-[#FF0033]/88">
+                <span className="ml-0.5 h-0 w-0 border-y-[4px] border-y-transparent border-l-[6px] border-l-white" />
               </span>
             ) : (
-              <span className="inline-flex items-center justify-center text-[#1ED760]">
-                <SocialIcon label="Spotify" className="h-5 w-5" />
+              <span className="inline-flex items-center justify-center text-[#1ED760]/90">
+                <SocialIcon label="Spotify" className="h-4 w-4" />
               </span>
             )}
-            <span
-              className={[
-                "font-semibold tracking-tight text-white",
-                isMobileViewport ? "text-[13px]" : compactHotspotUi ? "text-[15px]" : "text-[17px]",
-              ].join(" ")}
-            >
-              {liveRoomSocialLabel}
-            </span>
           </span>
         </span>
       );
@@ -1423,7 +1705,7 @@ export default function RoomScene({ room }: { room: Room }) {
             customTooltipOffsetClass,
             isChillOutCommunityDot
               ? "whitespace-pre-line break-words md:whitespace-pre-line rounded-full leading-tight"
-              : "whitespace-normal break-words md:whitespace-nowrap rounded-full leading-tight",
+              : "whitespace-nowrap rounded-full leading-tight",
             "border border-white/18 bg-black/55 backdrop-blur-xl",
             "px-2.5 py-1 font-semibold text-white/85 sm:px-3 sm:py-1.5 md:px-3.5",
             "shadow-[0_12px_40px_rgba(0,0,0,0.45)]",
@@ -1439,7 +1721,7 @@ export default function RoomScene({ room }: { room: Room }) {
           ].join(" ")}
           style={{ maxWidth: `${dotLabelMaxWidth}px`, fontSize: dotLabelFontSize }}
         >
-          {spot.label}
+          <HotspotLabelText spot={spot} showHoverLabel />
         </span>
       </span>
     );
@@ -1492,6 +1774,21 @@ export default function RoomScene({ room }: { room: Room }) {
       onTouchCancel={() => {
         touchPanStartRef.current = null;
       }}
+      onMouseMove={(e) => {
+        if (!canDesktopCursorPan || !desktopCoverMetrics) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        if (!rect.width) return;
+        const rawNormalizedX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const deadZone = 0.08;
+        const normalizedX =
+          Math.abs(rawNormalizedX) < deadZone
+            ? 0
+            : ((Math.abs(rawNormalizedX) - deadZone) / (1 - deadZone)) * Math.sign(rawNormalizedX);
+        const edgeWeightedX = Math.sign(normalizedX) * Math.pow(Math.abs(normalizedX), 2);
+        const extendedMaxPanX = desktopCoverMetrics.maxPanX * 1.18;
+        const targetX = clamp(-edgeWeightedX * extendedMaxPanX, -extendedMaxPanX, extendedMaxPanX);
+        scheduleDesktopPan({ x: targetX, y: 0 });
+      }}
     >
       {/* Background */}
       <div
@@ -1504,7 +1801,7 @@ export default function RoomScene({ room }: { room: Room }) {
         style={
           isMobileViewport
             ? undefined
-            : { transform: `translate3d(${displayedPan.x}px, ${displayedPan.y + backgroundOffsetY}px, 0) scale(${sceneScale})` }
+            : { transform: `translate3d(0, ${backgroundOffsetY}px, 0) scale(${sceneScale})` }
         }
       >
         {useContainedBackground && shouldRenderStaticBackgroundImage ? (
@@ -1534,6 +1831,7 @@ export default function RoomScene({ room }: { room: Room }) {
             quality={70}
             className={[
               "absolute inset-0 h-full w-full",
+              isMarketingRoom && isMobileViewport ? "scale-[1.16]" : "",
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
             style={{
@@ -1541,30 +1839,45 @@ export default function RoomScene({ room }: { room: Room }) {
                 ? "50% 42%"
                 : isMobileViewport
                   ? `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                  : canDesktopCursorPan
+                    ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
                   : `50% ${backgroundObjectPositionY}%`,
             }}
             draggable={false}
           />
         ) : null}
-        {room.backgroundVideo ? (
+        {activeBackgroundVideo ? (
           <video
-            ref={backgroundVideoRef}
+            ref={setBackgroundVideoNode}
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay
             loop
             muted
             playsInline
-            preload={isLiveRoom ? "auto" : "metadata"}
+            disablePictureInPicture
+            disableRemotePlayback
+            preload={room.slug === "live" || room.slug === "front" ? "auto" : "metadata"}
             style={
               isMobileViewport
-                ? { objectPosition: `calc(50% + ${displayedPan.x}px) calc(50% + ${displayedPan.y}px)` }
-                : undefined
+                ? {
+                    backgroundColor: room.slug === "live" ? "#000000" : undefined,
+                    objectPosition:
+                      room.slug === "live"
+                        ? `calc(50% + ${displayedPan.x}px) calc(62% + ${displayedPan.y}px)`
+                        : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`,
+                  }
+                : room.slug === "live"
+                  ? {
+                      backgroundColor: "#000000",
+                      objectPosition: compactHotspotUi ? "50% 68%" : "50% 33%",
+                    }
+                  : canDesktopCursorPan
+                    ? { objectPosition: `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%` }
+                    : { objectPosition: `50% ${backgroundObjectPositionY}%` }
             }
-          >
-            <source src={room.backgroundVideo} type="video/mp4" />
-          </video>
+            src={activeBackgroundVideo}
+          />
         ) : null}
-
         {showWebsiteDesignEmbed ? (
           <div
             data-no-pan
@@ -1594,6 +1907,45 @@ export default function RoomScene({ room }: { room: Room }) {
           </div>
         ) : null}
       </div>
+
+      {isMobileViewport && tiltAvailable && !exploreOpen && !isModalOpen ? (
+        <div className="absolute bottom-20 right-2 z-50 flex flex-col items-end gap-1.5 md:hidden" data-no-pan>
+          {tiltEnabled ? (
+            <button
+              type="button"
+              onClick={() => {
+                setTiltEnabled(false);
+                setMobileTiltPan({ x: 0, y: 0 });
+                tiltBaselineRef.current = null;
+                tiltSignalSeenRef.current = false;
+                setTiltStatus("idle");
+              }}
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/55 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-md transition hover:bg-black/70"
+            >
+              {tiltStatus === "active" ? "Tilt On" : "Tilt Ready"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={enableTiltPan}
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/78 backdrop-blur-md transition hover:bg-black/60 hover:text-white"
+            >
+              {tiltPermissionNeeded ? "Enable Tilt" : "Tilt Off"}
+            </button>
+          )}
+
+          {tiltStatus === "blocked" ? (
+            <div className="max-w-[10rem] rounded-xl border border-white/15 bg-black/55 px-2.5 py-1.5 text-right text-[10px] leading-tight text-white/72 backdrop-blur-md">
+              Motion access is blocked on this device/browser.
+            </div>
+          ) : null}
+
+          <div className="max-w-[11rem] rounded-xl border border-white/10 bg-black/45 px-2.5 py-1.5 text-right text-[10px] leading-tight text-white/62 backdrop-blur-md">
+            <div>Secure: {isSecureContextState ? "yes" : "no"}</div>
+            <div>Tilt: {tiltStatus}</div>
+          </div>
+        </div>
+      ) : null}
 
       {shouldShowOrangeSessionPreview ? (
         <div
@@ -1673,21 +2025,7 @@ export default function RoomScene({ room }: { room: Room }) {
           {isOrangeMobileSessionAudioActive ? (
             <button
               type="button"
-              onClick={() => {
-                const nextMuted = !isOrangePreviewMuted;
-                const video = orangeMobileAudioRef.current;
-                if (video) {
-                  video.muted = nextMuted;
-                  if (!nextMuted) {
-                    video.volume = Math.max(video.volume, 0.2);
-                    const playPromise = video.play();
-                    if (playPromise && typeof playPromise.catch === "function") {
-                      playPromise.catch(() => {});
-                    }
-                  }
-                }
-                setIsOrangePreviewMuted(nextMuted);
-              }}
+              onClick={toggleOrangePreviewMute}
               className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/65 px-3 py-2 text-xs font-semibold text-white/90 backdrop-blur-md transition hover:bg-black/80"
               aria-label={isOrangePreviewMuted ? "Unmute music" : "Mute music"}
             >
@@ -1701,6 +2039,7 @@ export default function RoomScene({ room }: { room: Room }) {
       <div
         className={[
           "absolute left-6 top-28 z-50 transition-opacity duration-100",
+          isLobbyRoom || !isMobileViewport ? "hidden" : "",
           exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
         ].join(" ")}
       >
@@ -1714,11 +2053,12 @@ export default function RoomScene({ room }: { room: Room }) {
         <div className="mt-1 flex items-center gap-3">
           <div
             className={[
-              "text-3xl font-semibold whitespace-pre-line",
+              "font-semibold whitespace-pre-line",
+              isMobileViewport ? "text-[1.6rem] leading-tight" : "text-3xl",
               room.slug === "orange"
                 ? "text-[#ff9f3f] [text-shadow:0_0_10px_rgba(255,159,63,0.75),0_0_24px_rgba(255,159,63,0.45)]"
                 : room.slug === "quiet"
-                  ? "text-[#8fbf7a] [text-shadow:0_0_8px_rgba(143,191,122,0.32),0_0_18px_rgba(74,124,67,0.18)]"
+                  ? "text-white [text-shadow:0_0_8px_rgba(255,255,255,0.22),0_0_18px_rgba(255,255,255,0.1)]"
                   : room.slug === "EMTEEARSalesDept"
                     ? "rounded-xl border border-white/10 bg-black/20 px-3 py-1.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm [text-shadow:0_0_8px_rgba(255,255,255,0.18)]"
                   : "",
@@ -1726,25 +2066,8 @@ export default function RoomScene({ room }: { room: Room }) {
           >
             {room.title || "Lobby"}
           </div>
-          {isLobbyRoom ? (
-            <button
-              type="button"
-              onClick={() => {
-                const startSpot =
-                  room.hotspots.find((spot) => spot.id === "start-here") ??
-                  room.hotspots.find((spot) => spot.id === "how-you-start") ??
-                  room.hotspots.find((spot) => spot.id === "departments");
-                if (!startSpot?.modal) return;
-                setModalBackModal(null);
-                openModal(startSpot.modal);
-              }}
-              className="start-here-priority inline-flex items-center justify-center rounded-full px-4 py-1.5 text-xs font-semibold tracking-[0.02em] transition"
-            >
-              Start Here
-            </button>
-          ) : null}
         </div>
-        {isHotspotTierPilotRoom ? (
+        {isHotspotTierPilotRoom && !isLobbyRoom ? (
           <div className="mt-2 flex items-center gap-2">
             <button
               type="button"
@@ -1762,9 +2085,111 @@ export default function RoomScene({ room }: { room: Room }) {
         ) : null}
       </div>
 
+      {isLobbyRoom ? (
+        <div
+          ref={lobbyHeaderRef}
+          className={[
+            "absolute left-1/2 top-24 z-50 w-[min(calc(100vw-2.5rem),18rem)] -translate-x-1/2 px-3 transition-opacity duration-100",
+            exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
+          ].join(" ")}
+          data-no-pan
+        >
+          <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(14,14,14,0.16),rgba(14,14,14,0.08))] px-3 py-3 shadow-[0_16px_34px_rgba(0,0,0,0.14)] backdrop-blur-md">
+            <div className="flex items-center justify-center rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] px-3 py-2.5">
+              {isHotspotTierPilotRoom ? (
+                <div className="relative flex w-full flex-col items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={toggleShowMoreHotspots}
+                    className="inline-flex min-w-[7.25rem] items-center justify-center rounded-full border border-white/20 bg-black/20 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/88 shadow-[0_6px_14px_rgba(0,0,0,0.1)] backdrop-blur-md transition hover:border-white/28 hover:bg-black/28 hover:text-white"
+                  >
+                    {showAllRoomHotspots ? "Hide Rooms" : "Show Rooms"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isLobbyExploreHoverOpen) {
+                        closeLobbyExploreHover();
+                        return;
+                      }
+                      openLobbyExploreHover();
+                      LOBBY_HOVER_ROOMS.forEach((item) => prefetchExploreRoute(item.href));
+                    }}
+                    className="inline-flex min-w-[7.25rem] items-center justify-center rounded-full border border-white/18 bg-white/[0.08] px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/86 shadow-[0_6px_14px_rgba(0,0,0,0.08)] backdrop-blur-md transition hover:border-white/24 hover:bg-white/[0.12] hover:text-white"
+                  >
+                    Explore All Rooms
+                  </button>
+                  <div
+                    className={[
+                      "absolute left-1/2 top-full z-[60] mt-1.5 -translate-x-1/2 transition duration-150",
+                      isLobbyExploreHoverOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+                    ].join(" ")}
+                  >
+                    <div className="w-56 rounded-xl border border-white/12 bg-black/62 p-1.5 backdrop-blur-md shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
+                      {LOBBY_HOVER_ROOMS.map((item) => (
+                        <Link
+                          key={`top-explore-${item.href}`}
+                          href={item.href}
+                          className="block rounded-md px-2.5 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
+                          onMouseEnter={() => prefetchExploreRoute(item.href)}
+                          onFocus={() => prefetchExploreRoute(item.href)}
+                          onClick={() => closeLobbyExploreHover()}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isLobbyRoom && lobbyStartHereSpot ? (
+        <div
+          className={[
+            "absolute z-40 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-100",
+            isModalOpen || exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
+          ].join(" ")}
+          style={{
+            ...getMobileHotspotStyle(lobbyStartHereSpot),
+            transform:
+              canDesktopCursorPan && !isMobileViewport
+                ? `translate3d(${desktopCursorPan.x}px, 0, 0) translate(-50%, -50%)`
+                : undefined,
+          }}
+          data-no-pan
+        >
+          <button
+            type="button"
+            onClick={() => {
+              const startSpot =
+                room.hotspots.find((spot) => spot.id === "start-here") ??
+                room.hotspots.find((spot) => spot.id === "how-you-start") ??
+                room.hotspots.find((spot) => spot.id === "departments");
+              if (!startSpot?.modal) return;
+              setModalBackModal(null);
+              openModal(startSpot.modal);
+            }}
+            className="start-here-priority inline-flex min-w-[6.5rem] items-center justify-center whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-semibold tracking-[0.02em] transition"
+          >
+            Start Here
+          </button>
+        </div>
+      ) : null}
+
 
       {showDotConnectors && (
-        <div className="pointer-events-none absolute inset-0 z-[35] opacity-100 transition-opacity duration-150">
+        <div
+          className="pointer-events-none absolute inset-0 z-[35] opacity-100 transition-opacity duration-150"
+          style={
+            canDesktopCursorPan && !isMobileViewport
+              ? { transform: `translate3d(${desktopCursorPan.x}px, 0, 0)` }
+              : undefined
+          }
+        >
           {connectableDots.map((spot) => (
             <div
               key={`connector-${spot.id}`}
@@ -1962,7 +2387,11 @@ export default function RoomScene({ room }: { room: Room }) {
           "pointer-events-none absolute inset-0 z-30 transition-opacity duration-50",
           hotspotsReady ? "opacity-100" : "opacity-0",
         ].join(" ")}
-        style={isMobileViewport ? undefined : { transform: `translate3d(${displayedPan.x}px, ${displayedPan.y}px, 0)` }}
+        style={
+          canDesktopCursorPan && !isMobileViewport
+            ? { transform: `translate3d(${desktopCursorPan.x}px, 0, 0)` }
+            : undefined
+        }
       >
         {areHotspotsPositionReady
           ? visibleHotspots.map((spot) => {
@@ -1971,7 +2400,7 @@ export default function RoomScene({ room }: { room: Room }) {
             isMobileNextRoomPin
               ? "absolute z-40 transition-opacity duration-100"
               : "absolute z-20 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-100",
-            isModalOpen || exploreOpen
+            isModalOpen || exploreOpen || (isLobbyRoom && isLobbyExploreHoverOpen)
               ? "pointer-events-none opacity-0"
               : "pointer-events-auto opacity-100",
           ].join(" ");
@@ -1986,48 +2415,7 @@ export default function RoomScene({ room }: { room: Room }) {
           if (spot.action === "explore") {
             const isLobbyDesktopExplorePin = room.slug === "front" && !isMobileViewport && spot.id === "explore";
             if (isLobbyDesktopExplorePin) {
-              return (
-                <div
-                  key={spot.id}
-                  className={sharedClassName}
-                  style={sharedStyle}
-                  onMouseEnter={() => {
-                    openLobbyExploreHover();
-                    LOBBY_HOVER_ROOMS.forEach((item) => prefetchExploreRoute(item.href));
-                  }}
-                  onMouseLeave={closeLobbyExploreHover}
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      triggerHotspotLabelGlow(spot);
-                      openLobbyExploreHover();
-                    }}
-                  >
-                    {content}
-                  </button>
-                  <div
-                    className={[
-                      "absolute left-1/2 top-full z-40 -translate-x-1/2 pt-0.5 transition duration-150",
-                      isLobbyExploreHoverOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
-                    ].join(" ")}
-                  >
-                    <div className="w-56 rounded-xl border border-white/12 bg-black/62 p-1.5 backdrop-blur-md shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
-                      {LOBBY_HOVER_ROOMS.map((item) => (
-                        <Link
-                          key={`hover-explore-${item.href}`}
-                          href={item.href}
-                          className="block rounded-md px-2.5 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
-                          onMouseEnter={() => prefetchExploreRoute(item.href)}
-                          onFocus={() => prefetchExploreRoute(item.href)}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
+              return null;
             }
             return (
               <button
@@ -2124,7 +2512,7 @@ export default function RoomScene({ room }: { room: Room }) {
       {/* Bottom Explore bar */}
       {isMobileViewport ? (
         <>
-          <div className="absolute bottom-6 left-6 z-50">
+          <div className={["absolute bottom-6 left-6", isStartHereModal ? "z-[10010]" : "z-50"].join(" ")}>
             <button
               type="button"
               aria-label="Open Explore menu"
@@ -2135,7 +2523,7 @@ export default function RoomScene({ room }: { room: Room }) {
               <span className="text-white/85">⌕</span>
             </button>
           </div>
-          <div className="absolute bottom-6 right-6 z-50 flex items-center gap-2">
+          <div className={["absolute bottom-6 right-6 flex items-center gap-2", isStartHereModal ? "z-[10010]" : "z-50"].join(" ")}>
             <button
               type="button"
               data-no-pan
@@ -2157,23 +2545,8 @@ export default function RoomScene({ room }: { room: Room }) {
           </div>
         </>
       ) : (
-        <div className="absolute bottom-6 left-6 right-6 z-40">
-          <div className="flex w-full items-stretch gap-2">
-            <button
-              type="button"
-              onClick={openExploreMenu}
-              data-no-pan
-              className="flex flex-1 touch-manipulation select-none items-center gap-3 rounded-2xl border border-white/15 bg-black/35 px-4 py-3 text-left backdrop-blur-xl transition hover:bg-black/45"
-            >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/30">
-                <span className="text-white/80">⌕</span>
-              </span>
-
-              <div className="flex-1">
-                <div className="text-sm font-semibold text-white/90">Explore</div>
-                <div className="text-xs text-white/60">Open navigation</div>
-              </div>
-            </button>
+        <div className={["absolute bottom-6 right-6", isStartHereModal ? "z-[10010]" : "z-40"].join(" ")}>
+          <div className="flex items-stretch justify-end gap-2">
             {!isLobbyRoom ? (
               <button
                 type="button"
@@ -2181,7 +2554,7 @@ export default function RoomScene({ room }: { room: Room }) {
                 aria-label="Go to previous room"
                 title={`Previous: ${explorePrevLabel}`}
                 onClick={() => router.push(explorePrevHref)}
-                className="group relative inline-flex w-12 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-black/35 text-white/70 backdrop-blur-xl transition hover:bg-black/45 hover:text-white"
+                className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
               >
                 ←
                 <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
@@ -2191,11 +2564,26 @@ export default function RoomScene({ room }: { room: Room }) {
             ) : null}
             <button
               type="button"
+              onClick={openExploreMenu}
+              data-no-pan
+              className="flex h-11 w-[min(30vw,220px)] min-w-[170px] touch-manipulation select-none items-center gap-2.5 rounded-2xl border border-white/14 bg-black/30 px-3.5 py-2 text-left backdrop-blur-xl transition hover:bg-black/42"
+            >
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/18 bg-black/26">
+                <span className="text-white/76">⌕</span>
+              </span>
+
+              <div className="flex-1">
+                <div className="text-[13px] font-semibold text-white/88">Explore</div>
+                <div className="text-[10px] uppercase tracking-[0.12em] text-white/52">All Rooms</div>
+              </div>
+            </button>
+            <button
+              type="button"
               data-no-pan
               aria-label="Go to next page"
               title={`Next: ${exploreArrowLabel}`}
               onClick={() => router.push(exploreArrowHref)}
-              className="group relative inline-flex w-12 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-black/35 text-white/70 backdrop-blur-xl transition hover:bg-black/45 hover:text-white"
+              className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
             >
               →
               <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
@@ -2209,7 +2597,8 @@ export default function RoomScene({ room }: { room: Room }) {
       {/* Explore overlay */}
       <div
         className={[
-          "fixed inset-0 z-[60] transition-opacity duration-300 ease-out",
+          "fixed inset-0 transition-opacity duration-300 ease-out",
+          isStartHereModal ? "z-[10020]" : "z-[60]",
           exploreOpen ? "pointer-events-auto" : "pointer-events-none",
           exploreOpen ? "opacity-100" : "opacity-0",
         ].join(" ")}
@@ -2223,7 +2612,7 @@ export default function RoomScene({ room }: { room: Room }) {
 
         <div
           className={[
-            "absolute left-0 top-0 h-full w-[300px] max-w-[78vw] border-r border-white/10 bg-black/45 backdrop-blur-2xl p-7 pt-[max(2rem,env(safe-area-inset-top))] md:w-[340px] md:max-w-[85vw] md:p-8",
+            "absolute left-0 top-0 h-full w-[300px] max-w-[78vw] border-r border-white/10 bg-black/45 backdrop-blur-2xl p-5 pt-[max(1rem,env(safe-area-inset-top))] md:w-[340px] md:max-w-[85vw] md:p-6",
             "transform-gpu will-change-[transform,opacity] transition-[transform,opacity] duration-[380ms] ease-out",
             exploreOpen ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0",
           ].join(" ")}
@@ -2243,7 +2632,7 @@ export default function RoomScene({ room }: { room: Room }) {
             </button>
           </div>
 
-          <div className="mt-10 flex-1 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-2 pb-[calc(env(safe-area-inset-bottom)+7.5rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="mt-6 flex-1 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-2 pb-[calc(env(safe-area-inset-bottom)+6rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {EXPLORE_ROOMS.map((item, index) => {
               const isApply = item.label.toLowerCase().includes("apply");
               const isUtilityLink =
@@ -2418,43 +2807,54 @@ export default function RoomScene({ room }: { room: Room }) {
                     revealStep >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                   ].join(" ")}
                 >
-                  <NextImage
-                    src={resolvedCornerLogo}
-                    alt={resolvedCornerLogoAlt ?? activeModal.title}
-                    width={
-                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
-                        ? 144
-                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
-                          ? 120
-                          : 66
-                    }
-                    height={
-                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
-                        ? 72
-                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
-                          ? 48
-                          : 26
-                    }
-                    sizes={
-                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
-                        ? "144px"
-                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
-                          ? "120px"
-                          : "66px"
-                    }
-                    className={[
-                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
-                        ? "h-auto w-auto max-w-[132px] object-contain"
-                        : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
-                          ? "h-auto w-auto max-w-[110px] object-contain"
-                          : "h-auto w-auto max-w-[60px] object-contain",
-                      resolvedCornerLogo === "/logotransparent.png" ? "invert" : "",
-                      resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ||
-                      resolvedCornerLogo === "/rooms/TenTenlogo.png"
-                        ? "invert"
-                        : "",
-                    ].join(" ")}
-                  />
+                  <div className="flex flex-col items-end gap-3">
+                    <NextImage
+                      src={resolvedCornerLogo}
+                      alt={resolvedCornerLogoAlt ?? activeModal.title}
+                      width={
+                        resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                          ? 144
+                          : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                            ? 120
+                            : 66
+                      }
+                      height={
+                        resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                          ? 72
+                          : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                            ? 48
+                            : 26
+                      }
+                      sizes={
+                        resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                          ? "144px"
+                          : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                            ? "120px"
+                            : "66px"
+                      }
+                      className={[
+                        resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                          ? "h-auto w-auto max-w-[132px] object-contain"
+                          : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
+                            ? "h-auto w-auto max-w-[110px] object-contain"
+                            : "h-auto w-auto max-w-[60px] object-contain",
+                        resolvedCornerLogo === "/logotransparent.png" ? "invert" : "",
+                        resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ||
+                        resolvedCornerLogo === "/rooms/TenTenlogo.png"
+                          ? "invert"
+                          : "",
+                      ].join(" ")}
+                    />
+                    {isOrangeSessionModalOpen ? (
+                      <button
+                        type="button"
+                        onClick={toggleOrangePreviewMute}
+                        className="inline-flex shrink-0 items-center justify-center rounded-full border border-orange-200/30 bg-black/45 px-4 py-2 text-xs font-semibold text-orange-100/90 transition hover:border-orange-200/50 hover:bg-black/60"
+                      >
+                        {isOrangePreviewMuted ? "Unmute Music" : "Mute Music"}
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
               ) : null}
 
@@ -2850,39 +3250,18 @@ export default function RoomScene({ room }: { room: Room }) {
   </div>
 )}
               </div>
-              {isOrangeSessionModalOpen ? (
-                <button
-                  type="button"
-                  onClick={toggleOrangePreviewMute}
-                  className="mt-1 inline-flex shrink-0 items-center justify-center rounded-full border border-orange-200/30 bg-black/45 px-4 py-2 text-xs font-semibold text-orange-100/90 transition hover:border-orange-200/50 hover:bg-black/60"
-                >
-                  {isOrangePreviewMuted ? "Unmute Music" : "Mute Music"}
-                </button>
-              ) : null}
             </div>
 
             <div
               className={[
                 isPackageGridModal
                   ? "shrink-0 grid w-full gap-3 px-6 pb-6 sm:grid-cols-2 transition-all duration-600 ease-out"
+                  : isStartHereModal
+                  ? "shrink-0 flex w-full flex-col items-stretch gap-2 px-6 pb-6 transition-all duration-600 ease-out"
                   : "shrink-0 flex flex-wrap items-center gap-3 px-6 pb-6 transition-all duration-600 ease-out",
                 revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
               ].join(" ")}
             >
-              {isStartHereModal && howYouStartModalTarget?.modal ? (
-                <button
-                  type="button"
-                  aria-label="How You Start"
-                  title="How You Start"
-                  onClick={() => {
-                    setModalBackModal(activeModal);
-                    openModal(howYouStartModalTarget.modal!);
-                  }}
-                  className="inline-flex items-center justify-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
-                >
-                  How You Start
-                </button>
-              ) : null}
               {isCustomProductionModal && activeModal.primaryHref ? (
                 activeModal.primaryHref.startsWith("http") ? (
                   <a
@@ -2916,9 +3295,6 @@ export default function RoomScene({ room }: { room: Room }) {
               ) : null}
               {activeModal.links?.length
                 ? activeModal.links.map((link) => {
-                    if (isStartHereModal && link.href === "modal:how-you-start") {
-                      return null;
-                    }
                     const modalLinkId = link.href.startsWith("modal:") ? link.href.slice(6) : null;
                     if (modalLinkId) {
                       const targetSpot = room.hotspots.find((spot) => spot.id === modalLinkId);
@@ -2935,7 +3311,7 @@ export default function RoomScene({ room }: { room: Room }) {
                           }}
                           className={
                             isStartHereModal
-                              ? "inline-flex items-center justify-center rounded-full border border-white/18 bg-white/6 px-4 py-1.5 text-xs font-medium text-white/78 transition hover:border-white/28 hover:bg-white/10 hover:text-white/90"
+                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
                               : isPackageGridModal
                               ? isWebsiteDesignMainModal
                                 ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
@@ -2955,6 +3331,22 @@ export default function RoomScene({ room }: { room: Room }) {
                         </button>
                       );
                     }
+                    if (link.href.startsWith("/")) {
+                      return (
+                        <Link
+                          key={`${link.label}-${link.href}`}
+                          href={link.href}
+                          onClick={closeModal}
+                          className={
+                            isStartHereModal
+                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                              : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                          }
+                        >
+                          {`${link.label} →`}
+                        </Link>
+                      );
+                    }
                     return (
                       <a
                         key={`${link.label}-${link.href}`}
@@ -2965,7 +3357,7 @@ export default function RoomScene({ room }: { room: Room }) {
                         title={link.label}
                         className={
                           isStartHereModal
-                            ? "inline-flex items-center justify-center rounded-full border border-white/18 bg-white/6 px-4 py-1.5 text-xs font-medium text-white/78 transition hover:border-white/28 hover:bg-white/10 hover:text-white/90"
+                            ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
                             : isPackageGridModal
                             ? isWebsiteDesignMainModal
                               ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
@@ -3116,7 +3508,7 @@ export default function RoomScene({ room }: { room: Room }) {
                     : "border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 hover:text-white",
                 ].join(" ")}
               >
-                Back
+                {modalBackModal ? "Back" : isStartHereModal ? "Back to Lobby" : "Close"}
               </button>
             </div>
           </div>

@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
+    "dev:https": "next dev --webpack --experimental-https -H 0.0.0.0 -p 3001",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "clean": "rm -rf .next"
+    "clean": "rm -rf .next",
+    "find:unused-room-assets": "node scripts/find-unused-room-assets.mjs"
   },
   "dependencies": {
     "next": "16.1.1",

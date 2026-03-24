@@ -370,6 +370,21 @@ html {
   display: none !important;
 }
 
+/* Hide mobile browser playback chrome on the gateway background video */
+.gateway-video::-webkit-media-controls {
+  display: none !important;
+}
+
+.gateway-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+.gateway-video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 /* Lobby Start Here button: high-priority but polished */
 .start-here-priority {
   position: relative;

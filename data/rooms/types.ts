@@ -1,6 +1,7 @@
 export type Hotspot = {
   id: string;
   label: string;
+  hoverLabel?: string;
   x: number;
   y: number;
   positions?: Partial<Record<"mobile" | "tablet" | "laptop" | "desktop", { x: number; y: number }>>;
@@ -40,5 +41,6 @@ export type Room = {
   title: string;
   backgroundImage: string;
   backgroundVideo?: string;
+  backgroundVideoMobile?: string;
   hotspots: Hotspot[];
 };

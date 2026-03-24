@@ -76,6 +76,10 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "A publishing/distribution readiness review to confirm platform configuration and release setup.",
     why: "Artists reduce setup errors and protect royalty collection before launch.",
   },
+  "Split Sheet Set Up": {
+    what: "Split sheet development support for your releases so song ownership is documented clearly.",
+    why: "Clear split sheets help everyone involved in the project receive their agreed share of the song and reduce future disputes.",
+  },
   "CRM Set-Up": {
     what: "Implementation of a CRM system to organize fan and business relationships.",
     why: "Artists can build direct audience ownership and improve conversion over time.",

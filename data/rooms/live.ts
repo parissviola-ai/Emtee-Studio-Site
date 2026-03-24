@@ -4,18 +4,19 @@ export const liveRoom: Room = {
     slug: "live",
     title: "Ten Ten\nEntertainment",
     backgroundImage: "/rooms/live-opt.jpg",
-    backgroundVideo: "/rooms/updatetenten.mp4?v=1",
+    backgroundVideo: "/rooms/updatedttbg1.mp4",
+    backgroundVideoMobile: "/rooms/mobilevideotenten.mp4",
     hotspots: [
       { id: "next-room", label: "Lobby", href: "/rooms/front", x: 90, y:  17, direction: "right" },
       {
         id: "ten-ten-showcase",
         label: "Ten Ten Showcase",
         x: 50,
-        y: 53,
+        y: 50,
         positions: {
-          laptop: { x: 50, y: 56 },
+          laptop: { x: 50, y: 50 },
           tablet: { x: 50, y: 57 },
-          mobile: { x: 52, y: 58 },
+          mobile: { x: 50, y: 50 },
         },
         allowLargeResponsiveShift: true,
         direction: "up",
@@ -37,8 +38,8 @@ export const liveRoom: Room = {
       {
         id: "mike-cannz-youtube",
         label: "YouTube",
-        x: 24,
-        y: 27,
+        x: 21,
+        y: 23,
         positions: {
           laptop: { x: 15, y: 27 },
           tablet: { x: 14, y: 28 },
@@ -52,7 +53,7 @@ export const liveRoom: Room = {
         id: "mike-cannz-spotify",
         label: "Spotify",
         x:  79,
-        y: 27,
+        y: 23,
         positions: {
           laptop: { x: 84, y: 27 },
           tablet: { x: 83, y: 28 },
@@ -66,11 +67,11 @@ export const liveRoom: Room = {
         id: "live-packages",
         label: "Packages",
         x: 25,
-        y: 26,
+        y: 37,
         positions: {
-          laptop: { x: 18, y: 45 },
+          laptop: { x: 18, y: 44 },
           tablet: { x: 17, y: 48 },
-          mobile: { x: 28, y: 20 },
+          mobile: { x: 28, y: 19 },
         },
         allowLargeResponsiveShift: true,
         direction: "up",

@@ -193,21 +193,6 @@ export default function CaseStudies2Client() {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Link
-            href="/artist-roster-releases"
-            className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
-          >
-            Back to Artist Page
-          </Link>
-          <Link
-            href="/case-studies"
-            className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
-          >
-            View Current Case Studies
-          </Link>
-        </div>
-
         <section className="mt-8 grid gap-7 lg:grid-cols-2">
           {DEPARTMENT_CASE_CARDS.map((card) => (
             <button

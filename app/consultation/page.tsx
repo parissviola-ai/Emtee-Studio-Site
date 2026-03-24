@@ -5,15 +5,7 @@ import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
 
 const PACKAGE_OPTIONS_BY_DEPARTMENT: Record<string, string[]> = {
-  "A&R / Sales": [
-    "CRM Set-Up",
-    "CRM Fee/Retainer",
-    "Community Building",
-    "Merchandise",
-    "Event Planning",
-    "Event Planner",
-  ],
-  Business: [
+  "Business Department": [
     "Consultation",
     "Brand Evaluation",
     "Income Evaluation",
@@ -21,7 +13,12 @@ const PACKAGE_OPTIONS_BY_DEPARTMENT: Record<string, string[]> = {
     "12-Month Rollout Strategy Plan",
     "Business Operations Set-Up",
   ],
-  Marketing: [
+  "Music Department": [
+    "Single Creation",
+    "3 Song Creation",
+    "Project Creation (5 Songs)",
+  ],
+  "Marketing Department": [
     "Content Creation",
     "Brand Deck",
     "Brand Deck + EPK",
@@ -29,14 +26,19 @@ const PACKAGE_OPTIONS_BY_DEPARTMENT: Record<string, string[]> = {
     "60min Live Performance Set Development",
     "Brand Deals",
     "Tour Management",
+    "Tier 1: Starter Site",
+    "Tier 2: Growth Site",
+    "Tier 3: Artist World",
   ],
-  Music: [
-    "Single Creation",
-    "3 Song Creation",
-    "Project Creation (5 Songs)",
+  "Publishing / Distribution Department": ["Publishing/Distro Workshop", "Split Sheet Set Up"],
+  "A&R / Sales Department": [
+    "CRM Set-Up",
+    "CRM Fee/Retainer",
+    "Community Building",
+    "Merchandise",
+    "Event Planning",
+    "Event Planner",
   ],
-  "Publishing / Distribution": ["Publishing/Distro Workshop"],
-  "Website Design": ["Website Creation"],
 };
 
 export default function ConsultationPage() {
@@ -163,7 +165,7 @@ export default function ConsultationPage() {
                 </p>
                 <div className="mt-4 overflow-hidden rounded-xl border border-black/10 bg-white">
                   <Image
-                    src="/rooms-misc/how-you-start.avif"
+                    src="/rooms/howyoustarthd.png"
                     alt="Consultation process overview"
                     width={1200}
                     height={840}

@@ -1,18 +1,35 @@
 "use client";
 
+import NextImage from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import NewsFeedDropdown from "@/components/NewsFeedDropdown";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
-const LEFT_LINKS: NavLink[] = [
-  { label: "Home", href: "/rooms/front" },
-  { label: "About Us", mobileLabel: "About", href: "/about" },
+const PRIMARY_LINKS: NavLink[] = [{ label: "Home", href: "/rooms/front" }];
+
+const ABOUT_LINKS: NavLink[] = [
+  { label: "Who We Are", href: "/rooms/front?modal=About" },
+  { label: "What We Offer", href: "/rooms/front?modal=departments-sheet" },
+  { label: "How You Start", href: "/rooms/front?modal=how-you-start" },
+  { label: "Book A Consultation", href: "/consultation" },
 ];
-const ARTIST_LINKS: NavLink[] = [{ label: "Case Studies", mobileLabel: "Studies", href: "/case-studies" }];
-const RIGHT_LINKS: NavLink[] = [{ label: "News", href: "/news" }];
+
+const RESOURCE_LINKS: NavLink[] = [
+  { label: "A&R & Sales Department", href: "/rooms/EMTEEARSalesDept" },
+  { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
+  { label: "Marketing Department", href: "/rooms/EMTEEMarketingDept" },
+  { label: "Publishing & Distribution Department", href: "/rooms/EMTEEPublishingandDistroDept" },
+  { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
+];
+
+const CASE_STUDY_LINKS: NavLink[] = [
+  { label: "Yanchan Produced", href: "/rooms/orange" },
+  { label: "Ten Ten Entertainment", href: "/rooms/live" },
+  { label: "Steeped Dreams Studios", href: "/rooms/quiet" },
+  { label: "Other Artists", href: "/artist-roster-releases" },
+];
 
 export default function MainMenuBar() {
   const pathname = usePathname() ?? "";
@@ -25,17 +42,20 @@ export default function MainMenuBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const bookingsActive = pathname === "/connect" || pathname.startsWith("/connect/");
-  const artistsActive = pathname === "/artist-roster-releases" || pathname.startsWith("/case-studies");
+  const aboutActive = pathname === "/about" || pathname === "/consultation";
+  const resourcesActive = pathname === "/connect" || pathname.startsWith("/connect/") || RESOURCE_LINKS.some((item) => pathname === item.href);
+  const caseStudiesActive =
+    pathname === "/case-studies" ||
+    pathname.startsWith("/case-studies") ||
+    pathname.startsWith("/artist-roster-releases") ||
+    CASE_STUDY_LINKS.some((item) => pathname === item.href);
 
   function navLinkClass(href: string) {
     const isActive = pathname === href;
     return [
       "relative whitespace-nowrap px-2 py-1 text-[11px] sm:px-0 sm:py-0 sm:text-sm transition-all duration-200",
       "sm:group-hover/menu:opacity-45 sm:hover:opacity-100 sm:focus-visible:opacity-100",
-      isActive
-        ? "text-white sm:group-hover/menu:opacity-100"
-        : "text-white/68 sm:hover:text-white",
+      isActive ? "text-white sm:group-hover/menu:opacity-100" : "text-white/68 sm:hover:text-white",
     ].join(" ");
   }
 
@@ -43,9 +63,7 @@ export default function MainMenuBar() {
     return [
       "relative whitespace-nowrap px-0 py-0 text-sm transition-all duration-200",
       "sm:group-hover/menu:opacity-45 sm:hover:opacity-100 sm:focus-visible:opacity-100",
-      isActive
-        ? "text-white sm:group-hover/menu:opacity-100"
-        : "text-white/68 sm:hover:text-white",
+      isActive ? "text-white sm:group-hover/menu:opacity-100" : "text-white/68 sm:hover:text-white",
     ].join(" ");
   }
 
@@ -63,9 +81,28 @@ export default function MainMenuBar() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/18" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/12" />
 
-        <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-2.5 sm:px-6 sm:py-3.5 sm:group/menu">
-          <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto text-sm font-semibold text-white/85 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-none sm:overflow-visible sm:gap-4 md:gap-8">
-            {LEFT_LINKS.map((item) => (
+        <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 sm:py-3.5">
+          <div className="shrink-0">
+            <Link
+              href="/rooms/front"
+              className="inline-flex items-center gap-2.5 transition hover:opacity-100"
+            >
+              <NextImage
+                src="/logotransparent.png"
+                alt="EMTEE Music Group"
+                width={66}
+                height={26}
+                className="h-6 w-auto object-contain invert opacity-80 sm:h-7"
+                priority
+              />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/88 sm:text-sm">
+                EMTEE <span className="text-white">Music Group</span>
+              </span>
+            </Link>
+          </div>
+
+          <nav className="flex min-w-0 items-center justify-end gap-1 overflow-x-auto text-sm font-semibold text-white/85 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:overflow-visible sm:gap-4 md:gap-7 sm:group/menu">
+            {PRIMARY_LINKS.map((item) => (
               <Link key={item.label} href={item.href} className={navLinkClass(item.href)}>
                 <span className="sm:hidden">{item.mobileLabel ?? item.label}</span>
                 <span className="hidden sm:inline">{item.label}</span>
@@ -73,24 +110,17 @@ export default function MainMenuBar() {
             ))}
 
             <div className="relative hidden sm:block group">
-              <Link
-                href="/artist-roster-releases"
-                className={desktopMenuLinkClass(artistsActive)}
-              >
-                Artist
-              </Link>
+              <Link href="/about" className={desktopMenuLinkClass(aboutActive)}>About</Link>
 
               <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
-                <div className="w-48 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
-                  {ARTIST_LINKS.map((item) => (
+                <div className="w-56 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
+                  {ABOUT_LINKS.map((item) => (
                     <Link
                       key={item.label}
                       href={item.href}
                       className={[
                         "block rounded-lg px-3 py-2 text-sm transition",
-                        pathname === item.href
-                          ? "bg-white/14 text-white"
-                          : "text-white/80 hover:bg-white/10 hover:text-white",
+                        pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
                       ].join(" ")}
                     >
                       {item.label}
@@ -100,46 +130,55 @@ export default function MainMenuBar() {
               </div>
             </div>
 
-            <div className="hidden sm:block">
-              <Link
-                href="/connect"
-                className={desktopMenuLinkClass(bookingsActive)}
-              >
-                Resources
-              </Link>
+            <div className="relative hidden sm:block group">
+              <Link href="/connect" className={desktopMenuLinkClass(resourcesActive)}>Resources</Link>
+
+              <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="w-72 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
+                  {RESOURCE_LINKS.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className={[
+                        "block rounded-lg px-3 py-2 text-sm transition",
+                        pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
+                      ].join(" ")}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <Link href="/artist-roster-releases" className={[navLinkClass("/artist-roster-releases"), "sm:hidden"].join(" ")}>
-              Artist
-            </Link>
-            {ARTIST_LINKS.map((item) => (
-              <Link key={item.label} href={item.href} className={[navLinkClass(item.href), "sm:hidden"].join(" ")}>
-                {item.mobileLabel ?? item.label}
-              </Link>
-            ))}
+            <div className="relative hidden sm:block group">
+              <Link href="/case-studies" className={desktopMenuLinkClass(caseStudiesActive)}>Case Studies</Link>
 
-            <Link href="/connect" className={[navLinkClass("/connect"), "sm:hidden"].join(" ")}>
-              Resources
-            </Link>
-          </nav>
+              <div className="pointer-events-none absolute right-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="w-64 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
+                  {CASE_STUDY_LINKS.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className={[
+                        "block rounded-lg px-3 py-2 text-sm transition",
+                        pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
+                      ].join(" ")}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-          <div
-            key={pathname}
-            className="pointer-events-none absolute right-52 hidden text-base font-semibold tracking-[0.12em] text-white xl:block brand-route-glow"
-          >
-            EMTEE <span className="text-white">MUSIC GROUP</span>
-          </div>
+            <Link href="/news" className={[navLinkClass("/news"), "hidden sm:inline"].join(" ")}>News</Link>
 
-          <nav className="flex shrink-0 items-center gap-1 text-sm font-semibold text-white/85 sm:gap-4 md:gap-8">
-            {RIGHT_LINKS.map((item) =>
-              item.label === "News" ? (
-                <NewsFeedDropdown key={item.label} href={item.href} navLinkClass={navLinkClass} />
-              ) : (
-                <Link key={item.label} href={item.href} className={navLinkClass(item.href)}>
-                  {item.label}
-                </Link>
-              )
-            )}
+            <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
+            <Link href="/consultation" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
+            <Link href="/connect" className={[navLinkClass("/connect"), "sm:hidden"].join(" ")}>Resources</Link>
+            <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
+            <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>
           </nav>
         </div>
       </div>

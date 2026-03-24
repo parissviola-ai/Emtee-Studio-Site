@@ -23,7 +23,8 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Business Department",
     summary: "Operational setup, finance clarity, and rollout planning resources.",
     roomHref: "/rooms/EMTEEBusinessDept",
-    artistCaseStudy: "Artist Name (Placeholder)",
+    artistCaseStudy: "Yanchan - Business Strategy",
+    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-business",
     items: [
       {
         name: "Consultation",
@@ -68,7 +69,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Music Department",
     summary: "Single, multi-song, and project creation resources.",
     roomHref: "/rooms/EMTEEMusicDept",
-    artistCaseStudy: "Fame Holiday",
+    artistCaseStudy: "Fame Holiday - Music Lane",
     artistCaseStudyHref: "/case-studies/fame-holiday",
     items: [
       {
@@ -107,8 +108,8 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Marketing Department",
     summary: "Brand, content, tour, live development, and web design resources.",
     roomHref: "/rooms/EMTEEMarketingDept",
-    artistCaseStudy: "Kisaki",
-    artistCaseStudyHref: "/case-studies/kisaki",
+    artistCaseStudy: "Kisaki - Marketing",
+    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=kisaki-marketing",
     items: [
       {
         name: "Content Creation",
@@ -190,7 +191,8 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Publishing / Distribution Department",
     summary: "Publishing and distro setup resources.",
     roomHref: "/rooms/EMTEEPublishingandDistroDept",
-    artistCaseStudy: "Artist Name (Placeholder)",
+    artistCaseStudy: "Yanchan - Publishing and Distro",
+    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
     items: [
       {
         name: "Publishing/Distro Workshop",
@@ -199,13 +201,21 @@ const RESOURCE_CARDS: ResourceCard[] = [
           "Includes 60-90min Meeting",
         ],
       },
+      {
+        name: "Split Sheet Set Up",
+        notes: [
+          "Split sheet development for your releases",
+          "Everyone involved in the project gets their share of the song",
+        ],
+      },
     ],
   },
   {
     department: "A&R / Sales Department",
     summary: "CRM and audience monetization resources.",
     roomHref: "/rooms/EMTEEARSalesDept",
-    artistCaseStudy: "Artist Name (Placeholder)",
+    artistCaseStudy: "Mike Cannz - A&R and Sales",
+    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=mike-ar-sales",
     items: [
       {
         name: "CRM Set-Up",
@@ -254,6 +264,17 @@ function getResourceContextWithFallback(name: string, notes: string[]) {
       why: `It helps artists move with clarity and consistency. Key support includes: ${notes.slice(0, 2).join("; ")}.`,
     }
   );
+}
+
+function getCaseStudyForResource(name: string) {
+  if (name === "30min Live Performance Set Development" || name === "60min Live Performance Set Development") {
+    return {
+      label: "Open Kisaki Case Study",
+      href: "/case-studies/kisaki",
+    };
+  }
+
+  return null;
 }
 
 export default function ResourcesPage() {
@@ -326,13 +347,16 @@ export default function ResourcesPage() {
                 onClick={() => toggleDepartment(item.department)}
               >
                 <div>
-                  <Link
-                    href={item.roomHref}
-                    onClick={(event) => event.stopPropagation()}
-                    className="text-lg font-semibold uppercase tracking-[0.08em] text-[#8b6a2f] underline decoration-[#d6ae66]/55 decoration-2 underline-offset-4 transition hover:text-[#6f511a]"
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleDepartment(item.department);
+                    }}
+                    className="text-left text-lg font-semibold uppercase tracking-[0.08em] text-[#8b6a2f] underline decoration-[#d6ae66]/55 decoration-2 underline-offset-4 transition hover:text-[#6f511a]"
                   >
                     {item.department}
-                  </Link>
+                  </button>
                   <p className="mt-2 text-sm text-zinc-700">{item.summary}</p>
                 </div>
                 <button
@@ -470,6 +494,19 @@ export default function ResourcesPage() {
                     {getResourceContextWithFallback(activeResource.name, activeResource.notes).why}
                   </p>
                 </div>
+                {getCaseStudyForResource(activeResource.name) ? (
+                  <div>
+                    <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
+                      Related Case Study
+                    </div>
+                    <Link
+                      href={getCaseStudyForResource(activeResource.name)!.href}
+                      className="mt-1 inline-flex text-sm font-medium text-zinc-900 underline decoration-[#d6ae66]/60 decoration-2 underline-offset-4 transition hover:text-[#7a5a24] hover:[text-shadow:0_0_14px_rgba(214,174,102,0.75)]"
+                    >
+                      {getCaseStudyForResource(activeResource.name)!.label}
+                    </Link>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

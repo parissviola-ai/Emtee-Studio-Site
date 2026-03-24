@@ -2,7 +2,7 @@ import type { Room } from "./types";
 
 export const orangeRoom: Room = {
     slug: "orange",
-    title: "Orange Room",
+    title: "Dirty Elephant Studio",
     backgroundImage: "/rooms/orangeroomwlogo.png",
     hotspots: [
       { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/live", x: 90, y:  20, direction: "right" },

@@ -7,14 +7,14 @@ import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "re
 
 const EXPLORE_LINKS = [
   { label: "Request A Consultation", href: "/consultation" },
-  { label: "Labels and Partners", href: "/labels-partners" },
+  { label: "Labels and Partners", href: "/artist-roster-releases#partners" },
   { label: "Lobby", href: "/rooms/front" },
   { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
   { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
   { label: "Marketing Department", href: "/rooms/EMTEEMarketingDept" },
   { label: "Publishing / Distribution Department", href: "/rooms/EMTEEPublishingandDistroDept" },
   { label: "A&R / Sales Department", href: "/rooms/EMTEEARSalesDept" },
-  { label: "Yanchan Produced", href: "/rooms/orange" },
+  { label: "Dirty Elephant Studio", href: "/rooms/orange" },
   { label: "Ten Ten Entertainment", href: "/rooms/live" },
   { label: "Steeped Dreams Studio", href: "/rooms/quiet" },
 ];
@@ -62,31 +62,31 @@ export default function ConditionalExploreBar() {
   return (
     <>
       {isMobileViewport ? (
-        <div className="fixed bottom-6 left-6 z-40">
+        <div className="fixed bottom-6 right-6 z-40">
           <button
             type="button"
             aria-label="Open Explore menu"
             onClick={() => setOpen(true)}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white backdrop-blur-xl transition hover:bg-black/65"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
           >
             <span className="text-white/80">⌕</span>
           </button>
         </div>
       ) : (
-        <div className="fixed bottom-6 left-6 right-6 z-40">
-          <div className="flex w-full items-stretch gap-2">
+        <div className="fixed bottom-6 right-6 z-40">
+          <div className="flex items-stretch gap-2">
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex flex-1 items-center gap-3 rounded-2xl border border-white/15 bg-black/55 px-4 py-3 text-left text-white backdrop-blur-xl transition hover:bg-black/65"
+              className="flex h-11 w-[min(30vw,220px)] min-w-[170px] items-center gap-2.5 rounded-2xl border border-white/14 bg-black/30 px-3.5 py-2 text-left backdrop-blur-xl transition hover:bg-black/42"
             >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/40">
-                <span className="text-white/80">⌕</span>
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/18 bg-black/26">
+                <span className="text-white/76">⌕</span>
               </span>
 
               <div className="flex-1">
-                <div className="text-sm font-semibold text-white/92">Explore</div>
-                <div className="text-xs text-white/65">Open navigation</div>
+                <div className="text-[13px] font-semibold text-white/88">Explore</div>
+                <div className="text-[10px] uppercase tracking-[0.12em] text-white/52">All Rooms</div>
               </div>
             </button>
             <button
@@ -94,7 +94,7 @@ export default function ConditionalExploreBar() {
               aria-label="Go to next page"
               title={`Next: ${nextExploreEntry.label}`}
               onClick={() => router.push(nextExploreEntry.href)}
-              className="group relative inline-flex w-12 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-black/55 text-white/75 backdrop-blur-xl transition hover:bg-black/65 hover:text-white"
+              className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
             >
               →
               <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
@@ -142,8 +142,8 @@ export default function ConditionalExploreBar() {
               {EXPLORE_LINKS.map((item, index) => {
                 const isApply = item.label.toLowerCase().includes("apply");
                 const isUtilityLink =
-                  item.href === "/consultation" || item.href === "/labels-partners";
-                const isLastUtilityLink = item.href === "/labels-partners";
+                  item.href === "/consultation" || item.href === "/artist-roster-releases#partners";
+                const isLastUtilityLink = item.href === "/artist-roster-releases#partners";
                 return (
                   <Link
                     key={item.label}

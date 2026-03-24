@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const marketingRoom: Room = {
     slug: "EMTEEMarketingDept",
     title: "Marketing",
-    backgroundImage: "/rooms/marketing1.png",
+    backgroundImage: "/rooms/colorizedmarketing.png",
     hotspots: [
       { id: "next-room", label: "Publishing and Distro", href: "/rooms/EMTEEPublishingandDistroDept", x: 90, y: 17, direction: "right" },
       {
@@ -26,8 +26,8 @@ export const marketingRoom: Room = {
       {
         id: "marketing-brand-deck-epk",
         label: "Brand Deck + EPK",
-        x: 3,
-        y: 50,
+        x: 8,
+        y: 45,
         direction: "left",
         variant: "dot",
         modal: {
@@ -60,8 +60,8 @@ export const marketingRoom: Room = {
       {
         id: "marketing-brand-deck",
         label: "Brand Deck",
-        x: 6,
-        y: 34,
+        x: 10,
+        y: 30,
         direction: "left",
         variant: "dot",
         modal: {
@@ -85,6 +85,9 @@ export const marketingRoom: Room = {
           title: "30min Live Performance Set Development",
           body:
             "Marketing department live performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
+          links: [
+            { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
+          ],
           primaryLabel: "Request a Consultation",
           primaryHref: "/consultation",
           secondaryLabel: "Resource Packages",
@@ -102,6 +105,9 @@ export const marketingRoom: Room = {
           title: "60min Live Performance Set Development",
           body:
             "Marketing department expanded live performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
+          links: [
+            { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
+          ],
           primaryLabel: "Request a Consultation",
           primaryHref: "/consultation",
           secondaryLabel: "Resource Packages",
@@ -111,7 +117,7 @@ export const marketingRoom: Room = {
       {
         id: "marketing-brand-deals",
         label: "Brand Deals",
-        x: 20,
+        x: 25,
         y: 80,
         direction: "up",
         variant: "dot",

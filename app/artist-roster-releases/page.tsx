@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type RosterItem = {
   artist: string;
@@ -22,6 +22,12 @@ type SupportedArtist = {
   imageSrc?: string;
   imageAlt?: string;
   imagePosition?: string;
+};
+
+type Partner = {
+  name: string;
+  src: string;
+  href: string;
 };
 
 const DIRECT_ROSTER: RosterItem[] = [
@@ -327,8 +333,140 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
   },
 ];
 
+const PARTNERS: Partner[] = [
+  { name: "UMusic", src: "/partners/umusic.png", href: "https://www.universalmusic.com" },
+  { name: "Republic Records", src: "/partners/republic.png", href: "https://www.republicrecords.com" },
+  { name: "Sony", src: "/partners/sony.png", href: "https://www.sonymusic.com" },
+  { name: "Cadence", src: "/partners/cadence.png", href: "https://cadencemusicgroup.com/" },
+  { name: "Dharma Studio", src: "/partners/dharmastudio.png", href: "https://www.dharmaworldwide.com/" },
+  { name: "Bonfire Records", src: "/partners/bonfire.png", href: "https://www.bonfiremusicgroup.com/about/" },
+  { name: "Spinnin’ Records", src: "/partners/spinnin2.svg", href: "https://www.spinninrecords.com" },
+];
+
 export default function ArtistRosterReleasesPage() {
-  const [activePanel, setActivePanel] = useState<"direct" | "supported">("direct");
+  const [activeView, setActiveView] = useState<"artists" | "partners">("artists");
+
+  useEffect(() => {
+    function syncViewFromHash() {
+      setActiveView(window.location.hash === "#partners" ? "partners" : "artists");
+    }
+
+    syncViewFromHash();
+    window.addEventListener("hashchange", syncViewFromHash);
+    return () => window.removeEventListener("hashchange", syncViewFromHash);
+  }, []);
+
+  function switchView(nextView: "artists" | "partners") {
+    setActiveView(nextView);
+    const nextHash = nextView === "partners" ? "#partners" : "#artists";
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${nextHash}`);
+  }
+
+  if (activeView === "partners") {
+    return (
+      <main className="relative min-h-[100svh] w-full overflow-hidden bg-black text-white">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-0 bg-black" />
+          <div className="absolute inset-0 bg-[radial-gradient(1000px_520px_at_50%_-10%,rgba(214,174,102,0.16),transparent_68%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(1200px_700px_at_25%_10%,rgba(255,255,255,0.08),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(900px_600px_at_75%_55%,rgba(255,255,255,0.05),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.0),rgba(0,0,0,0.55))]" />
+        </div>
+
+        <div className="relative">
+          <div className="mx-auto max-w-7xl px-5 pb-12 pt-24 sm:px-6 sm:pt-28">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => switchView("artists")}
+                    className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white"
+                  >
+                    Other Artists
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => switchView("partners")}
+                    className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/45 bg-white/12 px-5 py-2 text-sm font-semibold text-white transition"
+                  >
+                    Labels & Partners
+                  </button>
+                </div>
+
+                <h1 className="mt-6 text-3xl font-semibold tracking-tight">
+                  Labels & Partners
+                </h1>
+                <p className="mt-3 max-w-2xl text-white/70">
+                  A selection of labels and partners we&apos;ve collaborated with to elevate our artists&apos; careers.
+                </p>
+                <div className="mt-2 text-xs uppercase tracking-widest text-white/50">
+                  Trusted by industry leaders
+                </div>
+                <div className="mt-2 h-px w-24 bg-gradient-to-r from-[#d6ae66]/80 via-white/45 to-transparent" />
+                <Image
+                  src="/logotransparent.png"
+                  alt="EMTEE logo"
+                  width={168}
+                  height={52}
+                  className="mt-4 h-9 w-auto object-contain brightness-0 invert opacity-85 sm:h-10"
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href="/artist-roster-releases/case-studies-2"
+                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)]"
+                >
+                  Case Study 2
+                </Link>
+                <Link
+                  href="/rooms/front"
+                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)]"
+                >
+                  Back to Lobby
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-10">
+              {PARTNERS.map((partner) => (
+                <a
+                  key={partner.name}
+                  href={partner.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={partner.name}
+                  className="group relative flex items-center justify-center rounded-3xl border border-white/12 bg-black/35 px-8 py-10 backdrop-blur-md shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_25px_80px_rgba(0,0,0,0.55)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[#d6ae66]/45 hover:bg-black/45 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_0_0_1px_rgba(214,174,102,0.16),0_30px_90px_rgba(0,0,0,0.65),0_0_40px_rgba(255,255,255,0.10),0_0_52px_rgba(214,174,102,0.18)] hover:after:absolute hover:after:bottom-6 hover:after:h-px hover:after:w-12 hover:after:bg-gradient-to-r hover:after:from-[#d6ae66]/85 hover:after:via-white/40 hover:after:to-transparent hover:after:content-[''] sm:px-12 sm:py-16"
+                >
+                  <div className="relative h-16 w-full sm:h-24">
+                    <Image
+                      src={partner.src}
+                      alt={partner.name}
+                      fill
+                      draggable={false}
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 24vw"
+                      className="object-contain opacity-90 transition group-hover:opacity-100 group-hover:drop-shadow-[0_0_18px_rgba(255,255,255,0.16)] group-hover:drop-shadow-[0_0_24px_rgba(214,174,102,0.2)]"
+                    />
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-12 text-xs text-white/45">
+              Want to be listed as a partner?{" "}
+              <Link href="/consultation" className="underline hover:text-white/80">
+                Request a consultation
+              </Link>
+              .
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-[100svh] overflow-hidden bg-white text-black">
@@ -345,11 +483,10 @@ export default function ArtistRosterReleasesPage() {
           <div className="mt-3 flex items-start justify-between gap-4">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-                Artist Supported Through Our Resources
+                Other Artist We&apos;ve Worked With
               </h1>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-700 sm:text-base">
-                Two categories are shown below: direct EMTEE roster artists, and artists supported through
-                department resources.
+                A selection of artists EMTEE has worked with through department resources, execution, and development support.
               </p>
             </div>
             <Image
@@ -363,16 +500,26 @@ export default function ArtistRosterReleasesPage() {
         </div>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="rounded-full border border-black/12 bg-white px-4 py-2 text-xs font-semibold tracking-[0.14em] text-black/65">
-            Direct Roster + Resource-Supported Artists
-          </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href="/artist-roster-releases/case-studies-2"
-              className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/12 px-5 py-2 text-sm font-semibold text-[#6f511a] transition hover:bg-[#d6ae66]/20"
+            <button
+              type="button"
+              onClick={() => switchView("artists")}
+              className={[
+                "inline-flex items-center justify-center rounded-full border px-5 py-2 text-sm font-semibold transition",
+                activeView === "artists"
+                  ? "border-[#d6ae66]/55 bg-[#d6ae66]/12 text-[#6f511a]"
+                  : "border-black/15 bg-white text-black/70 hover:border-[#d6ae66]/45 hover:bg-black/[0.03]",
+              ].join(" ")}
             >
-              Case Study 2
-            </Link>
+              Other Artists
+            </button>
+            <button
+              type="button"
+              onClick={() => switchView("partners")}
+              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/70 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
+            >
+              Labels & Partners
+            </button>
             <Link
               href="/rooms/front"
               className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
@@ -383,152 +530,44 @@ export default function ArtistRosterReleasesPage() {
         </div>
 
         <section className="mt-8">
-          <div className="mb-4 inline-flex rounded-full border border-black/15 bg-white p-1 shadow-[0_8px_22px_rgba(0,0,0,0.08)]">
-            <button
-              type="button"
-              onClick={() => setActivePanel("direct")}
-              className={[
-                "rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition",
-                activePanel === "direct"
-                  ? "bg-black text-white shadow-[0_8px_18px_rgba(0,0,0,0.22)]"
-                  : "text-black/65 hover:text-black",
-              ].join(" ")}
-            >
-              Direct EMTEE Artists
-            </button>
-            <button
-              type="button"
-              onClick={() => setActivePanel("supported")}
-              className={[
-                "rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition",
-                activePanel === "supported"
-                  ? "bg-black text-white shadow-[0_8px_18px_rgba(0,0,0,0.22)]"
-                  : "text-black/65 hover:text-black",
-              ].join(" ")}
-            >
-              Artists Supported Through Resources
-            </button>
-          </div>
-
-          {activePanel === "direct" ? (
-            <div className="animate-[fadeIn_220ms_ease-out]">
-              <div className="mb-4 rounded-xl border border-black/18 bg-[linear-gradient(145deg,rgba(0,0,0,0.05),rgba(0,0,0,0.015))] px-4 py-3 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="text-[12px] font-bold uppercase tracking-[0.18em] text-black/88">
-                    Direct EMTEE Artists
-                  </div>
-                  <div className="rounded-full border border-black/25 bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-black/75">
-                    Core Roster
-                  </div>
-                </div>
-                <p className="mt-1 text-sm font-medium text-zinc-700">
-                  Artists in EMTEE&apos;s direct roster.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-                {DIRECT_ROSTER.map((item) => (
+          <div className="animate-[fadeIn_220ms_ease-out]">
+            <div className="grid gap-3 md:grid-cols-2">
+              {RESOURCE_SUPPORTED_ARTISTS.map((item, index) => (
                 <article
-                  key={item.artist}
-                  className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-white p-3 shadow-[0_16px_48px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#d6ae66]/62 hover:shadow-[0_0_0_1px_rgba(214,174,102,0.28),0_0_24px_rgba(214,174,102,0.2),0_24px_58px_rgba(0,0,0,0.18)]"
+                  key={`${item.artist}-${item.supportLane}-${index}`}
+                  className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_34px_rgba(0,0,0,0.08)]"
                 >
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100 bg-[radial-gradient(460px_240px_at_8%_0%,rgba(214,174,102,0.24),transparent_72%)]"
-                  />
-
-                  <div className="relative overflow-hidden rounded-lg border border-black/10 bg-white">
-                    <Image
-                      src={item.imageSrc}
-                      alt={item.imageAlt}
-                      width={1200}
-                      height={720}
-                      className="aspect-[3/4] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]"
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
-                      draggable={false}
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/72 via-black/18 to-transparent" />
-                    <div className="absolute left-2 top-2 rounded-full border border-black/12 bg-white/75 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.15em] text-black/70">
-                      {item.catalogId}
+                  {item.imageSrc ? (
+                    <div className="overflow-hidden rounded-lg border border-black/8 bg-black/[0.02]">
+                      <Image
+                        src={item.imageSrc}
+                        alt={item.imageAlt ?? `${item.artist} image`}
+                        width={1200}
+                        height={720}
+                        className="aspect-[16/9] w-full object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
+                        draggable={false}
+                      />
                     </div>
+                  ) : null}
+                  <div className="inline-flex rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7c5b20]">
+                    {item.supportLane}
                   </div>
-
-                  <div className="relative mt-3 min-h-[2.9rem] text-[10px] font-semibold uppercase tracking-[0.16em] text-black/65 sm:min-h-0">
-                    {item.role}
-                  </div>
-                  <h2 className="relative mt-1.5 min-h-[2.25rem] text-base font-semibold text-zinc-900 sm:min-h-0 sm:text-lg">
-                    {item.artist}
-                  </h2>
-
-                  <div className="relative mt-auto pt-3 flex">
-                    <a
-                      href={item.instagramHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex w-full items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/16 px-3 py-1.5 text-xs font-semibold text-[#6f511a] shadow-[0_0_14px_rgba(214,174,102,0.18)] transition hover:bg-[#d6ae66]/24 hover:text-[#3e2d0d]"
+                  <h2 className="mt-2 text-lg font-semibold text-zinc-900">{item.artist}</h2>
+                  <p className="mt-1 text-sm text-zinc-700">{item.note}</p>
+                  {item.caseStudyHref ? (
+                    <Link
+                      href={item.caseStudyHref}
+                      className="mt-3 inline-flex items-center text-sm font-semibold text-[#7c5b20] transition hover:text-[#5b4217]"
                     >
-                      Instagram
-                    </a>
-                  </div>
+                      View Case Study →
+                    </Link>
+                  ) : null}
                 </article>
-                ))}
-              </div>
+              ))}
             </div>
-          ) : (
-            <div className="animate-[fadeIn_220ms_ease-out]">
-              <div className="mb-4 rounded-xl border border-black/15 border-dashed bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(0,0,0,0.02))] px-4 py-3 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="text-[12px] font-bold uppercase tracking-[0.18em] text-black/78">
-                    Artists Supported Through Resources
-                  </div>
-                  <div className="rounded-full border border-black/20 bg-black/[0.03] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-black/70">
-                    Department Support
-                  </div>
-                </div>
-                <p className="mt-1 text-sm font-medium text-zinc-700">
-                  Artists supported through specific department resources.
-                </p>
-              </div>
-
-              <div className="grid gap-3 md:grid-cols-2">
-                {RESOURCE_SUPPORTED_ARTISTS.map((item, index) => (
-                  <article
-                    key={`${item.artist}-${item.supportLane}-${index}`}
-                    className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_34px_rgba(0,0,0,0.08)]"
-                  >
-                    {item.imageSrc ? (
-                      <div className="overflow-hidden rounded-lg border border-black/8 bg-black/[0.02]">
-                        <Image
-                          src={item.imageSrc}
-                          alt={item.imageAlt ?? `${item.artist} image`}
-                          width={1200}
-                          height={720}
-                          className="aspect-[16/9] w-full object-cover"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
-                          draggable={false}
-                        />
-                      </div>
-                    ) : null}
-                    <div className="inline-flex rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7c5b20]">
-                      {item.supportLane}
-                    </div>
-                    <h2 className="mt-2 text-lg font-semibold text-zinc-900">{item.artist}</h2>
-                    <p className="mt-1 text-sm text-zinc-700">{item.note}</p>
-                    {item.caseStudyHref ? (
-                      <Link
-                        href={item.caseStudyHref}
-                        className="mt-3 inline-flex items-center text-sm font-semibold text-[#7c5b20] transition hover:text-[#5b4217]"
-                      >
-                        View Case Study →
-                      </Link>
-                    ) : null}
-                  </article>
-                ))}
-              </div>
-            </div>
-          )}
+          </div>
         </section>
       </section>
     </main>

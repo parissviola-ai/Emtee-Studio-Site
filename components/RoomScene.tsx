@@ -560,6 +560,7 @@ export default function RoomScene({ room }: { room: Room }) {
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
   const tiltBaselineRef = useRef<{ beta: number; gamma: number } | null>(null);
+  const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltSignalSeenRef = useRef(false);
 
   // video audio state
@@ -1029,6 +1030,7 @@ export default function RoomScene({ room }: { room: Room }) {
     }
 
     tiltBaselineRef.current = null;
+    tiltFilteredReadingRef.current = null;
     tiltSignalSeenRef.current = false;
     setTiltPermissionNeeded(false);
     setTiltStatus("listening");
@@ -1321,6 +1323,7 @@ export default function RoomScene({ room }: { room: Room }) {
     if (!isMobileViewport || !tiltEnabled || !canPanRoom) {
       setMobileTiltPan({ x: 0, y: 0 });
       tiltBaselineRef.current = null;
+      tiltFilteredReadingRef.current = null;
       tiltSignalSeenRef.current = false;
       tiltPanTargetRef.current = { x: 0, y: 0 };
       if (tiltPanFrameRef.current) {
@@ -1340,23 +1343,37 @@ export default function RoomScene({ room }: { room: Room }) {
       tiltSignalSeenRef.current = true;
       setTiltStatus("active");
 
-      const nextReading = { beta: event.beta, gamma: event.gamma };
+      const rawReading = { beta: event.beta, gamma: event.gamma };
+      const previousFiltered = tiltFilteredReadingRef.current ?? rawReading;
+      const nextReading = {
+        beta: previousFiltered.beta + (rawReading.beta - previousFiltered.beta) * 0.18,
+        gamma: previousFiltered.gamma + (rawReading.gamma - previousFiltered.gamma) * 0.18,
+      };
+      tiltFilteredReadingRef.current = nextReading;
+
       if (!tiltBaselineRef.current) {
         tiltBaselineRef.current = nextReading;
       }
 
       const baseline = tiltBaselineRef.current;
-      const baselineDrift = 0.035;
-      tiltBaselineRef.current = {
-        beta: baseline.beta + (nextReading.beta - baseline.beta) * baselineDrift,
-        gamma: baseline.gamma + (nextReading.gamma - baseline.gamma) * baselineDrift,
-      };
       const deltaGamma = nextReading.gamma - baseline.gamma;
       const deltaBeta = nextReading.beta - baseline.beta;
+      const movementDeadzone = { gamma: 1.1, beta: 1.1 };
+
+      if (Math.abs(deltaGamma) < movementDeadzone.gamma && Math.abs(deltaBeta) < movementDeadzone.beta) {
+        tiltBaselineRef.current = {
+          beta: baseline.beta + (nextReading.beta - baseline.beta) * 0.12,
+          gamma: baseline.gamma + (nextReading.gamma - baseline.gamma) * 0.12,
+        };
+        return;
+      }
+
       const normalizedGamma = clamp(deltaGamma / 14, -1, 1);
       const normalizedBeta = clamp(deltaBeta / 16, -1, 1);
-      const shapedGamma = Math.sign(normalizedGamma) * Math.pow(Math.abs(normalizedGamma), 1.08);
-      const shapedBeta = Math.sign(normalizedBeta) * Math.pow(Math.abs(normalizedBeta), 1.15);
+      const gammaWithDeadzone = Math.abs(normalizedGamma) < 0.08 ? 0 : normalizedGamma;
+      const betaWithDeadzone = Math.abs(normalizedBeta) < 0.08 ? 0 : normalizedBeta;
+      const shapedGamma = Math.sign(gammaWithDeadzone) * Math.pow(Math.abs(gammaWithDeadzone), 1.08);
+      const shapedBeta = Math.sign(betaWithDeadzone) * Math.pow(Math.abs(betaWithDeadzone), 1.15);
       const xRange = maxPanX * 0.98;
       const yRange = maxPanY * 0.86;
       const nextX = clamp(
@@ -1975,6 +1992,7 @@ export default function RoomScene({ room }: { room: Room }) {
                 setTiltEnabled(false);
                 setMobileTiltPan({ x: 0, y: 0 });
                 tiltBaselineRef.current = null;
+                tiltFilteredReadingRef.current = null;
                 tiltSignalSeenRef.current = false;
                 setTiltStatus("idle");
               }}

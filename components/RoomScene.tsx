@@ -1148,6 +1148,12 @@ export default function RoomScene({ room }: { room: Room }) {
         y: clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
+  const displayedHotspotPan = isMobileViewport
+    ? {
+        x: clamp(mobilePan.x + mobileTiltPan.x * 0.9, -maxPanX, maxPanX),
+        y: clamp(mobilePan.y + mobileTiltPan.y * 0.92, -maxPanY, maxPanY),
+      }
+    : { x: 0, y: 0 };
 
   function getMobileHotspotStyle(spot: Hotspot) {
     const shiftConversationBlueprintRight =
@@ -1172,8 +1178,10 @@ export default function RoomScene({ room }: { room: Room }) {
         top: shiftLivePackagesDown ? `calc(${spot.y}% + 3in)` : `${spot.y}%`,
       };
     }
-    const left = mobileImageMetrics.offsetX + (spot.x / 100) * mobileImageMetrics.renderedW + displayedPan.x;
-    const top = mobileImageMetrics.offsetY + (spot.y / 100) * mobileImageMetrics.renderedH + displayedPan.y;
+    const left =
+      mobileImageMetrics.offsetX + (spot.x / 100) * mobileImageMetrics.renderedW + displayedHotspotPan.x;
+    const top =
+      mobileImageMetrics.offsetY + (spot.y / 100) * mobileImageMetrics.renderedH + displayedHotspotPan.y;
     return {
       left: shiftConversationBlueprintRight
         ? `calc(${left}px + 2in)`

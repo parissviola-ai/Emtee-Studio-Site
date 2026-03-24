@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import RoomScene from "@/components/RoomScene";
 import { rooms } from "@/data/rooms";
@@ -36,5 +37,9 @@ export default async function RoomPage({
     );
   }
 
-  return <RoomScene room={room} />;
+  return (
+    <Suspense fallback={null}>
+      <RoomScene room={room} />
+    </Suspense>
+  );
 }

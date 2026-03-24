@@ -1150,8 +1150,8 @@ export default function RoomScene({ room }: { room: Room }) {
     : { x: 0, y: 0 };
   const displayedHotspotPan = isMobileViewport
     ? {
-        x: clamp(mobilePan.x + mobileTiltPan.x * 0.9, -maxPanX, maxPanX),
-        y: clamp(mobilePan.y + mobileTiltPan.y * 0.92, -maxPanY, maxPanY),
+        x: clamp(mobilePan.x + mobileTiltPan.x * 0.82, -maxPanX, maxPanX),
+        y: clamp(mobilePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
 
@@ -1354,8 +1354,8 @@ export default function RoomScene({ room }: { room: Room }) {
       const rawReading = { beta: event.beta, gamma: event.gamma };
       const previousFiltered = tiltFilteredReadingRef.current ?? rawReading;
       const nextReading = {
-        beta: previousFiltered.beta + (rawReading.beta - previousFiltered.beta) * 0.18,
-        gamma: previousFiltered.gamma + (rawReading.gamma - previousFiltered.gamma) * 0.18,
+        beta: previousFiltered.beta + (rawReading.beta - previousFiltered.beta) * 0.12,
+        gamma: previousFiltered.gamma + (rawReading.gamma - previousFiltered.gamma) * 0.12,
       };
       tiltFilteredReadingRef.current = nextReading;
 
@@ -1366,20 +1366,21 @@ export default function RoomScene({ room }: { room: Room }) {
       const baseline = tiltBaselineRef.current;
       const deltaGamma = nextReading.gamma - baseline.gamma;
       const deltaBeta = nextReading.beta - baseline.beta;
-      const movementDeadzone = { gamma: 1.1, beta: 1.1 };
+      const movementDeadzone = { gamma: 1.6, beta: 1.6 };
 
       if (Math.abs(deltaGamma) < movementDeadzone.gamma && Math.abs(deltaBeta) < movementDeadzone.beta) {
+        scheduleTiltPan({ x: 0, y: 0 });
         tiltBaselineRef.current = {
-          beta: baseline.beta + (nextReading.beta - baseline.beta) * 0.12,
-          gamma: baseline.gamma + (nextReading.gamma - baseline.gamma) * 0.12,
+          beta: baseline.beta + (nextReading.beta - baseline.beta) * 0.18,
+          gamma: baseline.gamma + (nextReading.gamma - baseline.gamma) * 0.18,
         };
         return;
       }
 
       const normalizedGamma = clamp(deltaGamma / 14, -1, 1);
       const normalizedBeta = clamp(deltaBeta / 16, -1, 1);
-      const gammaWithDeadzone = Math.abs(normalizedGamma) < 0.08 ? 0 : normalizedGamma;
-      const betaWithDeadzone = Math.abs(normalizedBeta) < 0.08 ? 0 : normalizedBeta;
+      const gammaWithDeadzone = Math.abs(normalizedGamma) < 0.12 ? 0 : normalizedGamma;
+      const betaWithDeadzone = Math.abs(normalizedBeta) < 0.12 ? 0 : normalizedBeta;
       const shapedGamma = Math.sign(gammaWithDeadzone) * Math.pow(Math.abs(gammaWithDeadzone), 1.08);
       const shapedBeta = Math.sign(betaWithDeadzone) * Math.pow(Math.abs(betaWithDeadzone), 1.15);
       const xRange = maxPanX * 0.98;

@@ -1106,8 +1106,8 @@ export default function RoomScene({ room }: { room: Room }) {
   const animateTiltPan = useCallback(() => {
     const target = tiltPanTargetRef.current;
     setMobileTiltPan((prev) => {
-      const nextX = prev.x + (target.x - prev.x) * 0.18;
-      const nextY = prev.y + (target.y - prev.y) * 0.18;
+      const nextX = prev.x + (target.x - prev.x) * 0.11;
+      const nextY = prev.y + (target.y - prev.y) * 0.11;
       if (Math.abs(nextX - target.x) < 0.2 && Math.abs(nextY - target.y) < 0.2) {
         tiltPanFrameRef.current = undefined;
         return { x: target.x, y: target.y };
@@ -1207,8 +1207,8 @@ export default function RoomScene({ room }: { room: Room }) {
   const animateDesktopPan = useCallback(() => {
     const target = desktopPanTargetRef.current;
     setDesktopCursorPan((prev) => {
-      const nextX = prev.x + (target.x - prev.x) * 0.16;
-      const nextY = prev.y + (target.y - prev.y) * 0.16;
+      const nextX = prev.x + (target.x - prev.x) * 0.13;
+      const nextY = prev.y + (target.y - prev.y) * 0.13;
       if (Math.abs(nextX - target.x) < 0.25 && Math.abs(nextY - target.y) < 0.25) {
         desktopPanFrameRef.current = undefined;
         return { x: target.x, y: target.y };

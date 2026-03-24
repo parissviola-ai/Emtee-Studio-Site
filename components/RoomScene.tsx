@@ -545,6 +545,8 @@ export default function RoomScene({ room }: { room: Room }) {
   const touchPanStartRef = useRef<{ x: number; y: number; panX: number; panY: number; dragging: boolean } | null>(null);
   const panFrameRef = useRef<number | undefined>(undefined);
   const panNextRef = useRef<{ x: number; y: number } | null>(null);
+  const tiltPanFrameRef = useRef<number | undefined>(undefined);
+  const tiltPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const desktopPanFrameRef = useRef<number | undefined>(undefined);
   const desktopPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
@@ -882,7 +884,7 @@ export default function RoomScene({ room }: { room: Room }) {
   const eagerBackgroundLoad = room.slug === "front" || room.slug === "live";
   const isMusicRoom = room.slug === "EMTEEMusicDept";
   const isMarketingRoomZoomedOut = room.slug === "EMTEEMarketingDept";
-  const mobileSceneScale = 1;
+  const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
   const desktopSceneScale =
     room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom
       ? 1
@@ -1101,6 +1103,26 @@ export default function RoomScene({ room }: { room: Room }) {
     });
   }
 
+  const animateTiltPan = useCallback(() => {
+    const target = tiltPanTargetRef.current;
+    setMobileTiltPan((prev) => {
+      const nextX = prev.x + (target.x - prev.x) * 0.18;
+      const nextY = prev.y + (target.y - prev.y) * 0.18;
+      if (Math.abs(nextX - target.x) < 0.2 && Math.abs(nextY - target.y) < 0.2) {
+        tiltPanFrameRef.current = undefined;
+        return { x: target.x, y: target.y };
+      }
+      tiltPanFrameRef.current = window.requestAnimationFrame(animateTiltPan);
+      return { x: nextX, y: nextY };
+    });
+  }, []);
+
+  function scheduleTiltPan(nextPan: { x: number; y: number }) {
+    tiltPanTargetRef.current = nextPan;
+    if (tiltPanFrameRef.current) return;
+    tiltPanFrameRef.current = window.requestAnimationFrame(animateTiltPan);
+  }
+
   function isInteractiveTarget(target: EventTarget | null) {
     if (!(target instanceof Element)) return false;
     return !!target.closest("a,button,input,textarea,select,iframe,[data-no-pan]");
@@ -1172,6 +1194,9 @@ export default function RoomScene({ room }: { room: Room }) {
       }
       if (panFrame) {
         window.cancelAnimationFrame(panFrame);
+      }
+      if (tiltPanFrameRef.current) {
+        window.cancelAnimationFrame(tiltPanFrameRef.current);
       }
       if (desktopPanFrame) {
         window.cancelAnimationFrame(desktopPanFrame);
@@ -1247,6 +1272,15 @@ export default function RoomScene({ room }: { room: Room }) {
   useEffect(() => {
     if (!hasHydrated || typeof window === "undefined") return;
     if (!isHotspotTierPilotRoom) return;
+
+    if (room.slug === "front") {
+      setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: false }));
+      try {
+        window.sessionStorage.removeItem(getShowMoreStorageKey(room.slug));
+      } catch {}
+      return;
+    }
+
     try {
       const raw = window.sessionStorage.getItem(getShowMoreStorageKey(room.slug));
       if (raw == null) return;
@@ -1288,6 +1322,11 @@ export default function RoomScene({ room }: { room: Room }) {
       setMobileTiltPan({ x: 0, y: 0 });
       tiltBaselineRef.current = null;
       tiltSignalSeenRef.current = false;
+      tiltPanTargetRef.current = { x: 0, y: 0 };
+      if (tiltPanFrameRef.current) {
+        window.cancelAnimationFrame(tiltPanFrameRef.current);
+        tiltPanFrameRef.current = undefined;
+      }
       setTiltStatus((prev) => (prev === "blocked" ? prev : "idle"));
       return;
     }
@@ -1309,12 +1348,16 @@ export default function RoomScene({ room }: { room: Room }) {
       const baseline = tiltBaselineRef.current;
       const deltaGamma = nextReading.gamma - baseline.gamma;
       const deltaBeta = nextReading.beta - baseline.beta;
-      const xRange = Math.min(maxPanX, 88);
-      const yRange = Math.min(maxPanY, 54);
-      const nextX = clamp((-deltaGamma / 10) * xRange, -xRange, xRange);
-      const nextY = clamp((-deltaBeta / 12) * yRange, -yRange, yRange);
+      const normalizedGamma = clamp(deltaGamma / 18, -1, 1);
+      const normalizedBeta = clamp(deltaBeta / 16, -1, 1);
+      const shapedGamma = Math.sign(normalizedGamma) * Math.pow(Math.abs(normalizedGamma), 1.15);
+      const shapedBeta = Math.sign(normalizedBeta) * Math.pow(Math.abs(normalizedBeta), 1.15);
+      const xRange = maxPanX * 0.82;
+      const yRange = maxPanY * 0.72;
+      const nextX = clamp(-shapedGamma * xRange, -xRange, xRange);
+      const nextY = clamp(-shapedBeta * yRange, -yRange, yRange);
 
-      setMobileTiltPan({ x: nextX, y: nextY });
+      scheduleTiltPan({ x: nextX, y: nextY });
     }
 
     const blockTimer = window.setTimeout(() => {
@@ -1838,7 +1881,9 @@ export default function RoomScene({ room }: { room: Room }) {
               objectPosition: isMarketingRoom && !isMobileViewport
                 ? "50% 42%"
                 : isMobileViewport
-                  ? `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                  ? room.slug === "front"
+                    ? `calc(54% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                    : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
                   : `50% ${backgroundObjectPositionY}%`,

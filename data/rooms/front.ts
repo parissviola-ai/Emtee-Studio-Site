@@ -4,7 +4,6 @@ export const frontRoom: Room = {
     slug: "front",
     title: "Lobby",
     backgroundImage: "/rooms/finishedlobby.png",
-    backgroundVideo: "/rooms/lobbynews.mp4",
     hotspots: [
       {
         id: "News",

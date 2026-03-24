@@ -1309,10 +1309,10 @@ export default function RoomScene({ room }: { room: Room }) {
       const baseline = tiltBaselineRef.current;
       const deltaGamma = nextReading.gamma - baseline.gamma;
       const deltaBeta = nextReading.beta - baseline.beta;
-      const xRange = Math.min(maxPanX, 34);
-      const yRange = Math.min(maxPanY, 22);
-      const nextX = clamp((-deltaGamma / 18) * xRange, -xRange, xRange);
-      const nextY = clamp((-deltaBeta / 22) * yRange, -yRange, yRange);
+      const xRange = Math.min(maxPanX, 88);
+      const yRange = Math.min(maxPanY, 54);
+      const nextX = clamp((-deltaGamma / 10) * xRange, -xRange, xRange);
+      const nextY = clamp((-deltaBeta / 12) * yRange, -yRange, yRange);
 
       setMobileTiltPan({ x: nextX, y: nextY });
     }

@@ -17,7 +17,7 @@ export default async function LiveSetDevelopmentApplyPage({
       <div className="relative mx-auto max-w-3xl">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
-            href="/rooms/live"
+            href="/rooms/ten-ten-entertainment"
             className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/15"
           >
             Back to Live Performance
@@ -27,7 +27,7 @@ export default async function LiveSetDevelopmentApplyPage({
         <section className="mt-8 rounded-[30px] border border-white/15 bg-black/45 p-8 shadow-[0_24px_72px_rgba(0,0,0,0.5)] backdrop-blur md:p-10">
           <p className="text-xs uppercase tracking-[0.22em] text-white/60">Live Set Performance Development</p>
           <h1 className="mt-3 text-4xl tracking-tight text-white md:text-5xl">Short Form</h1>
-          <p className="mt-4 text-white/75">Make your performance stand out. Apply for live set development support.</p>
+          <p className="mt-4 text-white/75">Make your performance stand out. Apply for ten-ten-entertainment set development support.</p>
 
           {status === "success" ? (
             <div className="mt-7 rounded-2xl border border-emerald-300/45 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
@@ -40,7 +40,7 @@ export default async function LiveSetDevelopmentApplyPage({
             </div>
           ) : null}
 
-          <form className="mt-8 grid grid-cols-1 gap-5" action="/api/live-set-development-apply" method="post">
+          <form className="mt-8 grid grid-cols-1 gap-5" action="/api/ten-ten-entertainment-set-development-apply" method="post">
             <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" />
 
             <label className="block">
@@ -60,7 +60,7 @@ export default async function LiveSetDevelopmentApplyPage({
 
             <label className="block">
               <span className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">Performance Link</span>
-              <input name="performance_link" type="url" required className="mt-2 h-12 w-full rounded-xl border border-white/20 bg-black/35 px-4 text-sm text-white outline-none transition focus:border-white/45 focus:ring-2 focus:ring-white/20" placeholder="A live clip or performance reference" />
+              <input name="performance_link" type="url" required className="mt-2 h-12 w-full rounded-xl border border-white/20 bg-black/35 px-4 text-sm text-white outline-none transition focus:border-white/45 focus:ring-2 focus:ring-white/20" placeholder="A ten-ten-entertainment clip or performance reference" />
             </label>
 
             <label className="block">

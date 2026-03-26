@@ -12,41 +12,41 @@ import { awaitRoomAssetsByHref, warmRoomAssetsByHref, warmRoomAssetsBySlug } fro
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
 const PRIMARY_LINKS: NavLink[] = [
-  { label: "Home", href: "/rooms/front" },
+  { label: "Home", href: "/rooms/lobby" },
 ];
 
 const ABOUT_LINKS: NavLink[] = [
-  { label: "Who We Are", href: "/rooms/front?modal=About" },
-  { label: "What We Offer", href: "/rooms/front?modal=departments-sheet" },
+  { label: "Who We Are", href: "/rooms/lobby?modal=About" },
+  { label: "What We Offer", href: "/rooms/lobby?modal=departments-sheet" },
   { label: "When Artists Have Taken Our Offers", href: "/case-studies" },
-  { label: "How You Can Start", href: "/rooms/front?modal=how-you-start" },
+  { label: "How You Can Start", href: "/rooms/lobby?modal=how-you-start" },
 ];
 
 const RESOURCE_LINKS: NavLink[] = [
-  { label: "A&R / Sales", href: "/rooms/EMTEEARSalesDept" },
-  { label: "Business", href: "/rooms/EMTEEBusinessDept" },
-  { label: "Marketing", href: "/rooms/EMTEEMarketingDept" },
-  { label: "Publishing & Distribution", href: "/rooms/EMTEEPublishingandDistroDept" },
-  { label: "Music", href: "/rooms/EMTEEMusicDept" },
+  { label: "A&R / Sales", href: "/rooms/ar-sales" },
+  { label: "Business", href: "/rooms/business" },
+  { label: "Marketing", href: "/rooms/marketing" },
+  { label: "Publishing & Distribution", href: "/rooms/publishing-distribution" },
+  { label: "Music", href: "/rooms/music" },
 ];
 
 const CASE_STUDY_LINKS: NavLink[] = [
-  { label: "Yanchan Produced", href: "/rooms/orange" },
-  { label: "Ten Ten Entertainment", href: "/rooms/live" },
-  { label: "Steeped Dreams Studios", href: "/rooms/quiet" },
+  { label: "Yanchan Produced", href: "/rooms/dirty-elephant-studio" },
+  { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
+  { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
   { label: "Other Artists", href: "/artist-roster-releases" },
 ];
 
 const ROOM_HEADER_LABELS: Record<string, { kind: "ROOM" | "DEPARTMENT"; label: string }> = {
-  "/rooms/front": { kind: "ROOM", label: "Lobby" },
-  "/rooms/EMTEEBusinessDept": { kind: "DEPARTMENT", label: "Business" },
-  "/rooms/EMTEEMusicDept": { kind: "DEPARTMENT", label: "Music" },
-  "/rooms/EMTEEMarketingDept": { kind: "DEPARTMENT", label: "Marketing" },
-  "/rooms/EMTEEPublishingandDistroDept": { kind: "DEPARTMENT", label: "Distribution / Publishing" },
-  "/rooms/EMTEEARSalesDept": { kind: "DEPARTMENT", label: "A&R / Sales" },
-  "/rooms/orange": { kind: "ROOM", label: "Dirty Elephant Studio" },
-  "/rooms/live": { kind: "ROOM", label: "Ten Ten Entertainment" },
-  "/rooms/quiet": { kind: "ROOM", label: "Steeped Dream Studio" },
+  "/rooms/lobby": { kind: "ROOM", label: "Lobby" },
+  "/rooms/business": { kind: "DEPARTMENT", label: "Business" },
+  "/rooms/music": { kind: "DEPARTMENT", label: "Music" },
+  "/rooms/marketing": { kind: "DEPARTMENT", label: "Marketing" },
+  "/rooms/publishing-distribution": { kind: "DEPARTMENT", label: "Distribution / Publishing" },
+  "/rooms/ar-sales": { kind: "DEPARTMENT", label: "A&R / Sales" },
+  "/rooms/dirty-elephant-studio": { kind: "ROOM", label: "Dirty Elephant Studio" },
+  "/rooms/ten-ten-entertainment": { kind: "ROOM", label: "Ten Ten Entertainment" },
+  "/rooms/steeped-dreams-studio": { kind: "ROOM", label: "Steeped Dreams Studio" },
 };
 
 function shouldDebugRoomNav() {
@@ -67,7 +67,7 @@ function logRoomNav(event: string, detail: Record<string, unknown>) {
 export default function RoomsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const router = useRouter();
-  const isLobby = pathname === "/rooms/front";
+  const isLobby = pathname === "/rooms/lobby";
   const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
 
   // ✅ Hooks MUST be inside the component
@@ -130,13 +130,13 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   }
 
   function handleFrontModalNav(event: MouseEvent<HTMLAnchorElement>, href: string) {
-    if (pathname !== "/rooms/front") return;
-    if (!href.startsWith("/rooms/front?modal=")) return;
+    if (pathname !== "/rooms/lobby") return;
+    if (!href.startsWith("/rooms/lobby?modal=")) return;
     event.preventDefault();
     if (typeof window === "undefined") return;
     const modalId = new URL(href, window.location.origin).searchParams.get("modal");
     window.history.replaceState({}, "", href);
-    window.dispatchEvent(new CustomEvent("emtee:open-front-modal", { detail: { modalId } }));
+    window.dispatchEvent(new CustomEvent("emtee:open-lobby-modal", { detail: { modalId } }));
   }
 
   const prefetchRoomRoute = useCallback((href: string) => {
@@ -184,13 +184,13 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
           <div className="relative flex w-full items-center justify-between gap-4 px-4 py-2.5 sm:px-6 sm:py-3.5">
             <div className="shrink-0">
               <Link
-                href="/rooms/front"
-                onMouseEnter={() => prefetchRoomRoute("/rooms/front")}
-                onFocus={() => prefetchRoomRoute("/rooms/front")}
-                onTouchStart={() => prefetchRoomRoute("/rooms/front")}
+                href="/rooms/lobby"
+                onMouseEnter={() => prefetchRoomRoute("/rooms/lobby")}
+                onFocus={() => prefetchRoomRoute("/rooms/lobby")}
+                onTouchStart={() => prefetchRoomRoute("/rooms/lobby")}
                 onClick={(event) => {
                   event.preventDefault();
-                  void navigateToRoom("/rooms/front");
+                  void navigateToRoom("/rooms/lobby");
                 }}
                 className="inline-flex items-center gap-2.5 transition hover:opacity-100"
               >

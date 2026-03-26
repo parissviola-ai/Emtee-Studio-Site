@@ -79,9 +79,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    router.prefetch("/rooms/front");
+    router.prefetch("/rooms/lobby");
     warmImageAsset("/rooms/finishedlobby-opt.jpg");
-    warmRoomAssetsBySlug("front");
+    warmRoomAssetsBySlug("lobby");
   }, [router]);
 
   useEffect(() => {
@@ -185,11 +185,11 @@ export default function Home() {
 
   async function handleEnterLobby() {
     if (isEnteringLobby) return;
-    logRoomNav("nav:click", { from: "/", to: "/rooms/front", source: "landing-enter" });
+    logRoomNav("nav:click", { from: "/", to: "/rooms/lobby", source: "landing-enter" });
     setIsEnteringLobby(true);
-    await awaitRoomAssetsByHref("/rooms/front");
-    logRoomNav("nav:push", { from: "/", to: "/rooms/front", source: "landing-enter" });
-    router.push("/rooms/front");
+    await awaitRoomAssetsByHref("/rooms/lobby");
+    logRoomNav("nav:push", { from: "/", to: "/rooms/lobby", source: "landing-enter" });
+    router.push("/rooms/lobby");
   }
 
   return (

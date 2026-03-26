@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
   const honeypot = cleanString(formData.get("company"), 120);
   if (honeypot) {
-    return NextResponse.redirect(new URL("/orange-room-session?status=success", request.url), 303);
+    return NextResponse.redirect(new URL("/dirty-elephant-studio-room-session?status=success", request.url), 303);
   }
 
   const artistName = cleanString(formData.get("artist_name"), 140);
@@ -31,16 +31,16 @@ export async function POST(request: NextRequest) {
   const notes = cleanString(formData.get("notes"), 3000);
 
   if (!artistName || !email || !instagramHandle || !musicLink || !preferredMonth || !cityTimezone || !notes) {
-    return NextResponse.redirect(new URL("/orange-room-session?status=error", request.url), 303);
+    return NextResponse.redirect(new URL("/dirty-elephant-studio-room-session?status=error", request.url), 303);
   }
 
   if (!isValidEmail(email) || !isLikelyUrl(musicLink)) {
-    return NextResponse.redirect(new URL("/orange-room-session?status=error", request.url), 303);
+    return NextResponse.redirect(new URL("/dirty-elephant-studio-room-session?status=error", request.url), 303);
   }
 
   const submission = {
     submittedAt: new Date().toISOString(),
-    source: "orange_room_session_short_form",
+    source: "dirty-elephant-studio_room_session_short_form",
     artistName,
     email,
     instagramHandle,
@@ -57,14 +57,14 @@ export async function POST(request: NextRequest) {
 
   try {
     await appendFile(
-      "/tmp/studio-site-orange-room-session.ndjson",
+      "/tmp/studio-site-dirty-elephant-studio-room-session.ndjson",
       `${JSON.stringify(submission)}\n`,
       "utf8"
     );
   } catch (error) {
-    console.error("Failed to write orange room session submission", error);
-    return NextResponse.redirect(new URL("/orange-room-session?status=error", request.url), 303);
+    console.error("Failed to write dirty-elephant-studio room session submission", error);
+    return NextResponse.redirect(new URL("/dirty-elephant-studio-room-session?status=error", request.url), 303);
   }
 
-  return NextResponse.redirect(new URL("/orange-room-session?status=success", request.url), 303);
+  return NextResponse.redirect(new URL("/dirty-elephant-studio-room-session?status=success", request.url), 303);
 }

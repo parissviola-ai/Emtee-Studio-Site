@@ -27,7 +27,7 @@ export default async function RoomPage({
           <span className="text-white">{slug ?? "unknown"}</span>
         </p>
         <Link
-          href="/rooms/front"
+          href="/rooms/lobby"
           className="mt-6 inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 transition"
         >
           Back to Lobby

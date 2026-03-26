@@ -86,15 +86,15 @@ type InfoCard = {
 const EXPLORE_ROOMS = [
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
   { label: "Our Artists", href: "/artist-roster-releases" },
-  { label: "Lobby", href: "/rooms/front" },
-  { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
-  { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
-  { label: "Marketing Department", href: "/rooms/EMTEEMarketingDept" },
-  { label: "Publishing / Distribution Department", href: "/rooms/EMTEEPublishingandDistroDept" },
-  { label: "A&R / Sales Department", href: "/rooms/EMTEEARSalesDept" },
-  { label: "Dirty Elephant Studio", href: "/rooms/orange" },
-  { label: "Ten Ten Entertainment", href: "/rooms/live" },
-  { label: "Steeped Dream Studio", href: "/rooms/quiet" },
+  { label: "Lobby", href: "/rooms/lobby" },
+  { label: "Business Department", href: "/rooms/business" },
+  { label: "Music Department", href: "/rooms/music" },
+  { label: "Marketing Department", href: "/rooms/marketing" },
+  { label: "Publishing / Distribution Department", href: "/rooms/publishing-distribution" },
+  { label: "A&R / Sales Department", href: "/rooms/ar-sales" },
+  { label: "Dirty Elephant Studio", href: "/rooms/dirty-elephant-studio" },
+  { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
+  { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
 ];
 const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/rooms/"));
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
@@ -115,12 +115,14 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };
 const NATIVE_BACKGROUND_IMAGE_ROOMS = new Set([
-  "front",
-  "EMTEEBusinessDept",
-  "EMTEEMusicDept",
-  "EMTEEMarketingDept",
+  "lobby",
+  "business",
+  "music",
+  "marketing",
+  "publishing-distribution",
+  "ar-sales",
 ]);
-const HOTSPOT_TIER_PILOT_ROOMS = new Set(["front"]);
+const HOTSPOT_TIER_PILOT_ROOMS = new Set(["lobby"]);
 
 const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
   title: "A&R / Sales Department Overview",
@@ -200,16 +202,16 @@ const WEBSITE_DESIGN_OVERVIEW_CARD: InfoCard = {
 };
 
 const PREVIOUS_ROOM_LINKS: Record<string, string> = {
-  EMTEEBusinessDept: "/rooms/front",
-  EMTEEMusicDept: "/rooms/EMTEEBusinessDept",
-  EMTEEMarketingDept: "/rooms/EMTEEMusicDept",
-  EMTEEPublishingandDistroDept: "/rooms/EMTEEMarketingDept",
-  EMTEEARSalesDept: "/rooms/EMTEEPublishingandDistroDept",
-  quiet: "/rooms/EMTEEARSalesDept",
-  orange: "/rooms/quiet",
-  live: "/rooms/orange",
+  business: "/rooms/lobby",
+  music: "/rooms/business",
+  marketing: "/rooms/music",
+  "publishing-distribution": "/rooms/marketing",
+  "ar-sales": "/rooms/publishing-distribution",
+  "steeped-dreams-studio": "/rooms/ar-sales",
+  "dirty-elephant-studio": "/rooms/steeped-dreams-studio",
+  "ten-ten-entertainment": "/rooms/dirty-elephant-studio",
 };
-const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-orange-room-session";
+const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-dirty-elephant-studio-room-session";
 const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
   { src: "/news/aruljuno-opt.jpg", label: "ARUL", isJunoNominated: true, objectPosition: "center 20%" },
   { src: "/news/thinkyouglowed-opt.jpg", label: "Lil Durk - Think You Glowed", objectPosition: "center 18%" },
@@ -507,7 +509,7 @@ export default function RoomScene({
   room: Room;
 }) {
   const router = useRouter();
-  const isLiveRoom = room.slug === "live";
+  const isLiveRoom = room.slug === "ten-ten-entertainment";
   const hasHydrated = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -586,7 +588,7 @@ export default function RoomScene({
   const shouldStartVideoMuted = (modal: Hotspot["modal"]) => modal?.title !== "Who We Are";
 
   const openModal = useCallback((modal: Hotspot["modal"]) => {
-    if (room.slug === "front" && modal?.title === "Start Here") {
+    if (room.slug === "lobby" && modal?.title === "Start Here") {
       lobbyStartHereOpenedRef.current = true;
     }
     setActiveModal(modal);
@@ -603,7 +605,7 @@ export default function RoomScene({
   }, [room.slug]);
 
   function closeModal() {
-    if (room.slug === "front" && typeof window !== "undefined") {
+    if (room.slug === "lobby" && typeof window !== "undefined") {
       isClosingLobbyModalRef.current = true;
       const url = new URL(window.location.href);
       if (url.searchParams.has("modal")) {
@@ -611,7 +613,7 @@ export default function RoomScene({
         window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
       }
     }
-    if (room.slug === "front" && lobbyStartHereOpenedRef.current) {
+    if (room.slug === "lobby" && lobbyStartHereOpenedRef.current) {
       lobbyStartHereOpenedRef.current = false;
       setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: true }));
       if (hasHydrated && typeof window !== "undefined") {
@@ -628,7 +630,7 @@ export default function RoomScene({
   }
 
   useEffect(() => {
-    if (room.slug !== "front") return;
+    if (room.slug !== "lobby") return;
     if (typeof window === "undefined") return;
     if (isClosingLobbyModalRef.current) {
       isClosingLobbyModalRef.current = false;
@@ -644,7 +646,7 @@ export default function RoomScene({
   }, [activeModal?.title, openModal, room.hotspots, room.slug]);
 
   useEffect(() => {
-    if (room.slug !== "front") return;
+    if (room.slug !== "lobby") return;
     if (typeof window === "undefined") return;
 
     function handleFrontModalOpen(event: Event) {
@@ -657,9 +659,9 @@ export default function RoomScene({
       openModal(targetSpot.modal);
     }
 
-    window.addEventListener("emtee:open-front-modal", handleFrontModalOpen as EventListener);
+    window.addEventListener("emtee:open-lobby-modal", handleFrontModalOpen as EventListener);
     return () => {
-      window.removeEventListener("emtee:open-front-modal", handleFrontModalOpen as EventListener);
+      window.removeEventListener("emtee:open-lobby-modal", handleFrontModalOpen as EventListener);
     };
   }, [openModal, room.hotspots, room.slug]);
 
@@ -780,18 +782,18 @@ export default function RoomScene({
   }, []);
 
   const isModalOpen = !!activeModal;
-  const showVaultCards = room.slug === "EMTEEARSalesDept";
-  const showStudioCard = room.slug === "EMTEEMusicDept";
-  const showMediaCard = room.slug === "EMTEEMarketingDept";
-  const showBoardRoomCard = room.slug === "EMTEEBusinessDept";
-  const showArtistsCard = room.slug === "EMTEEPublishingandDistroDept";
+  const showVaultCards = room.slug === "ar-sales";
+  const showStudioCard = room.slug === "music";
+  const showMediaCard = room.slug === "marketing";
+  const showBoardRoomCard = room.slug === "business";
+  const showArtistsCard = room.slug === "publishing-distribution";
   const showWebsiteDesignCard = room.slug === "EMTEEWebDesign";
-  const showOrangeCard = room.slug === "orange";
-  const isMarketingRoom = room.slug === "EMTEEMarketingDept";
+  const showOrangeCard = room.slug === "dirty-elephant-studio";
+  const isMarketingRoom = room.slug === "marketing";
   const isWebsiteDesignRoom = room.slug === "EMTEEWebDesign";
-  const isOrangeRoom = room.slug === "orange";
-  const isLobbyRoom = room.slug === "front";
-  const isArSalesRoom = room.slug === "EMTEEARSalesDept";
+  const isOrangeRoom = room.slug === "dirty-elephant-studio";
+  const isLobbyRoom = room.slug === "lobby";
+  const isArSalesRoom = room.slug === "ar-sales";
   const isHotspotTierPilotRoom = HOTSPOT_TIER_PILOT_ROOMS.has(room.slug);
   const showAllRoomHotspots = !isHotspotTierPilotRoom || (showMoreHotspotsByRoom[room.slug] ?? false);
   const activeOverviewCard = showVaultCards
@@ -837,19 +839,19 @@ export default function RoomScene({
   const isYanchanDiscographyModal = activeModal?.title === "Discography";
   const isJoinCommunityModal = activeModal?.title === "Join Community";
   const isCustomProductionModal = activeModal?.title === "Apply For Custom Production";
-  const isLivePackagesModal = room.slug === "live" && activeModal?.title === "Packages";
+  const isLivePackagesModal = room.slug === "ten-ten-entertainment" && activeModal?.title === "Packages";
   const isWebsiteDesignMainModal =
-    room.slug === "EMTEEMarketingDept" && activeModal?.title === "Website Design";
+    room.slug === "marketing" && activeModal?.title === "Website Design";
   const isPackageGridModal = isLivePackagesModal || isWebsiteDesignMainModal;
   const isLivePackageDetailModal =
-    room.slug === "live" &&
+    room.slug === "ten-ten-entertainment" &&
     (
       activeModal?.title === "Up & Coming Artist Package" ||
       activeModal?.title === "Rising Star Showcase Package" ||
       activeModal?.title === "Ten Ten Community"
     );
   const isWebsiteDesignTierModal =
-    room.slug === "EMTEEMarketingDept" &&
+    room.slug === "marketing" &&
     (
       activeModal?.title === "Tier 1: Starter Site" ||
       activeModal?.title === "Tier 2: Growth Site" ||
@@ -859,26 +861,26 @@ export default function RoomScene({
   const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Apply For An Orange Room Session";
   const isStartHereModal = activeModal?.title === "Start Here";
   const isCarouselModal = !!activeModal?.carouselSlides?.length;
-  const isLiveRoomModal = room.slug === "live" && !!activeModal && !isPackageGridModal;
+  const isLiveRoomModal = room.slug === "ten-ten-entertainment" && !!activeModal && !isPackageGridModal;
   const shouldShowOrangeSessionPreview = isOrangeRoom && !isMobileViewport && (isOrangeSessionPreviewVisible || isOrangeSessionModalOpen);
   const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
   const activeCarouselSlide =
     isCarouselModal && activeModal?.carouselSlides
       ? activeModal.carouselSlides[((activeCarouselIndex % activeModal.carouselSlides.length) + activeModal.carouselSlides.length) % activeModal.carouselSlides.length]
       : null;
-  const isQuietModal = room.slug === "quiet" && !!activeModal;
+  const isQuietModal = room.slug === "steeped-dreams-studio" && !!activeModal;
   const isDepartmentRoom =
-    room.slug === "EMTEEBusinessDept" ||
-    room.slug === "EMTEEMusicDept" ||
-    room.slug === "EMTEEMarketingDept" ||
-    room.slug === "EMTEEPublishingandDistroDept" ||
-    room.slug === "EMTEEARSalesDept";
+    room.slug === "business" ||
+    room.slug === "music" ||
+    room.slug === "marketing" ||
+    room.slug === "publishing-distribution" ||
+    room.slug === "ar-sales";
   const shouldShowDefaultEmteeCornerLogo =
     !!activeModal &&
     (
       isDepartmentRoom ||
       (
-        room.slug === "front" &&
+        room.slug === "lobby" &&
         (
           activeModal.title === "Who We Are" ||
           activeModal.title === "What We Offer" ||
@@ -914,9 +916,9 @@ export default function RoomScene({
   const navCircleClass = "flex h-9 w-9 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/85 bg-black/10 backdrop-blur-sm";
   const navPillClass = "inline-flex h-9 sm:h-7 items-center whitespace-nowrap rounded-full border border-white/85 bg-black/10 px-4 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/30 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.2)] group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.52)]";
   const compactHotspotUi = viewportW > 0 && viewportW < 1280;
-  const eagerBackgroundLoad = room.slug === "front" || room.slug === "live";
-  const isMusicRoom = room.slug === "EMTEEMusicDept";
-  const isMarketingRoomZoomedOut = room.slug === "EMTEEMarketingDept";
+  const eagerBackgroundLoad = room.slug === "lobby" || room.slug === "ten-ten-entertainment";
+  const isMusicRoom = room.slug === "music";
+  const isMarketingRoomZoomedOut = room.slug === "marketing";
   const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
   const desktopSceneScale =
     room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom
@@ -930,12 +932,12 @@ export default function RoomScene({
   const backgroundObjectPositionY =
     room.slug === "EMTEEWebDesign"
       ? 60
-      : room.slug === "EMTEEARSalesDept"
+      : room.slug === "ar-sales"
         ? 64
-        : room.slug === "front" && !isMobileViewport
+        : room.slug === "lobby" && !isMobileViewport
           ? 58
           : 50;
-  const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "live" ? 50 : 0;
+  const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "ten-ten-entertainment" ? 50 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && isMobileViewport ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const activeBackgroundVideo = isMobileViewport && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
@@ -951,7 +953,7 @@ export default function RoomScene({
   );
   const modalIncludesKey = activeModal ? `${room.slug}:${activeModal.title}` : "";
   const isPilotFoldablePackageModal =
-    room.slug === "EMTEEARSalesDept" && !!activeModal && parsedModalBody.includes.length > 0;
+    room.slug === "ar-sales" && !!activeModal && parsedModalBody.includes.length > 0;
   const isPilotModalIncludesExpanded = modalIncludesKey ? (expandedPackageIncludesByModal[modalIncludesKey] ?? false) : false;
   const visiblePilotModalIncludes =
     isPilotFoldablePackageModal && !isPilotModalIncludesExpanded
@@ -1204,7 +1206,7 @@ export default function RoomScene({
   const canPanRoom = isMobileViewport && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
     !isMobileViewport &&
-    room.slug === "front" &&
+    room.slug === "lobby" &&
     !isModalOpen &&
     !exploreOpen &&
     !!desktopCoverMetrics &&
@@ -1228,7 +1230,7 @@ export default function RoomScene({
 
   function getMobileHotspotStyle(spot: Hotspot) {
     const shiftConversationBlueprintRight =
-      room.slug === "EMTEEARSalesDept" && spot.id === "ar-sales-conversion-blueprint";
+      room.slug === "ar-sales" && spot.id === "ar-sales-conversion-blueprint";
 
     if (isMobileViewport && spot.id === "next-room") {
       return {
@@ -1261,13 +1263,13 @@ export default function RoomScene({
     if ((spot.variant ?? "pill") === "dot") return "translate(-50%, -50%)";
 
     const isLeftLabelLobbyPill =
-      room.slug === "front" &&
+      room.slug === "lobby" &&
       (
         spot.id === "Board Rooms" ||
         spot.id === "departments" ||
         spot.id === "Ten Ten Entertainment" ||
         spot.id === "Dirty Elephant Studios" ||
-        spot.id === "Steeped Dream Studio"
+        spot.id === "Steeped Dreams Studio"
       );
     const tipInset = 6;
 
@@ -1343,11 +1345,11 @@ export default function RoomScene({
   }, [canDesktopCursorPan, room.slug]);
 
   useEffect(() => {
-    if (room.slug === "front") return;
+    if (room.slug === "lobby") return;
 
     // Warm route + key lobby asset so "Back to Lobby" feels snappier.
-    router.prefetch("/rooms/front");
-    warmRoomAssetsBySlug("front");
+    router.prefetch("/rooms/lobby");
+    warmRoomAssetsBySlug("lobby");
   }, [room.slug, router]);
 
   useEffect(() => {
@@ -1372,10 +1374,10 @@ export default function RoomScene({
   }, [isLiveRoom]);
 
   useEffect(() => {
-    if (room.slug !== "front") return;
+    if (room.slug !== "lobby") return;
 
     // Keep lobby startup light: warm only top two next-click routes.
-    ["/rooms/EMTEEBusinessDept", "/rooms/EMTEEMusicDept"].forEach((href) => {
+    ["/rooms/business", "/rooms/music"].forEach((href) => {
       router.prefetch(href);
       warmRoomAssetsByHref(href);
     });
@@ -1385,7 +1387,7 @@ export default function RoomScene({
     if (!hasHydrated || typeof window === "undefined") return;
     if (!isHotspotTierPilotRoom) return;
 
-    if (room.slug === "front") {
+    if (room.slug === "lobby") {
       setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: false }));
       try {
         window.sessionStorage.removeItem(getShowMoreStorageKey(room.slug));
@@ -1680,7 +1682,7 @@ export default function RoomScene({
   }, [backgroundImageSrc]);
 
   useEffect(() => {
-    if (room.slug !== "EMTEEWebDesign" && room.slug !== "EMTEEPublishingandDistroDept") return;
+    if (room.slug !== "EMTEEWebDesign" && room.slug !== "publishing-distribution") return;
     router.prefetch("/website-design-consultation");
   }, [room.slug, router]);
 
@@ -1690,19 +1692,19 @@ export default function RoomScene({
     const isNavigationSpot = spot.id === "next-room";
     const isMobileNavigationSpot = isNavigationSpot && isMobileViewport;
     const isClickedLabelVisible = clickedHotspotId === spot.id && !isNavigationSpot;
-    const isLobbyPill = room.slug === "front" && !isNavigationSpot;
+    const isLobbyPill = room.slug === "lobby" && !isNavigationSpot;
     const isExpanded = true;
-    const isWhoWeArePin = room.slug === "front" && spot.id === "About";
-    const isLobbyExplorePin = room.slug === "front" && spot.id === "explore";
-    const isCaseStudiesLobbyButton = room.slug === "front" && spot.id === "case-study-tour";
+    const isWhoWeArePin = room.slug === "lobby" && spot.id === "About";
+    const isLobbyExplorePin = room.slug === "lobby" && spot.id === "explore";
+    const isCaseStudiesLobbyButton = room.slug === "lobby" && spot.id === "case-study-tour";
     const isLeftLabelLobbyPill =
-      room.slug === "front" &&
+      room.slug === "lobby" &&
       (
         spot.id === "Board Rooms" ||
         spot.id === "departments" ||
         spot.id === "Ten Ten Entertainment" ||
         spot.id === "Dirty Elephant Studios" ||
-        spot.id === "Steeped Dream Studio"
+        spot.id === "Steeped Dreams Studio"
       );
     const showLabelOnLeft = isLeftLabelLobbyPill && !isMobileNavigationSpot;
     const lobbyPillCircleSize = compactHotspotUi
@@ -1795,12 +1797,12 @@ export default function RoomScene({
 
   function DotHotspotContent(spot: Hotspot) {
     const isClickedLabelVisible = clickedHotspotId === spot.id;
-    const isOrangeSessionDot = spot.id === "orange-room-sessions";
-    const isMediaRoom = room.slug === "EMTEEMarketingDept";
-    const isBrandDealsDot = room.slug === "EMTEEMarketingDept" && spot.id === "marketing-brand-deals";
-    const isLobbyDot = room.slug === "front";
+    const isOrangeSessionDot = spot.id === "dirty-elephant-studio-room-sessions";
+    const isMediaRoom = room.slug === "marketing";
+    const isBrandDealsDot = room.slug === "marketing" && spot.id === "marketing-brand-deals";
+    const isLobbyDot = room.slug === "lobby";
     const isLiveRoomSocialDot =
-      room.slug === "live" &&
+      room.slug === "ten-ten-entertainment" &&
       (spot.id === "mike-cannz-youtube" || spot.id === "mike-cannz-spotify");
     const liveRoomSocialLabel =
       spot.id === "mike-cannz-youtube"
@@ -1819,7 +1821,7 @@ export default function RoomScene({
       isOrangeRoom && spot.id === "apply-custom-production" ? "translate-x-3 sm:translate-x-4" : "";
     const isChillOutCommunityDot = spot.id === "chill-out-community";
     const isQuietAccentDot =
-      room.slug === "quiet" &&
+      room.slug === "steeped-dreams-studio" &&
       (spot.id === "kym-tea-music" ||
         spot.id === "eight-d-mixes" ||
         spot.id === "steeped-dreams-studio" ||
@@ -2060,7 +2062,7 @@ export default function RoomScene({
               objectPosition: isMarketingRoom && !isMobileViewport
                 ? "50% 42%"
                 : isMobileViewport
-                  ? room.slug === "front"
+                  ? room.slug === "lobby"
                     ? `calc(54% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
@@ -2090,7 +2092,7 @@ export default function RoomScene({
               objectPosition: isMarketingRoom && !isMobileViewport
                 ? "50% 42%"
                 : isMobileViewport
-                  ? room.slug === "front"
+                  ? room.slug === "lobby"
                     ? `calc(54% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
@@ -2113,7 +2115,7 @@ export default function RoomScene({
             playsInline
             disablePictureInPicture
             disableRemotePlayback
-            preload={room.slug === "live" || room.slug === "front" ? "auto" : "metadata"}
+            preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" ? "auto" : "metadata"}
             onLoadedData={() => {
               logRoomNav("room:videoLoadedData", { slug: room.slug, src: activeBackgroundVideo });
             }}
@@ -2126,13 +2128,13 @@ export default function RoomScene({
             style={
               isMobileViewport
                 ? {
-                    backgroundColor: room.slug === "live" ? "#000000" : undefined,
+                    backgroundColor: room.slug === "ten-ten-entertainment" ? "#000000" : undefined,
                     objectPosition:
-                      room.slug === "live"
+                      room.slug === "ten-ten-entertainment"
                         ? `calc(50% + ${displayedPan.x}px) calc(62% + ${displayedPan.y}px)`
                         : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`,
                   }
-                : room.slug === "live"
+                : room.slug === "ten-ten-entertainment"
                   ? {
                       backgroundColor: "#000000",
                       objectPosition: compactHotspotUi ? "50% 68%" : "50% 33%",
@@ -2230,7 +2232,7 @@ export default function RoomScene({
             <video
               ref={orangePreviewVideoRef}
               className={[
-                "orange-preview-video absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-200",
+                "dirty-elephant-studio-preview-video absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-200",
                 "opacity-100",
               ].join(" ")}
               loop
@@ -2301,7 +2303,7 @@ export default function RoomScene({
       >
         <div className="flex items-center gap-2">
           <div className="text-xs tracking-widest text-white/60">
-            {room.slug === "front" || room.slug === "orange" || room.slug === "quiet" || room.slug === "live"
+            {room.slug === "lobby" || room.slug === "dirty-elephant-studio" || room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment"
               ? "ROOM"
               : "DEPARTMENT"}
           </div>
@@ -2311,11 +2313,11 @@ export default function RoomScene({
             className={[
               "font-semibold whitespace-pre-line",
               isMobileViewport ? "text-[1.6rem] leading-tight" : "text-3xl",
-              room.slug === "orange"
+              room.slug === "dirty-elephant-studio"
                 ? "text-[#ff9f3f] [text-shadow:0_0_10px_rgba(255,159,63,0.75),0_0_24px_rgba(255,159,63,0.45)]"
-                : room.slug === "quiet"
+                : room.slug === "steeped-dreams-studio"
                   ? "text-white [text-shadow:0_0_8px_rgba(255,255,255,0.22),0_0_18px_rgba(255,255,255,0.1)]"
-                  : room.slug === "EMTEEARSalesDept"
+                  : room.slug === "ar-sales"
                     ? "rounded-xl border border-white/10 bg-black/20 px-3 py-1.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm [text-shadow:0_0_8px_rgba(255,255,255,0.18)]"
                   : "",
             ].join(" ")}
@@ -2386,7 +2388,7 @@ export default function RoomScene({
           <button
             type="button"
             onClick={() => {
-              if (room.slug === "front") {
+              if (room.slug === "lobby") {
                 lobbyStartHereOpenedRef.current = true;
               }
               const startSpot =
@@ -2641,7 +2643,7 @@ export default function RoomScene({
 
           // Action hotspot (opens Explore panel)
           if (spot.action === "explore") {
-            const isLobbyDesktopExplorePin = room.slug === "front" && !isMobileViewport && spot.id === "explore";
+            const isLobbyDesktopExplorePin = room.slug === "lobby" && !isMobileViewport && spot.id === "explore";
             if (isLobbyDesktopExplorePin) {
               return null;
             }
@@ -2994,7 +2996,7 @@ export default function RoomScene({
                 ? "relative z-10 my-2 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]"
                 : "relative z-10 my-2 flex w-full max-w-[900px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]",
               isOrangeModal
-                ? "border border-orange-300/28 bg-[linear-gradient(160deg,rgba(15,10,6,0.9),rgba(10,8,6,0.86))] shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_30px_80px_rgba(0,0,0,0.62)]"
+                ? "border border-dirty-elephant-studio-300/28 bg-[linear-gradient(160deg,rgba(15,10,6,0.9),rgba(10,8,6,0.86))] shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_30px_80px_rgba(0,0,0,0.62)]"
                 : "border border-white/15 bg-black/55",
             ].join(" ")}
           >
@@ -3095,7 +3097,7 @@ export default function RoomScene({
                       <button
                         type="button"
                         onClick={toggleOrangePreviewMute}
-                        className="inline-flex shrink-0 items-center justify-center rounded-full border border-orange-200/30 bg-black/45 px-4 py-2 text-xs font-semibold text-orange-100/90 transition hover:border-orange-200/50 hover:bg-black/60"
+                        className="inline-flex shrink-0 items-center justify-center rounded-full border border-dirty-elephant-studio-200/30 bg-black/45 px-4 py-2 text-xs font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/50 hover:bg-black/60"
                       >
                         {isOrangePreviewMuted ? "Unmute Music" : "Mute Music"}
                       </button>
@@ -3383,13 +3385,13 @@ export default function RoomScene({
                           {parsedModalBody.before}
                         </p>
                         <div className="mt-4">
-                          <div className={["text-[12px] font-semibold uppercase tracking-[0.2em]", isOrangeModal ? "text-orange-200/90" : "text-orange-300/90"].join(" ")}>
+                          <div className={["text-[12px] font-semibold uppercase tracking-[0.2em]", isOrangeModal ? "text-dirty-elephant-studio-200/90" : "text-dirty-elephant-studio-300/90"].join(" ")}>
                             Includes:
                           </div>
                           <ul className={["mt-2 space-y-1.5 text-sm", isOrangeModal ? "text-white/90" : "text-white/84"].join(" ")}>
                             {visiblePilotModalIncludes.map((item) => (
                               <li key={item} className="flex gap-2 leading-relaxed">
-                                <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-orange-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                                <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
                                 <span>{item}</span>
                               </li>
                             ))}
@@ -3404,7 +3406,7 @@ export default function RoomScene({
                                   [modalIncludesKey]: !isPilotModalIncludesExpanded,
                                 }));
                               }}
-                              className="mt-3 text-xs font-semibold uppercase tracking-[0.08em] text-orange-200/85 transition hover:text-white"
+                              className="mt-3 text-xs font-semibold uppercase tracking-[0.08em] text-dirty-elephant-studio-200/85 transition hover:text-white"
                             >
                               {isPilotModalIncludesExpanded ? "Show less" : "View full package details"}
                             </button>
@@ -3454,7 +3456,7 @@ export default function RoomScene({
                         <div
                           className={[
                             "text-[12px] font-semibold uppercase tracking-[0.2em]",
-                            isOrangeModal ? "text-orange-200/90" : "text-orange-300/90",
+                            isOrangeModal ? "text-dirty-elephant-studio-200/90" : "text-dirty-elephant-studio-300/90",
                           ].join(" ")}
                         >
                           Includes:
@@ -3468,7 +3470,7 @@ export default function RoomScene({
                         >
                           {(parsedModalBody.includes.length ? parsedModalBody.includes : activeModal.highlights ?? []).map((item) => (
                             <li key={item} className={isWebsiteDesignTierModal ? "mb-1 break-inside-avoid flex gap-2 leading-snug" : "flex gap-2 leading-relaxed"}>
-                              <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-orange-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                              <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
                               <span>{item}</span>
                             </li>
                           ))}
@@ -3486,7 +3488,7 @@ export default function RoomScene({
                         className={[
                           "mt-6 space-y-4 rounded-2xl p-4 transition-all duration-700 ease-out",
                           isOrangeModal
-                            ? "border border-orange-200/20 bg-gradient-to-b from-[#2a1b10]/78 to-[#130d08]/72"
+                            ? "border border-dirty-elephant-studio-200/20 bg-gradient-to-b from-[#2a1b10]/78 to-[#130d08]/72"
                             : "border border-white/15 bg-gradient-to-b from-white/[0.08] to-white/[0.02]",
                           revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                         ].join(" ")}
@@ -3495,7 +3497,7 @@ export default function RoomScene({
                           <div
                             className={[
                               "text-[12px] font-semibold uppercase tracking-[0.2em]",
-                              isOrangeModal ? "text-orange-200/90" : "text-orange-300/90",
+                              isOrangeModal ? "text-dirty-elephant-studio-200/90" : "text-dirty-elephant-studio-300/90",
                             ].join(" ")}
                           >
                             {activeModal.highlightsTitle ?? "Package Includes"}
@@ -3507,7 +3509,7 @@ export default function RoomScene({
                               {YANCHAN_DISCOGRAPHY_SPOTLIGHT.map((item, index) => (
                                 <figure
                                   key={`${item.label}-${item.src}-${index}`}
-                                  className="group relative overflow-hidden rounded-xl border border-orange-200/24 bg-black/45 shadow-[0_10px_24px_rgba(0,0,0,0.34)]"
+                                  className="group relative overflow-hidden rounded-xl border border-dirty-elephant-studio-200/24 bg-black/45 shadow-[0_10px_24px_rgba(0,0,0,0.34)]"
                                 >
                                   {item.isJunoNominated ? (
                                     <span className="absolute right-1.5 top-1.5 z-10 inline-flex items-center rounded-md border border-[#f7c48a]/55 bg-black/65 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#ffd8a4] backdrop-blur-sm">
@@ -3523,7 +3525,7 @@ export default function RoomScene({
                                       className="object-cover transition-transform duration-200 group-hover:scale-[1.03]"
                                       style={{ objectPosition: item.objectPosition ?? "center" }}
                                     />
-                                    <figcaption className="absolute inset-x-0 bottom-0 border-t border-orange-200/14 bg-gradient-to-t from-black/90 to-black/45 px-2 py-1 text-[10px] font-medium leading-snug text-orange-50/92">
+                                    <figcaption className="absolute inset-x-0 bottom-0 border-t border-dirty-elephant-studio-200/14 bg-gradient-to-t from-black/90 to-black/45 px-2 py-1 text-[10px] font-medium leading-snug text-dirty-elephant-studio-50/92">
                                       {item.label}
                                     </figcaption>
                                   </div>
@@ -3547,12 +3549,12 @@ export default function RoomScene({
                                     isLivePackageDetailModal
                                       ? ""
                                       : isOrangeModal
-                                        ? "border border-orange-200/18 bg-black/35 text-white/90 hover:border-orange-200/42 hover:bg-[#1a120b]"
-                                        : "border border-white/10 bg-black/35 text-white/84 hover:border-orange-300/40 hover:bg-black/45",
+                                        ? "border border-dirty-elephant-studio-200/18 bg-black/35 text-white/90 hover:border-dirty-elephant-studio-200/42 hover:bg-[#1a120b]"
+                                        : "border border-white/10 bg-black/35 text-white/84 hover:border-dirty-elephant-studio-300/40 hover:bg-black/45",
                                   ].join(" ")}
                                 >
                                   <span className="inline-flex items-center gap-2">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-orange-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                                    <span className="h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
                                     <span>{label}</span>
                                   </span>
                                 </li>
@@ -3632,7 +3634,7 @@ export default function RoomScene({
                     className={[
                       "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
                       isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                         : "bg-white text-black hover:bg-white/90",
                     ].join(" ")}
                   >
@@ -3645,7 +3647,7 @@ export default function RoomScene({
                     className={[
                       "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
                       isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                         : "bg-white text-black hover:bg-white/90",
                     ].join(" ")}
                   >
@@ -3675,13 +3677,13 @@ export default function RoomScene({
                               : isPackageGridModal
                               ? isWebsiteDesignMainModal
                                 ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
-                                : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-orange-300/40 hover:bg-black/45 hover:text-white"
+                                : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-dirty-elephant-studio-300/40 hover:bg-black/45 hover:text-white"
                               : isYanchanMusicModal
                               ? isOrangeModal
-                                ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-orange-200/28 bg-black/35 text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                                ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                                 : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
                               : isOrangeModal
-                                ? "inline-flex items-center justify-center rounded-full border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                                ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                               : isQuietModal
                                 ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                               : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
@@ -3721,13 +3723,13 @@ export default function RoomScene({
                             : isPackageGridModal
                             ? isWebsiteDesignMainModal
                               ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
-                              : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-orange-300/40 hover:bg-black/45 hover:text-white"
+                              : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-dirty-elephant-studio-300/40 hover:bg-black/45 hover:text-white"
                             : isYanchanMusicModal
                             ? isOrangeModal
-                              ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-orange-200/28 bg-black/35 text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                              ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                               : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
                             : isOrangeModal
-                              ? "inline-flex items-center justify-center rounded-full border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 transition hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                              ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                             : isQuietModal
                               ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                             : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
@@ -3751,7 +3753,7 @@ export default function RoomScene({
                       isStartHereModal
                         ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                         : isLiveRoomModal
@@ -3776,7 +3778,7 @@ export default function RoomScene({
                       isStartHereModal
                         ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                         : isLiveRoomModal
@@ -3797,7 +3799,7 @@ export default function RoomScene({
                       isStartHereModal
                         ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                         : isLiveRoomModal
@@ -3816,7 +3818,7 @@ export default function RoomScene({
                       isStartHereModal
                         ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                         : isLiveRoomModal
@@ -3840,7 +3842,7 @@ export default function RoomScene({
                       isStartHereModal
                         ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                         : isLiveRoomModal
@@ -3859,7 +3861,7 @@ export default function RoomScene({
                       isStartHereModal
                         ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
                         : isOrangeModal
-                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                         : isLiveRoomModal
@@ -3887,7 +3889,7 @@ export default function RoomScene({
                   isStartHereModal
                     ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
                     : isOrangeModal
-                    ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 hover:border-orange-200/45 hover:bg-black/55"
+                    ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
                     : isQuietModal
                       ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                     : "border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 hover:text-white",

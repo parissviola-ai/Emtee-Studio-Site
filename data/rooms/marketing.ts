@@ -1,11 +1,11 @@
 import type { Room } from "./types";
 
 export const marketingRoom: Room = {
-    slug: "EMTEEMarketingDept",
+    slug: "marketing",
     title: "Marketing",
     backgroundImage: "/rooms/colorizedmarketing-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Publishing and Distro", href: "/rooms/EMTEEPublishingandDistroDept", x: 90, y: 17, direction: "right" },
+      { id: "next-room", label: "Publishing and Distro", href: "/rooms/publishing-distribution", x: 90, y: 17, direction: "right" },
       {
         id: "marketing-content-creation",
         label: "Content Creation",
@@ -50,7 +50,7 @@ export const marketingRoom: Room = {
         modal: {
           title: "Tour Management",
           body:
-            "Marketing department live support package.\n\nIncludes:\n• BTS Footage\n• Road Manager",
+            "Marketing department ten-ten-entertainment support package.\n\nIncludes:\n• BTS Footage\n• Road Manager",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -75,7 +75,7 @@ export const marketingRoom: Room = {
         },
       },
       {
-        id: "marketing-30min-live-performance-set-development",
+        id: "marketing-30min-ten-ten-entertainment-performance-set-development",
         label: "30min Live Set Development",
         x: 80,
         y: 30,
@@ -84,7 +84,7 @@ export const marketingRoom: Room = {
         modal: {
           title: "30min Live Performance Set Development",
           body:
-            "Marketing department live performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
+            "Marketing department ten-ten-entertainment performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
           links: [
             { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
           ],
@@ -95,7 +95,7 @@ export const marketingRoom: Room = {
         },
       },
       {
-        id: "marketing-60min-live-performance-set-development",
+        id: "marketing-60min-ten-ten-entertainment-performance-set-development",
         label: "60min Live Set Development",
         x: 23.18,
         y: 30.37,
@@ -104,7 +104,7 @@ export const marketingRoom: Room = {
         modal: {
           title: "60min Live Performance Set Development",
           body:
-            "Marketing department expanded live performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
+            "Marketing department expanded ten-ten-entertainment performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
           links: [
             { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
           ],

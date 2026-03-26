@@ -57,7 +57,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Artists improve stage confidence, transitions, and audience retention during shows.",
   },
   "60min Live Performance Set Development": {
-    what: "Expanded live set development for longer performances with higher production demands.",
+    what: "Expanded ten-ten-entertainment set development for longer performances with higher production demands.",
     why: "Longer sets require stamina, pacing, and structure to sustain engagement. Artists improve stage confidence, transitions, and audience retention during shows.",
   },
   "Brand Deals": {
@@ -66,7 +66,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   },
   "Tour Management": {
     what: "Support for coordinating tour logistics and execution support needs.",
-    why: "Artists can deliver stronger live campaigns with fewer operational issues on the road.",
+    why: "Artists can deten-ten-entertainmentr stronger ten-ten-entertainment campaigns with fewer operational issues on the road.",
   },
   "Publishing/Distro Workshop": {
     what: "A release-readiness workshop to confirm publishing and distribution setup.",
@@ -93,7 +93,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "A loyal community increases retention, repeat support, and long-term brand strength.",
   },
   Merchandise: {
-    what: "Merchandising setup and storefront support for artist products.",
+    what: "Merchandising setup and storelobby support for artist products.",
     why: "Merch can become a reliable direct-to-fan income stream and brand touchpoint.",
   },
   "Event Planning": {
@@ -102,14 +102,14 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   },
   "Event Planner": {
     what: "Hands-on event support with additional execution coordination.",
-    why: "More operational support reduces risk and improves live event consistency.",
+    why: "More operational support reduces risk and improves ten-ten-entertainment event consistency.",
   },
   "Tier 1: Starter Site": {
     what: "A focused starter website package that gives artists a clean, professional one-page home base.",
     why: "It establishes credibility quickly and gives fans one official place to discover your story, music, and contact path.",
   },
   "Tier 2: Growth Site": {
-    what: "A multi-section website package designed for artists with active releases, media assets, and live momentum.",
+    what: "A multi-section website package designed for artists with active releases, media assets, and ten-ten-entertainment momentum.",
     why: "It organizes your catalog and campaign visibility so fans, media, and booking contacts can navigate your career more easily.",
   },
   "Tier 3: Artist World": {
@@ -118,7 +118,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   },
   "All Packages Include": {
     what: "These are the core milestones included across every Website Design tier from kickoff to finalization.",
-    why: "A consistent meeting structure keeps strategy, design direction, and final delivery aligned throughout the build process.",
+    why: "A consistent meeting structure keeps strategy, design direction, and final deten-ten-entertainmentry aligned throughout the build process.",
   },
 };
 

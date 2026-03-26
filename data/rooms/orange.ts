@@ -1,11 +1,11 @@
 import type { Room } from "./types";
 
 export const orangeRoom: Room = {
-    slug: "orange",
+    slug: "dirty-elephant-studio",
     title: "Dirty Elephant Studio",
     backgroundImage: "/rooms/orangeroomwlogo-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/live", x: 90, y:  20, direction: "right" },
+      { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment", x: 90, y:  20, direction: "right" },
       {
         id: "apply-custom-production",
         label: "Custom Production",
@@ -92,7 +92,7 @@ export const orangeRoom: Room = {
         },
       },
       {
-        id: "apply-orange-room-session",
+        id: "apply-dirty-elephant-studio-room-session",
         label: "Orange Room Session",
         x: 91.62,
         y: 46.24,
@@ -110,7 +110,7 @@ export const orangeRoom: Room = {
           body:
             "Submit a short application to request an Orange Room Session slot.\n\nUse the preview link below to see the format and performance style.",
           primaryLabel: "Apply (Short Form)",
-          primaryHref: "/orange-room-session",
+          primaryHref: "/dirty-elephant-studio-room-session",
           secondaryLabel: "Preview Orange Room Session",
           secondaryHref: "https://www.instagram.com/p/DUqfIvGER2F/",
         },
@@ -130,7 +130,7 @@ export const orangeRoom: Room = {
         href: "https://yanchanproduced.beatstars.com/",
       },
       {
-        id: "yanchan-produced-live",
+        id: "yanchan-produced-ten-ten-entertainment",
         label: "Yanchan Produced Live",
         x: 70,
         y: 54,

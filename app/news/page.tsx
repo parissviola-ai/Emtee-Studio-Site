@@ -80,7 +80,7 @@ export default function NewsPage() {
           />
           <div className="flex w-full max-w-xs flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:items-end">
             <Link
-              href="/rooms/front"
+              href="/rooms/lobby"
               className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:bg-black/[0.03] sm:w-auto"
             >
               Back to Lobby

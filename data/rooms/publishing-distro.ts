@@ -1,11 +1,11 @@
 import type { Room } from "./types";
 
 export const publishingDistroRoom: Room = {
-    slug: "EMTEEPublishingandDistroDept",
+    slug: "publishing-distribution",
     title: "Distribution / Publishing",
     backgroundImage: "/rooms/cdshop-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "The Strategy Suite", href: "/rooms/EMTEEARSalesDept", x: 90, y: 17, direction: "right" },
+      { id: "next-room", label: "The Strategy Suite", href: "/rooms/ar-sales", x: 90, y: 17, direction: "right" },
       {
     id: "publishing-distro-workshop",
     label: "Publishing/Distro Workshop",

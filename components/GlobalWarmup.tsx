@@ -7,7 +7,7 @@ import { warmImageAsset, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/li
 
 const GLOBAL_ROUTES = [
   "/",
-  "/rooms/front",
+  "/rooms/lobby",
   "/about",
   "/connect",
   "/case-studies",

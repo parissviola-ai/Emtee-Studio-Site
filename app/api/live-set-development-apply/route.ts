@@ -17,7 +17,7 @@ function isLikelyUrl(value: string) {
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const honeypot = cleanString(formData.get("company"), 120);
-  if (honeypot) return NextResponse.redirect(new URL("/live-set-development-apply?status=success", request.url), 303);
+  if (honeypot) return NextResponse.redirect(new URL("/ten-ten-entertainment-set-development-apply?status=success", request.url), 303);
 
   const name = cleanString(formData.get("name"), 140);
   const email = cleanString(formData.get("email"), 200).toLowerCase();
@@ -26,12 +26,12 @@ export async function POST(request: NextRequest) {
   const developmentGoal = cleanString(formData.get("development_goal"), 3000);
 
   if (!name || !email || !instagramHandle || !performanceLink || !developmentGoal || !isValidEmail(email) || !isLikelyUrl(performanceLink)) {
-    return NextResponse.redirect(new URL("/live-set-development-apply?status=error", request.url), 303);
+    return NextResponse.redirect(new URL("/ten-ten-entertainment-set-development-apply?status=error", request.url), 303);
   }
 
   const submission = {
     submittedAt: new Date().toISOString(),
-    source: "live_set_development_apply",
+    source: "ten-ten-entertainment_set_development_apply",
     name,
     email,
     instagramHandle,
@@ -42,10 +42,10 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    await appendFile("/tmp/studio-site-live-set-development-apply.ndjson", `${JSON.stringify(submission)}\n`, "utf8");
+    await appendFile("/tmp/studio-site-ten-ten-entertainment-set-development-apply.ndjson", `${JSON.stringify(submission)}\n`, "utf8");
   } catch {
-    return NextResponse.redirect(new URL("/live-set-development-apply?status=error", request.url), 303);
+    return NextResponse.redirect(new URL("/ten-ten-entertainment-set-development-apply?status=error", request.url), 303);
   }
 
-  return NextResponse.redirect(new URL("/live-set-development-apply?status=success", request.url), 303);
+  return NextResponse.redirect(new URL("/ten-ten-entertainment-set-development-apply?status=success", request.url), 303);
 }

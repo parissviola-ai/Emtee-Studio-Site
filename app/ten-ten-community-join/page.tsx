@@ -17,7 +17,7 @@ export default async function TenTenCommunityJoinPage({
       <div className="relative mx-auto max-w-3xl">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
-            href="/rooms/live"
+            href="/rooms/ten-ten-entertainment"
             className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/15"
           >
             Back to Live Performance

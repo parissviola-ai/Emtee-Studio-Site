@@ -381,7 +381,7 @@ export default function ArtistRosterReleasesPage() {
                 </button>
               </div>
               <Link
-                href="/rooms/front"
+                href="/rooms/lobby"
                 className="inline-flex items-center justify-center self-start rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)] sm:self-auto"
               >
                 Back to Lobby
@@ -479,7 +479,7 @@ export default function ArtistRosterReleasesPage() {
             </button>
           </div>
           <Link
-            href="/rooms/front"
+            href="/rooms/lobby"
             className="inline-flex items-center justify-center self-start rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03] sm:self-auto"
           >
             Back to Lobby

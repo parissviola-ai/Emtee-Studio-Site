@@ -1,9 +1,9 @@
 export const tenTenLivePerformanceV1 = {
-  slug: "live",
+  slug: "ten-ten-entertainment",
   title: "Live Performance",
   backgroundImage: "/rooms/live-opt.jpg",
   hotspots: [
-    { id: "next-room", label: "Board Room", href: "/rooms/EMTEEBusinessDept", x: 90, y: 20, direction: "right" },
+    { id: "next-room", label: "Board Room", href: "/rooms/business", x: 90, y: 20, direction: "right" },
     {
       id: "xperience-projects",
       label: "Xperience Projects",

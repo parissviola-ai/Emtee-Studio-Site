@@ -447,7 +447,7 @@ export default function CaseStudiesClient() {
 
           <div className="flex w-full max-w-xs flex-col items-stretch gap-3 sm:items-end md:w-auto md:max-w-none">
             <Link
-              href="/rooms/front"
+              href="/rooms/lobby"
               className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
             >
               Back to Lobby

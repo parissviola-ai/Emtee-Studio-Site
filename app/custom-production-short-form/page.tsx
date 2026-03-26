@@ -18,7 +18,7 @@ export default async function CustomProductionShortFormPage({
       <div className="relative mx-auto max-w-3xl">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
-            href="/rooms/orange"
+            href="/rooms/dirty-elephant-studio"
             className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/15"
           >
             Back to Orange Room
@@ -33,9 +33,9 @@ export default async function CustomProductionShortFormPage({
           </a>
         </div>
 
-        <section className="mt-8 rounded-[30px] border border-orange-200/25 bg-[linear-gradient(160deg,rgba(18,12,8,0.94),rgba(9,7,5,0.92))] p-8 shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_24px_72px_rgba(0,0,0,0.5)] backdrop-blur md:p-10">
+        <section className="mt-8 rounded-[30px] border border-dirty-elephant-studio-200/25 bg-[linear-gradient(160deg,rgba(18,12,8,0.94),rgba(9,7,5,0.92))] p-8 shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_24px_72px_rgba(0,0,0,0.5)] backdrop-blur md:p-10">
           <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.22em] text-orange-100/65">CUSTOM PRODUCTION</p>
+            <p className="text-xs uppercase tracking-[0.22em] text-dirty-elephant-studio-100/65">CUSTOM PRODUCTION</p>
             <h1 className="mt-3 text-4xl tracking-tight text-[#ffe3c2] md:text-5xl">
               Short Form
             </h1>
@@ -64,23 +64,23 @@ export default async function CustomProductionShortFormPage({
             <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" />
 
             <label className="block">
-              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-orange-100/70">Name</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-dirty-elephant-studio-100/70">Name</span>
               <input
                 name="name"
                 type="text"
                 required
-                className="mt-2 h-12 w-full rounded-xl border border-orange-200/20 bg-black/35 px-4 text-sm text-white outline-none transition focus:border-orange-200/45 focus:ring-2 focus:ring-orange-200/20"
+                className="mt-2 h-12 w-full rounded-xl border border-dirty-elephant-studio-200/20 bg-black/35 px-4 text-sm text-white outline-none transition focus:border-dirty-elephant-studio-200/45 focus:ring-2 focus:ring-dirty-elephant-studio-200/20"
                 placeholder="Your name"
               />
             </label>
 
             <label className="block">
-              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-orange-100/70">Link to Music</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-dirty-elephant-studio-100/70">Link to Music</span>
               <input
                 name="music_link"
                 type="url"
                 required
-                className="mt-2 h-12 w-full rounded-xl border border-orange-200/20 bg-black/35 px-4 text-sm text-white outline-none transition focus:border-orange-200/45 focus:ring-2 focus:ring-orange-200/20"
+                className="mt-2 h-12 w-full rounded-xl border border-dirty-elephant-studio-200/20 bg-black/35 px-4 text-sm text-white outline-none transition focus:border-dirty-elephant-studio-200/45 focus:ring-2 focus:ring-dirty-elephant-studio-200/20"
                 placeholder="Spotify, YouTube, Apple Music, SoundCloud, etc."
               />
             </label>

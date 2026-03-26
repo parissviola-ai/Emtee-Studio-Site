@@ -120,7 +120,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
     accomplishments: [
       "Improved consistency in release execution and turnaround times",
-      "Strengthened campaign readiness with cleaner asset delivery",
+      "Strengthened campaign readiness with cleaner asset deten-ten-entertainmentry",
       "Built stronger partnership communication flow across initiatives",
       "Established repeatable weekly content operations for visibility",
     ],
@@ -170,7 +170,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     selectedPackageHref: "/connect",
     imageSrc: "/case-studies/kisaki-opt.jpg",
     bio:
-      "KISAKI is a Korean-Canadian electronic music producer, DJ, and vocalist based in Toronto, known for her electrifying fusion of dynamic vocals with hard-hitting beats and cinematic experience. Blending elements of rock, K-Pop, J-Pop and anime, her live performances feel like stepping into the soundtrack of a cyber dream.\nA former Touhou Vocal artist with Japan's doujin circles including EastNewSound, she channels the soul of a lost android searching for freedom and love into a dark yet melodic soundscape influenced by cyberpunk and neo noir.\nSince 2024, she has taken her sound on the road, lighting up stages in over fifteen cities across North America, and earning a growing following in the Canadian underground scene.",
+      "KISAKI is a Korean-Canadian electronic music producer, DJ, and vocalist based in Toronto, known for her electrifying fusion of dynamic vocals with hard-hitting beats and cinematic experience. Blending elements of rock, K-Pop, J-Pop and anime, her ten-ten-entertainment performances feel like stepping into the soundtrack of a cyber dream.\nA former Touhou Vocal artist with Japan's doujin circles including EastNewSound, she channels the soul of a lost android searching for freedom and love into a dark yet melodic soundscape influenced by cyberpunk and neo noir.\nSince 2024, she has taken her sound on the road, lighting up stages in over fifteen cities across North America, and earning a growing following in the Canadian underground scene.",
     bullets: [
       "3 Song Creation (Music Department)",
       "Project Creation (5 Songs) (Music Department)",
@@ -183,7 +183,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     accomplishments: [
       "Built reliable release quality-control checkpoints",
       "Created a more predictable launch rhythm and campaign timeline",
-      "Improved preparedness for live opportunities and showcases",
+      "Improved preparedness for ten-ten-entertainment opportunities and showcases",
       "Elevated overall presentation consistency across releases",
     ],
     roadmap: [
@@ -191,7 +191,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         phase: "Phase 01",
         title: "Catalog Quality Control",
         detail:
-          "Standardized artwork, metadata, and final delivery checks to reduce errors and maintain professional release standards.",
+          "Standardized artwork, metadata, and final deten-ten-entertainmentry checks to reduce errors and maintain professional release standards.",
       },
       {
         phase: "Phase 02",
@@ -203,7 +203,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         phase: "Phase 03",
         title: "Live Readiness",
         detail:
-          "Aligned performance preparation and media support so live moments reinforced the broader artist brand.",
+          "Aligned performance preparation and media support so ten-ten-entertainment moments reinforced the broader artist brand.",
       },
     ],
     highlights: [
@@ -269,7 +269,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         phase: "Phase 03",
         title: "Team Execution Model",
         detail:
-          "Set up a dependable workflow between producers, engineers, and content contributors for faster campaign delivery.",
+          "Set up a dependable workflow between producers, engineers, and content contributors for faster campaign deten-ten-entertainmentry.",
       },
     ],
     highlights: [

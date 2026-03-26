@@ -1,13 +1,13 @@
 import type { Room } from "./types";
 
 export const liveRoom: Room = {
-    slug: "live",
+    slug: "ten-ten-entertainment",
     title: "Ten Ten\nEntertainment",
     backgroundImage: "/rooms/live-opt.jpg",
     backgroundVideo: "/rooms/updatedttbg1.mp4",
     backgroundVideoMobile: "/rooms/mobilevideotenten.mp4",
     hotspots: [
-      { id: "next-room", label: "Lobby", href: "/rooms/front", x: 90, y:  17, direction: "right" },
+      { id: "next-room", label: "Lobby", href: "/rooms/lobby", x: 90, y:  17, direction: "right" },
       {
         id: "ten-ten-showcase",
         label: "Ten Ten Showcase",
@@ -64,7 +64,7 @@ export const liveRoom: Room = {
         href: "https://open.spotify.com/playlist/5Usj5DLi7RstSUHG6kw0ul",
       },
       {
-        id: "live-packages",
+        id: "ten-ten-entertainment-packages",
         label: "Packages",
         x: 21.85,
         y: 63.32,
@@ -138,7 +138,7 @@ export const liveRoom: Room = {
           cornerLogo: "/rooms/TenTenlogo.png",
           cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
-            "Expanded showcase lane for artists ready for deeper support, stronger promo, and elevated live execution.",
+            "Expanded showcase lane for artists ready for deeper support, stronger promo, and elevated ten-ten-entertainment execution.",
           highlightsTitle: "Package Includes:",
           highlights: [
             "10 minute set (8 minute music duration + dialogue)",
@@ -157,7 +157,7 @@ export const liveRoom: Room = {
         },
       },
       {
-        id: "live-set-performance-development",
+        id: "ten-ten-entertainment-set-performance-development",
         label: "Live Set Performance Development",
         x: 50.05,
         y: 78,
@@ -173,9 +173,9 @@ export const liveRoom: Room = {
           cornerLogo: "/rooms/TenTenlogo.png",
           cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
-            "Make your performance stand out.\n\nGet development support to tighten your live set, pacing, transitions, stage presence, and audience engagement before showcase day.",
+            "Make your performance stand out.\n\nGet development support to tighten your ten-ten-entertainment set, pacing, transitions, stage presence, and audience engagement before showcase day.",
           primaryLabel: "Apply for Live Set Development",
-          primaryHref: "/live-set-development-apply",
+          primaryHref: "/ten-ten-entertainment-set-development-apply",
         },
       },
       {

@@ -32,7 +32,7 @@ const DEPARTMENT_META: Record<
   business: {
     title: "Business Department",
     label: "Business",
-    roomHref: "/rooms/EMTEEBusinessDept",
+    roomHref: "/rooms/business",
     roomLabel: "Open Business Department",
     summary: "Best for artists and music entrepreneurs who need structure, operations, and clearer decision-making.",
     why: [
@@ -44,7 +44,7 @@ const DEPARTMENT_META: Record<
   music: {
     title: "Music Department",
     label: "Music",
-    roomHref: "/rooms/EMTEEMusicDept",
+    roomHref: "/rooms/music",
     roomLabel: "Open Music Department",
     summary: "Best for artists who need stronger records, better creative direction, and clearer release readiness.",
     why: [
@@ -56,7 +56,7 @@ const DEPARTMENT_META: Record<
   marketing: {
     title: "Marketing Department",
     label: "Marketing",
-    roomHref: "/rooms/EMTEEMarketingDept",
+    roomHref: "/rooms/marketing",
     roomLabel: "Open Marketing Department",
     summary: "Best for artists who need stronger brand presentation, content direction, and audience-facing rollout.",
     why: [
@@ -68,7 +68,7 @@ const DEPARTMENT_META: Record<
   publishing: {
     title: "Publishing / Distribution Department",
     label: "Publishing / Distribution",
-    roomHref: "/rooms/EMTEEPublishingandDistroDept",
+    roomHref: "/rooms/publishing-distribution",
     roomLabel: "Open Publishing / Distribution Department",
     summary: "Best for artists who need cleaner release structure, catalog setup, and backend organization.",
     why: [
@@ -80,7 +80,7 @@ const DEPARTMENT_META: Record<
   sales: {
     title: "A&R / Sales Department",
     label: "A&R / Sales",
-    roomHref: "/rooms/EMTEEARSalesDept",
+    roomHref: "/rooms/ar-sales",
     roomLabel: "Open A&R / Sales Department",
     summary: "Best for artists who need stronger conversion, relationship management, and revenue-facing systems.",
     why: [
@@ -286,13 +286,13 @@ export default function PathQuizClient() {
   const results = useMemo(() => (isComplete ? getResults(answers) : null), [answers, isComplete]);
   const primaryDepartment = results ? DEPARTMENT_META[results.primary] : null;
   const secondaryDepartment = results ? DEPARTMENT_META[results.secondary] : null;
-  const liveResults = useMemo(() => {
+  const entertainmentResults = useMemo(() => {
     const hasAnyAnswer = answers.some((answer) => answer !== -1);
     if (!hasAnyAnswer) return null;
     return getResults(answers);
   }, [answers]);
-  const livePrimaryDepartment = liveResults ? DEPARTMENT_META[liveResults.primary] : null;
-  const liveSecondaryDepartment = liveResults ? DEPARTMENT_META[liveResults.secondary] : null;
+  const entertainmentPrimaryDepartment = entertainmentResults ? DEPARTMENT_META[entertainmentResults.primary] : null;
+  const entertainmentSecondaryDepartment = entertainmentResults ? DEPARTMENT_META[entertainmentResults.secondary] : null;
 
   function selectAnswer(optionIndex: number) {
     setAnswers((prev) => {
@@ -365,7 +365,7 @@ export default function PathQuizClient() {
               Back to About
             </Link>
             <Link
-              href="/rooms/front"
+              href="/rooms/lobby"
               className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-3.5 py-1.5 text-[13px] font-semibold text-black/75 shadow-[0_10px_24px_rgba(0,0,0,0.05)] transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
             >
               Back to Lobby
@@ -557,16 +557,16 @@ export default function PathQuizClient() {
                   Live Path Preview
                 </div>
                 <div className="mt-3 rounded-[24px] border border-[#d6ae66]/26 bg-[linear-gradient(145deg,rgba(214,174,102,0.08),rgba(255,255,255,0.98))] p-3.5">
-                  {livePrimaryDepartment ? (
+                  {entertainmentPrimaryDepartment ? (
                     <>
                       <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b6a2f]/85">
                         Currently Leading
                       </div>
                       <div className="mt-1.5 text-[1.1rem] font-semibold tracking-tight text-zinc-900">
-                        {livePrimaryDepartment.title}
+                        {entertainmentPrimaryDepartment.title}
                       </div>
                       <p className="mt-2 text-[13px] leading-relaxed text-zinc-700">
-                        {livePrimaryDepartment.summary}
+                        {entertainmentPrimaryDepartment.summary}
                       </p>
 
                       <div className="mt-3 rounded-2xl border border-white/70 bg-white/80 p-3 shadow-[0_12px_28px_rgba(0,0,0,0.04)]">
@@ -574,7 +574,7 @@ export default function PathQuizClient() {
                           Secondary Support Lane
                         </div>
                         <div className="mt-1.5 text-[14px] font-semibold text-zinc-900">
-                          {liveSecondaryDepartment?.title}
+                          {entertainmentSecondaryDepartment?.title}
                         </div>
                       </div>
                     </>
@@ -600,7 +600,7 @@ export default function PathQuizClient() {
                         key={department.title}
                         className={[
                           "rounded-full border px-3 py-1 text-[11px] font-semibold shadow-[0_8px_18px_rgba(0,0,0,0.04)]",
-                          livePrimaryDepartment?.title === department.title
+                          entertainmentPrimaryDepartment?.title === department.title
                             ? "border-[#d6ae66]/45 bg-[#d6ae66]/12 text-[#8b6a2f]"
                             : "border-[#d6ae66]/28 bg-white text-zinc-700",
                         ].join(" ")}

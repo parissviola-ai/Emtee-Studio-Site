@@ -602,7 +602,7 @@ export default function WebsiteDesignPage() {
                     <ul className="mt-2 columns-1 gap-x-6 text-sm text-zinc-700 sm:columns-2">
                       {(activeModal.hotspot.modal.highlights ?? []).map((item) => (
                         <li key={item} className="mb-2 break-inside-avoid flex gap-2 leading-relaxed">
-                          <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-orange-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                          <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -649,7 +649,7 @@ export default function WebsiteDesignPage() {
                         className="rounded-xl border border-[#d6ae66]/32 bg-white px-3 py-2 text-sm text-zinc-700 shadow-[0_10px_24px_rgba(0,0,0,0.2)]"
                       >
                         <span className="inline-flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-orange-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                          <span className="h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
                           <span>{item}</span>
                         </span>
                       </div>

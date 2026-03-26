@@ -9,15 +9,15 @@ import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAsset
 const EXPLORE_LINKS = [
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
   { label: "Our Artists", href: "/artist-roster-releases" },
-  { label: "Lobby", href: "/rooms/front" },
-  { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
-  { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
-  { label: "Marketing Department", href: "/rooms/EMTEEMarketingDept" },
-  { label: "Publishing / Distribution Department", href: "/rooms/EMTEEPublishingandDistroDept" },
-  { label: "A&R / Sales Department", href: "/rooms/EMTEEARSalesDept" },
-  { label: "Dirty Elephant Studio", href: "/rooms/orange" },
-  { label: "Ten Ten Entertainment", href: "/rooms/live" },
-  { label: "Steeped Dreams Studio", href: "/rooms/quiet" },
+  { label: "Lobby", href: "/rooms/lobby" },
+  { label: "Business Department", href: "/rooms/business" },
+  { label: "Music Department", href: "/rooms/music" },
+  { label: "Marketing Department", href: "/rooms/marketing" },
+  { label: "Publishing / Distribution Department", href: "/rooms/publishing-distribution" },
+  { label: "A&R / Sales Department", href: "/rooms/ar-sales" },
+  { label: "Dirty Elephant Studio", href: "/rooms/dirty-elephant-studio" },
+  { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
+  { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
 ];
 
 function shouldDebugRoomNav() {
@@ -59,7 +59,7 @@ export default function ConditionalExploreBar() {
   const isMobileViewport = hasHydrated ? isMobileViewportRaw : false;
   const nextExploreEntry = useMemo(() => {
     const currentIndex = EXPLORE_LINKS.findIndex((item) => item.href === pathname);
-    if (currentIndex === -1) return { href: "/rooms/front", label: "Lobby" };
+    if (currentIndex === -1) return { href: "/rooms/lobby", label: "Lobby" };
     if (currentIndex >= EXPLORE_LINKS.length - 1) return EXPLORE_LINKS[0];
     return EXPLORE_LINKS[currentIndex + 1];
   }, [pathname]);

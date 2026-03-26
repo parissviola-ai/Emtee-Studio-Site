@@ -8,7 +8,7 @@ const PROJECT_BUTTONS = [
   },
   {
     title: "Major Label Services (Independent)",
-    desc: "Identity-first development across music, branding, release, business + live.",
+    desc: "Identity-first development across music, branding, release, business + ten-ten-entertainment.",
     href: "#major-label-services",
   },
   {
@@ -41,7 +41,7 @@ export default function EmteeProjectsPage() {
       <div className="mx-auto max-w-6xl px-6 pt-10 pb-16">
         <div className="flex items-center justify-between">
           <Link
-            href="/rooms/front"
+            href="/rooms/lobby"
             className="text-sm text-white/70 hover:text-white transition"
           >
             ← Back to Lobby
@@ -117,7 +117,7 @@ export default function EmteeProjectsPage() {
           </p>
           <p className="mt-3 text-white/70 leading-relaxed max-w-3xl">
             We focus on mentorship and education, supported by professionals
-            across music, brand, release, business, and live development.  [oai_citation:2‡Emtee Music Group](https://www.emteemusicgroup.com/emteeprojects)
+            across music, brand, release, business, and ten-ten-entertainment development.  [oai_citation:2‡Emtee Music Group](https://www.emteemusicgroup.com/emteeprojects)
           </p>
         </section>
 
@@ -127,7 +127,7 @@ export default function EmteeProjectsPage() {
           </h3>
           <p className="mt-3 text-white/70 leading-relaxed max-w-3xl">
             We start with defining the artist—because confidence in identity
-            drives everything else: music, branding, release, business, and live.
+            drives everything else: music, branding, release, business, and ten-ten-entertainment.
             Artists who finance their own development keep ownership and
             creative control.  [oai_citation:3‡Emtee Music Group](https://www.emteemusicgroup.com/emteeprojects)
           </p>

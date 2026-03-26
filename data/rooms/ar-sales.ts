@@ -1,11 +1,11 @@
 import type { Room } from "./types";
 
 export const arSalesRoom: Room = {
-    slug: "EMTEEARSalesDept",
+    slug: "ar-sales",
     title: "A&R / Sales",
     backgroundImage: "/rooms/8-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Steeped Dream Studio", href: "/rooms/quiet", x: 90, y: 17, direction: "right", tier: "core" },
+      { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio", x: 90, y: 17, direction: "right", tier: "core" },
 
       {
         id: "ar-sales-crm-set-up",

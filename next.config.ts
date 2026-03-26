@@ -137,38 +137,83 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/rooms/front",
+        destination: "/rooms/lobby",
+        permanent: true,
+      },
+      {
+        source: "/rooms/EMTEEBusinessDept",
+        destination: "/rooms/business",
+        permanent: true,
+      },
+      {
+        source: "/rooms/EMTEEMusicDept",
+        destination: "/rooms/music",
+        permanent: true,
+      },
+      {
+        source: "/rooms/EMTEEMarketingDept",
+        destination: "/rooms/marketing",
+        permanent: true,
+      },
+      {
+        source: "/rooms/EMTEEPublishingandDistroDept",
+        destination: "/rooms/publishing-distribution",
+        permanent: true,
+      },
+      {
+        source: "/rooms/EMTEEARSalesDept",
+        destination: "/rooms/ar-sales",
+        permanent: true,
+      },
+      {
+        source: "/rooms/orange",
+        destination: "/rooms/dirty-elephant-studio",
+        permanent: true,
+      },
+      {
+        source: "/rooms/live",
+        destination: "/rooms/ten-ten-entertainment",
+        permanent: true,
+      },
+      {
+        source: "/rooms/quiet",
+        destination: "/rooms/steeped-dreams-studio",
+        permanent: true,
+      },
+      {
         source: "/rooms/projects",
-        destination: "/rooms/EMTEEBusinessDept",
+        destination: "/rooms/business",
         permanent: true,
       },
       {
         source: "/rooms/session",
-        destination: "/rooms/EMTEEMusicDept",
+        destination: "/rooms/music",
         permanent: true,
       },
       {
         source: "/rooms/media",
-        destination: "/rooms/EMTEEMarketingDept",
+        destination: "/rooms/marketing",
         permanent: true,
       },
       {
         source: "/rooms/artists",
-        destination: "/rooms/EMTEEPublishingandDistroDept",
+        destination: "/rooms/publishing-distribution",
         permanent: true,
       },
       {
         source: "/rooms/vault",
-        destination: "/rooms/EMTEEARSalesDept",
+        destination: "/rooms/ar-sales",
         permanent: true,
       },
       {
         source: "/rooms/website-design",
-        destination: "/rooms/EMTEEARSalesDept",
+        destination: "/rooms/ar-sales",
         permanent: true,
       },
       {
         source: "/rooms/EMTEEWebDesignDept",
-        destination: "/rooms/EMTEEARSalesDept",
+        destination: "/rooms/ar-sales",
         permanent: true,
       },
     ];

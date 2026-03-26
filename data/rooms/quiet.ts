@@ -1,11 +1,11 @@
 import type { Room } from "./types";
 
 export const quietRoom: Room = {
-    slug: "quiet",
-    title: "Steeped Dream\nStudio",
+    slug: "steeped-dreams-studio",
+    title: "Steeped Dreams\nStudio",
     backgroundImage: "/rooms/kymteastudio1-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/orange", x: 90, y: 17, direction: "right" },
+      { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/dirty-elephant-studio", x: 90, y: 17, direction: "right" },
       {
         id: "kym-tea-music",
         label: "Kym Tea Music",
@@ -26,7 +26,7 @@ export const quietRoom: Room = {
             { src: "/rooms/kymtea3.jpg", alt: "Kym Tea portrait 3" },
           ],
           body:
-            "Kym Tea is the founder of Steeped Dream Studio. Through her artist project and community work, she is building sensory-friendly music experiences that support people who need calmer, more flexible environments.",
+            "Kym Tea is the founder of Steeped Dreams Studio. Through her artist project and community work, she is building sensory-friendly music experiences that support people who need calmer, more flexible environments.",
           links: [
             { label: "YouTube", href: "https://www.youtube.com/@notthatkym/featured" },
             { label: "Linktree", href: "https://linktr.ee/notthatkym" },
@@ -57,7 +57,7 @@ export const quietRoom: Room = {
       },
       {
         id: "steeped-dreams-studio",
-        label: "Steeped Dream Studio",
+        label: "Steeped Dreams Studio",
         x: 63,
         y: 65,
         positions: {
@@ -68,9 +68,9 @@ export const quietRoom: Room = {
         direction: "up",
         variant: "dot",
         modal: {
-          title: "Steeped Dream Studio",
+          title: "Steeped Dreams Studio",
           body:
-            "Steeped Dream Studio is a creative space and community built around sensory-friendly music, events, and shared experiences.\n\nFounder Kym Tea created the studio after being diagnosed with anxiety and PTSD and finding traditional crowded music settings difficult to navigate. The vision expanded further when a close family member was diagnosed with autism and had significant sensory needs.\n\nNeed a break to reset? The studio includes a dedicated chill-out area where guests can recharge for as little or as long as they need.\n\nThe mission is to create open, welcoming environments where people can enjoy music and community without feeling pressure to mask who they are.",
+            "Steeped Dreams Studio is a creative space and community built around sensory-friendly music, events, and shared experiences.\n\nFounder Kym Tea created the studio after being diagnosed with anxiety and PTSD and finding traditional crowded music settings difficult to navigate. The vision expanded further when a close family member was diagnosed with autism and had significant sensory needs.\n\nNeed a break to reset? The studio includes a dedicated chill-out area where guests can recharge for as little or as long as they need.\n\nThe mission is to create open, welcoming environments where people can enjoy music and community without feeling pressure to mask who they are.",
           links: [
             { label: "Watch Video", href: "https://www.instagram.com/p/DUrMEmwEZGf/" },
             { label: "Instagram", href: "https://www.instagram.com/notthatkym/" },

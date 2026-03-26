@@ -39,7 +39,7 @@ export default function Footer() {
           <div>
             <p className="text-[10px] uppercase tracking-[0.22em] text-white/45">Navigate</p>
             <div className="mt-3 grid grid-cols-2 gap-1.5 text-sm">
-              <Link href="/rooms/front" className="text-white/75 transition hover:text-white">Lobby</Link>
+              <Link href="/rooms/lobby" className="text-white/75 transition hover:text-white">Lobby</Link>
               <Link href="/about" className="text-white/75 transition hover:text-white">About Us</Link>
               <Link href="/news" className="text-white/75 transition hover:text-white">News</Link>
               <Link href="/artist-roster-releases#partners" className="text-white/75 transition hover:text-white">Partners</Link>

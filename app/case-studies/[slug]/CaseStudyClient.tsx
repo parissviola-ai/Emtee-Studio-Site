@@ -118,7 +118,7 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
           </Link>
 
           <Link
-            href="/rooms/front"
+            href="/rooms/lobby"
             className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
           >
             Back to Lobby

@@ -22,7 +22,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Business Department",
     summary: "Financial and operational systems that support long-term sustainability and decision quality. This also includes grant strategies.",
-    roomHref: "/rooms/EMTEEBusinessDept",
+    roomHref: "/rooms/business",
     artistCaseStudy: "Yanchan - Business Strategy",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-business",
     items: [
@@ -68,7 +68,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Music Department",
     summary: "Creative direction, production support and release readiness built around artist identity.",
-    roomHref: "/rooms/EMTEEMusicDept",
+    roomHref: "/rooms/music",
     artistCaseStudy: "Fame Holiday - Music Lane",
     artistCaseStudyHref: "/case-studies/fame-holiday",
     items: [
@@ -107,7 +107,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Marketing Department",
     summary: "Branding, content, touring and everything that fuels the reach of your brand and expansion of your audience.",
-    roomHref: "/rooms/EMTEEMarketingDept",
+    roomHref: "/rooms/marketing",
     artistCaseStudy: "Kisaki - Marketing",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=kisaki-marketing",
     items: [
@@ -190,7 +190,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Publishing / Distribution Department",
     summary: "Catalog management, publishing administration and royalty collections.",
-    roomHref: "/rooms/EMTEEPublishingandDistroDept",
+    roomHref: "/rooms/publishing-distribution",
     artistCaseStudy: "Yanchan - Publishing and Distro",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
     items: [
@@ -213,7 +213,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "A&R / Sales Department",
     summary: "CRMs, company valuations and the question of long-lasting, sustainable monetization of your music business.",
-    roomHref: "/rooms/EMTEEARSalesDept",
+    roomHref: "/rooms/ar-sales",
     artistCaseStudy: "Mike Cannz - A&R and Sales",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=mike-ar-sales",
     items: [
@@ -314,7 +314,7 @@ export default function ResourcesPage() {
             />
           </div>
           <Link
-            href="/rooms/front"
+            href="/rooms/lobby"
             className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 backdrop-blur-xl transition hover:border-[#d6ae66]/45 hover:bg-zinc-50 hover:text-zinc-900"
           >
             Back to Lobby

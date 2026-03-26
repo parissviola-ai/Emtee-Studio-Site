@@ -1,7 +1,7 @@
 import type { Room } from "./types";
 
 export const businessRoom: Room = {
-  slug: "EMTEEBusinessDept",
+  slug: "business",
   title: "Business",
   backgroundImage: "/rooms/boardroom-opt.jpg",
   hotspots: [
@@ -141,7 +141,7 @@ export const businessRoom: Room = {
     {
       id: "next-room",
       label: "Studio",
-      href: "/rooms/EMTEEMusicDept",
+      href: "/rooms/music",
       x: 90,
       y: 17,
       positions: {

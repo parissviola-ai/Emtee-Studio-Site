@@ -140,7 +140,7 @@ export default function WebsiteDesignConsultationPage() {
                     <option>Instagram</option>
                     <option>TikTok</option>
                     <option>Streaming platforms</option>
-                    <option>Word of mouth/live shows</option>
+                    <option>Word of mouth/ten-ten-entertainment shows</option>
                   </select>
                 </label>
                 <label className="block md:col-span-2">

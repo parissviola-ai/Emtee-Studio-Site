@@ -101,7 +101,7 @@ export default function ConsultationPage() {
       <div className="relative mx-auto max-w-6xl">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
-            href="/rooms/front"
+            href="/rooms/lobby"
             className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:bg-black/[0.03]"
           >
             Back to Lobby

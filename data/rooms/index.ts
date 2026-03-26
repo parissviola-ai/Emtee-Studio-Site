@@ -1,4 +1,4 @@
-import { frontRoom } from "./front";
+import { lobbyRoom } from "./front";
 import { publishingDistroRoom } from "./publishing-distro";
 import { businessRoom } from "./business";
 import { musicRoom } from "./music";
@@ -12,7 +12,7 @@ import type { Room } from "./types";
 export { type Hotspot, type Room } from "./types";
 
 export const rooms: Room[] = [
-  frontRoom,
+  lobbyRoom,
   publishingDistroRoom,
   businessRoom,
   musicRoom,

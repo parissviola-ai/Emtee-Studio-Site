@@ -156,7 +156,7 @@ export const lobbyRoom: Room = {
           primaryLabel: "See How These Packages Perform in Case Studies",
           primaryHref: "/case-studies",
           secondaryLabel: "View Resources",
-          secondaryHref: "/connect",
+          secondaryHref: "/resources",
         },
       },
       {

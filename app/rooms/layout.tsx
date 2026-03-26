@@ -83,7 +83,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const routeSet = new Set<string>([
       "/about",
-      "/connect",
+      "/resources",
       "/case-studies",
       "/artist-roster-releases",
       "/news",
@@ -155,7 +155,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   }
 
   const aboutActive = pathname === "/about" || pathname === "/consultation" || pathname === "/path-quiz";
-  const resourcesActive = pathname === "/connect" || pathname.startsWith("/connect/") || RESOURCE_LINKS.some((item) => pathname === item.href);
+  const resourcesActive = pathname === "/resources" || pathname.startsWith("/resources/") || RESOURCE_LINKS.some((item) => pathname === item.href);
   const caseStudiesActive =
     pathname === "/case-studies" ||
     pathname.startsWith("/case-studies") ||
@@ -265,7 +265,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               </div>
 
               <div className="relative hidden sm:block group">
-                <Link href="/connect" className={desktopMenuLinkClass(resourcesActive)}>Resources</Link>
+                <Link href="/resources" className={desktopMenuLinkClass(resourcesActive)}>Resources</Link>
 
                 <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="w-64 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
@@ -326,7 +326,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
               <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
               <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
-              <Link href="/connect" className={[navLinkClass("/connect"), "sm:hidden"].join(" ")}>Resources</Link>
+              <Link href="/resources" className={[navLinkClass("/resources"), "sm:hidden"].join(" ")}>Resources</Link>
               <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
               <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>
             </nav>

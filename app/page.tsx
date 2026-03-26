@@ -18,7 +18,7 @@ const LANDING_CARD_COORDS = {
 };
 const LANDING_WARMUP_ROUTES = [
   "/about",
-  "/connect",
+  "/resources",
   "/case-studies",
   "/artist-roster-releases",
   "/news",

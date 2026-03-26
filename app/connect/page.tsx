@@ -1,5 +1,5 @@
-import ResourcesPage from "./ResourcesPage";
+import { redirect } from "next/navigation";
 
 export default function ConnectPage() {
-  return <ResourcesPage />;
+  redirect("/resources");
 }

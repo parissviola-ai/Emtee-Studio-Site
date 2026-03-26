@@ -26,7 +26,7 @@ export const arSalesRoom: Room = {
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
-          secondaryHref: "/connect",
+          secondaryHref: "/resources",
         },
       },
       {
@@ -48,7 +48,7 @@ export const arSalesRoom: Room = {
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
-          secondaryHref: "/connect",
+          secondaryHref: "/resources",
         },
       },
       {
@@ -70,7 +70,7 @@ export const arSalesRoom: Room = {
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
-          secondaryHref: "/connect",
+          secondaryHref: "/resources",
         },
       },
       {
@@ -92,7 +92,7 @@ export const arSalesRoom: Room = {
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
-          secondaryHref: "/connect",
+          secondaryHref: "/resources",
         },
       },
       {
@@ -114,7 +114,7 @@ export const arSalesRoom: Room = {
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
-          secondaryHref: "/connect",
+          secondaryHref: "/resources",
         },
       },
       {
@@ -136,7 +136,7 @@ export const arSalesRoom: Room = {
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
-          secondaryHref: "/connect",
+          secondaryHref: "/resources",
         },
       },
     ],

@@ -9,7 +9,7 @@ const GLOBAL_ROUTES = [
   "/",
   "/rooms/lobby",
   "/about",
-  "/connect",
+  "/resources",
   "/case-studies",
   "/artist-roster-releases",
   "/news",

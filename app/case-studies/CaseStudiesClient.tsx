@@ -257,7 +257,7 @@ function CaseStudyCard({
 
             {cs.selectedPackageLabel ? (
               <Link
-                href={cs.selectedPackageHref ?? "/connect"}
+                href={cs.selectedPackageHref ?? "/resources"}
                 className="rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-xs font-semibold text-[#7a5a24] transition hover:bg-[#d6ae66]/18"
               >
                 {cs.selectedPackageLabel}

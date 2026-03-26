@@ -182,6 +182,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/connect",
+        destination: "/resources",
+        permanent: true,
+      },
+      {
+        source: "/connect/booking-calendar",
+        destination: "/resources",
+        permanent: true,
+      },
+      {
         source: "/rooms/projects",
         destination: "/rooms/business",
         permanent: true,

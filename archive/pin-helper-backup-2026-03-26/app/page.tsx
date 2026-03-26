@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { warmImageAsset, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity.png";
@@ -46,6 +46,15 @@ export default function Home() {
   const [isEnterVisible, setIsEnterVisible] = useState(false);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const [mobileNaturalSize, setMobileNaturalSize] = useState<{ w: number; h: number } | null>(null);
+  const [showPinHelper, setShowPinHelper] = useState(false);
+  const [pinHelperLocked, setPinHelperLocked] = useState(false);
+  const pinHelperLockedRef = useRef(false);
+  const [pinHelperPoint, setPinHelperPoint] = useState<{
+    left: number;
+    top: number;
+    x: number;
+    y: number;
+  } | null>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setIsVisible(true), 760);
@@ -137,8 +146,57 @@ export default function Home() {
     };
   }, [imageMetrics, isMobileViewport, viewport.h, viewport.w]);
 
+  function updatePinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!showPinHelper || pinHelperLockedRef.current || !imageMetrics) return;
+    const objectPositionX = 0.5;
+    const objectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
+    const renderedLeft = rect.left + (viewport.w - imageMetrics.renderedW) * objectPositionX;
+    const renderedTop = rect.top + (viewport.h - imageMetrics.renderedH) * objectPositionY;
+    const x = Math.min(100, Math.max(0, Number((((clientX - renderedLeft) / imageMetrics.renderedW) * 100).toFixed(2))));
+    const y = Math.min(100, Math.max(0, Number((((clientY - renderedTop) / imageMetrics.renderedH) * 100).toFixed(2))));
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+  }
+
+  function lockPinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!showPinHelper || !imageMetrics) return;
+    const objectPositionX = 0.5;
+    const objectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
+    const renderedLeft = rect.left + (viewport.w - imageMetrics.renderedW) * objectPositionX;
+    const renderedTop = rect.top + (viewport.h - imageMetrics.renderedH) * objectPositionY;
+    const x = Math.min(100, Math.max(0, Number((((clientX - renderedLeft) / imageMetrics.renderedW) * 100).toFixed(2))));
+    const y = Math.min(100, Math.max(0, Number((((clientY - renderedTop) / imageMetrics.renderedH) * 100).toFixed(2))));
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+    pinHelperLockedRef.current = true;
+    setPinHelperLocked(true);
+  }
+
   return (
-    <main className="group relative h-screen overflow-hidden bg-black text-white">
+    <main
+      className="group relative h-screen overflow-hidden bg-black text-white"
+      onMouseMove={(e) => {
+        updatePinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+      }}
+      onMouseLeave={() => {
+        if (!pinHelperLockedRef.current) setPinHelperPoint(null);
+      }}
+      onClickCapture={(e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        if (!showPinHelper) return;
+        if (target.closest("a,button,[data-no-pin-helper]")) return;
+        lockPinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+      }}
+    >
       <Image
         src={LANDING_MOBILE_IMAGE}
         alt=""
@@ -155,6 +213,81 @@ export default function Home() {
         sizes="100vw"
         className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[center_18%] transition-transform duration-[1800ms] ease-out sm:block lg:object-[center_50%] 2xl:object-[center_58%] group-hover:scale-[1.02]"
       />
+
+      <div className="absolute left-3 top-3 z-20 flex flex-col items-start gap-2" data-no-pin-helper>
+        <button
+          type="button"
+          onClick={() => {
+            setShowPinHelper((prev) => {
+              const next = !prev;
+              if (!next) {
+                setPinHelperPoint(null);
+                pinHelperLockedRef.current = false;
+                setPinHelperLocked(false);
+              }
+              return next;
+            });
+          }}
+          className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/55 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-md transition hover:bg-black/70"
+        >
+          {showPinHelper ? "Pin Helper On" : "Pin Helper Off"}
+        </button>
+
+        {showPinHelper ? (
+          <div className="min-w-[11rem] rounded-2xl border border-white/14 bg-black/60 px-3 py-2 text-[11px] text-white/84 shadow-[0_14px_36px_rgba(0,0,0,0.35)] backdrop-blur-md">
+            <div className="font-semibold uppercase tracking-[0.14em] text-white/62">Landing Coordinates</div>
+            <div className="mt-1 text-[10px] text-white/58">{isMobileViewport ? "Mobile image" : "Desktop image"}</div>
+            <div className="mt-1">{pinHelperPoint ? `x: ${pinHelperPoint.x}%` : "x: move cursor"}</div>
+            <div>{pinHelperPoint ? `y: ${pinHelperPoint.y}%` : "y: move cursor"}</div>
+            <div className="mt-1 text-[10px] text-white/58">
+              {pinHelperLocked ? "Locked." : "Move cursor, then click scene to lock."}
+            </div>
+            <div className="mt-2 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  pinHelperLockedRef.current = false;
+                  setPinHelperLocked(false);
+                }}
+                disabled={!pinHelperLocked}
+                className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                Unlock
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPinHelperPoint(null);
+                  pinHelperLockedRef.current = false;
+                  setPinHelperLocked(false);
+                }}
+                disabled={!pinHelperPoint}
+                className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                Clear
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={async () => {
+                if (!pinHelperPoint || typeof navigator === "undefined" || !navigator.clipboard) return;
+                await navigator.clipboard.writeText(`x: ${pinHelperPoint.x}, y: ${pinHelperPoint.y}`);
+              }}
+              disabled={!pinHelperPoint}
+              className="mt-2 inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              Copy Coordinates
+            </button>
+          </div>
+        ) : null}
+      </div>
+
+      {showPinHelper && pinHelperPoint ? (
+        <div
+          className="pointer-events-none absolute z-[15] h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/80 bg-cyan-300/35 shadow-[0_0_0_4px_rgba(103,232,249,0.12),0_0_18px_rgba(34,211,238,0.45)]"
+          style={{ left: `${pinHelperPoint.left}px`, top: `${pinHelperPoint.top}px` }}
+        />
+      ) : null}
 
       <div className="relative z-10 flex h-full items-end justify-center px-6 py-12 sm:px-0 sm:py-0">
         <div

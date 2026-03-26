@@ -1245,7 +1245,7 @@ export default function RoomScene({
     desktopCoverMetrics.maxPanX > 0;
   const rawMaxPanX = mobileImageMetrics?.maxPanX ?? 0;
   const rawMaxPanY = mobileImageMetrics?.maxPanY ?? 0;
-  const maxPanX = rawMaxPanX;
+  const maxPanX = isLobbyRoom && isMobileViewport ? rawMaxPanX * 0.82 : rawMaxPanX;
   const maxPanY = rawMaxPanY;
   const displayedPan = isMobileViewport
     ? {

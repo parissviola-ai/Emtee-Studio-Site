@@ -70,10 +70,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!isVisible) {
-      setIsEnterVisible(false);
-      return;
-    }
+    if (!isVisible) return;
     const timer = window.setTimeout(() => setIsEnterVisible(true), 3200);
     return () => window.clearTimeout(timer);
   }, [isVisible]);

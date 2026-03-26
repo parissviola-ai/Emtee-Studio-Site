@@ -12,15 +12,6 @@ export function generateStaticParams(): RoomPageParams[] {
   return rooms.map((room) => ({ slug: room.slug }));
 }
 
-function RoomFallback({ backgroundImage }: { backgroundImage: string }) {
-  return (
-    <main
-      className="min-h-[100svh] bg-black bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    />
-  );
-}
-
 export default async function RoomPage({
   params,
 }: {
@@ -48,8 +39,8 @@ export default async function RoomPage({
   }
 
   const scene = (
-    <Suspense fallback={<RoomFallback backgroundImage={room.backgroundImage} />}>
-      <RoomScene key={room.slug} room={room} />
+    <Suspense fallback={null}>
+      <RoomScene room={room} />
     </Suspense>
   );
 

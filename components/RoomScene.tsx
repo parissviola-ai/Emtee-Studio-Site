@@ -95,9 +95,6 @@ const EXPLORE_ROOMS = [
   { label: "Ten Ten Entertainment", href: "/rooms/live" },
   { label: "Steeped Dream Studio", href: "/rooms/quiet" },
 ];
-const LOBBY_HOVER_ROOMS = EXPLORE_ROOMS.filter(
-  (item) => item.href.startsWith("/rooms/") && item.href !== "/rooms/front"
-);
 const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/rooms/"));
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby.png": { w: 9504, h: 4752 },
@@ -321,26 +318,6 @@ function connectorStyle(
   };
 }
 
-function getHotspotBreakpoint(viewportW: number) {
-  if (!viewportW) return "desktop" as const;
-  if (viewportW < 768) return "mobile" as const;
-  if (viewportW < 1024) return "tablet" as const;
-  if (viewportW < 1440) return "laptop" as const;
-  return "desktop" as const;
-}
-
-function clampHotspotShift(
-  base: { x: number; y: number },
-  override: { x: number; y: number },
-  maxShift: number
-) {
-  const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-  return {
-    x: clamp(override.x, base.x - maxShift, base.x + maxShift),
-    y: clamp(override.y, base.y - maxShift, base.y + maxShift),
-  };
-}
-
 function getCoverImageMetrics(
   viewportW: number,
   viewportH: number,
@@ -371,7 +348,6 @@ function getCoverImageMetrics(
     maxPanY: Math.max((renderedH - viewportH) / 2, 0),
   };
 }
-type CoverImageMetrics = NonNullable<ReturnType<typeof getCoverImageMetrics>>;
 
 function SocialIcon({ label, className = "" }: { label: string; className?: string }) {
   const common = `h-4 w-4 ${className}`.trim();
@@ -517,7 +493,6 @@ export default function RoomScene({ room }: { room: Room }) {
   const [contentVisibleByRoom, setContentVisibleByRoom] = useState<Record<string, boolean>>({});
   const [clickedHotspotIdByRoom, setClickedHotspotIdByRoom] = useState<Record<string, string | null>>({});
   const [isOrangePreviewMuted, setIsOrangePreviewMuted] = useState(false);
-  const [isOrangePreviewMinimized, setIsOrangePreviewMinimized] = useState(false);
   const [isOrangeSessionPreviewVisible, setIsOrangeSessionPreviewVisible] = useState(false);
   const [isOrangeMobileSessionAudioActive, setIsOrangeMobileSessionAudioActive] = useState(false);
   const [isLobbyExploreHoverOpen, setIsLobbyExploreHoverOpen] = useState(false);
@@ -563,7 +538,6 @@ export default function RoomScene({ room }: { room: Room }) {
   const desktopPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const imageNaturalSizeCacheRef = useRef<Record<string, { w: number; h: number }>>({});
-  const imageMetricsCacheRef = useRef<Record<string, CoverImageMetrics>>({});
   const orangePreviewVideoRef = useRef<HTMLVideoElement | null>(null);
   const orangeMobileAudioRef = useRef<HTMLVideoElement | null>(null);
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -580,7 +554,7 @@ export default function RoomScene({ room }: { room: Room }) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const shouldStartVideoMuted = (modal: Hotspot["modal"]) => modal?.title !== "Who We Are";
 
-  function openModal(modal: Hotspot["modal"]) {
+  const openModal = useCallback((modal: Hotspot["modal"]) => {
     if (room.slug === "front" && modal?.title === "Start Here") {
       lobbyStartHereOpenedRef.current = true;
     }
@@ -595,7 +569,7 @@ export default function RoomScene({ room }: { room: Room }) {
     requestAnimationFrame(() => setRevealStep(1));
     setTimeout(() => setRevealStep(2), 140);
     setTimeout(() => setRevealStep(3), 280);
-  }
+  }, [room.slug]);
 
   function closeModal() {
     if (room.slug === "front" && typeof window !== "undefined") {
@@ -630,7 +604,7 @@ export default function RoomScene({ room }: { room: Room }) {
     if (activeModal?.title === targetSpot.modal.title) return;
     setModalBackModal(null);
     openModal(targetSpot.modal);
-  }, [activeModal?.title, room.hotspots, room.slug, searchParams]);
+  }, [activeModal?.title, openModal, room.hotspots, room.slug, searchParams]);
 
   // YouTube IFrame Player API (postMessage) unmute
   function unmuteYoutube() {
@@ -736,14 +710,6 @@ export default function RoomScene({ room }: { room: Room }) {
       setIsOrangeSessionPreviewVisible(false);
       orangePreviewHideTimerRef.current = undefined;
     }, 140);
-  }, []);
-
-  const openLobbyExploreHover = useCallback(() => {
-    if (lobbyExploreHoverCloseTimerRef.current !== undefined) {
-      window.clearTimeout(lobbyExploreHoverCloseTimerRef.current);
-      lobbyExploreHoverCloseTimerRef.current = undefined;
-    }
-    setIsLobbyExploreHoverOpen(true);
   }, []);
 
   const closeLobbyExploreHover = useCallback(() => {
@@ -880,7 +846,6 @@ export default function RoomScene({ room }: { room: Room }) {
       }),
     [room.hotspots]
   );
-  const lobbyWhoWeAreSpot = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "About") : undefined;
   const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
   const lobbyStartHereSpot =
     isLobbyRoom && lobbyStartHereAnchor
@@ -939,11 +904,8 @@ export default function RoomScene({ room }: { room: Room }) {
     () => {
       if (!(isMobileViewport || useContainedBackground)) return null;
       const fitMode = useContainedBackground ? "contain" : "cover";
-      const metricsCacheKey = `${room.slug}:${backgroundImageSrc}:${viewportW}x${viewportH}:${sceneScale}:${fitMode}`;
-      const cachedMetrics = imageMetricsCacheRef.current[metricsCacheKey];
-      if (cachedMetrics) return cachedMetrics;
       if (!imageNaturalSize) return null;
-      const computed = getCoverImageMetrics(
+      return getCoverImageMetrics(
         viewportW,
         viewportH,
         imageNaturalSize.w,
@@ -951,10 +913,6 @@ export default function RoomScene({ room }: { room: Room }) {
         sceneScale,
         fitMode
       );
-      if (computed) {
-        imageMetricsCacheRef.current[metricsCacheKey] = computed;
-      }
-      return computed;
     },
     [backgroundImageSrc, imageNaturalSize, isMobileViewport, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
   );
@@ -1153,7 +1111,7 @@ export default function RoomScene({ room }: { room: Room }) {
     });
   }
 
-  const animateTiltPan = useCallback(() => {
+  function animateTiltPan() {
     const target = tiltPanTargetRef.current;
     setMobileTiltPan((prev) => {
       const nextX = prev.x + (target.x - prev.x) * 0.066;
@@ -1165,13 +1123,13 @@ export default function RoomScene({ room }: { room: Room }) {
       tiltPanFrameRef.current = window.requestAnimationFrame(animateTiltPan);
       return { x: nextX, y: nextY };
     });
-  }, []);
+  }
 
-  function scheduleTiltPan(nextPan: { x: number; y: number }) {
+  const scheduleTiltPan = useCallback((nextPan: { x: number; y: number }) => {
     tiltPanTargetRef.current = nextPan;
     if (tiltPanFrameRef.current) return;
     tiltPanFrameRef.current = window.requestAnimationFrame(animateTiltPan);
-  }
+  }, []);
 
   function isInteractiveTarget(target: EventTarget | null) {
     if (!(target instanceof Element)) return false;
@@ -1293,7 +1251,7 @@ export default function RoomScene({ room }: { room: Room }) {
     };
   }, []);
 
-  const animateDesktopPan = useCallback(() => {
+  function animateDesktopPan() {
     const target = desktopPanTargetRef.current;
     setDesktopCursorPan((prev) => {
       const nextX = prev.x + (target.x - prev.x) * 0.13;
@@ -1305,7 +1263,7 @@ export default function RoomScene({ room }: { room: Room }) {
       desktopPanFrameRef.current = window.requestAnimationFrame(animateDesktopPan);
       return { x: nextX, y: nextY };
     });
-  }, []);
+  }
 
   function scheduleDesktopPan(nextPan: { x: number; y: number }) {
     desktopPanTargetRef.current = nextPan;
@@ -1491,7 +1449,7 @@ export default function RoomScene({ room }: { room: Room }) {
       window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
       window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
     };
-  }, [canPanRoom, isMobileViewport, maxPanX, maxPanY, mobilePan.x, mobilePan.y, tiltEnabled]);
+  }, [canPanRoom, isMobileViewport, maxPanX, maxPanY, mobilePan.x, mobilePan.y, scheduleTiltPan, tiltEnabled]);
 
   useEffect(() => {
     if (!isOrangeRoom) return;
@@ -2254,14 +2212,14 @@ export default function RoomScene({ room }: { room: Room }) {
           <div
             className={[
               "relative overflow-hidden rounded-2xl border border-white/20 bg-black/30 shadow-[0_12px_28px_rgba(0,0,0,0.45)] transition-[width,height] duration-300 ease-out",
-              isOrangePreviewMinimized ? "h-12 w-12" : "h-[411px] w-[232px]",
+              "h-[411px] w-[232px]",
             ].join(" ")}
           >
             <video
               ref={orangePreviewVideoRef}
               className={[
                 "orange-preview-video absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-200",
-                isOrangePreviewMinimized ? "pointer-events-none opacity-0" : "opacity-100",
+                "opacity-100",
               ].join(" ")}
               loop
               muted={isOrangePreviewMuted}
@@ -2281,17 +2239,6 @@ export default function RoomScene({ room }: { room: Room }) {
               <source src="/rooms/yanchanvibes.mp4" type="video/mp4" />
             </video>
           </div>
-          {isOrangePreviewMinimized ? (
-            <div className="relative h-40 w-40 overflow-hidden rounded-xl border border-white/25 bg-black/25 shadow-[0_12px_28px_rgba(0,0,0,0.4)]">
-              <NextImage
-                src="/case-studies/yanchan.png"
-                alt="Yanchan"
-                fill
-                sizes="160px"
-                className="object-cover"
-              />
-            </div>
-          ) : null}
         </div>
       ) : null}
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { CASE_STUDY_DECK, type CaseStudyDeckItem } from "@/data/case-study-deck";
 
 type DepartmentCaseCard = CaseStudyDeckItem & {
@@ -21,30 +21,21 @@ export default function CaseStudies2Client() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeCard, setActiveCard] = useState<DepartmentCaseCard | null>(null);
-
-  useEffect(() => {
+  const activeCard = useMemo(() => {
     const selectedExampleId = searchParams.get("example");
-    if (!selectedExampleId) {
-      return;
-    }
-    const matchedCard = DEPARTMENT_CASE_CARDS.find((card) => card.id === selectedExampleId);
-    if (matchedCard) {
-      setActiveCard(matchedCard);
-    }
+    if (!selectedExampleId) return null;
+    return DEPARTMENT_CASE_CARDS.find((card) => card.id === selectedExampleId) ?? null;
   }, [searchParams]);
 
-  function openCard(card: DepartmentCaseCard) {
-    setActiveCard(card);
+  const openCard = useCallback((card: DepartmentCaseCard) => {
     router.replace(`${pathname}?example=${card.id}`, { scroll: false });
-  }
+  }, [pathname, router]);
 
-  function closeCard() {
-    setActiveCard(null);
+  const closeCard = useCallback(() => {
     router.replace(pathname, { scroll: false });
-  }
+  }, [pathname, router]);
 
-  function goToAdjacentCard(direction: "prev" | "next") {
+  const goToAdjacentCard = useCallback((direction: "prev" | "next") => {
     if (!activeCard) return;
     const currentIndex = DEPARTMENT_CASE_CARDS.findIndex((card) => card.id === activeCard.id);
     if (currentIndex === -1) return;
@@ -53,7 +44,7 @@ export default function CaseStudies2Client() {
         ? (currentIndex + 1) % DEPARTMENT_CASE_CARDS.length
         : (currentIndex - 1 + DEPARTMENT_CASE_CARDS.length) % DEPARTMENT_CASE_CARDS.length;
     openCard(DEPARTMENT_CASE_CARDS[nextIndex]);
-  }
+  }, [activeCard, openCard]);
 
   useEffect(() => {
     if (!activeCard) return;
@@ -64,7 +55,7 @@ export default function CaseStudies2Client() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeCard]);
+  }, [activeCard, closeCard, goToAdjacentCard]);
 
   return (
     <main className="relative min-h-[100svh] overflow-hidden bg-white text-black">

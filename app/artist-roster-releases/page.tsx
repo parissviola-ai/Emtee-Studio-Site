@@ -4,16 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-type RosterItem = {
-  artist: string;
-  role: string;
-  instagramHref: string;
-  imageSrc: string;
-  imageAlt: string;
-  catalogId: string;
-  imagePosition?: string;
-};
-
 type SupportedArtist = {
   artist: string;
   supportLane: string;
@@ -29,35 +19,6 @@ type Partner = {
   src: string;
   href: string;
 };
-
-const DIRECT_ROSTER: RosterItem[] = [
-  {
-    artist: "Yanchan Produced",
-    role: "Producer / Artist",
-    instagramHref: "https://www.instagram.com/yanchanproduced/",
-    imageSrc: "/case-studies/yanchan-opt.jpg",
-    imageAlt: "Yanchan Produced portrait",
-    catalogId: "AR-001",
-    imagePosition: "center 22%",
-  },
-  {
-    artist: "Mike Cannz",
-    role: "Artist / Entrepreneur",
-    instagramHref: "https://www.instagram.com/mikecannz/",
-    imageSrc: "/case-studies/mikecannz-opt.jpg",
-    imageAlt: "Mike Cannz portrait",
-    catalogId: "AR-002",
-    imagePosition: "center 20%",
-  },
-  {
-    artist: "KISAKI",
-    role: "Producer / DJ / Vocalist",
-    instagramHref: "https://www.instagram.com/kisakimusic/",
-    imageSrc: "/case-studies/kisaki-opt.jpg",
-    imageAlt: "KISAKI portrait",
-    catalogId: "AR-003",
-  },
-];
 
 const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
   {

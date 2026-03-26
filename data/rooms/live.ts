@@ -218,7 +218,7 @@ export const liveRoom: Room = {
       {
         id: "mike-cannz",
         label: "Mike Cannz",
-        x: 52,
+        x: 50,
         y: 35,
         positions: {
           laptop: { x: 50, y: 36 },

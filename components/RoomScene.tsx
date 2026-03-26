@@ -978,7 +978,6 @@ export default function RoomScene({
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const activeBackgroundVideo = backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const useContainedBackground = false;
-  const lockMobileDesktopFraming = room.slug === "steeped-dreams-studio" && isMobileViewport;
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const shouldUseNativeBackgroundImage =
     shouldRenderStaticBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
@@ -1242,7 +1241,7 @@ export default function RoomScene({
     return !!target.closest("a,button,input,textarea,select,iframe,[data-no-pan]");
   }
 
-  const canPanRoom = isMobileViewport && !lockMobileDesktopFraming && !isModalOpen && !exploreOpen;
+  const canPanRoom = isMobileViewport && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
     room.slug === "lobby" &&
@@ -1258,14 +1257,14 @@ export default function RoomScene({
   const maxPanY = rawMaxPanY;
   const displayedPan = isMobileViewport
     ? {
-        x: lockMobileDesktopFraming ? 0 : clamp(mobilePan.x + mobileTiltPan.x, -mobilePanLeftLimit, mobilePanRightLimit),
-        y: lockMobileDesktopFraming ? 0 : clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
+        x: clamp(mobilePan.x + mobileTiltPan.x, -mobilePanLeftLimit, mobilePanRightLimit),
+        y: clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
   const displayedHotspotPan = isMobileViewport
     ? {
-        x: lockMobileDesktopFraming ? 0 : clamp(mobilePan.x + mobileTiltPan.x * 0.82, -mobilePanLeftLimit, mobilePanRightLimit),
-        y: lockMobileDesktopFraming ? 0 : clamp(mobilePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
+        x: clamp(mobilePan.x + mobileTiltPan.x * 0.82, -mobilePanLeftLimit, mobilePanRightLimit),
+        y: clamp(mobilePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
 
@@ -2105,8 +2104,6 @@ export default function RoomScene({
                 : backgroundUsesMobileLayout
                   ? room.slug === "lobby"
                     ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
-                    : room.slug === "steeped-dreams-studio"
-                      ? `50% ${backgroundObjectPositionY}%`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
@@ -2137,8 +2134,6 @@ export default function RoomScene({
                 : backgroundUsesMobileLayout
                   ? room.slug === "lobby"
                     ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
-                    : room.slug === "steeped-dreams-studio"
-                      ? `50% ${backgroundObjectPositionY}%`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`

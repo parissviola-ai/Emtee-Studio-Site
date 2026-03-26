@@ -71,7 +71,6 @@ export const liveRoom: Room = {
         positions: {
           laptop: { x: 18, y: 33 },
           tablet: { x: 17, y: 37 },
-          mobile: { x: 28, y: 19 },
         },
         allowLargeResponsiveShift: true,
         direction: "up",

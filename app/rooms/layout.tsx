@@ -20,7 +20,6 @@ const ABOUT_LINKS: NavLink[] = [
   { label: "What We Offer", href: "/rooms/front?modal=departments-sheet" },
   { label: "When Artists Have Taken Our Offers", href: "/case-studies" },
   { label: "How You Can Start", href: "/rooms/front?modal=how-you-start" },
-  { label: "Start Path Quiz", href: "/path-quiz" },
 ];
 
 const RESOURCE_LINKS: NavLink[] = [

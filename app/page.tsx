@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { rooms } from "@/data/rooms";
 import { warmImageAsset, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity.png";
@@ -16,6 +17,16 @@ const LANDING_BUTTON_COORDS = {
 const LANDING_CARD_COORDS = {
   desktop: { x: 46.37, y: 38.08 },
 };
+const LANDING_WARMUP_ROUTES = [
+  "/about",
+  "/connect",
+  "/case-studies",
+  "/artist-roster-releases",
+  "/news",
+  "/path-quiz",
+  "/subscribe",
+  "/labels-partners",
+];
 
 function getCoverImageMetrics(
   viewportW: number,
@@ -56,6 +67,26 @@ export default function Home() {
     router.prefetch("/rooms/front");
     warmImageAsset("/rooms/finishedlobby.png");
     warmRoomAssetsBySlug("front");
+  }, [router]);
+
+  useEffect(() => {
+    const warmLandingNetwork = () => {
+      router.prefetch("/");
+      warmImageAsset(LANDING_DESKTOP_IMAGE);
+      warmImageAsset(LANDING_MOBILE_IMAGE);
+
+      LANDING_WARMUP_ROUTES.forEach((href) => {
+        router.prefetch(href);
+      });
+
+      rooms.forEach((room) => {
+        router.prefetch(`/rooms/${room.slug}`);
+        warmRoomAssetsBySlug(room.slug);
+      });
+    };
+
+    const timer = window.setTimeout(warmLandingNetwork, 2200);
+    return () => window.clearTimeout(timer);
   }, [router]);
 
   useEffect(() => {

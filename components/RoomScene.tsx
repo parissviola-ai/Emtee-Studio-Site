@@ -107,8 +107,8 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/front.jpg": { w: 2048, h: 1365 },
   "/rooms/live-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/kymteabg-opt.jpg": { w: 1536, h: 1024 },
-  "/rooms/kymteastudio1-opt.jpg": { w: 2560, h: 1440 },
-  "/rooms/orangeroomwlogo-opt.jpg": { w: 2560, h: 1440 },
+  "/rooms/SDSFinal.png": { w: 3840, h: 2160 },
+  "/rooms/dirtyelephant2.png": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/10-refresh-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
@@ -926,7 +926,9 @@ export default function RoomScene({
       room.hotspots.map((spot) => {
         const breakpointPosition =
           hotspotBreakpoint === "mobile"
-            ? undefined
+            ? room.slug === "ten-ten-entertainment"
+              ? spot.positions?.mobile
+              : undefined
             : spot.positions?.[hotspotBreakpoint] ??
               (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
@@ -935,7 +937,7 @@ export default function RoomScene({
           y: breakpointPosition?.y ?? spot.y,
         };
       }),
-    [hotspotBreakpoint, room.hotspots]
+    [hotspotBreakpoint, room.hotspots, room.slug]
   );
   const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
   const lobbyStartHereSpot =

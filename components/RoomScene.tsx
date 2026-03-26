@@ -2552,17 +2552,24 @@ export default function RoomScene({
               className={[
                 "absolute inline-flex items-center justify-center rounded-full overflow-visible",
                 "border border-white/35 bg-white/12 text-xs font-semibold text-white",
-                "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.32),0_0_34px_rgba(255,255,255,0.18)]",
-                "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_22px_rgba(255,255,255,0.4),0_0_40px_rgba(255,255,255,0.24)]",
+                isMobileViewport ? "mobile-overview-toggle-glow" : "",
+                isMobileViewport
+                  ? "shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_24px_rgba(255,255,255,0.48),0_0_46px_rgba(255,255,255,0.28)]"
+                  : "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.32),0_0_34px_rgba(255,255,255,0.18)]",
+                isMobileViewport
+                  ? "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.32),0_0_28px_rgba(255,255,255,0.56),0_0_52px_rgba(255,255,255,0.32)]"
+                  : "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_22px_rgba(255,255,255,0.4),0_0_40px_rgba(255,255,255,0.24)]",
                 isCardCompact ? "right-2 top-2 h-8 w-8" : "right-3 top-3 h-8 w-8",
               ].join(" ")}
             >
-              <span
-                className={[
-                  "pointer-events-none absolute -inset-1 rounded-full border border-white/35",
-                  prefersReducedMotion ? "opacity-70" : "animate-[softPulse_1.8s_ease-in-out_infinite]",
-                ].join(" ")}
-              />
+              {!isMobileViewport ? (
+                <span
+                  className={[
+                    "pointer-events-none absolute -inset-1 rounded-full border border-white/35",
+                    prefersReducedMotion ? "opacity-80" : "animate-[softPulse_1.8s_ease-in-out_infinite]",
+                  ].join(" ")}
+                />
+              ) : null}
               {isCardMinimized ? ">" : "<"}
             </button>
 

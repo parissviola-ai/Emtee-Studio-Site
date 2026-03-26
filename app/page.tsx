@@ -14,6 +14,7 @@ const LANDING_BUTTON_COORDS = {
   desktop: { x: 45.38, y: 86.04 },
 };
 const LANDING_CARD_COORDS = {
+  mobile: { x: 50, y: 47 },
   desktop: { x: 46.37, y: 38.08 },
 };
 const LANDING_WARMUP_ROUTES = [
@@ -172,14 +173,15 @@ export default function Home() {
   }, [buttonAnchorPoint, isMobileViewport]);
 
   const cardStyle = useMemo(() => {
-    if (isMobileViewport || !imageMetrics) return undefined;
+    if (!imageMetrics) return undefined;
     const objectPositionX = 0.5;
     const objectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
     const offsetX = (viewport.w - imageMetrics.renderedW) * objectPositionX;
     const offsetY = (viewport.h - imageMetrics.renderedH) * objectPositionY;
+    const activeCardCoords = isMobileViewport ? LANDING_CARD_COORDS.mobile : LANDING_CARD_COORDS.desktop;
     return {
-      left: `${offsetX + (LANDING_CARD_COORDS.desktop.x / 100) * imageMetrics.renderedW}px`,
-      top: `${offsetY + (LANDING_CARD_COORDS.desktop.y / 100) * imageMetrics.renderedH}px`,
+      left: `${offsetX + (activeCardCoords.x / 100) * imageMetrics.renderedW}px`,
+      top: `${offsetY + (activeCardCoords.y / 100) * imageMetrics.renderedH}px`,
     };
   }, [imageMetrics, isMobileViewport, viewport.h, viewport.w]);
 
@@ -211,7 +213,7 @@ export default function Home() {
         <div
           className={[
             "flex flex-col items-center gap-4",
-            !viewportReady || isMobileViewport ? "" : "absolute -translate-x-1/2",
+            viewportReady ? "absolute -translate-x-1/2 -translate-y-1/2" : "",
           ].join(" ")}
           style={cardStyle}
         >

@@ -114,6 +114,12 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };
+const NATIVE_BACKGROUND_IMAGE_ROOMS = new Set([
+  "front",
+  "EMTEEBusinessDept",
+  "EMTEEMusicDept",
+  "EMTEEMarketingDept",
+]);
 const HOTSPOT_TIER_PILOT_ROOMS = new Set(["front"]);
 
 const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
@@ -935,6 +941,8 @@ export default function RoomScene({
   const activeBackgroundVideo = isMobileViewport && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const useContainedBackground = false;
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
+  const shouldUseNativeBackgroundImage =
+    shouldRenderStaticBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
   const parsedModalBody = useMemo(
@@ -2039,7 +2047,33 @@ export default function RoomScene({
             draggable={false}
           />
         ) : null}
-        {shouldRenderStaticBackgroundImage ? (
+        {shouldRenderStaticBackgroundImage && shouldUseNativeBackgroundImage ? (
+          <img
+            src={backgroundImageSrc}
+            alt={room.title || room.slug}
+            className={[
+              "absolute inset-0 h-full w-full",
+              isMarketingRoom && isMobileViewport ? "scale-[1.16]" : "",
+              useContainedBackground ? "object-contain" : "object-cover",
+            ].join(" ")}
+            style={{
+              objectPosition: isMarketingRoom && !isMobileViewport
+                ? "50% 42%"
+                : isMobileViewport
+                  ? room.slug === "front"
+                    ? `calc(54% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                    : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                  : canDesktopCursorPan
+                    ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
+                    : `50% ${backgroundObjectPositionY}%`,
+            }}
+            onLoad={() => {
+              logRoomNav("room:imageLoaded", { slug: room.slug, src: backgroundImageSrc });
+            }}
+            draggable={false}
+          />
+        ) : null}
+        {shouldRenderStaticBackgroundImage && !shouldUseNativeBackgroundImage ? (
           <NextImage
             src={backgroundImageSrc}
             alt={room.title || room.slug}

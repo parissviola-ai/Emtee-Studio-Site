@@ -194,21 +194,17 @@ export default function Home() {
 
   return (
     <main className="group relative h-screen overflow-hidden bg-black text-white">
-      <Image
+      <img
         src={LANDING_MOBILE_IMAGE}
         alt=""
-        fill
-        priority
-        sizes="100vw"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-top sm:hidden"
+        draggable={false}
       />
-      <Image
+      <img
         src={LANDING_DESKTOP_IMAGE}
         alt=""
-        fill
-        priority
-        sizes="100vw"
         className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[center_18%] transition-transform duration-[1800ms] ease-out sm:block lg:object-[center_50%] 2xl:object-[center_58%] group-hover:scale-[1.02]"
+        draggable={false}
       />
 
       <div className="relative z-10 flex h-full items-end justify-center px-6 py-12 sm:px-0 sm:py-0">

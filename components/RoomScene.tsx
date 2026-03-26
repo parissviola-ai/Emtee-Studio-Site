@@ -550,6 +550,7 @@ export default function RoomScene({
   const lobbyExploreHoverCloseTimerRef = useRef<number | undefined>(undefined);
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
+  const isClosingLobbyModalRef = useRef(false);
   const tiltBaselineRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltSignalSeenRef = useRef(false);
@@ -578,10 +579,11 @@ export default function RoomScene({
 
   function closeModal() {
     if (room.slug === "front" && typeof window !== "undefined") {
+      isClosingLobbyModalRef.current = true;
       const url = new URL(window.location.href);
       if (url.searchParams.has("modal")) {
         url.searchParams.delete("modal");
-        router.replace(`${url.pathname}${url.search}${url.hash}`, { scroll: false });
+        window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
       }
     }
     if (room.slug === "front" && lobbyStartHereOpenedRef.current) {
@@ -603,6 +605,10 @@ export default function RoomScene({
   useEffect(() => {
     if (room.slug !== "front") return;
     if (typeof window === "undefined") return;
+    if (isClosingLobbyModalRef.current) {
+      isClosingLobbyModalRef.current = false;
+      return;
+    }
     const modalId = new URLSearchParams(window.location.search).get("modal");
     if (!modalId) return;
     const targetSpot = room.hotspots.find((spot) => spot.id === modalId);
@@ -611,6 +617,26 @@ export default function RoomScene({
     setModalBackModal(null);
     openModal(targetSpot.modal);
   }, [activeModal?.title, openModal, room.hotspots, room.slug]);
+
+  useEffect(() => {
+    if (room.slug !== "front") return;
+    if (typeof window === "undefined") return;
+
+    function handleFrontModalOpen(event: Event) {
+      const customEvent = event as CustomEvent<{ modalId?: string }>;
+      const modalId = customEvent.detail?.modalId;
+      if (!modalId) return;
+      const targetSpot = room.hotspots.find((spot) => spot.id === modalId);
+      if (!targetSpot?.modal) return;
+      setModalBackModal(null);
+      openModal(targetSpot.modal);
+    }
+
+    window.addEventListener("emtee:open-front-modal", handleFrontModalOpen as EventListener);
+    return () => {
+      window.removeEventListener("emtee:open-front-modal", handleFrontModalOpen as EventListener);
+    };
+  }, [openModal, room.hotspots, room.slug]);
 
   // YouTube IFrame Player API (postMessage) unmute
   function unmuteYoutube() {
@@ -826,7 +852,14 @@ export default function RoomScene({
     !!activeModal &&
     (
       isDepartmentRoom ||
-      (room.slug === "front" && (activeModal.title === "Who We Are" || activeModal.title === "Departments"))
+      (
+        room.slug === "front" &&
+        (
+          activeModal.title === "Who We Are" ||
+          activeModal.title === "What We Offer" ||
+          activeModal.title === "How You Start"
+        )
+      )
     );
   const resolvedCornerLogo = activeModal?.cornerLogo ?? (shouldShowDefaultEmteeCornerLogo ? "/logotransparent.png" : undefined);
   const resolvedCornerLogoAlt = activeModal?.cornerLogoAlt ?? (shouldShowDefaultEmteeCornerLogo ? "EMTEE logo" : undefined);

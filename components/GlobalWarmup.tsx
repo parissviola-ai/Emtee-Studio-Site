@@ -35,6 +35,7 @@ export default function GlobalWarmup() {
       warmImageAsset("/rooms/finishedlobby.png");
       warmImageAsset("/rooms/fullimagecity.png");
       warmImageAsset("/rooms/stillbuildingfinal.png");
+      warmImageAsset("/rooms/departmentdeck.png");
     };
 
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {

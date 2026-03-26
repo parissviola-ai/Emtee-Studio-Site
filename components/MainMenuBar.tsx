@@ -3,7 +3,7 @@
 import NextImage from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { rooms } from "@/data/rooms";
 import { warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
@@ -100,6 +100,16 @@ export default function MainMenuBar() {
     ].join(" ");
   }
 
+  function handleFrontModalNav(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (pathname !== "/rooms/front") return;
+    if (!href.startsWith("/rooms/front?modal=")) return;
+    event.preventDefault();
+    if (typeof window === "undefined") return;
+    const modalId = new URL(href, window.location.origin).searchParams.get("modal");
+    window.history.replaceState({}, "", href);
+    window.dispatchEvent(new CustomEvent("emtee:open-front-modal", { detail: { modalId } }));
+  }
+
   return (
     <header className="fixed left-0 right-0 top-0 z-50">
       <div
@@ -151,6 +161,7 @@ export default function MainMenuBar() {
                     <Link
                       key={item.label}
                       href={item.href}
+                      onClick={(event) => handleFrontModalNav(event, item.href)}
                       className={[
                         "block rounded-lg px-3 py-2 text-sm transition",
                         pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
@@ -167,7 +178,7 @@ export default function MainMenuBar() {
               <Link href="/connect" className={desktopMenuLinkClass(resourcesActive)}>Resources</Link>
 
               <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
-                <div className="w-80 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
+                <div className="w-64 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
                   {RESOURCE_LINKS.map((item) => (
                     <Link
                       key={item.label}

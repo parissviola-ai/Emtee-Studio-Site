@@ -346,6 +346,14 @@ function connectorStyle(
   };
 }
 
+function getHotspotBreakpoint(viewportW: number) {
+  if (!viewportW) return "desktop" as const;
+  if (viewportW < 768) return "mobile" as const;
+  if (viewportW < 1024) return "tablet" as const;
+  if (viewportW < 1440) return "laptop" as const;
+  return "desktop" as const;
+}
+
 function getCoverImageMetrics(
   viewportW: number,
   viewportH: number,
@@ -892,16 +900,20 @@ export default function RoomScene({
   const resolvedCornerLogoAlt = activeModal?.cornerLogoAlt ?? (shouldShowDefaultEmteeCornerLogo ? "EMTEE logo" : undefined);
   const [viewportW, viewportH] = viewportKey.split("x").map((n) => Number(n) || 0);
   const viewportKnown = viewportW > 0 && viewportH > 0;
+  const hotspotBreakpoint = getHotspotBreakpoint(viewportW);
   const resolvedHotspots = useMemo(
     () =>
       room.hotspots.map((spot) => {
+        const breakpointPosition =
+          spot.positions?.[hotspotBreakpoint] ??
+          (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
           ...spot,
-          x: spot.x,
-          y: spot.y,
+          x: breakpointPosition?.x ?? spot.x,
+          y: breakpointPosition?.y ?? spot.y,
         };
       }),
-    [room.hotspots]
+    [hotspotBreakpoint, room.hotspots]
   );
   const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
   const lobbyStartHereSpot =
@@ -1236,6 +1248,14 @@ export default function RoomScene({
       return {
         right: "1rem",
         bottom: "calc(env(safe-area-inset-bottom) + 1rem)",
+      };
+    }
+    if (isMobileViewport) {
+      return {
+        left: shiftConversationBlueprintRight
+          ? `calc(${spot.x}% + 2in)`
+          : `${spot.x}%`,
+        top: `${spot.y}%`,
       };
     }
     if (!requiresMetricBasedHotspots || !hotspotImageMetrics) {

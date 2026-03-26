@@ -2561,13 +2561,19 @@ export default function RoomScene({
               aria-label={isCardMinimized ? "Expand overview card" : "Minimize overview card"}
               className={[
                 "absolute inline-flex items-center justify-center rounded-full overflow-visible",
-                "border border-white/35 bg-white/12 text-xs font-semibold text-white",
+                mobileStaticUi && isCardCompact
+                  ? "border border-black/70 bg-black/68 text-white"
+                  : "border border-white/35 bg-white/12 text-xs font-semibold text-white",
                 mobileStaticUi && isCardCompact ? "mobile-overview-toggle-glow" : "",
-                mobileStaticUi
-                  ? "shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_24px_rgba(255,255,255,0.48),0_0_46px_rgba(255,255,255,0.28)]"
+                mobileStaticUi && isCardCompact
+                  ? "shadow-[0_0_0_1px_rgba(0,0,0,0.42),0_0_24px_rgba(0,0,0,0.5),0_0_46px_rgba(0,0,0,0.34)]"
+                  : mobileStaticUi
+                    ? "shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_24px_rgba(255,255,255,0.48),0_0_46px_rgba(255,255,255,0.28)]"
                   : "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.32),0_0_34px_rgba(255,255,255,0.18)]",
-                mobileStaticUi
-                  ? "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.32),0_0_28px_rgba(255,255,255,0.56),0_0_52px_rgba(255,255,255,0.32)]"
+                mobileStaticUi && isCardCompact
+                  ? "transition hover:bg-black/78 hover:text-white hover:shadow-[0_0_0_1px_rgba(0,0,0,0.5),0_0_28px_rgba(0,0,0,0.58),0_0_52px_rgba(0,0,0,0.38)]"
+                  : mobileStaticUi
+                    ? "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.32),0_0_28px_rgba(255,255,255,0.56),0_0_52px_rgba(255,255,255,0.32)]"
                   : "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_22px_rgba(255,255,255,0.4),0_0_40px_rgba(255,255,255,0.24)]",
                 isCardCompact
                   ? mobileStaticUi

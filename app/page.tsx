@@ -10,11 +10,11 @@ const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity.png";
 const LANDING_MOBILE_IMAGE = "/rooms/stillbuildingfinal.png";
 const LANDING_DESKTOP_NATURAL_SIZE = { w: 6240, h: 3510 };
 const LANDING_BUTTON_COORDS = {
-  mobile: { x: 56, y: 84 },
+  mobile: { x: 59, y: 84 },
   desktop: { x: 45.38, y: 86.04 },
 };
 const LANDING_CARD_COORDS = {
-  mobile: { x: 50, y: 47 },
+  mobile: { x: 50, y: 50 },
   desktop: { x: 46.37, y: 38.08 },
 };
 const LANDING_WARMUP_ROUTES = [
@@ -166,11 +166,9 @@ export default function Home() {
     return {
       left: `${buttonAnchorPoint.x}px`,
       top: `${buttonAnchorPoint.y}px`,
-      transform: isMobileViewport
-        ? `translate(calc(-100% + ${arrowTipInset}px), -50%)`
-        : `translate(-${arrowTipInset}px, -50%)`,
+      transform: `translate(-${arrowTipInset}px, -50%)`,
     };
-  }, [buttonAnchorPoint, isMobileViewport]);
+  }, [buttonAnchorPoint]);
 
   const cardStyle = useMemo(() => {
     if (!imageMetrics) return undefined;
@@ -213,13 +211,17 @@ export default function Home() {
         <div
           className={[
             "flex flex-col items-center gap-4",
-            viewportReady ? "absolute -translate-x-1/2 -translate-y-1/2" : "",
+            viewportReady
+              ? isMobileViewport
+                ? "absolute -translate-x-1/2 -translate-y-1/2"
+                : "absolute -translate-x-1/2"
+              : "",
           ].join(" ")}
           style={cardStyle}
         >
           <div
             className={[
-              "w-full max-w-[19.5rem] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3.5 py-3 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2400ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[22rem] sm:px-4 sm:py-3.5",
+              "w-[min(24rem,calc(100vw-1.5rem))] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3.5 py-3 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2400ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-full sm:max-w-[22rem] sm:px-4 sm:py-3.5",
               isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             ].join(" ")}
           >
@@ -232,7 +234,7 @@ export default function Home() {
               className="mx-auto mb-2 h-auto w-[52px] object-contain invert sm:w-[58px]"
             />
 
-            <div className="mx-auto max-w-[16.5rem] text-center sm:max-w-[18rem]">
+            <div className="mx-auto max-w-[20.75rem] text-center sm:max-w-[18rem]">
               <h1 className="text-[0.98rem] font-semibold leading-[1.08] text-white sm:text-[1.2rem]">
                 Welcome to
                 <br />

@@ -226,6 +226,21 @@ const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
   },
 ];
 
+function shouldDebugRoomNav() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem("emtee-debug-nav") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function logRoomNav(event: string, detail: Record<string, unknown>) {
+  if (!shouldDebugRoomNav()) return;
+  const stamp = typeof performance !== "undefined" ? performance.now().toFixed(1) : Date.now().toString();
+  console.log(`[emtee-nav ${stamp}ms] ${event}`, detail);
+}
+
 function getArrow(direction?: "left" | "right" | "up" | "down") {
   switch (direction) {
     case "right":
@@ -1081,6 +1096,15 @@ export default function RoomScene({
   useEffect(() => {
     warmRoomAssetsBySlug(room.slug);
   }, [room.slug]);
+
+  useEffect(() => {
+    logRoomNav("room:mount", {
+      slug: room.slug,
+      backgroundImage: room.backgroundImage,
+      backgroundVideo: room.backgroundVideo ?? null,
+      backgroundVideoMobile: room.backgroundVideoMobile ?? null,
+    });
+  }, [room.backgroundImage, room.backgroundVideo, room.backgroundVideoMobile, room.slug]);
 
   function triggerHotspotLabelGlow(spot: Hotspot) {
     if (spot.id === "next-room") return;
@@ -2037,6 +2061,9 @@ export default function RoomScene({
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
                     : `50% ${backgroundObjectPositionY}%`,
             }}
+            onLoad={() => {
+              logRoomNav("room:imageLoaded", { slug: room.slug, src: backgroundImageSrc });
+            }}
             draggable={false}
           />
         ) : null}
@@ -2051,6 +2078,15 @@ export default function RoomScene({
             disablePictureInPicture
             disableRemotePlayback
             preload={room.slug === "live" || room.slug === "front" ? "auto" : "metadata"}
+            onLoadedData={() => {
+              logRoomNav("room:videoLoadedData", { slug: room.slug, src: activeBackgroundVideo });
+            }}
+            onCanPlay={() => {
+              logRoomNav("room:videoCanPlay", { slug: room.slug, src: activeBackgroundVideo });
+            }}
+            onPlaying={() => {
+              logRoomNav("room:videoPlaying", { slug: room.slug, src: activeBackgroundVideo });
+            }}
             style={
               isMobileViewport
                 ? {

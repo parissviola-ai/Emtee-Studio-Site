@@ -9,6 +9,21 @@ const videoReadyPromises = new Map<string, Promise<void>>();
 
 const ROOM_NAVIGATION_WAIT_TIMEOUT_MS = 2200;
 
+function shouldDebugRoomNav() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem("emtee-debug-nav") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function logRoomNav(event: string, detail: Record<string, unknown>) {
+  if (!shouldDebugRoomNav()) return;
+  const stamp = typeof performance !== "undefined" ? performance.now().toFixed(1) : Date.now().toString();
+  console.log(`[emtee-nav ${stamp}ms] ${event}`, detail);
+}
+
 function waitWithTimeout(promise: Promise<void>, timeoutMs: number) {
   return Promise.race<void>([
     promise,
@@ -110,6 +125,7 @@ export async function awaitRoomAssetsBySlug(slug?: string | null) {
   const room = rooms.find((entry) => entry.slug === slug);
   if (!room) return;
 
+  logRoomNav("awaitRoomAssets:start", { slug });
   warmRoomAssetsBySlug(slug);
 
   const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
@@ -118,11 +134,13 @@ export async function awaitRoomAssetsBySlug(slug?: string | null) {
 
   if (activeVideo) {
     await waitWithTimeout(waitForVideoReady(activeVideo), ROOM_NAVIGATION_WAIT_TIMEOUT_MS);
+    logRoomNav("awaitRoomAssets:ready", { slug, assetType: "video", src: activeVideo });
     return;
   }
 
   if (room.backgroundImage) {
     await waitWithTimeout(waitForImageReady(room.backgroundImage), ROOM_NAVIGATION_WAIT_TIMEOUT_MS);
+    logRoomNav("awaitRoomAssets:ready", { slug, assetType: "image", src: room.backgroundImage });
   }
 }
 

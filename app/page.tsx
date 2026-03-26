@@ -27,6 +27,21 @@ const LANDING_WARMUP_ROUTES = [
   "/labels-partners",
 ];
 
+function shouldDebugRoomNav() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem("emtee-debug-nav") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function logRoomNav(event: string, detail: Record<string, unknown>) {
+  if (!shouldDebugRoomNav()) return;
+  const stamp = typeof performance !== "undefined" ? performance.now().toFixed(1) : Date.now().toString();
+  console.log(`[emtee-nav ${stamp}ms] ${event}`, detail);
+}
+
 function getCoverImageMetrics(
   viewportW: number,
   viewportH: number,
@@ -170,8 +185,10 @@ export default function Home() {
 
   async function handleEnterLobby() {
     if (isEnteringLobby) return;
+    logRoomNav("nav:click", { from: "/", to: "/rooms/front", source: "landing-enter" });
     setIsEnteringLobby(true);
     await awaitRoomAssetsByHref("/rooms/front");
+    logRoomNav("nav:push", { from: "/", to: "/rooms/front", source: "landing-enter" });
     router.push("/rooms/front");
   }
 

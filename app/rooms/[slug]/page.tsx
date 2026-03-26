@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import RoomScene from "@/components/RoomScene";
+import LobbyPage from "@/components/transitions/LobbyPage";
 import { rooms } from "@/data/rooms";
 
 type RoomPageParams = { slug: string };
@@ -9,6 +10,15 @@ export const dynamicParams = false;
 
 export function generateStaticParams(): RoomPageParams[] {
   return rooms.map((room) => ({ slug: room.slug }));
+}
+
+function RoomFallback({ backgroundImage }: { backgroundImage: string }) {
+  return (
+    <main
+      className="min-h-[100svh] bg-black bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    />
+  );
 }
 
 export default async function RoomPage({
@@ -37,9 +47,15 @@ export default async function RoomPage({
     );
   }
 
-  return (
-    <Suspense fallback={null}>
+  const scene = (
+    <Suspense fallback={<RoomFallback backgroundImage={room.backgroundImage} />}>
       <RoomScene key={room.slug} room={room} />
     </Suspense>
   );
+
+  if (room.slug === "front") {
+    return <LobbyPage route="/rooms/front">{scene}</LobbyPage>;
+  }
+
+  return scene;
 }

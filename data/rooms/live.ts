@@ -159,7 +159,7 @@ export const liveRoom: Room = {
       {
         id: "live-set-performance-development",
         label: "Live Set Performance Development",
-        x: 50,
+        x: 50.05,
         y: 78,
         positions: {
           laptop: { x: 50, y: 79 },

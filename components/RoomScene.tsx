@@ -597,7 +597,6 @@ export default function RoomScene({
     (modal: Hotspot["modal"]) => modal?.title !== "Who We Are" || isMobileViewportRaw,
     [isMobileViewportRaw]
   );
-
   const openModal = useCallback((modal: Hotspot["modal"]) => {
     if (room.slug === "lobby" && modal?.title === "Start Here") {
       lobbyStartHereOpenedRef.current = true;
@@ -842,6 +841,8 @@ export default function RoomScene({
   const isMobileViewport = hasHydrated ? isMobileViewportRaw : false;
   const prefersReducedMotion = hasHydrated ? prefersReducedMotionRaw : false;
   const viewportKey = hasHydrated ? viewportKeyRaw : "0x0";
+  const backgroundUsesMobileLayout = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;
+  const lobbyResponsiveIsMobile = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;
   const isCardMinimized = minimizedByRoom[room.slug] ?? false;
   const isCardContentVisible = contentVisibleByRoom[room.slug] ?? true;
   const isCardCompact = isCardMinimized || !isCardContentVisible;
@@ -890,6 +891,7 @@ export default function RoomScene({
   const isLiveRoomModal = room.slug === "ten-ten-entertainment" && !!activeModal && !isPackageGridModal;
   const shouldShowOrangeSessionPreview = isOrangeRoom && !isMobileViewport && (isOrangeSessionPreviewVisible || isOrangeSessionModalOpen);
   const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
+  const suppressLobbyResponsiveUiUntilHydrated = isLobbyRoom && !hasHydrated;
   const activeCarouselSlide =
     isCarouselModal && activeModal?.carouselSlides
       ? activeModal.carouselSlides[((activeCarouselIndex % activeModal.carouselSlides.length) + activeModal.carouselSlides.length) % activeModal.carouselSlides.length]
@@ -960,19 +962,19 @@ export default function RoomScene({
         : isMarketingRoomZoomedOut
           ? 1
         : 1.06;
-  const sceneScale = isMobileViewport ? mobileSceneScale : desktopSceneScale;
+  const sceneScale = backgroundUsesMobileLayout ? mobileSceneScale : desktopSceneScale;
   const backgroundObjectPositionY =
     room.slug === "EMTEEWebDesign"
       ? 60
       : room.slug === "ar-sales"
         ? 64
-        : room.slug === "lobby" && !isMobileViewport
+        : room.slug === "lobby"
           ? 58
           : 50;
   const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "ten-ten-entertainment" ? 50 : 0;
   const backgroundImageSrc =
-    isWebsiteDesignRoom && isMobileViewport ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
-  const activeBackgroundVideo = isMobileViewport && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
+    isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
+  const activeBackgroundVideo = backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const useContainedBackground = false;
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const shouldUseNativeBackgroundImage =
@@ -993,7 +995,7 @@ export default function RoomScene({
       : parsedModalBody.includes;
   const mobileImageMetrics = useMemo(
     () => {
-      if (!(isMobileViewport || useContainedBackground)) return null;
+      if (!(backgroundUsesMobileLayout || useContainedBackground)) return null;
       const fitMode = useContainedBackground ? "contain" : "cover";
       const metricsCacheKey = `${room.slug}:${backgroundImageSrc}:${viewportW}x${viewportH}:${sceneScale}:${fitMode}`;
       const cachedMetrics = imageMetricsCacheRef.current[metricsCacheKey];
@@ -1012,17 +1014,18 @@ export default function RoomScene({
       }
       return computed;
     },
-    [backgroundImageSrc, imageNaturalSize, isMobileViewport, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
+    [backgroundImageSrc, backgroundUsesMobileLayout, imageNaturalSize, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
   );
   const requiresMetricBasedHotspots = true;
   const desktopCoverMetrics = useMemo(
     () =>
-      !isMobileViewport && imageNaturalSize
+      !backgroundUsesMobileLayout && imageNaturalSize
         ? getCoverImageMetrics(viewportW, viewportH, imageNaturalSize.w, imageNaturalSize.h, sceneScale, "cover")
         : null,
-    [imageNaturalSize, isMobileViewport, sceneScale, viewportH, viewportW]
+    [backgroundUsesMobileLayout, imageNaturalSize, sceneScale, viewportH, viewportW]
   );
   const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
+  const lobbyMobileHotspotsReady = !isMobileViewport || !!hotspotImageMetrics;
   const sceneReady =
     hasHydrated && viewportKnown && !!imageNaturalSize && (!requiresMetricBasedHotspots || !!hotspotImageMetrics);
   const hotspotsReady =
@@ -1033,13 +1036,14 @@ export default function RoomScene({
       resolvedHotspots.filter((spot) => {
         if (spot.hidden) return false;
         if (spot.id === "next-room") return false;
-        if (isLobbyRoom && isMobileViewport && spot.id === "explore") return false;
+        if (isLobbyRoom && !hasHydrated && spot.id === "explore") return false;
+        if (isLobbyRoom && lobbyResponsiveIsMobile && spot.id === "explore") return false;
         if (isLobbyRoom && !showAllRoomHotspots) return false;
         if (!isHotspotTierPilotRoom) return true;
         if (showAllRoomHotspots) return true;
         return (spot.tier ?? "core") === "core";
       }),
-    [isHotspotTierPilotRoom, isLobbyRoom, isMobileViewport, resolvedHotspots, showAllRoomHotspots]
+    [hasHydrated, isHotspotTierPilotRoom, isLobbyRoom, lobbyResponsiveIsMobile, resolvedHotspots, showAllRoomHotspots]
   );
   const connectableDots = visibleHotspots.filter((spot) => spot.variant === "dot");
   const showDotConnectors =
@@ -1237,7 +1241,7 @@ export default function RoomScene({
 
   const canPanRoom = isMobileViewport && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
-    !isMobileViewport &&
+    !lobbyResponsiveIsMobile &&
     room.slug === "lobby" &&
     !isModalOpen &&
     !exploreOpen &&
@@ -1245,17 +1249,19 @@ export default function RoomScene({
     desktopCoverMetrics.maxPanX > 0;
   const rawMaxPanX = mobileImageMetrics?.maxPanX ?? 0;
   const rawMaxPanY = mobileImageMetrics?.maxPanY ?? 0;
-  const maxPanX = isLobbyRoom && isMobileViewport ? rawMaxPanX * 0.82 : rawMaxPanX;
+  const maxPanX = rawMaxPanX;
+  const mobilePanLeftLimit = isLobbyRoom && isMobileViewport ? rawMaxPanX * 1.02 : rawMaxPanX;
+  const mobilePanRightLimit = rawMaxPanX;
   const maxPanY = rawMaxPanY;
   const displayedPan = isMobileViewport
     ? {
-        x: clamp(mobilePan.x + mobileTiltPan.x, -maxPanX, maxPanX),
+        x: clamp(mobilePan.x + mobileTiltPan.x, -mobilePanLeftLimit, mobilePanRightLimit),
         y: clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
   const displayedHotspotPan = isMobileViewport
     ? {
-        x: clamp(mobilePan.x + mobileTiltPan.x * 0.82, -maxPanX, maxPanX),
+        x: clamp(mobilePan.x + mobileTiltPan.x * 0.82, -mobilePanLeftLimit, mobilePanRightLimit),
         y: clamp(mobilePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
@@ -1519,12 +1525,12 @@ export default function RoomScene({
       const betaWithDeadzone = Math.abs(normalizedBeta) < 0.12 ? 0 : normalizedBeta;
       const shapedGamma = Math.sign(gammaWithDeadzone) * Math.pow(Math.abs(gammaWithDeadzone), 1.08);
       const shapedBeta = Math.sign(betaWithDeadzone) * Math.pow(Math.abs(betaWithDeadzone), 1.15);
-      const xRange = maxPanX * 0.98;
+      const xRange = Math.min(mobilePanLeftLimit, mobilePanRightLimit) * 0.98;
       const yRange = maxPanY * 0.86;
       const nextX = clamp(
         clamp(-shapedGamma * xRange, -xRange, xRange),
-        -maxPanX - mobilePan.x,
-        maxPanX - mobilePan.x,
+        -mobilePanLeftLimit - mobilePan.x,
+        mobilePanRightLimit - mobilePan.x,
       );
       const nextY = clamp(
         clamp(-shapedBeta * yRange, -yRange, yRange),
@@ -2020,7 +2026,7 @@ export default function RoomScene({
           touchPanStartRef.current = start;
         }
         e.preventDefault();
-        const nextX = clamp(start.panX + dx * 0.7, -maxPanX, maxPanX);
+        const nextX = clamp(start.panX + dx * 0.7, -mobilePanLeftLimit, mobilePanRightLimit);
         const nextY = clamp(start.panY + dy * 0.58, -maxPanY, maxPanY);
         scheduleMobilePan({ x: nextX, y: nextY });
       }}
@@ -2087,15 +2093,15 @@ export default function RoomScene({
             alt={room.title || room.slug}
             className={[
               "absolute inset-0 h-full w-full",
-              isMarketingRoom && isMobileViewport ? "scale-[1.16]" : "",
+              isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
             style={{
-              objectPosition: isMarketingRoom && !isMobileViewport
+              objectPosition: isMarketingRoom && !backgroundUsesMobileLayout
                 ? "50% 42%"
-                : isMobileViewport
+                : backgroundUsesMobileLayout
                   ? room.slug === "lobby"
-                    ? `calc(54% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                    ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
@@ -2117,15 +2123,15 @@ export default function RoomScene({
             quality={70}
             className={[
               "absolute inset-0 h-full w-full",
-              isMarketingRoom && isMobileViewport ? "scale-[1.16]" : "",
+              isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
             style={{
-              objectPosition: isMarketingRoom && !isMobileViewport
+              objectPosition: isMarketingRoom && !backgroundUsesMobileLayout
                 ? "50% 42%"
-                : isMobileViewport
+                : backgroundUsesMobileLayout
                   ? room.slug === "lobby"
-                    ? `calc(54% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                    ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
@@ -2235,16 +2241,6 @@ export default function RoomScene({
             </button>
           )}
 
-          {tiltStatus === "blocked" ? (
-            <div className="max-w-[10rem] rounded-xl border border-white/15 bg-black/55 px-2.5 py-1.5 text-right text-[10px] leading-tight text-white/72 backdrop-blur-md">
-              Motion access is blocked on this device/browser.
-            </div>
-          ) : null}
-
-          <div className="max-w-[11rem] rounded-xl border border-white/10 bg-black/45 px-2.5 py-1.5 text-right text-[10px] leading-tight text-white/62 backdrop-blur-md">
-            <div>Secure: {isSecureContextState ? "yes" : "no"}</div>
-            <div>Tilt: {tiltStatus}</div>
-          </div>
         </div>
       ) : null}
 
@@ -2375,7 +2371,7 @@ export default function RoomScene({
         ) : null}
       </div>
 
-      {isLobbyRoom ? (
+      {isLobbyRoom && !suppressLobbyResponsiveUiUntilHydrated ? (
         <div
           ref={lobbyHeaderRef}
           className={[
@@ -2402,7 +2398,7 @@ export default function RoomScene({
         </div>
       ) : null}
 
-      {isLobbyRoom && lobbyStartHereSpot ? (
+      {isLobbyRoom && lobbyStartHereSpot && !suppressLobbyResponsiveUiUntilHydrated && lobbyMobileHotspotsReady ? (
         <div
           className={[
             "absolute z-40 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-100",
@@ -2675,7 +2671,10 @@ export default function RoomScene({
 
           // Action hotspot (opens Explore panel)
           if (spot.action === "explore") {
-            const isLobbyDesktopExplorePin = room.slug === "lobby" && !isMobileViewport && spot.id === "explore";
+            if (isLobbyRoom && !hasHydrated) {
+              return null;
+            }
+            const isLobbyDesktopExplorePin = room.slug === "lobby" && !lobbyResponsiveIsMobile && spot.id === "explore";
             if (isLobbyDesktopExplorePin) {
               return null;
             }
@@ -2777,9 +2776,9 @@ export default function RoomScene({
       </div>
 
       {/* Bottom Explore bar */}
-      {isMobileViewport ? (
-        <>
-          <div className={["absolute bottom-6 left-6", isStartHereModal ? "z-[10010]" : "z-50"].join(" ")}>
+      {!suppressLobbyResponsiveUiUntilHydrated ? (
+        isMobileViewport ? (
+          <div className={["absolute bottom-6 right-6 flex items-center gap-2", isStartHereModal ? "z-[10010]" : "z-50"].join(" ")}>
             <button
               type="button"
               aria-label="Open Explore menu"
@@ -2789,17 +2788,17 @@ export default function RoomScene({
             >
               <span className="text-white/85">⌕</span>
             </button>
-          </div>
-          <div className={["absolute bottom-6 right-6 flex items-center gap-2", isStartHereModal ? "z-[10010]" : "z-50"].join(" ")}>
-            <button
-              type="button"
-              data-no-pan
-              aria-label={`Previous room: ${explorePrevLabel}`}
-              onClick={() => void navigateToRoomHref(explorePrevHref)}
-              className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
-            >
-              ←
-            </button>
+            {!isLobbyRoom ? (
+              <button
+                type="button"
+                data-no-pan
+                aria-label={`Previous room: ${explorePrevLabel}`}
+                onClick={() => void navigateToRoomHref(explorePrevHref)}
+                className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
+              >
+                ←
+              </button>
+            ) : null}
             <button
               type="button"
               data-no-pan
@@ -2810,76 +2809,81 @@ export default function RoomScene({
               →
             </button>
           </div>
-        </>
-      ) : (
-        <div className={["absolute bottom-6 right-6", isStartHereModal ? "z-[10010]" : "z-40"].join(" ")}>
-          <div className="flex items-stretch justify-end gap-2">
-            {!isLobbyRoom ? (
+        ) : (
+          <div className={["absolute bottom-6 right-6", isStartHereModal ? "z-[10010]" : "z-40"].join(" ")}>
+            <div className="flex items-stretch justify-end gap-2">
+              {!isLobbyRoom ? (
+                <button
+                  type="button"
+                  data-no-pan
+                  aria-label="Go to previous room"
+                  title={`Previous: ${explorePrevLabel}`}
+                  onClick={() => void navigateToRoomHref(explorePrevHref)}
+                  className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
+                >
+                  ←
+                  <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
+                    {explorePrevLabel}
+                  </span>
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={openExploreMenu}
+                data-no-pan
+                className="flex h-11 w-[min(25vw,188px)] min-w-[148px] touch-manipulation select-none items-center gap-2.5 rounded-2xl border border-white/14 bg-black/30 px-3.5 py-2 text-left backdrop-blur-xl transition-[width,background-color,border-color] duration-250 ease-out hover:w-[min(30vw,220px)] hover:bg-black/42"
+              >
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/18 bg-black/26">
+                  <span className="text-white/76">⌕</span>
+                </span>
+
+                <div className="flex-1">
+                  <div className="text-[13px] font-semibold text-white/88">Explore</div>
+                  <div className="text-[10px] uppercase tracking-[0.12em] text-white/52">All Rooms</div>
+                </div>
+              </button>
               <button
                 type="button"
                 data-no-pan
-                aria-label="Go to previous room"
-                title={`Previous: ${explorePrevLabel}`}
-                onClick={() => void navigateToRoomHref(explorePrevHref)}
+                aria-label="Go to next page"
+                title={`Next: ${exploreArrowLabel}`}
+                onClick={() => void navigateToRoomHref(exploreArrowHref)}
                 className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
               >
-                ←
+                →
                 <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
-                  {explorePrevLabel}
+                  {exploreArrowLabel}
                 </span>
               </button>
-            ) : null}
-            <button
-              type="button"
-              onClick={openExploreMenu}
-              data-no-pan
-              className="flex h-11 w-[min(25vw,188px)] min-w-[148px] touch-manipulation select-none items-center gap-2.5 rounded-2xl border border-white/14 bg-black/30 px-3.5 py-2 text-left backdrop-blur-xl transition-[width,background-color,border-color] duration-250 ease-out hover:w-[min(30vw,220px)] hover:bg-black/42"
-            >
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/18 bg-black/26">
-                <span className="text-white/76">⌕</span>
-              </span>
-
-              <div className="flex-1">
-                <div className="text-[13px] font-semibold text-white/88">Explore</div>
-                <div className="text-[10px] uppercase tracking-[0.12em] text-white/52">All Rooms</div>
-              </div>
-            </button>
-            <button
-              type="button"
-              data-no-pan
-              aria-label="Go to next page"
-              title={`Next: ${exploreArrowLabel}`}
-              onClick={() => void navigateToRoomHref(exploreArrowHref)}
-              className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
-            >
-              →
-              <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
-                {exploreArrowLabel}
-              </span>
-            </button>
+            </div>
           </div>
-        </div>
-      )}
+        )
+      ) : null}
 
       {/* Explore overlay */}
       <div
         className={[
-          "fixed inset-0 transition-opacity duration-300 ease-out",
+          "fixed inset-0",
           isStartHereModal ? "z-[10020]" : "z-[60]",
           exploreOpen ? "pointer-events-auto" : "pointer-events-none",
+          isMobileViewport ? "" : "transition-opacity duration-300 ease-out",
           exploreOpen ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >
         <button
           type="button"
           aria-label="Close Explore"
-          className="absolute inset-0 bg-black/40"
+          className={[
+            "absolute inset-0 transition-opacity ease-out",
+            isMobileViewport ? "bg-black/60 duration-150" : "bg-black/40 duration-300",
+            exploreOpen ? "opacity-100" : "opacity-0",
+          ].join(" ")}
           onClick={() => setExploreOpen(false)}
         />
 
         <div
           className={[
-            "absolute left-0 top-0 h-full w-[300px] max-w-[78vw] border-r border-white/10 bg-black/45 backdrop-blur-2xl p-5 pt-[max(1rem,env(safe-area-inset-top))] md:w-[340px] md:max-w-[85vw] md:p-6",
+            "absolute left-0 top-0 h-full w-[272px] max-w-[72vw] border-r border-white/10 bg-black/45 backdrop-blur-2xl p-5 pt-[max(1rem,env(safe-area-inset-top))] md:w-[340px] md:max-w-[85vw] md:p-6",
             "transform-gpu will-change-[transform,opacity] transition-[transform,opacity] duration-[380ms] ease-out",
             exploreOpen ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0",
           ].join(" ")}

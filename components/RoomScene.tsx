@@ -2104,6 +2104,8 @@ export default function RoomScene({
                 : backgroundUsesMobileLayout
                   ? room.slug === "lobby"
                     ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                    : room.slug === "steeped-dreams-studio"
+                      ? `50% ${backgroundObjectPositionY}%`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
@@ -2134,6 +2136,8 @@ export default function RoomScene({
                 : backgroundUsesMobileLayout
                   ? room.slug === "lobby"
                     ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                    : room.slug === "steeped-dreams-studio"
+                      ? `50% ${backgroundObjectPositionY}%`
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`

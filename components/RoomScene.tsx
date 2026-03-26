@@ -845,8 +845,15 @@ export default function RoomScene({
   const viewportKey = hasHydrated ? viewportKeyRaw : "0x0";
   const backgroundUsesMobileLayout = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;
   const lobbyResponsiveIsMobile = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;
-  const isCardMinimized = minimizedByRoom[room.slug] ?? false;
-  const isCardContentVisible = contentVisibleByRoom[room.slug] ?? true;
+  const shouldDefaultMobileOverviewCollapsed = isMobileViewportRaw && !!activeOverviewCard;
+  const hasOverviewCardState =
+    minimizedByRoom[room.slug] !== undefined || contentVisibleByRoom[room.slug] !== undefined;
+  const isCardMinimized = shouldDefaultMobileOverviewCollapsed && !hasOverviewCardState
+    ? true
+    : (minimizedByRoom[room.slug] ?? false);
+  const isCardContentVisible = shouldDefaultMobileOverviewCollapsed && !hasOverviewCardState
+    ? false
+    : (contentVisibleByRoom[room.slug] ?? true);
   const isCardCompact = isCardMinimized || !isCardContentVisible;
   const isYoutubeEmbed = !!activeModal?.videoEmbed?.includes("youtube.com/embed");
   const resolvedVideoEmbedSrc = useMemo(() => {
@@ -1469,6 +1476,16 @@ export default function RoomScene({
       setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: raw === "1" }));
     } catch {}
   }, [hasHydrated, isHotspotTierPilotRoom, room.slug]);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!isMobileViewport) return;
+    if (!activeOverviewCard) return;
+    if (minimizedByRoom[room.slug] !== undefined) return;
+
+    setMinimizedByRoom((prev) => ({ ...prev, [room.slug]: true }));
+    setContentVisibleByRoom((prev) => ({ ...prev, [room.slug]: false }));
+  }, [activeOverviewCard, hasHydrated, isMobileViewport, minimizedByRoom, room.slug]);
 
   useEffect(() => {
     if (!isLobbyRoom || !isLobbyExploreHoverOpen) return;

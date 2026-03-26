@@ -65,7 +65,7 @@ export default function Home() {
 
   useEffect(() => {
     router.prefetch("/rooms/front");
-    warmImageAsset("/rooms/finishedlobby.png");
+    warmImageAsset("/rooms/finishedlobby-opt.jpg");
     warmRoomAssetsBySlug("front");
   }, [router]);
 

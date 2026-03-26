@@ -98,15 +98,19 @@ const EXPLORE_ROOMS = [
 ];
 const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/rooms/"));
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
-  "/rooms/finishedlobby.png": { w: 9504, h: 4752 },
-  "/rooms/8.png": { w: 6240, h: 3510 },
+  "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
+  "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
-  "/rooms/cdshop.png": { w: 3840, h: 2160 },
+  "/rooms/cdshop-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/marketing1.png": { w: 3840, h: 2160 },
   "/rooms/finalfinalmarketing.png": { w: 4320, h: 2430 },
   "/rooms/front.jpg": { w: 2048, h: 1365 },
   "/rooms/live-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/kymteabg-opt.jpg": { w: 1536, h: 1024 },
+  "/rooms/kymteastudio1-opt.jpg": { w: 2560, h: 1440 },
+  "/rooms/orangeroomwlogo-opt.jpg": { w: 2560, h: 1440 },
+  "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/10-refresh-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };

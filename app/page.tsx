@@ -10,7 +10,7 @@ const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity.png";
 const LANDING_MOBILE_IMAGE = "/rooms/stillbuildingfinal.png";
 const LANDING_DESKTOP_NATURAL_SIZE = { w: 6240, h: 3510 };
 const LANDING_BUTTON_COORDS = {
-  mobile: { x: 54, y: 73 },
+  mobile: { x: 56, y: 84 },
   desktop: { x: 45.38, y: 86.04 },
 };
 const LANDING_CARD_COORDS = {

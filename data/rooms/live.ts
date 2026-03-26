@@ -182,7 +182,7 @@ export const liveRoom: Room = {
         id: "ten-ten-community",
         label: "Ten Ten Community",
         x: 74,
-        y:  65,
+        y: 63.45,
         positions: {
           laptop: { x: 73, y: 63 },
           tablet: { x: 72, y: 62 },

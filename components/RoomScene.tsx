@@ -923,8 +923,10 @@ export default function RoomScene({
     () =>
       room.hotspots.map((spot) => {
         const breakpointPosition =
-          spot.positions?.[hotspotBreakpoint] ??
-          (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
+          hotspotBreakpoint === "mobile"
+            ? undefined
+            : spot.positions?.[hotspotBreakpoint] ??
+              (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
           ...spot,
           x: breakpointPosition?.x ?? spot.x,

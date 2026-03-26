@@ -841,6 +841,7 @@ export default function RoomScene({
     () => "0x0"
   );
   const isMobileViewport = hasHydrated ? isMobileViewportRaw : false;
+  const mobileStaticUi = isMobileViewportRaw;
   const prefersReducedMotion = hasHydrated ? prefersReducedMotionRaw : false;
   const viewportKey = hasHydrated ? viewportKeyRaw : "0x0";
   const backgroundUsesMobileLayout = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;
@@ -2371,8 +2372,9 @@ export default function RoomScene({
       {/* Room label */}
       <div
         className={[
-          "absolute left-6 top-28 z-50 transition-opacity duration-100",
-          isLobbyRoom || !isMobileViewport ? "hidden" : "",
+          "absolute top-28 z-50 transition-opacity duration-100",
+          mobileStaticUi ? "left-8" : "left-6",
+          isLobbyRoom || !mobileStaticUi ? "hidden" : "",
           exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
         ].join(" ")}
       >
@@ -2387,7 +2389,7 @@ export default function RoomScene({
           <div
             className={[
               "font-semibold whitespace-pre-line",
-              isMobileViewport ? "text-[1.6rem] leading-tight" : "text-3xl",
+              mobileStaticUi ? "text-[1.6rem] leading-tight" : "text-3xl",
               room.slug === "dirty-elephant-studio"
                 ? "text-[#ff9f3f] [text-shadow:0_0_10px_rgba(255,159,63,0.75),0_0_24px_rgba(255,159,63,0.45)]"
                 : room.slug === "steeped-dreams-studio"
@@ -2505,14 +2507,17 @@ export default function RoomScene({
       {activeOverviewCard && (
         <div
           className={[
-            "absolute z-40 overflow-hidden origin-right transition-[width] duration-300 ease-out",
+            "absolute z-40 origin-right transition-[width] duration-300 ease-out",
+            mobileStaticUi && isCardCompact ? "overflow-visible" : "overflow-hidden",
             showOrangeCard
                 ? "bottom-32 left-4 md:bottom-24"
-              : isMobileViewport
+              : mobileStaticUi
                 ? "bottom-32 left-4 md:bottom-28"
               : "bottom-52 left-4 md:bottom-28",
             isCardMinimized
-              ? "w-12"
+              ? mobileStaticUi
+                ? "w-8"
+                : "w-12"
               : showOrangeCard
                 ? "w-[min(84vw,340px)]"
                 : "w-[min(94vw,420px)]",
@@ -2523,9 +2528,14 @@ export default function RoomScene({
         >
           <div
             className={[
-              "relative rounded-2xl border border-white/15 bg-black/45 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]",
+              "relative",
+              isCardCompact && mobileStaticUi
+                ? "h-8 w-8 rounded-full border-0 bg-transparent p-0 backdrop-blur-0 shadow-none"
+                : "rounded-2xl border border-white/15 bg-black/45 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]",
               isCardCompact
-                ? "h-12 p-2"
+                ? mobileStaticUi
+                  ? ""
+                  : "h-12 p-2"
                 : showOrangeCard
                   ? "p-4"
                   : "p-5",
@@ -2552,17 +2562,23 @@ export default function RoomScene({
               className={[
                 "absolute inline-flex items-center justify-center rounded-full overflow-visible",
                 "border border-white/35 bg-white/12 text-xs font-semibold text-white",
-                isMobileViewport ? "mobile-overview-toggle-glow" : "",
-                isMobileViewport
+                mobileStaticUi && isCardCompact ? "mobile-overview-toggle-glow" : "",
+                mobileStaticUi
                   ? "shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_24px_rgba(255,255,255,0.48),0_0_46px_rgba(255,255,255,0.28)]"
                   : "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.32),0_0_34px_rgba(255,255,255,0.18)]",
-                isMobileViewport
+                mobileStaticUi
                   ? "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.32),0_0_28px_rgba(255,255,255,0.56),0_0_52px_rgba(255,255,255,0.32)]"
                   : "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_22px_rgba(255,255,255,0.4),0_0_40px_rgba(255,255,255,0.24)]",
-                isCardCompact ? "right-2 top-2 h-8 w-8" : "right-3 top-3 h-8 w-8",
+                isCardCompact
+                  ? mobileStaticUi
+                    ? "left-0 top-0 h-8 w-8"
+                    : "right-2 top-2 h-8 w-8"
+                  : mobileStaticUi
+                    ? "right-3 top-3 h-8 w-8"
+                    : "right-3 top-3 h-8 w-8",
               ].join(" ")}
             >
-              {!isMobileViewport ? (
+              {!mobileStaticUi ? (
                 <span
                   className={[
                     "pointer-events-none absolute -inset-1 rounded-full border border-white/35",

@@ -92,7 +92,8 @@ export default function Home() {
     probe.src = LANDING_MOBILE_IMAGE;
   }, []);
 
-  const isMobileViewport = viewport.w > 0 ? viewport.w < 640 : false;
+  const isMobileViewport = viewport.w > 0 ? viewport.w < 640 : true;
+  const viewportReady = viewport.w > 0 && viewport.h > 0;
   const activeCoords = isMobileViewport ? LANDING_BUTTON_COORDS.mobile : LANDING_BUTTON_COORDS.desktop;
   const activeNaturalSize = isMobileViewport ? mobileNaturalSize : LANDING_DESKTOP_NATURAL_SIZE;
   const imageMetrics = useMemo(
@@ -276,7 +277,7 @@ export default function Home() {
         <div
           className={[
             "flex flex-col items-center gap-4",
-            isMobileViewport ? "" : "absolute -translate-x-1/2",
+            !viewportReady || isMobileViewport ? "" : "absolute -translate-x-1/2",
           ].join(" ")}
           style={cardStyle}
         >

@@ -171,6 +171,8 @@ export const frontRoom: Room = {
           topImage: "/rooms/howyoustart1.png",
           topImageAlt: "How you start diagram",
           body: "",
+          primaryLabel: "Apply For A Consultation",
+          primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         },
       },
       {

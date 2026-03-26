@@ -414,14 +414,7 @@ export default function ArtistRosterReleasesPage() {
               </div>
 
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap gap-2">
-                  <Link
-                    href="/artist-roster-releases/case-studies-2"
-                    className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)]"
-                  >
-                    Case Study 2
-                  </Link>
-                </div>
+                <div />
                 <Link
                   href="/rooms/front"
                   className="inline-flex items-center justify-center self-start rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)] sm:self-auto"

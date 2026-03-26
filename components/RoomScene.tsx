@@ -3255,7 +3255,7 @@ export default function RoomScene({ room }: { room: Room }) {
                           />
                         </div>
                         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                          <div className="inline-flex rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7a5a24]">
+                          <div className="inline-flex rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/16 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-[0_0_18px_rgba(214,174,102,0.18)]">
                             {activeCarouselSlide.eyebrow}
                           </div>
                           <div className="flex items-center gap-2">

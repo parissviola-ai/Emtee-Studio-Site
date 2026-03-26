@@ -1989,8 +1989,10 @@ export default function RoomScene({ room }: { room: Room }) {
             : ((Math.abs(rawNormalizedX) - deadZone) / (1 - deadZone)) * Math.sign(rawNormalizedX);
         const edgeWeightedX = Math.sign(normalizedX) * Math.pow(Math.abs(normalizedX), 2);
         // Keep desktop pan slightly inside the true cover-image bounds so the black page background never peeks through.
-        const extendedMaxPanX = desktopCoverMetrics.maxPanX * 0.97;
-        const targetX = clamp(-edgeWeightedX * extendedMaxPanX, -extendedMaxPanX, extendedMaxPanX);
+        const rightPanLimit = desktopCoverMetrics.maxPanX * 0.97;
+        const leftPanLimit = rightPanLimit * 1.15;
+        const rawTargetX = -edgeWeightedX * desktopCoverMetrics.maxPanX;
+        const targetX = clamp(rawTargetX, -rightPanLimit, leftPanLimit);
         scheduleDesktopPan({ x: targetX, y: 0 });
       }}
       onMouseLeave={() => {

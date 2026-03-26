@@ -40,6 +40,7 @@ function getObjectPositionY(viewportW: number, isMobile: boolean) {
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isEnterVisible, setIsEnterVisible] = useState(false);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const [mobileNaturalSize, setMobileNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const [showPinHelper, setShowPinHelper] = useState(false);
@@ -53,9 +54,18 @@ export default function Home() {
   } | null>(null);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setIsVisible(true), 900);
+    const timer = window.setTimeout(() => setIsVisible(true), 760);
     return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setIsEnterVisible(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setIsEnterVisible(true), 3200);
+    return () => window.clearTimeout(timer);
+  }, [isVisible]);
 
   useEffect(() => {
     const updateViewport = () => {
@@ -272,7 +282,7 @@ export default function Home() {
         >
           <div
             className={[
-              "w-full max-w-[19.5rem] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3.5 py-3 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2200ms] ease-out sm:max-w-[22rem] sm:px-4 sm:py-3.5",
+              "w-full max-w-[19.5rem] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3.5 py-3 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2400ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-[22rem] sm:px-4 sm:py-3.5",
               isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             ].join(" ")}
           >
@@ -309,7 +319,10 @@ export default function Home() {
       {buttonStyle ? (
         <Link
           href="/rooms/front"
-          className="absolute z-10 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/28 px-3 py-2 text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition hover:bg-black/40"
+          className={[
+            "absolute z-10 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/28 px-3 py-2 text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition-all duration-[900ms] ease-out hover:bg-black/40",
+            isEnterVisible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none",
+          ].join(" ")}
           style={buttonStyle}
         >
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/75 bg-black/18 text-xs leading-none">

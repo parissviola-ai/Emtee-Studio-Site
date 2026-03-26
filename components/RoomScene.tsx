@@ -1424,6 +1424,32 @@ export default function RoomScene({
   }, [room.slug, router]);
 
   useEffect(() => {
+    if (!isLobbyRoom || !isMobileViewport) return;
+    if (!hotspotImageMetrics || !lobbyStartHereAnchor) return;
+    if (mobilePanByContext[panContextKey]) return;
+
+    const currentHotspotX =
+      hotspotImageMetrics.offsetX + (lobbyStartHereAnchor.x / 100) * hotspotImageMetrics.renderedW;
+    const desiredHotspotX = viewportW * 0.44;
+    const initialPanX = clamp(desiredHotspotX - currentHotspotX, -mobilePanLeftLimit, mobilePanRightLimit);
+
+    setMobilePanByContext((prev) => ({
+      ...prev,
+      [panContextKey]: { x: initialPanX, y: 0 },
+    }));
+  }, [
+    hotspotImageMetrics,
+    isLobbyRoom,
+    isMobileViewport,
+    lobbyStartHereAnchor,
+    mobilePanByContext,
+    mobilePanLeftLimit,
+    mobilePanRightLimit,
+    panContextKey,
+    viewportW,
+  ]);
+
+  useEffect(() => {
     if (!hasHydrated || typeof window === "undefined") return;
     if (!isHotspotTierPilotRoom) return;
 

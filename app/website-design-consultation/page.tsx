@@ -49,7 +49,7 @@ export default function WebsiteDesignConsultationPage() {
             href="/connect"
             className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/35 bg-white px-5 py-2 text-sm font-semibold text-[#6f511a] transition hover:bg-[#fff8ed]"
           >
-            Back to Resource Packages
+            Back to Resources
           </Link>
         </div>
 

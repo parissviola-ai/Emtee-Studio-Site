@@ -43,7 +43,7 @@ export default function Footer() {
               <Link href="/about" className="text-white/75 transition hover:text-white">About Us</Link>
               <Link href="/news" className="text-white/75 transition hover:text-white">News</Link>
               <Link href="/artist-roster-releases#partners" className="text-white/75 transition hover:text-white">Partners</Link>
-              <Link href="/connect" className="text-white/75 transition hover:text-white">Resource Packages</Link>
+              <Link href="/connect" className="text-white/75 transition hover:text-white">Resources</Link>
               <Link href="/artist-roster-releases" className="text-white/75 transition hover:text-white">Artists</Link>
               <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className="text-white/75 transition hover:text-white">Consultation</Link>
             </div>

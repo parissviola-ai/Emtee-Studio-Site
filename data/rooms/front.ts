@@ -155,7 +155,7 @@ export const frontRoom: Room = {
           image: "/rooms/departmentdeck.png",
           primaryLabel: "See How These Packages Perform in Case Studies",
           primaryHref: "/case-studies",
-          secondaryLabel: "View Resource Packages",
+          secondaryLabel: "View Resources",
           secondaryHref: "/connect",
         },
       },

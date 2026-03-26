@@ -118,7 +118,7 @@ const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
     "This room is a representation of EMTEE's A&R / Sales department. Core scope includes audience strategizing, community building, and revenue development so creative momentum turns into commercial momentum.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resource Packages",
+  secondaryCta: "Resources",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
   exampleHref: "/artist-roster-releases/case-studies-2?example=mike-ar-sales",
@@ -131,7 +131,7 @@ const STUDIO_OVERVIEW_CARD: InfoCard = {
     "This room is a representation of EMTEE's Music department. Core scope includes studio sessions, custom production, and mixing/mastering so artists move from creative direction to release-ready execution.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resource Packages",
+  secondaryCta: "Resources",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
   exampleHref: "/artist-roster-releases/case-studies-2?example=fame-music",
@@ -144,7 +144,7 @@ const MEDIA_OVERVIEW_CARD: InfoCard = {
     "This room is a representation of EMTEE's Marketing department. Core scope includes content production, brand deck/media kits, and set/tour development to drive campaign clarity and repeatable audience growth.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resource Packages",
+  secondaryCta: "Resources",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
   exampleHref: "/artist-roster-releases/case-studies-2?example=kisaki-marketing",
@@ -157,7 +157,7 @@ const BOARDROOM_OVERVIEW_CARD: InfoCard = {
     "This room is a representation of EMTEE's Business department. Core scope includes accounting system setup, grant writing, and vision building so artists can operate with structure and long-term decision clarity.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resource Packages",
+  secondaryCta: "Resources",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
   exampleHref: "/artist-roster-releases/case-studies-2?example=yanchan-business",
@@ -171,7 +171,7 @@ const ARTISTS_OVERVIEW_CARD: InfoCard = {
     "This room is a representation of EMTEE's Distribution / Publishing department. Core scope includes publishing workshops, catalog organization, and television/film sync preparation for cleaner release operations and stronger long-term rights monetization.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resource Packages",
+  secondaryCta: "Resources",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
   exampleHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
@@ -184,7 +184,7 @@ const WEBSITE_DESIGN_OVERVIEW_CARD: InfoCard = {
     "This room is a representation of EMTEE's Website Design lane. Core scope includes clarifying your artist story, structuring your digital home, and building a site fans, media, and bookers can actually use.\n\nExplore the room dots to view process and package options.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "/website-design-consultation",
-  secondaryCta: "Resource Packages",
+  secondaryCta: "Resources",
   secondaryHref: "/connect",
   eyebrow: "Website Design",
 };
@@ -1683,7 +1683,7 @@ export default function RoomScene({
               isNavigationSpot
                 ? `relative ${navCircleClass}`
                 : [
-                    "relative flex items-center justify-center rounded-full border bg-black/10 backdrop-blur-sm",
+                    "relative flex items-center justify-center rounded-full border bg-black/10 backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/28 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.18),0_0_18px_rgba(255,255,255,0.22)]",
                     isLobbyPill
                       ? ""
                       : compactHotspotUi
@@ -1716,7 +1716,7 @@ export default function RoomScene({
         ) : null}
 
         {/* Label */}
-        <span className={`${isMobileNavigationSpot || showLabelOnLeft ? "mr-2" : "ml-2"} ${isNavigationSpot ? navPillClass : "overflow-hidden rounded-full border border-white/85 bg-black/10 text-white backdrop-blur-sm transition-all duration-300 ease-out"} ${
+        <span className={`${isMobileNavigationSpot || showLabelOnLeft ? "mr-2" : "ml-2"} ${isNavigationSpot ? navPillClass : "overflow-hidden rounded-full border border-white/85 bg-black/10 text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/28 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.22)]"} ${
           isExpanded ? "max-w-[300px]" : "max-w-0 group-hover:max-w-[260px]"
         } ${
           isClickedLabelVisible
@@ -1730,7 +1730,7 @@ export default function RoomScene({
           } ${
             isLobbyPill ? "text-[11px] sm:text-[12px]" : compactHotspotUi ? "text-xs sm:text-[11px]" : "text-sm"
           } ${
-            isClickedLabelVisible ? "[text-shadow:0_0_12px_rgba(255,255,255,0.55)]" : ""
+            isClickedLabelVisible ? "[text-shadow:0_0_12px_rgba(255,255,255,0.55)]" : "group-hover:[text-shadow:0_0_10px_rgba(255,255,255,0.48)]"
           }`}
           style={
             isLobbyPill

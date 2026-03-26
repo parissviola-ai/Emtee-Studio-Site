@@ -373,38 +373,35 @@ export default function ArtistRosterReleasesPage() {
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.0),rgba(0,0,0,0.55))]" />
         </div>
 
-        <div className="relative">
-          <div className="mx-auto max-w-7xl px-5 pb-12 pt-24 sm:px-6 sm:pt-28">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-28">
+          <div className="min-h-[204px] rounded-2xl border border-white/12 bg-[linear-gradient(145deg,rgba(20,20,20,0.92),rgba(10,10,10,0.82))] p-6 shadow-[0_0_0_1px_rgba(214,174,102,0.08),0_28px_75px_rgba(0,0,0,0.38)] sm:min-h-[216px]">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#d6ae66]/85">
+              Labels & Partners
+            </div>
+            <div className="mt-3 flex items-start justify-between gap-4">
               <div>
-                <div className="mt-6">
-                  <div>
-                    <div className="flex items-center gap-3">
-                      <h1 className="text-3xl font-semibold tracking-tight">
-                        Labels & Partners
-                      </h1>
-                      <Image
-                        src="/logotransparent.png"
-                        alt="EMTEE logo"
-                        width={52}
-                        height={52}
-                        className="h-10 w-10 rounded-md object-contain brightness-0 invert opacity-80 sm:h-[52px] sm:w-[52px]"
-                      />
-                    </div>
-                    <p className="mt-3 max-w-2xl text-white/70">
-                      A selection of labels and partners we&apos;ve collaborated with to elevate our artists&apos; careers.
-                    </p>
-                    <div className="mt-2 text-xs uppercase tracking-widest text-white/50">
-                      Trusted by industry leaders
-                    </div>
-                    <div className="mt-2 h-px w-24 bg-gradient-to-r from-[#d6ae66]/80 via-white/45 to-transparent" />
-                  </div>
+                <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                  Labels & Partners
+                </h1>
+                <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/70 sm:text-base">
+                  A selection of labels and partners we&apos;ve collaborated with to elevate our artists&apos; careers.
+                </p>
+                <div className="mt-2 text-xs uppercase tracking-widest text-white/50">
+                  Trusted by industry leaders
                 </div>
+                <div className="mt-2 h-px w-24 bg-gradient-to-r from-[#d6ae66]/80 via-white/45 to-transparent" />
               </div>
+              <Image
+                src="/logotransparent.png"
+                alt="EMTEE logo"
+                width={52}
+                height={52}
+                className="h-10 w-10 rounded-md object-contain brightness-0 invert opacity-80 sm:h-[52px] sm:w-[52px]"
+              />
             </div>
           </div>
 
-          <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-6">
+          <div className="mt-6">
             <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap items-center gap-2">
                 <button
@@ -475,7 +472,7 @@ export default function ArtistRosterReleasesPage() {
       />
 
       <section className="relative mx-auto max-w-6xl px-6 pb-20 pt-28">
-        <div className="accent-card rounded-2xl border border-[#d6ae66]/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(214,174,102,0.12),0_28px_75px_rgba(0,0,0,0.14)]">
+        <div className="accent-card min-h-[204px] rounded-2xl border border-[#d6ae66]/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(214,174,102,0.12),0_28px_75px_rgba(0,0,0,0.14)] sm:min-h-[216px]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#d6ae66]/85">
             Artist Catalog
           </div>

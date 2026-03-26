@@ -26,6 +26,17 @@ export type Hotspot = {
   modal?: {
     title: string;
     body: string;
+    carouselSlides?: Array<{
+      src: string;
+      alt: string;
+      eyebrow?: string;
+      title: string;
+      body?: string;
+      primaryLabel?: string;
+      primaryHref?: string;
+      secondaryLabel?: string;
+      secondaryHref?: string;
+    }>;
     primaryLabel?: string;
     primaryHref?: string;
     primaryAction?: "openExplore";
@@ -72,8 +83,8 @@ type InfoCard = {
 };
 
 const EXPLORE_ROOMS = [
-  { label: "Request A Consultation", href: "/consultation" },
-  { label: "Labels and Partners", href: "/artist-roster-releases#partners" },
+  { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
+  { label: "Our Artists", href: "/artist-roster-releases" },
   { label: "Lobby", href: "/rooms/front" },
   { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
   { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
@@ -107,8 +118,8 @@ const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
   title: "A&R / Sales Department Overview",
   body:
     "This room is a representation of EMTEE's A&R / Sales department. Core scope includes audience strategizing, community building, and revenue development so creative momentum turns into commercial momentum.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Request a Consultation",
-  primaryHref: "/consultation",
+  primaryCta: "Apply For A Consultation",
+  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
@@ -120,8 +131,8 @@ const STUDIO_OVERVIEW_CARD: InfoCard = {
   title: "Music Department Overview",
   body:
     "This room is a representation of EMTEE's Music department. Core scope includes studio sessions, custom production, and mixing/mastering so artists move from creative direction to release-ready execution.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Request a Consultation",
-  primaryHref: "/consultation",
+  primaryCta: "Apply For A Consultation",
+  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
@@ -133,8 +144,8 @@ const MEDIA_OVERVIEW_CARD: InfoCard = {
   title: "Marketing Department Overview",
   body:
     "This room is a representation of EMTEE's Marketing department. Core scope includes content production, brand deck/media kits, and set/tour development to drive campaign clarity and repeatable audience growth.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Request a Consultation",
-  primaryHref: "/consultation",
+  primaryCta: "Apply For A Consultation",
+  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
@@ -146,8 +157,8 @@ const BOARDROOM_OVERVIEW_CARD: InfoCard = {
   title: "Business Department Overview",
   body:
     "This room is a representation of EMTEE's Business department. Core scope includes accounting system setup, grant writing, and vision building so artists can operate with structure and long-term decision clarity.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Request a Consultation",
-  primaryHref: "/consultation",
+  primaryCta: "Apply For A Consultation",
+  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
@@ -160,8 +171,8 @@ const ARTISTS_OVERVIEW_CARD: InfoCard = {
   title: "Distribution / Publishing Department Overview",
   body:
     "This room is a representation of EMTEE's Distribution / Publishing department. Core scope includes publishing workshops, catalog organization, and television/film sync preparation for cleaner release operations and stronger long-term rights monetization.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Request a Consultation",
-  primaryHref: "/consultation",
+  primaryCta: "Apply For A Consultation",
+  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
   exampleCta: "Case Study Example",
@@ -173,7 +184,7 @@ const WEBSITE_DESIGN_OVERVIEW_CARD: InfoCard = {
   title: "Website Design Overview",
   body:
     "This room is a representation of EMTEE's Website Design lane. Core scope includes clarifying your artist story, structuring your digital home, and building a site fans, media, and bookers can actually use.\n\nExplore the room dots to view process and package options.",
-  primaryCta: "Request a Consultation",
+  primaryCta: "Apply For A Consultation",
   primaryHref: "/website-design-consultation",
   secondaryCta: "Resource Packages",
   secondaryHref: "/connect",
@@ -499,6 +510,7 @@ export default function RoomScene({ room }: { room: Room }) {
   );
   const [exploreOpen, setExploreOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<Hotspot["modal"] | null>(null);
+  const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
   const [modalBackModal, setModalBackModal] = useState<Hotspot["modal"] | null>(null);
   const [revealStep, setRevealStep] = useState(0);
   const [minimizedByRoom, setMinimizedByRoom] = useState<Record<string, boolean>>({});
@@ -566,17 +578,19 @@ export default function RoomScene({ room }: { room: Room }) {
   // video audio state
   const [videoMuted, setVideoMuted] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const shouldStartVideoMuted = (modal: Hotspot["modal"]) => modal?.title !== "Who We Are";
 
   function openModal(modal: Hotspot["modal"]) {
     if (room.slug === "front" && modal?.title === "Start Here") {
       lobbyStartHereOpenedRef.current = true;
     }
     setActiveModal(modal);
+    setActiveCarouselIndex(0);
     if (modal) {
       setExpandedPackageIncludesByModal((prev) => ({ ...prev, [`${room.slug}:${modal.title}`]: false }));
     }
     setRevealStep(0);
-    setVideoMuted(true);
+    setVideoMuted(shouldStartVideoMuted(modal));
 
     requestAnimationFrame(() => setRevealStep(1));
     setTimeout(() => setRevealStep(2), 140);
@@ -601,6 +615,7 @@ export default function RoomScene({ room }: { room: Room }) {
       }
     }
     setActiveModal(null);
+    setActiveCarouselIndex(0);
     setModalBackModal(null);
     setRevealStep(0);
     setVideoMuted(true);
@@ -624,6 +639,14 @@ export default function RoomScene({ room }: { room: Room }) {
 
     win.postMessage(JSON.stringify({ event: "command", func: "unMute", args: [] }), "*");
     win.postMessage(JSON.stringify({ event: "command", func: "setVolume", args: [100] }), "*");
+    win.postMessage(JSON.stringify({ event: "command", func: "playVideo", args: [] }), "*");
+  }
+
+  function muteYoutube() {
+    const win = iframeRef.current?.contentWindow;
+    if (!win) return;
+
+    win.postMessage(JSON.stringify({ event: "command", func: "mute", args: [] }), "*");
     win.postMessage(JSON.stringify({ event: "command", func: "playVideo", args: [] }), "*");
   }
 
@@ -767,6 +790,15 @@ export default function RoomScene({ room }: { room: Room }) {
     : null;
   const [mobilePanByContext, setMobilePanByContext] = useState<Record<string, { x: number; y: number }>>({});
   const [desktopCursorPan, setDesktopCursorPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [showPinHelper, setShowPinHelper] = useState(false);
+  const [pinHelperLocked, setPinHelperLocked] = useState(false);
+  const pinHelperLockedRef = useRef(false);
+  const [pinHelperPoint, setPinHelperPoint] = useState<{
+    left: number;
+    top: number;
+    x: number;
+    y: number;
+  } | null>(null);
   const viewportKeyRaw = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -812,9 +844,14 @@ export default function RoomScene({ room }: { room: Room }) {
   const isOrangeModal = isOrangeRoom && !!activeModal;
   const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Apply For An Orange Room Session";
   const isStartHereModal = activeModal?.title === "Start Here";
+  const isCarouselModal = !!activeModal?.carouselSlides?.length;
   const isLiveRoomModal = room.slug === "live" && !!activeModal && !isPackageGridModal;
   const shouldShowOrangeSessionPreview = isOrangeRoom && !isMobileViewport && (isOrangeSessionPreviewVisible || isOrangeSessionModalOpen);
   const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
+  const activeCarouselSlide =
+    isCarouselModal && activeModal?.carouselSlides
+      ? activeModal.carouselSlides[((activeCarouselIndex % activeModal.carouselSlides.length) + activeModal.carouselSlides.length) % activeModal.carouselSlides.length]
+      : null;
   const isQuietModal = room.slug === "quiet" && !!activeModal;
   const isDepartmentRoom =
     room.slug === "EMTEEBusinessDept" ||
@@ -832,47 +869,22 @@ export default function RoomScene({ room }: { room: Room }) {
   const resolvedCornerLogoAlt = activeModal?.cornerLogoAlt ?? (shouldShowDefaultEmteeCornerLogo ? "EMTEE logo" : undefined);
   const [viewportW, viewportH] = viewportKey.split("x").map((n) => Number(n) || 0);
   const viewportKnown = viewportW > 0 && viewportH > 0;
-  const hotspotBreakpoint =
-    room.slug === "front" && viewportW >= 1024 && viewportW < 1728
-      ? "laptop"
-      : getHotspotBreakpoint(viewportW);
   const resolvedHotspots = useMemo(
     () =>
       room.hotspots.map((spot) => {
-        const override = spot.positions?.[hotspotBreakpoint];
-        const baseResolved =
-          !override
-            ? { x: spot.x, y: spot.y }
-            : spot.allowLargeResponsiveShift
-              ? { x: override.x, y: override.y }
-              : clampHotspotShift({ x: spot.x, y: spot.y }, override, 0);
-        const mobileBoardroomDotOffset =
-          room.slug === "EMTEEBusinessDept" && hotspotBreakpoint === "mobile" && spot.variant === "dot" ? -1 : 0;
-        const nonMobileBoardroomBusinessOpsYOffset =
-          room.slug === "EMTEEBusinessDept" && hotspotBreakpoint !== "mobile" && spot.id === "business-operations-set-up" ? 1 : 0;
-        const websiteDesignEnterSiteMobilePosition =
-          room.slug === "EMTEEWebDesign" && hotspotBreakpoint === "mobile" && spot.id === "website-design-enter-website"
-            ? { x: 65, y: 67 }
-            : null;
-        const mobileArSalesCrmSetUpDirection =
-          room.slug === "EMTEEARSalesDept" && hotspotBreakpoint === "mobile" && spot.id === "ar-sales-crm-set-up"
-            ? "left"
-            : spot.direction;
         return {
           ...spot,
-          x: websiteDesignEnterSiteMobilePosition?.x ?? baseResolved.x,
-          y:
-            websiteDesignEnterSiteMobilePosition?.y ??
-            (baseResolved.y + mobileBoardroomDotOffset + nonMobileBoardroomBusinessOpsYOffset),
-          direction: mobileArSalesCrmSetUpDirection,
+          x: spot.x,
+          y: spot.y,
         };
       }),
-    [hotspotBreakpoint, room.hotspots, room.slug]
+    [room.hotspots]
   );
   const lobbyWhoWeAreSpot = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "About") : undefined;
+  const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
   const lobbyStartHereSpot =
-    isLobbyRoom && lobbyWhoWeAreSpot
-      ? { ...lobbyWhoWeAreSpot, id: "start-here-floating", x: lobbyWhoWeAreSpot.x, y: Math.min(lobbyWhoWeAreSpot.y + 15, 92) }
+    isLobbyRoom && lobbyStartHereAnchor
+      ? { ...lobbyStartHereAnchor, id: "start-here-floating" }
       : undefined;
   const isPortraitViewport = viewportH >= viewportW;
   const mobileOrientationKey = isPortraitViewport ? "portrait" : "landscape";
@@ -946,7 +958,7 @@ export default function RoomScene({ room }: { room: Room }) {
     },
     [backgroundImageSrc, imageNaturalSize, isMobileViewport, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
   );
-  const requiresMetricBasedHotspots = isMobileViewport || useContainedBackground;
+  const requiresMetricBasedHotspots = true;
   const desktopCoverMetrics = useMemo(
     () =>
       !isMobileViewport && imageNaturalSize
@@ -954,10 +966,12 @@ export default function RoomScene({ room }: { room: Room }) {
         : null,
     [imageNaturalSize, isMobileViewport, sceneScale, viewportH, viewportW]
   );
+  const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
+  const canShowPinHelper = !!hotspotImageMetrics && !isModalOpen && !exploreOpen;
   const sceneReady =
-    hasHydrated && viewportKnown && !!imageNaturalSize && (!requiresMetricBasedHotspots || !!mobileImageMetrics);
+    hasHydrated && viewportKnown && !!imageNaturalSize && (!requiresMetricBasedHotspots || !!hotspotImageMetrics);
   const hotspotsReady =
-    hasHydrated && viewportKnown && (!requiresMetricBasedHotspots || !!mobileImageMetrics);
+    hasHydrated && viewportKnown && (!requiresMetricBasedHotspots || !!hotspotImageMetrics);
   const areHotspotsPositionReady = hotspotsReady;
   const visibleHotspots = useMemo(
     () =>
@@ -1003,6 +1017,40 @@ export default function RoomScene({ room }: { room: Room }) {
 
   function clamp(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function updatePinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!canShowPinHelper || !showPinHelper || pinHelperLockedRef.current || !hotspotImageMetrics) return;
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedHotspotPan.x : desktopCursorPan.x);
+    const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedHotspotPan.y;
+    const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
+    const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
+    const x = clamp(Number(rawX.toFixed(2)), 0, 100);
+    const y = clamp(Number(rawY.toFixed(2)), 0, 100);
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+  }
+
+  function lockPinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!canShowPinHelper || !showPinHelper || !hotspotImageMetrics) return;
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedHotspotPan.x : desktopCursorPan.x);
+    const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedHotspotPan.y;
+    const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
+    const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
+    const x = clamp(Number(rawX.toFixed(2)), 0, 100);
+    const y = clamp(Number(rawY.toFixed(2)), 0, 100);
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+    pinHelperLockedRef.current = true;
+    setPinHelperLocked(true);
   }
 
   async function enableTiltPan() {
@@ -1158,11 +1206,6 @@ export default function RoomScene({ room }: { room: Room }) {
   function getMobileHotspotStyle(spot: Hotspot) {
     const shiftConversationBlueprintRight =
       room.slug === "EMTEEARSalesDept" && spot.id === "ar-sales-conversion-blueprint";
-    const shiftLivePackagesDown =
-      room.slug === "live" &&
-      (spot.id === "up-and-coming-artist-package" ||
-        spot.id === "rising-star-showcase-package" ||
-        spot.id === "live-packages");
 
     if (isMobileViewport && spot.id === "next-room") {
       return {
@@ -1170,24 +1213,60 @@ export default function RoomScene({ room }: { room: Room }) {
         bottom: "calc(env(safe-area-inset-bottom) + 1rem)",
       };
     }
-    if ((!isMobileViewport && !useContainedBackground) || !mobileImageMetrics) {
+    if (!requiresMetricBasedHotspots || !hotspotImageMetrics) {
       return {
         left: shiftConversationBlueprintRight
           ? `calc(${spot.x}% + 2in)`
           : `${spot.x}%`,
-        top: shiftLivePackagesDown ? `calc(${spot.y}% + 3in)` : `${spot.y}%`,
+        top: `${spot.y}%`,
       };
     }
     const left =
-      mobileImageMetrics.offsetX + (spot.x / 100) * mobileImageMetrics.renderedW + displayedHotspotPan.x;
+      hotspotImageMetrics.offsetX + (spot.x / 100) * hotspotImageMetrics.renderedW + displayedHotspotPan.x;
     const top =
-      mobileImageMetrics.offsetY + (spot.y / 100) * mobileImageMetrics.renderedH + displayedHotspotPan.y;
+      hotspotImageMetrics.offsetY + (spot.y / 100) * hotspotImageMetrics.renderedH + displayedHotspotPan.y;
     return {
       left: shiftConversationBlueprintRight
         ? `calc(${left}px + 2in)`
         : `${left}px`,
-      top: shiftLivePackagesDown ? `calc(${top}px + 3in)` : `${top}px`,
+      top: `${top}px`,
     };
+  }
+
+  function getHotspotAnchorTransform(spot: Hotspot) {
+    if (isMobileViewport && spot.id === "next-room") return undefined;
+    if ((spot.variant ?? "pill") === "dot") return "translate(-50%, -50%)";
+
+    const isLeftLabelLobbyPill =
+      room.slug === "front" &&
+      (
+        spot.id === "Board Rooms" ||
+        spot.id === "departments" ||
+        spot.id === "Ten Ten Entertainment" ||
+        spot.id === "Dirty Elephant Studios" ||
+        spot.id === "Steeped Dream Studio"
+      );
+    const tipInset = 6;
+
+    if (spot.direction === "right") {
+      return isLeftLabelLobbyPill
+        ? `translate(calc(-100% + ${tipInset}px), -50%)`
+        : `translate(-${tipInset}px, -50%)`;
+    }
+    if (spot.direction === "left") {
+      return isLeftLabelLobbyPill
+        ? `translate(calc(-100% - ${tipInset}px), -50%)`
+        : `translate(${tipInset}px, -50%)`;
+    }
+    if (spot.direction === "up") {
+      return `translate(-50%, ${tipInset}px)`;
+    }
+    if (spot.direction === "down") {
+      return `translate(-50%, -${tipInset}px)`;
+    }
+    return isLeftLabelLobbyPill
+      ? `translate(calc(-100% + ${tipInset}px), -50%)`
+      : `translate(-${tipInset}px, -50%)`;
   }
 
   useEffect(() => {
@@ -1592,6 +1671,7 @@ export default function RoomScene({ room }: { room: Room }) {
     const isExpanded = true;
     const isWhoWeArePin = room.slug === "front" && spot.id === "About";
     const isLobbyExplorePin = room.slug === "front" && spot.id === "explore";
+    const isCaseStudiesLobbyButton = room.slug === "front" && spot.id === "case-study-tour";
     const isLeftLabelLobbyPill =
       room.slug === "front" &&
       (
@@ -1602,6 +1682,12 @@ export default function RoomScene({ room }: { room: Room }) {
         spot.id === "Steeped Dream Studio"
       );
     const showLabelOnLeft = isLeftLabelLobbyPill && !isMobileNavigationSpot;
+    const lobbyPillCircleSize = compactHotspotUi
+      ? "clamp(24px, 1.95vw, 28px)"
+      : "clamp(26px, 2.05vw, 32px)";
+    const lobbyPillFontSize = "clamp(10px, 0.78vw, 12px)";
+    const lobbyPillPaddingX = "clamp(10px, 0.95vw, 14px)";
+    const lobbyPillPaddingY = "clamp(5px, 0.42vw, 7px)";
     return (
       <span
         className={[
@@ -1618,14 +1704,34 @@ export default function RoomScene({ room }: { room: Room }) {
                 ? `relative ${navCircleClass}`
                 : [
                     "relative flex items-center justify-center rounded-full border bg-black/10 backdrop-blur-sm",
-                    compactHotspotUi ? "h-7 w-7 sm:h-6 sm:w-6" : "h-8 w-8 sm:h-7 sm:w-7",
+                    isLobbyPill
+                      ? ""
+                      : compactHotspotUi
+                        ? "h-7 w-7 sm:h-6 sm:w-6"
+                        : "h-8 w-8 sm:h-7 sm:w-7",
                   ].join(" "),
               isWhoWeArePin
                 ? "border-[#d6ae66]/90 shadow-[0_0_0_2px_rgba(214,174,102,0.28),0_0_22px_rgba(214,174,102,0.6)]"
                 : "border-white/85",
             ].join(" ")}
+            style={
+              isLobbyPill && !isNavigationSpot
+                ? { width: lobbyPillCircleSize, height: lobbyPillCircleSize }
+                : undefined
+            }
           >
-            <span className="text-xs leading-none">{getArrow(spot.direction)}</span>
+            {isCaseStudiesLobbyButton ? (
+              <NextImage
+                src="/logotransparent.png"
+                alt=""
+                width={18}
+                height={18}
+                aria-hidden
+                className="h-3.5 w-3.5 object-contain invert opacity-90"
+              />
+            ) : (
+              <span className="text-xs leading-none">{getArrow(spot.direction)}</span>
+            )}
           </span>
         ) : null}
 
@@ -1645,7 +1751,18 @@ export default function RoomScene({ room }: { room: Room }) {
             isLobbyPill ? "text-[11px] sm:text-[12px]" : compactHotspotUi ? "text-xs sm:text-[11px]" : "text-sm"
           } ${
             isClickedLabelVisible ? "[text-shadow:0_0_12px_rgba(255,255,255,0.55)]" : ""
-          }`}>
+          }`}
+          style={
+            isLobbyPill
+              ? {
+                  fontSize: lobbyPillFontSize,
+                  paddingLeft: lobbyPillPaddingX,
+                  paddingRight: lobbyPillPaddingX,
+                  paddingTop: lobbyPillPaddingY,
+                  paddingBottom: lobbyPillPaddingY,
+                }
+              : undefined
+          }>
             <HotspotLabelText spot={spot} showHoverLabel={false} />
           </span>
         </span>
@@ -1723,8 +1840,8 @@ export default function RoomScene({ room }: { room: Room }) {
               "relative inline-flex items-center justify-center rounded-full text-white",
               isMobileViewport ? "h-8 w-8" : "h-9 w-9",
               "border border-white/14 bg-black/24 backdrop-blur-[3px]",
-              "shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_0_16px_rgba(255,255,255,0.14),0_6px_18px_rgba(0,0,0,0.24)] transition-all duration-200",
-              "group-hover:border-white/28 group-hover:bg-black/34 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.18),0_0_22px_rgba(255,255,255,0.22),0_8px_22px_rgba(0,0,0,0.28)]",
+              "shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_0_20px_rgba(255,255,255,0.18),0_10px_24px_rgba(0,0,0,0.26)] transition-all duration-200",
+              "group-hover:border-white/28 group-hover:bg-black/34 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_28px_rgba(255,255,255,0.3),0_10px_26px_rgba(0,0,0,0.3)]",
             ].join(" ")}
           >
             {isYoutube ? (
@@ -1815,7 +1932,10 @@ export default function RoomScene({ room }: { room: Room }) {
         "relative min-h-[100dvh] w-full overflow-hidden bg-black text-white",
         canPanRoom ? "touch-none" : "",
       ].join(" ")}
-      onClickCapture={() => {
+      onClickCapture={(e) => {
+        if (showPinHelper && canShowPinHelper && !isInteractiveTarget(e.target)) {
+          lockPinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+        }
         if (!isMobileViewport) return;
         if (!activeOverviewCard) return;
         if (isModalOpen || exploreOpen) return;
@@ -1857,6 +1977,7 @@ export default function RoomScene({ room }: { room: Room }) {
         touchPanStartRef.current = null;
       }}
       onMouseMove={(e) => {
+        updatePinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
         if (!canDesktopCursorPan || !desktopCoverMetrics) return;
         const rect = e.currentTarget.getBoundingClientRect();
         if (!rect.width) return;
@@ -1867,13 +1988,20 @@ export default function RoomScene({ room }: { room: Room }) {
             ? 0
             : ((Math.abs(rawNormalizedX) - deadZone) / (1 - deadZone)) * Math.sign(rawNormalizedX);
         const edgeWeightedX = Math.sign(normalizedX) * Math.pow(Math.abs(normalizedX), 2);
-        const extendedMaxPanX = desktopCoverMetrics.maxPanX * 1.18;
+        // Keep desktop pan slightly inside the true cover-image bounds so the black page background never peeks through.
+        const extendedMaxPanX = desktopCoverMetrics.maxPanX * 0.97;
         const targetX = clamp(-edgeWeightedX * extendedMaxPanX, -extendedMaxPanX, extendedMaxPanX);
         scheduleDesktopPan({ x: targetX, y: 0 });
+      }}
+      onMouseLeave={() => {
+        if (!pinHelperLockedRef.current) {
+          setPinHelperPoint(null);
+        }
       }}
     >
       {/* Background */}
       <div
+        key={`${room.slug}:${backgroundImageSrc}`}
         data-moving-layer="true"
         className={[
           "absolute inset-0 transition-[filter] duration-300 ease-out",
@@ -1888,6 +2016,7 @@ export default function RoomScene({ room }: { room: Room }) {
       >
         {useContainedBackground && shouldRenderStaticBackgroundImage ? (
           <NextImage
+            key={`${room.slug}:${backgroundImageSrc}:blur`}
             src={backgroundImageSrc}
             alt=""
             aria-hidden
@@ -1905,6 +2034,7 @@ export default function RoomScene({ room }: { room: Room }) {
         ) : null}
         {shouldRenderStaticBackgroundImage ? (
           <NextImage
+            key={`${room.slug}:${backgroundImageSrc}:main`}
             src={backgroundImageSrc}
             alt={room.title || room.slug}
             fill
@@ -2030,6 +2160,86 @@ export default function RoomScene({ room }: { room: Room }) {
             <div>Tilt: {tiltStatus}</div>
           </div>
         </div>
+      ) : null}
+
+      {showPinHelper || canShowPinHelper ? (
+        <div className="absolute left-3 top-3 z-[70] flex flex-col items-start gap-2" data-no-pan>
+          <button
+            type="button"
+            onClick={() => {
+              setShowPinHelper((prev) => {
+                const next = !prev;
+                if (!next) {
+                  setPinHelperPoint(null);
+                  pinHelperLockedRef.current = false;
+                  setPinHelperLocked(false);
+                }
+                return next;
+              });
+            }}
+            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/55 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-md transition hover:bg-black/70"
+          >
+            {showPinHelper ? "Pin Helper On" : "Pin Helper Off"}
+          </button>
+
+          {showPinHelper ? (
+            <div className="min-w-[11rem] rounded-2xl border border-white/14 bg-black/60 px-3 py-2 text-[11px] text-white/84 shadow-[0_14px_36px_rgba(0,0,0,0.35)] backdrop-blur-md">
+              <div className="font-semibold uppercase tracking-[0.14em] text-white/62">Pin Coordinates</div>
+              <div className="mt-1">
+                {pinHelperPoint ? `x: ${pinHelperPoint.x}%` : "x: move cursor"}
+              </div>
+              <div>
+                {pinHelperPoint ? `y: ${pinHelperPoint.y}%` : "y: move cursor"}
+              </div>
+              <div className="mt-1 text-[10px] text-white/58">
+                {pinHelperLocked ? "Locked. Click Unlock or click scene after unlocking." : "Move cursor, then click scene to lock."}
+              </div>
+              <div className="mt-2 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    pinHelperLockedRef.current = false;
+                    setPinHelperLocked(false);
+                  }}
+                  disabled={!pinHelperLocked}
+                  className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Unlock
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPinHelperPoint(null);
+                    pinHelperLockedRef.current = false;
+                    setPinHelperLocked(false);
+                  }}
+                  disabled={!pinHelperPoint}
+                  className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Clear
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!pinHelperPoint || typeof navigator === "undefined" || !navigator.clipboard) return;
+                  await navigator.clipboard.writeText(`x: ${pinHelperPoint.x}, y: ${pinHelperPoint.y}`);
+                }}
+                disabled={!pinHelperPoint}
+                className="mt-2 inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                Copy Coordinates
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {showPinHelper && pinHelperPoint && canShowPinHelper ? (
+        <div
+          className="pointer-events-none absolute z-[65] h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/80 bg-cyan-300/35 shadow-[0_0_0_4px_rgba(103,232,249,0.12),0_0_18px_rgba(34,211,238,0.45)]"
+          style={{ left: `${pinHelperPoint.left}px`, top: `${pinHelperPoint.top}px` }}
+        />
       ) : null}
 
       {shouldShowOrangeSessionPreview ? (
@@ -2190,41 +2400,6 @@ export default function RoomScene({ room }: { room: Room }) {
                   >
                     {showAllRoomHotspots ? "Hide Rooms" : "Show Rooms"}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (isLobbyExploreHoverOpen) {
-                        closeLobbyExploreHover();
-                        return;
-                      }
-                      openLobbyExploreHover();
-                      LOBBY_HOVER_ROOMS.forEach((item) => prefetchExploreRoute(item.href));
-                    }}
-                    className="inline-flex min-w-[7.25rem] items-center justify-center rounded-full border border-white/18 bg-white/[0.08] px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/86 shadow-[0_6px_14px_rgba(0,0,0,0.08)] backdrop-blur-md transition hover:border-white/24 hover:bg-white/[0.12] hover:text-white"
-                  >
-                    Explore All Rooms
-                  </button>
-                  <div
-                    className={[
-                      "absolute left-1/2 top-full z-[60] mt-1.5 -translate-x-1/2 transition duration-150",
-                      isLobbyExploreHoverOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
-                    ].join(" ")}
-                  >
-                    <div className="w-56 rounded-xl border border-white/12 bg-black/62 p-1.5 backdrop-blur-md shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
-                      {LOBBY_HOVER_ROOMS.map((item) => (
-                        <Link
-                          key={`top-explore-${item.href}`}
-                          href={item.href}
-                          className="block rounded-md px-2.5 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
-                          onMouseEnter={() => prefetchExploreRoute(item.href)}
-                          onFocus={() => prefetchExploreRoute(item.href)}
-                          onClick={() => closeLobbyExploreHover()}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               ) : null}
             </div>
@@ -2243,14 +2418,18 @@ export default function RoomScene({ room }: { room: Room }) {
             transform:
               canDesktopCursorPan && !isMobileViewport
                 ? `translate3d(${desktopCursorPan.x}px, 0, 0) translate(-50%, -50%)`
-                : undefined,
+                : "translate(-50%, -50%)",
           }}
           data-no-pan
         >
           <button
             type="button"
             onClick={() => {
+              if (room.slug === "front") {
+                lobbyStartHereOpenedRef.current = true;
+              }
               const startSpot =
+                room.hotspots.find((spot) => spot.id === "About") ??
                 room.hotspots.find((spot) => spot.id === "start-here") ??
                 room.hotspots.find((spot) => spot.id === "how-you-start") ??
                 room.hotspots.find((spot) => spot.id === "departments");
@@ -2264,7 +2443,6 @@ export default function RoomScene({ room }: { room: Room }) {
           </button>
         </div>
       ) : null}
-
 
       {showDotConnectors && (
         <div
@@ -2457,12 +2635,6 @@ export default function RoomScene({ room }: { room: Room }) {
                       ) : null}
                     </>
                   )}
-                  <Link
-                    href="/case-studies"
-                    className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 hover:text-white"
-                  >
-                    View All Case Studies
-                  </Link>
                 </div>
               </div>
             ) : (
@@ -2487,16 +2659,20 @@ export default function RoomScene({ room }: { room: Room }) {
         {areHotspotsPositionReady
           ? visibleHotspots.map((spot) => {
           const isMobileNextRoomPin = isMobileViewport && spot.id === "next-room";
+          const hotspotTransform = getHotspotAnchorTransform(spot);
           const sharedClassName = [
             isMobileNextRoomPin
               ? "absolute z-40 transition-opacity duration-100"
-              : "absolute z-20 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-100",
+              : "absolute z-20 transition-opacity duration-100",
             isModalOpen || exploreOpen || (isLobbyRoom && isLobbyExploreHoverOpen)
               ? "pointer-events-none opacity-0"
               : "pointer-events-auto opacity-100",
           ].join(" ");
 
-          const sharedStyle = getMobileHotspotStyle(spot);
+          const sharedStyle = {
+            ...getMobileHotspotStyle(spot),
+            ...(hotspotTransform ? { transform: hotspotTransform } : {}),
+          };
 
           const variant = spot.variant ?? "pill";
           const content =
@@ -2657,7 +2833,7 @@ export default function RoomScene({ room }: { room: Room }) {
               type="button"
               onClick={openExploreMenu}
               data-no-pan
-              className="flex h-11 w-[min(30vw,220px)] min-w-[170px] touch-manipulation select-none items-center gap-2.5 rounded-2xl border border-white/14 bg-black/30 px-3.5 py-2 text-left backdrop-blur-xl transition hover:bg-black/42"
+              className="flex h-11 w-[min(25vw,188px)] min-w-[148px] touch-manipulation select-none items-center gap-2.5 rounded-2xl border border-white/14 bg-black/30 px-3.5 py-2 text-left backdrop-blur-xl transition-[width,background-color,border-color] duration-250 ease-out hover:w-[min(30vw,220px)] hover:bg-black/42"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/18 bg-black/26">
                 <span className="text-white/76">⌕</span>
@@ -2725,10 +2901,10 @@ export default function RoomScene({ room }: { room: Room }) {
 
           <div className="mt-6 flex-1 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-2 pb-[calc(env(safe-area-inset-bottom)+6rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {EXPLORE_ROOMS.map((item, index) => {
-              const isApply = item.label.toLowerCase().includes("apply");
+              const isApply = false;
               const isUtilityLink =
-                item.href === "/consultation" || item.href === "/labels-partners";
-              const isLastUtilityLink = item.href === "/labels-partners";
+                item.label === "Apply For A Consultation" || item.label === "Our Artists";
+              const isLastUtilityLink = item.label === "Our Artists";
 
               return (
                 <Link
@@ -2840,14 +3016,14 @@ export default function RoomScene({ room }: { room: Room }) {
           <div
             className={[
               isStartHereModal
-                ? "relative z-10 my-2 flex w-full max-w-[560px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]"
+                ? "relative z-10 my-2 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]"
                 : "relative z-10 my-2 flex w-full max-w-[900px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]",
               isOrangeModal
                 ? "border border-orange-300/28 bg-[linear-gradient(160deg,rgba(15,10,6,0.9),rgba(10,8,6,0.86))] shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_30px_80px_rgba(0,0,0,0.62)]"
                 : "border border-white/15 bg-black/55",
             ].join(" ")}
           >
-            <div className={["flex-1 overflow-y-auto", isStartHereModal ? "p-4 md:p-5" : "p-6"].join(" ")}>
+            <div className={["flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : "p-6 pb-8 md:pb-10"].join(" ")}>
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 w-full">
                 {activeModal.headerLogo ? (
@@ -2975,12 +3151,17 @@ export default function RoomScene({ room }: { room: Room }) {
 
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
 
-                        {isYoutubeEmbed && videoMuted && (
+                        {isYoutubeEmbed && (
                           <button
                             type="button"
                             onClick={() => {
-                              setVideoMuted(false);
-                              unmuteYoutube();
+                              const nextMuted = !videoMuted;
+                              setVideoMuted(nextMuted);
+                              if (nextMuted) {
+                                muteYoutube();
+                              } else {
+                                unmuteYoutube();
+                              }
                             }}
                             className="
                               absolute bottom-3 right-3
@@ -2996,7 +3177,7 @@ export default function RoomScene({ room }: { room: Room }) {
                               hover:text-white
                             "
                           >
-                            🔇 Sound off · Click to unmute
+                            {videoMuted ? "Unmute" : "Mute"}
                           </button>
                         )}
                       </div>
@@ -3054,7 +3235,116 @@ export default function RoomScene({ room }: { room: Room }) {
                   ].join(" ")}
                 >
                   <div className="min-w-0">
-                    {activeModal.imageGallery?.length ? (
+                    {isCarouselModal && activeCarouselSlide ? (
+                      <div
+                        className={[
+                          "mb-4 transition-all duration-700 ease-out",
+                          revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                        ].join(" ")}
+                      >
+                        <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
+                          <NextImage
+                            src={activeCarouselSlide.src}
+                            alt={activeCarouselSlide.alt}
+                            width={1400}
+                            height={1600}
+                            sizes="(max-width: 900px) 100vw, 900px"
+                            className="w-full max-h-[460px] object-contain"
+                          />
+                        </div>
+                        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                          <div className="inline-flex rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7a5a24]">
+                            {activeCarouselSlide.eyebrow}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!activeModal?.carouselSlides?.length) return;
+                                setActiveCarouselIndex((prev) => (prev - 1 + activeModal.carouselSlides!.length) % activeModal.carouselSlides!.length);
+                              }}
+                              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 px-3 py-1.5 text-xs font-semibold text-white/86 transition hover:bg-white/14 hover:text-white"
+                            >
+                              ← Prev
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!activeModal?.carouselSlides?.length) return;
+                                setActiveCarouselIndex((prev) => (prev + 1) % activeModal.carouselSlides!.length);
+                              }}
+                              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 px-3 py-1.5 text-xs font-semibold text-white/86 transition hover:bg-white/14 hover:text-white"
+                            >
+                              Next →
+                            </button>
+                          </div>
+                        </div>
+                        <h3 className="mt-4 text-2xl font-semibold tracking-tight text-white">
+                          {activeCarouselSlide.title}
+                        </h3>
+                        {activeCarouselSlide.body ? (
+                          <p className="mt-3 leading-relaxed text-white/80">
+                            {activeCarouselSlide.body}
+                          </p>
+                        ) : null}
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                          {activeModal.carouselSlides?.map((slide, index) => (
+                            <button
+                              key={`${slide.title}-${index}`}
+                              type="button"
+                              onClick={() => setActiveCarouselIndex(index)}
+                              className={[
+                                "h-2 rounded-full transition-all",
+                                index === activeCarouselIndex ? "w-8 bg-[#d6ae66]" : "w-2 bg-white/30 hover:bg-white/50",
+                              ].join(" ")}
+                              aria-label={`Go to slide ${index + 1}`}
+                            />
+                          ))}
+                        </div>
+                        <div className="mt-5 flex flex-wrap gap-2">
+                          {activeCarouselSlide.secondaryHref && activeCarouselSlide.secondaryLabel ? (
+                            activeCarouselSlide.secondaryHref.startsWith("http") ? (
+                              <a
+                                href={activeCarouselSlide.secondaryHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                              >
+                                {activeCarouselSlide.secondaryLabel} →
+                              </a>
+                            ) : (
+                              <Link
+                                href={activeCarouselSlide.secondaryHref}
+                                onClick={closeModal}
+                                className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                              >
+                                {activeCarouselSlide.secondaryLabel} →
+                              </Link>
+                            )
+                          ) : null}
+                          {activeCarouselSlide.primaryHref && activeCarouselSlide.primaryLabel ? (
+                            activeCarouselSlide.primaryHref.startsWith("http") ? (
+                              <a
+                                href={activeCarouselSlide.primaryHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+                              >
+                                {activeCarouselSlide.primaryLabel} →
+                              </a>
+                            ) : (
+                              <Link
+                                href={activeCarouselSlide.primaryHref}
+                                onClick={closeModal}
+                                className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+                              >
+                                {activeCarouselSlide.primaryLabel} →
+                              </Link>
+                            )
+                          ) : null}
+                        </div>
+                      </div>
+                    ) : activeModal.imageGallery?.length ? (
                       <div
                         className={[
                           "mb-4 grid gap-3 sm:grid-cols-3 transition-all duration-700 ease-out",
@@ -3097,7 +3387,7 @@ export default function RoomScene({ room }: { room: Room }) {
                       </div>
                     ) : null}
 
-                    {activeResourceContext ? (
+                    {isCarouselModal ? null : activeResourceContext ? (
                       <p
                         className={[
                           "leading-relaxed whitespace-pre-line transition-all duration-600 ease-out",
@@ -3350,10 +3640,10 @@ export default function RoomScene({ room }: { room: Room }) {
             <div
               className={[
                 isPackageGridModal
-                  ? "shrink-0 grid w-full gap-3 px-6 pb-6 sm:grid-cols-2 transition-all duration-600 ease-out"
+                  ? "shrink-0 grid w-full gap-3 border-t border-white/10 bg-black/24 px-6 pb-6 pt-4 sm:grid-cols-2 transition-all duration-600 ease-out"
                   : isStartHereModal
-                  ? "shrink-0 flex w-full flex-col items-stretch gap-1.5 px-4 pb-4 md:px-5 md:pb-5 transition-all duration-600 ease-out"
-                  : "shrink-0 flex flex-wrap items-center gap-3 px-6 pb-6 transition-all duration-600 ease-out",
+                  ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out"
+                  : "shrink-0 flex flex-wrap items-center gap-3 border-t border-white/10 bg-black/24 px-6 pb-6 pt-4 transition-all duration-600 ease-out",
                 revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
               ].join(" ")}
             >
@@ -3406,7 +3696,7 @@ export default function RoomScene({ room }: { room: Room }) {
                           }}
                           className={
                             isStartHereModal
-                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3.5 py-2.5 text-sm font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
                               : isPackageGridModal
                               ? isWebsiteDesignMainModal
                                 ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
@@ -3434,7 +3724,7 @@ export default function RoomScene({ room }: { room: Room }) {
                           onClick={closeModal}
                           className={
                             isStartHereModal
-                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3.5 py-2.5 text-sm font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
                               : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
                           }
                         >
@@ -3452,7 +3742,7 @@ export default function RoomScene({ room }: { room: Room }) {
                         title={link.label}
                         className={
                           isStartHereModal
-                            ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3.5 py-2.5 text-sm font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                            ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
                             : isPackageGridModal
                             ? isWebsiteDesignMainModal
                               ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
@@ -3495,6 +3785,31 @@ export default function RoomScene({ room }: { room: Room }) {
                     ].join(" ")}
                   >
                     {activeModal.primaryLabel ?? "Open Explore"} →
+                  </button>
+                ) : activeModal.primaryHref && activeModal.primaryHref.startsWith("modal:") ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const modalLinkId = activeModal.primaryHref!.slice(6);
+                      const targetSpot = room.hotspots.find((spot) => spot.id === modalLinkId);
+                      if (!targetSpot?.modal) return;
+                      setModalBackModal(activeModal);
+                      openModal(targetSpot.modal);
+                    }}
+                    className={[
+                      "inline-flex items-center justify-center rounded-full transition",
+                      isStartHereModal
+                        ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
+                        : isOrangeModal
+                        ? "border border-orange-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-orange-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-orange-200/45 hover:bg-black/55 hover:text-white"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : isLiveRoomModal
+                        ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
+                        : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
+                    ].join(" ")}
+                  >
+                    {activeModal.primaryLabel ?? "View Details"} →
                   </button>
                 ) : activeModal.primaryHref && activeModal.primaryHref.startsWith("http") ? (
                   <a

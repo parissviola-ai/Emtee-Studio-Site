@@ -413,16 +413,18 @@ export default function ArtistRosterReleasesPage() {
                 />
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href="/artist-roster-releases/case-studies-2"
-                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)]"
-                >
-                  Case Study 2
-                </Link>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/artist-roster-releases/case-studies-2"
+                    className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)]"
+                  >
+                    Case Study 2
+                  </Link>
+                </div>
                 <Link
                   href="/rooms/front"
-                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)]"
+                  className="inline-flex items-center justify-center self-start rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)] sm:self-auto"
                 >
                   Back to Lobby
                 </Link>
@@ -457,8 +459,8 @@ export default function ArtistRosterReleasesPage() {
 
             <div className="mt-12 text-xs text-white/45">
               Want to be listed as a partner?{" "}
-              <Link href="/consultation" className="underline hover:text-white/80">
-                Request a consultation
+              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" className="underline hover:text-white/80">
+                Apply For A Consultation
               </Link>
               .
             </div>
@@ -520,13 +522,13 @@ export default function ArtistRosterReleasesPage() {
             >
               Labels & Partners
             </button>
-            <Link
-              href="/rooms/front"
-              className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
-            >
-              Back to Lobby
-            </Link>
           </div>
+          <Link
+            href="/rooms/front"
+            className="inline-flex items-center justify-center self-start rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03] sm:self-auto"
+          >
+            Back to Lobby
+          </Link>
         </div>
 
         <section className="mt-8">

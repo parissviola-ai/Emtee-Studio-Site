@@ -1,4 +1,5 @@
 import type { Room } from "./types";
+import { CASE_STUDY_DECK } from "@/data/case-study-deck";
 
 export const frontRoom: Room = {
     slug: "front",
@@ -12,12 +13,6 @@ export const frontRoom: Room = {
         href: "/news",
         x: 72,
         y: 44,
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 74, y: 44 },
-          tablet: { x: 70, y: 46 },
-          mobile: { x: 74, y: 44 },
-        },
       },
       {
         id: "Board Rooms",
@@ -25,15 +20,9 @@ export const frontRoom: Room = {
         hoverLabel: "Business Department",
         tier: "secondary",
         href: "/rooms/EMTEEBusinessDept",
-        x: 6.5,
-        y: 46,
+        x: 9.89,
+        y: 43.57,
         direction: "right",
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 2, y: 46 },
-          tablet: { x: 14, y: 48 },
-          mobile: { x: 5.5, y: 46 },
-        },
       },
       {
         id: "Studio",
@@ -41,14 +30,8 @@ export const frontRoom: Room = {
         hoverLabel: "Music Department",
         tier: "secondary",
         href: "/rooms/EMTEEMusicDept",
-        x: 49,
-        y: 45,
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 50, y: 45 },
-          tablet: { x: 47, y: 52 },
-          mobile: { x: 50, y: 45 },
-        },
+        x: 46.53,
+        y: 43.71,
       },
       {
         id: "Photo Studio",
@@ -56,14 +39,8 @@ export const frontRoom: Room = {
         hoverLabel: "Marketing Department",
         tier: "secondary",
         href: "/rooms/EMTEEMarketingDept",
-        x: 56,
-        y: 49,
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 57, y: 49 },
-          tablet: { x: 56, y: 56 },
-          mobile: { x: 57, y: 49 },
-        },
+        x: 52.36,
+        y: 48.05,
       },
       {
         id: "Catalog Room",
@@ -71,14 +48,8 @@ export const frontRoom: Room = {
         hoverLabel: "Publishing / Distribution Department",
         tier: "secondary",
         href: "/rooms/EMTEEPublishingandDistroDept",
-        x: 60,
-        y: 45,
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 63, y: 45 },
-          tablet: { x: 64, y: 50 },
-          mobile: { x: 63, y: 45 },
-        },
+        x: 56.59,
+        y: 42.89,
       },
       {
         id: "explore",
@@ -88,57 +59,33 @@ export const frontRoom: Room = {
         x: 89,
         y: 40,
         direction: "left",
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 92, y: 34 },
-          tablet: { x: 89, y: 42 },
-          mobile: { x: 92, y: 34 },
-        },
       },
       {
         id: "Dirty Elephant Studios",
         label: "Dirty Elephant Studios",
         tier: "secondary",
         href: "/rooms/orange",
-        x: 86,
-        y: 50,
+        x: 91.04,
+        y: 49.69,
         direction: "right",
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 89, y: 47 },
-          tablet: { x: 76, y: 54 },
-          mobile: { x: 85, y: 47 },
-        },
       },
       {
         id: "Ten Ten Entertainment",
         label: "Ten Ten Entertainment",
         tier: "secondary",
         href: "/rooms/live",
-        x: 94,
-        y: 44,
+        x: 98.11,
+        y: 41.26,
         direction: "right",
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 96, y: 39 },
-          tablet: { x: 82, y: 46 },
-          mobile: { x: 92, y: 39 },
-        },
       },
       {
         id: "Steeped Dream Studio",
         label: "Steeped Dream Studio",
         tier: "secondary",
         href: "/rooms/quiet",
-        x: 91,
-        y: 58,
+        x: 95.94,
+        y: 55.31,
         direction: "right",
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 97, y: 60 },
-          tablet: { x: 82, y: 60 },
-          mobile: { x: 93, y: 60 },
-        },
       },
       {
         id: "departments",
@@ -146,14 +93,8 @@ export const frontRoom: Room = {
         hoverLabel: "A&R / Sales Department",
         tier: "core",
         href: "/rooms/EMTEEARSalesDept",
-        x: 4.5,
-        y: 41,
-        allowLargeResponsiveShift: true,
-        positions: {
-          laptop: { x: 0, y: 40 },
-          tablet: { x: 20, y: 57 },
-          mobile: { x: 5, y: 40 },
-        },
+        x: 7.81,
+        y: 37.65,
         direction: "right",
       },
       {
@@ -161,8 +102,8 @@ export const frontRoom: Room = {
         label: "Start Here",
         tier: "core",
         hidden: true,
-        x: 50,
-        y: 50,
+        x: 29.66,
+        y: 56.73,
         modal: {
           title: "Start Here",
           body:
@@ -171,9 +112,33 @@ export const frontRoom: Room = {
             { label: "Who We Are", href: "modal:About" },
             { label: "What We Offer", href: "modal:departments-sheet" },
             { label: "How You Start", href: "modal:how-you-start" },
-            { label: "Book A Consultation", href: "/consultation" },
+            { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
             { label: "Learn More", href: "/about" },
           ],
+        },
+      },
+      {
+        id: "case-study-tour",
+        label: "Case Studies",
+        tier: "core",
+        x: 12.55,
+        y: 76.88,
+        modal: {
+          title: "Case Studies",
+          body: "Browse a quick lobby slideshow of case study cards in A&R, Business, Marketing, Publishing & Distribution, and Music order.",
+          carouselSlides: CASE_STUDY_DECK.map((card) => ({
+            src: card.imageSrc,
+            alt: card.imageAlt,
+            eyebrow: card.lane,
+            title: card.artist,
+            body: card.snapshot,
+            primaryLabel: card.caseStudyHref ? "View Full Case Study" : undefined,
+            primaryHref: card.caseStudyHref,
+            secondaryLabel: "Open Department",
+            secondaryHref: card.departmentHref,
+          })),
+          primaryLabel: "View All Case Studies",
+          primaryHref: "/case-studies",
         },
       },
       {
@@ -186,8 +151,8 @@ export const frontRoom: Room = {
         modal: {
           title: "What We Offer",
           body:
-            "Each department is a package lane inside our artist development system, built to move your music, brand, and business with structure.\n\nChoose the path that matches your stage, then execute with a clear rollout framework.",
-          image: "/rooms/departmenthq.png",
+            "All workings with EMTEE fall under 5 main pillars/departments. These departments help identify structural requirements to successfully launch a creative's career and business in a way that is highly sustainable. With resources and specialists in each department, EMTEE strives to develop an infrastructure for your future that will allow for strong movements in your music, brand and business. To explore the departments further please tour the rooms from the Lobby.",
+          image: "/rooms/departmentdeck.png",
           primaryLabel: "See How These Packages Perform in Case Studies",
           primaryHref: "/case-studies",
           secondaryLabel: "View Resource Packages",
@@ -203,35 +168,29 @@ export const frontRoom: Room = {
         y: 50,
         modal: {
           title: "How You Start",
-          topImage: "/rooms/howyoustarthd.png",
+          topImage: "/rooms/howyoustart1.png",
           topImageAlt: "How you start diagram",
           body: "",
         },
       },
-
-    {
-      id: "About",
-      label: "Who We Are",
-      tier: "core",
-      x: 25,
-      y: 40,
-      allowLargeResponsiveShift: true,
-      positions: {
-        laptop: { x: 26, y: 41 },
-        tablet: { x: 27, y: 42 },
-        mobile: { x: 26, y: 41 },
+      {
+        id: "About",
+        label: "Who We Are",
+        tier: "core",
+        hidden: true,
+        x: 25,
+        y: 40,
+        direction: "right",
+        variant: "dot",
+        modal: {
+          title: "Who We Are",
+          videoEmbed:
+            "https://www.youtube.com/embed/SePmCgtpw6s?autoplay=1&mute=0&playsinline=1&controls=0&rel=0&enablejsapi=1",
+          body:
+            "Emtee Music Group began in the pits of the pandemic, formed by a small collective of music managers, producers and industry professionals stalled by the inaction of major labels. Between 2021 and 2025, this team of disruptors operated an independent label that earned a Juno Award nomination, a Number 1 charting single on IG Music and numerous releases and performances around the world.\n\nToday, EMTEE operates as the first ever creative business launch pad built on 5 main pillars — A&R/Sales, Business, Marketing, Publishing & Distribution, Music — with foundations that turn creative momentum into long-term career structure.",
+          primaryLabel: "What We Offer",
+          primaryHref: "modal:departments-sheet",
+        },
       },
-      direction: "right",
-      variant: "dot",
-      modal: {
-        title: "Who We Are",
-        videoEmbed:
-          "https://www.youtube.com/embed/SePmCgtpw6s?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&enablejsapi=1",
-        body:
-          "Emtee Music Group began in the pits of the pandemic, formed by a small collective of music managers, producers, and industry professionals stalled by the inaction of major labels. Between 2021 and 2025, this team of disruptors operated an independent label that earned a Juno Award nomination, a Number 1 charting single on IG Music, and numerous releases and performances.\n\nThose outcomes shaped EMTEE's core philosophy: clarity before action, systems over randomness, and execution that compounds. Today, EMTEE operates as a creative business launch pad built on five pillars — music, brand, release, business, and live — with foundations that turn creative momentum into long-term career structure.",
-        primaryLabel: "Why EMTEE Works",
-        primaryHref: "/about",
-      },
-    },
     ],
   };

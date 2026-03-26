@@ -94,8 +94,8 @@ export const orangeRoom: Room = {
       {
         id: "apply-orange-room-session",
         label: "Orange Room Session",
-        x: 95,
-        y: 48,
+        x: 91.62,
+        y: 46.24,
         positions: {
           laptop: { x: 94, y: 48 },
           tablet: { x: 92, y: 49 },

@@ -38,8 +38,8 @@ export const liveRoom: Room = {
       {
         id: "mike-cannz-youtube",
         label: "YouTube",
-        x: 21,
-        y: 23,
+        x: 23.17,
+        y: 27.99,
         positions: {
           laptop: { x: 15, y: 27 },
           tablet: { x: 14, y: 28 },
@@ -52,8 +52,8 @@ export const liveRoom: Room = {
       {
         id: "mike-cannz-spotify",
         label: "Spotify",
-        x:  79,
-        y: 23,
+        x: 77.96,
+        y: 26.94,
         positions: {
           laptop: { x: 84, y: 27 },
           tablet: { x: 83, y: 28 },
@@ -66,11 +66,11 @@ export const liveRoom: Room = {
       {
         id: "live-packages",
         label: "Packages",
-        x: 25,
-        y: 37,
+        x: 21.85,
+        y: 63.32,
         positions: {
-          laptop: { x: 18, y: 44 },
-          tablet: { x: 17, y: 48 },
+          laptop: { x: 18, y: 33 },
+          tablet: { x: 17, y: 37 },
           mobile: { x: 28, y: 19 },
         },
         allowLargeResponsiveShift: true,

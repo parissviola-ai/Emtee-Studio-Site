@@ -16,16 +16,17 @@ const PRIMARY_LINKS: NavLink[] = [
 const ABOUT_LINKS: NavLink[] = [
   { label: "Who We Are", href: "/rooms/front?modal=About" },
   { label: "What We Offer", href: "/rooms/front?modal=departments-sheet" },
-  { label: "How You Start", href: "/rooms/front?modal=how-you-start" },
-  { label: "Book A Consultation", href: "/consultation" },
+  { label: "When Artists Have Taken Our Offers", href: "/case-studies" },
+  { label: "How You Can Start", href: "/rooms/front?modal=how-you-start" },
+  { label: "Start Path Quiz", href: "/path-quiz" },
 ];
 
 const RESOURCE_LINKS: NavLink[] = [
-  { label: "A&R & Sales Department", href: "/rooms/EMTEEARSalesDept" },
-  { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
-  { label: "Marketing Department", href: "/rooms/EMTEEMarketingDept" },
-  { label: "Publishing & Distribution Department", href: "/rooms/EMTEEPublishingandDistroDept" },
-  { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
+  { label: "A&R / Sales", href: "/rooms/EMTEEARSalesDept" },
+  { label: "Business", href: "/rooms/EMTEEBusinessDept" },
+  { label: "Marketing", href: "/rooms/EMTEEMarketingDept" },
+  { label: "Publishing & Distribution", href: "/rooms/EMTEEPublishingandDistroDept" },
+  { label: "Music", href: "/rooms/EMTEEMusicDept" },
 ];
 
 const CASE_STUDY_LINKS: NavLink[] = [
@@ -82,7 +83,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     ].join(" ");
   }
 
-  const aboutActive = pathname === "/about" || pathname === "/consultation";
+  const aboutActive = pathname === "/about" || pathname === "/consultation" || pathname === "/path-quiz";
   const resourcesActive = pathname === "/connect" || pathname.startsWith("/connect/") || RESOURCE_LINKS.some((item) => pathname === item.href);
   const caseStudiesActive =
     pathname === "/case-studies" ||
@@ -109,7 +110,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
           {/* bottom hairline */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/12" />
 
-          <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 sm:py-3.5">
+          <div className="relative flex w-full items-center justify-between gap-4 px-4 py-2.5 sm:px-6 sm:py-3.5">
             <div className="shrink-0">
               <Link
                 href="/rooms/front"
@@ -131,10 +132,10 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
             {currentRoomHeader ? (
               <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 sm:flex sm:flex-col sm:items-center sm:justify-center">
-                <div className="text-[8px] font-semibold uppercase tracking-[0.22em] text-white/40">
-                  {currentRoomHeader.kind}
+                <div className="text-[7px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                  You Are Here
                 </div>
-                <div className="max-w-[24rem] truncate text-center text-[15px] font-semibold text-white/92 [text-shadow:0_0_10px_rgba(255,255,255,0.22),0_0_24px_rgba(255,255,255,0.1)] md:text-[18px]">
+                <div className="max-w-[22rem] truncate text-center text-[13px] font-semibold text-white/92 [text-shadow:0_0_10px_rgba(255,255,255,0.22),0_0_24px_rgba(255,255,255,0.1)] md:text-[16px]">
                   {currentRoomHeader.label}
                 </div>
               </div>
@@ -177,7 +178,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                 <Link href="/connect" className={desktopMenuLinkClass(resourcesActive)}>Resources</Link>
 
                 <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
-                  <div className="w-72 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
+                  <div className="w-80 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
                     {RESOURCE_LINKS.map((item) => (
                       <Link
                         key={item.label}
@@ -218,7 +219,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               <Link href="/news" className={[navLinkClass("/news"), "hidden sm:inline"].join(" ")}>News</Link>
 
               <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
-              <Link href="/consultation" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
+              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
               <Link href="/connect" className={[navLinkClass("/connect"), "sm:hidden"].join(" ")}>Resources</Link>
               <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
               <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>

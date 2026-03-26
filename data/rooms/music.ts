@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const musicRoom: Room = {
     slug: "EMTEEMusicDept",
     title: "Music",
-    backgroundImage: "/rooms/10.png",
+    backgroundImage: "/rooms/10-refresh.png",
   hotspots: [
     { id: "next-room", label: "Media Room", href: "/rooms/EMTEEMarketingDept", x: 90, y: 17, direction: "right" },
     {
@@ -17,8 +17,8 @@ export const musicRoom: Room = {
         title: "Single Creation",
         body:
           "Music department creation package.\n\nIncludes:\n• an EMG A&R for Sound Direction / Songwriting\n• In-Session Vocal Coaching\n• Mix + 2 Post Edits\n• 1 Custom Beat\n• Two 3hr Studio Sessions",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },
@@ -26,16 +26,16 @@ export const musicRoom: Room = {
     {
       id: "music-3-song-creation",
       label: "3 Song Creation",
-      x: 64,
-      y: 52,
+      x: 70.26,
+      y: 46.48,
       direction: "right",
       variant: "dot",
       modal: {
         title: "3 Song Creation",
         body:
           "Music department multi-song package.\n\nIncludes:\n• an EMG A&R for Sound Direction / Songwriting\n• In-Session Vocal Coaching\n• Mix + 2 Post Edits (per song)\n• 1 Custom Beat (per song)\n• Six 3hr Studio Sessions",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },
@@ -43,16 +43,16 @@ export const musicRoom: Room = {
     {
       id: "music-project-creation-5-songs",
       label: "Project Creation (5 Songs)",
-      x: 56,
-      y: 67,
+      x: 49.32,
+      y: 56.11,
       direction: "down",
       variant: "dot",
       modal: {
         title: "Project Creation (5 Songs)",
         body:
           "Full project creation package from the music department.\n\nIncludes:\n• an EMG A&R for Sound Direction / Songwriting\n• In-Session Vocal Coaching\n• Mix + 2 Post Edits (per song)\n• 1 Custom Beat (per song)\n• Ten 3hr Studio Sessions",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },

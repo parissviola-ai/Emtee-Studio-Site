@@ -12,16 +12,17 @@ const PRIMARY_LINKS: NavLink[] = [{ label: "Home", href: "/rooms/front" }];
 const ABOUT_LINKS: NavLink[] = [
   { label: "Who We Are", href: "/rooms/front?modal=About" },
   { label: "What We Offer", href: "/rooms/front?modal=departments-sheet" },
-  { label: "How You Start", href: "/rooms/front?modal=how-you-start" },
-  { label: "Book A Consultation", href: "/consultation" },
+  { label: "When Artists Have Taken Our Offers", href: "/case-studies" },
+  { label: "How You Can Start", href: "/rooms/front?modal=how-you-start" },
+  { label: "Start Path Quiz", href: "/path-quiz" },
 ];
 
 const RESOURCE_LINKS: NavLink[] = [
-  { label: "A&R & Sales Department", href: "/rooms/EMTEEARSalesDept" },
-  { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
-  { label: "Marketing Department", href: "/rooms/EMTEEMarketingDept" },
-  { label: "Publishing & Distribution Department", href: "/rooms/EMTEEPublishingandDistroDept" },
-  { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
+  { label: "A&R / Sales", href: "/rooms/EMTEEARSalesDept" },
+  { label: "Business", href: "/rooms/EMTEEBusinessDept" },
+  { label: "Marketing", href: "/rooms/EMTEEMarketingDept" },
+  { label: "Publishing & Distribution", href: "/rooms/EMTEEPublishingandDistroDept" },
+  { label: "Music", href: "/rooms/EMTEEMusicDept" },
 ];
 
 const CASE_STUDY_LINKS: NavLink[] = [
@@ -42,7 +43,7 @@ export default function MainMenuBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const aboutActive = pathname === "/about" || pathname === "/consultation";
+  const aboutActive = pathname === "/about" || pathname === "/consultation" || pathname === "/path-quiz";
   const resourcesActive = pathname === "/connect" || pathname.startsWith("/connect/") || RESOURCE_LINKS.some((item) => pathname === item.href);
   const caseStudiesActive =
     pathname === "/case-studies" ||
@@ -81,7 +82,7 @@ export default function MainMenuBar() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/18" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/12" />
 
-        <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 sm:py-3.5">
+        <div className="relative flex w-full items-center justify-between gap-4 px-4 py-2.5 sm:px-6 sm:py-3.5">
           <div className="shrink-0">
             <Link
               href="/rooms/front"
@@ -134,7 +135,7 @@ export default function MainMenuBar() {
               <Link href="/connect" className={desktopMenuLinkClass(resourcesActive)}>Resources</Link>
 
               <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
-                <div className="w-72 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
+                <div className="w-80 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
                   {RESOURCE_LINKS.map((item) => (
                     <Link
                       key={item.label}
@@ -175,7 +176,7 @@ export default function MainMenuBar() {
             <Link href="/news" className={[navLinkClass("/news"), "hidden sm:inline"].join(" ")}>News</Link>
 
             <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
-            <Link href="/consultation" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
+            <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
             <Link href="/connect" className={[navLinkClass("/connect"), "sm:hidden"].join(" ")}>Resources</Link>
             <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
             <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>

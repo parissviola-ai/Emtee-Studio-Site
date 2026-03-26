@@ -106,6 +106,12 @@ export default function ConsultationPage() {
           >
             Back to Lobby
           </Link>
+          <a
+            href="mailto:info@emtee.com"
+            className="inline-flex items-center justify-center rounded-full border border-[#c19d58]/40 bg-[#f8f4eb] px-5 py-2 text-sm font-semibold text-black/80 transition hover:bg-[#f2ead9]"
+          >
+            Email Direct →
+          </a>
         </div>
 
         <section className="accent-card relative mt-8 rounded-[34px] border border-black/10 bg-white/90 p-8 shadow-[0_20px_80px_rgba(0,0,0,0.08)] backdrop-blur md:p-12">
@@ -119,7 +125,7 @@ export default function ConsultationPage() {
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.22em] text-black/45">EMTEE MUSIC GROUP</p>
             <h1 className="mt-3 text-4xl tracking-tight text-black md:text-6xl">
-              Apply For A Consultation
+              Request a Consultation
             </h1>
             <p className="mt-5 text-base leading-relaxed text-black/65 md:text-lg">
               We accept artists who are serious about building a lasting foundation.

@@ -39,7 +39,7 @@ export default async function RoomPage({
 
   return (
     <Suspense fallback={null}>
-      <RoomScene room={room} />
+      <RoomScene key={room.slug} room={room} />
     </Suspense>
   );
 }

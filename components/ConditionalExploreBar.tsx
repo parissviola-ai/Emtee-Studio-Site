@@ -6,8 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 const EXPLORE_LINKS = [
-  { label: "Request A Consultation", href: "/consultation" },
-  { label: "Labels and Partners", href: "/artist-roster-releases#partners" },
+  { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
+  { label: "Our Artists", href: "/artist-roster-releases" },
   { label: "Lobby", href: "/rooms/front" },
   { label: "Business Department", href: "/rooms/EMTEEBusinessDept" },
   { label: "Music Department", href: "/rooms/EMTEEMusicDept" },
@@ -140,10 +140,10 @@ export default function ConditionalExploreBar() {
 
             <div className="mt-10 flex-1 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-2 pb-[calc(env(safe-area-inset-bottom)+7.5rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {EXPLORE_LINKS.map((item, index) => {
-                const isApply = item.label.toLowerCase().includes("apply");
+                const isApply = false;
                 const isUtilityLink =
-                  item.href === "/consultation" || item.href === "/artist-roster-releases#partners";
-                const isLastUtilityLink = item.href === "/artist-roster-releases#partners";
+                  item.label === "Apply For A Consultation" || item.label === "Our Artists";
+                const isLastUtilityLink = item.label === "Our Artists";
                 return (
                   <Link
                     key={item.label}

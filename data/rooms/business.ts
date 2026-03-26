@@ -21,8 +21,8 @@ export const businessRoom: Room = {
         title: "Consultation",
         body:
           "Business department resource package for first-step strategy alignment.\n\nIncludes:\n• Recommendation List\n• 60-90min Meeting\n• Artist Report",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },
@@ -43,8 +43,8 @@ export const businessRoom: Room = {
         title: "Brand Evaluation",
         body:
           "Business department brand-direction package.\n\nIncludes:\n• Niche\n• 2-3hr Meeting focused on Vision, Mission, Values",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },
@@ -65,8 +65,8 @@ export const businessRoom: Room = {
         title: "Business Operations Set-Up",
         body:
           "Business operations setup package.\n\nIncludes:\n• Bookkeeping\n• Tax Advisory\n• Set-up Proper Business Bank Account\n• Set-up Proper Business Licensing\n• Income Evaluation",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },
@@ -74,8 +74,8 @@ export const businessRoom: Room = {
     {
       id: "business-income-evaluation",
       label: "Income Evaluation",
-      x: 43,
-      y: 74,
+      x: 43.17,
+      y: 71.93,
       positions: {
         laptop: { x: 32, y: 64 },
         tablet: { x: 31, y: 65 },
@@ -87,8 +87,8 @@ export const businessRoom: Room = {
         title: "Income Evaluation",
         body:
           "Business department finance review package.\n\nIncludes:\n• Assessing Business Finance",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },
@@ -109,8 +109,8 @@ export const businessRoom: Room = {
         title: "6-Month Rollout Strategy Plan",
         body:
           "Business department strategy package.\n\nIncludes:\n• 2hr Meeting Focused on Long Term Strategy",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },
@@ -131,8 +131,8 @@ export const businessRoom: Room = {
         title: "12-Month Rollout Strategy Plan",
         body:
           "Business department long-range strategy package.\n\nIncludes:\n• 3hr Meeting Focused on Long Term Strategy",
-        primaryLabel: "Request a Consultation",
-        primaryHref: "/consultation",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resource Packages",
         secondaryHref: "/connect",
       },

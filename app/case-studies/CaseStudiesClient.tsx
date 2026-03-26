@@ -461,10 +461,10 @@ export default function CaseStudiesClient() {
             </Link>
 
             <Link
-              href="/consultation"
+              href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
               className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/16 px-5 py-2 text-sm font-semibold text-[#6f511a] transition hover:bg-[#d6ae66]/24 hover:text-[#3e2d0d]"
             >
-              Request a Consultation →
+              Apply For A Consultation →
             </Link>
           </div>
 

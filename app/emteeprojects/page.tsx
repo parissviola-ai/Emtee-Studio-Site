@@ -183,21 +183,19 @@ export default function EmteeProjectsPage() {
         <section id="contact" className="mt-14 pb-10">
           <h3 className="text-2xl font-semibold">Contact</h3>
           <p className="mt-3 text-white/70 leading-relaxed max-w-3xl">
-            For the demo, you can keep this simple and link to your contact
-            email or embed a form later.
+            Use the consultation form if you want to connect with the EMTEE team.
           </p>
 
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-6">
-            <p className="text-sm text-white/70">
-              Email:{" "}
-              <span className="text-white/90 font-semibold">
-                contact@emteemusicgroup.com
-              </span>
-            </p>
+            <a
+              href="https://tinyurl.com/connectwithemtee"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/15"
+            >
+              Apply For A Consultation
+            </a>
           </div>
         </section>
       </div>
     </main>
   );
 }
-

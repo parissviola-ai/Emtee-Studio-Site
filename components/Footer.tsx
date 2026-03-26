@@ -1,8 +1,6 @@
 import Link from "next/link";
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <footer className="relative w-full overflow-hidden border-t border-black/10 bg-[#0d0d0d] text-white">
       <div className="pointer-events-none absolute inset-0">
@@ -22,7 +20,7 @@ export default function Footer() {
             </p>
             <div className="mt-4 flex flex-wrap gap-2.5">
               <Link
-                href="/consultation"
+                href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
                 className="inline-flex items-center justify-center rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black transition hover:bg-white/90"
               >
                 Request Consultation
@@ -45,7 +43,7 @@ export default function Footer() {
               <Link href="/artist-roster-releases#partners" className="text-white/75 transition hover:text-white">Partners</Link>
               <Link href="/connect" className="text-white/75 transition hover:text-white">Resource Packages</Link>
               <Link href="/artist-roster-releases" className="text-white/75 transition hover:text-white">Artists</Link>
-              <Link href="/consultation" className="text-white/75 transition hover:text-white">Consultation</Link>
+              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" className="text-white/75 transition hover:text-white">Consultation</Link>
             </div>
           </div>
 
@@ -80,12 +78,6 @@ export default function Footer() {
                 LinkedIn
               </a>
             </div>
-            <a
-              href="mailto:contact@emteemusicgroup.com"
-              className="mt-4 block text-sm text-white/65 transition hover:text-white"
-            >
-              contact@emteemusicgroup.com
-            </a>
           </div>
         </div>
 
@@ -94,7 +86,7 @@ export default function Footer() {
             <Link href="/privacy" className="transition hover:text-white">Privacy Policy</Link>
             <Link href="/terms" className="transition hover:text-white">Terms of Service</Link>
           </div>
-          <div>© {year} EMTEE Music Group</div>
+          <div>© The Emtee Group</div>
         </div>
       </div>
     </footer>

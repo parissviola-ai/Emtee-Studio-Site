@@ -15,6 +15,17 @@ export type Hotspot = {
   modal?: {
     title: string;
     body: string;
+    carouselSlides?: Array<{
+      src: string;
+      alt: string;
+      eyebrow?: string;
+      title: string;
+      body?: string;
+      primaryLabel?: string;
+      primaryHref?: string;
+      secondaryLabel?: string;
+      secondaryHref?: string;
+    }>;
     primaryLabel?: string;
     primaryHref?: string;
     primaryAction?: "openExplore";

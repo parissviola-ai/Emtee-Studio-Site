@@ -9,7 +9,7 @@ export default function SubscribePage() {
           Subscription updates are currently handled through consultation requests.
         </p>
         <Link
-          href="/consultation"
+          href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
           className="mt-6 inline-flex items-center rounded-full border border-black/15 px-5 py-2 text-sm font-semibold hover:bg-black/[0.03]"
         >
           Request Consultation

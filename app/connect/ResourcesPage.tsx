@@ -21,7 +21,7 @@ type ResourceCard = {
 const RESOURCE_CARDS: ResourceCard[] = [
   {
     department: "Business Department",
-    summary: "Operational setup, finance clarity, and rollout planning resources.",
+    summary: "Financial and operational systems that support long-term sustainability and decision quality. This also includes grant strategies.",
     roomHref: "/rooms/EMTEEBusinessDept",
     artistCaseStudy: "Yanchan - Business Strategy",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-business",
@@ -67,7 +67,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   },
   {
     department: "Music Department",
-    summary: "Single, multi-song, and project creation resources.",
+    summary: "Creative direction, production support and release readiness built around artist identity.",
     roomHref: "/rooms/EMTEEMusicDept",
     artistCaseStudy: "Fame Holiday - Music Lane",
     artistCaseStudyHref: "/case-studies/fame-holiday",
@@ -106,7 +106,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   },
   {
     department: "Marketing Department",
-    summary: "Brand, content, tour, live development, and web design resources.",
+    summary: "Branding, content, touring and everything that fuels the reach of your brand and expansion of your audience.",
     roomHref: "/rooms/EMTEEMarketingDept",
     artistCaseStudy: "Kisaki - Marketing",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=kisaki-marketing",
@@ -189,7 +189,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   },
   {
     department: "Publishing / Distribution Department",
-    summary: "Publishing and distro setup resources.",
+    summary: "Catalog management, publishing administration and royalty collections.",
     roomHref: "/rooms/EMTEEPublishingandDistroDept",
     artistCaseStudy: "Yanchan - Publishing and Distro",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
@@ -212,7 +212,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
   },
   {
     department: "A&R / Sales Department",
-    summary: "CRM and audience monetization resources.",
+    summary: "CRMs, company valuations and the question of long-lasting, sustainable monetization of your music business.",
     roomHref: "/rooms/EMTEEARSalesDept",
     artistCaseStudy: "Mike Cannz - A&R and Sales",
     artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=mike-ar-sales",
@@ -278,8 +278,6 @@ function getCaseStudyForResource(name: string) {
 }
 
 export default function ResourcesPage() {
-  const questionsEmail = "contact@emteemusicgroup.com";
-  const questionsHref = `mailto:${questionsEmail}?subject=${encodeURIComponent("Resources Question")}&body=${encodeURIComponent("Hi Emtee team,\n\nI have a question about the artist resources.\n\nThanks,")}`;
   const [openDepartments, setOpenDepartments] = useState<string[]>([]);
   const [hoveredDepartment, setHoveredDepartment] = useState<string | null>(null);
   const [activeResource, setActiveResource] = useState<{
@@ -305,7 +303,7 @@ export default function ResourcesPage() {
         <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-              Resource Packages
+              Resources
             </h1>
             <Image
               src="/Logo2.png"
@@ -324,9 +322,9 @@ export default function ResourcesPage() {
         </div>
 
         <div className="accent-card relative z-10 mt-4 max-w-3xl rounded-xl border border-[#d6ae66]/35 bg-white/90 px-5 py-4 text-sm text-zinc-700 shadow-[0_0_0_1px_rgba(214,174,102,0.12),0_12px_36px_rgba(0,0,0,0.10)]">
-          Browse each department to see available resources, package options, and what each one includes.
+          Browse each department to see the different capabilities our in-house specialists are able to provide.
           <br />
-          Click the department card or the <span className="font-semibold text-[#8b6a2f]">+</span> to view resources in each department.
+          Click the department card or the <span className="font-semibold text-[#8b6a2f]">+</span> to view available resources for you.
         </div>
 
         <div className="relative z-10 mt-8 grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -432,23 +430,16 @@ export default function ResourcesPage() {
         <div className="accent-card-soft relative z-10 mt-6 rounded-2xl border border-zinc-200 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.75),0_18px_55px_rgba(0,0,0,0.12)]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Next Step</div>
           <p className="mt-3 text-sm text-zinc-700">
-            Choose your department package first, then finalize onboarding and rollout with the EMTEE team.
+            Click the button below to apply for a full artist consultation and begin working towards the launch of your career!
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
-              href="/consultation"
+              href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
               className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/18 px-5 py-2 text-sm font-semibold text-[#6f511a] shadow-[0_0_26px_rgba(214,174,102,0.28)] transition hover:bg-[#d6ae66]/26 hover:text-[#3d2b0c]"
             >
-              Request a Consultation
-            </Link>
-            <Link
-              href={questionsHref}
-              className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-5 py-2 text-sm font-semibold text-zinc-800 transition hover:border-[#d6ae66]/45 hover:bg-zinc-50"
-            >
-              Have Any Questions?
+              Apply For A Consultation
             </Link>
           </div>
-          <p className="mt-4 text-xs text-zinc-500">{questionsEmail}</p>
         </div>
 
         {activeResource ? (

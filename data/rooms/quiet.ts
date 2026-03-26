@@ -37,8 +37,8 @@ export const quietRoom: Room = {
       {
         id: "eight-d-mixes",
         label: "8D Mixes",
-        x: 9,
-        y: 36,
+        x: 10.5,
+        y: 41.96,
         positions: {
           laptop: { x: 42, y: 36 },
           tablet: { x: 41, y: 37 },

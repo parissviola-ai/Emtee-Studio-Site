@@ -1250,14 +1250,6 @@ export default function RoomScene({
         bottom: "calc(env(safe-area-inset-bottom) + 1rem)",
       };
     }
-    if (isMobileViewport) {
-      return {
-        left: shiftConversationBlueprintRight
-          ? `calc(${spot.x}% + 2in)`
-          : `${spot.x}%`,
-        top: `${spot.y}%`,
-      };
-    }
     if (!requiresMetricBasedHotspots || !hotspotImageMetrics) {
       return {
         left: shiftConversationBlueprintRight

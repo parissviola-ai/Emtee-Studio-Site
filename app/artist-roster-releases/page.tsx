@@ -377,55 +377,59 @@ export default function ArtistRosterReleasesPage() {
           <div className="mx-auto max-w-7xl px-5 pb-12 pt-24 sm:px-6 sm:pt-28">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => switchView("artists")}
-                    className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white"
-                  >
-                    Other Artists
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => switchView("partners")}
-                    className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/45 bg-white/12 px-5 py-2 text-sm font-semibold text-white transition"
-                  >
-                    Labels & Partners
-                  </button>
+                <div className="mt-6">
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <h1 className="text-3xl font-semibold tracking-tight">
+                        Labels & Partners
+                      </h1>
+                      <Image
+                        src="/logotransparent.png"
+                        alt="EMTEE logo"
+                        width={52}
+                        height={52}
+                        className="h-10 w-10 rounded-md object-contain brightness-0 invert opacity-80 sm:h-[52px] sm:w-[52px]"
+                      />
+                    </div>
+                    <p className="mt-3 max-w-2xl text-white/70">
+                      A selection of labels and partners we&apos;ve collaborated with to elevate our artists&apos; careers.
+                    </p>
+                    <div className="mt-2 text-xs uppercase tracking-widest text-white/50">
+                      Trusted by industry leaders
+                    </div>
+                    <div className="mt-2 h-px w-24 bg-gradient-to-r from-[#d6ae66]/80 via-white/45 to-transparent" />
+                  </div>
                 </div>
-
-                <h1 className="mt-6 text-3xl font-semibold tracking-tight">
-                  Labels & Partners
-                </h1>
-                <p className="mt-3 max-w-2xl text-white/70">
-                  A selection of labels and partners we&apos;ve collaborated with to elevate our artists&apos; careers.
-                </p>
-                <div className="mt-2 text-xs uppercase tracking-widest text-white/50">
-                  Trusted by industry leaders
-                </div>
-                <div className="mt-2 h-px w-24 bg-gradient-to-r from-[#d6ae66]/80 via-white/45 to-transparent" />
-                <Image
-                  src="/logotransparent.png"
-                  alt="EMTEE logo"
-                  width={168}
-                  height={52}
-                  className="mt-4 h-9 w-auto object-contain brightness-0 invert opacity-85 sm:h-10"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div />
-                <Link
-                  href="/rooms/front"
-                  className="inline-flex items-center justify-center self-start rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)] sm:self-auto"
-                >
-                  Back to Lobby
-                </Link>
               </div>
             </div>
           </div>
 
           <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-6">
+            <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => switchView("artists")}
+                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white"
+                >
+                  Other Artists
+                </button>
+                <button
+                  type="button"
+                  onClick={() => switchView("partners")}
+                  className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/45 bg-white/12 px-5 py-2 text-sm font-semibold text-white transition"
+                >
+                  Labels & Partners
+                </button>
+              </div>
+              <Link
+                href="/rooms/front"
+                className="inline-flex items-center justify-center self-start rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white hover:shadow-[0_0_24px_rgba(214,174,102,0.24),0_0_18px_rgba(255,255,255,0.14)] sm:self-auto"
+              >
+                Back to Lobby
+              </Link>
+            </div>
+
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-10">
               {PARTNERS.map((partner) => (
                 <a

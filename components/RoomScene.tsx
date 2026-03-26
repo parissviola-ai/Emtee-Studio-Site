@@ -121,6 +121,8 @@ const NATIVE_BACKGROUND_IMAGE_ROOMS = new Set([
   "marketing",
   "publishing-distribution",
   "ar-sales",
+  "dirty-elephant-studio",
+  "steeped-dreams-studio",
 ]);
 const HOTSPOT_TIER_PILOT_ROOMS = new Set(["lobby"]);
 

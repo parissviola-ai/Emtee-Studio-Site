@@ -2727,7 +2727,7 @@ export default function RoomScene({
               type="button"
               data-no-pan
               aria-label={`Previous room: ${explorePrevLabel}`}
-              onClick={() => router.push(explorePrevHref)}
+              onClick={() => void navigateToRoomHref(explorePrevHref)}
               className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
             >
               ←
@@ -2736,7 +2736,7 @@ export default function RoomScene({
               type="button"
               data-no-pan
               aria-label={`Next room: ${exploreArrowLabel}`}
-              onClick={() => router.push(exploreArrowHref)}
+              onClick={() => void navigateToRoomHref(exploreArrowHref)}
               className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
             >
               →
@@ -2752,7 +2752,7 @@ export default function RoomScene({
                 data-no-pan
                 aria-label="Go to previous room"
                 title={`Previous: ${explorePrevLabel}`}
-                onClick={() => router.push(explorePrevHref)}
+                onClick={() => void navigateToRoomHref(explorePrevHref)}
                 className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
               >
                 ←
@@ -2781,7 +2781,7 @@ export default function RoomScene({
               data-no-pan
               aria-label="Go to next page"
               title={`Next: ${exploreArrowLabel}`}
-              onClick={() => router.push(exploreArrowHref)}
+              onClick={() => void navigateToRoomHref(exploreArrowHref)}
               className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
             >
               →

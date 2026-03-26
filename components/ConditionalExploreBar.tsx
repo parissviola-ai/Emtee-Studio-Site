@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
 
 const EXPLORE_LINKS = [
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
@@ -56,6 +56,15 @@ export default function ConditionalExploreBar() {
     warmRoomAssetsByHref(href);
   }, [router]);
 
+  async function navigateToHref(href: string) {
+    if (!href.startsWith("/rooms/")) {
+      router.push(href);
+      return;
+    }
+    await awaitRoomAssetsByHref(href);
+    router.push(href);
+  }
+
   // Room pages already render their own explore bar in RoomScene.
   if (pathname.startsWith("/rooms")) return null;
   if (pathname === "/") return null;
@@ -95,7 +104,10 @@ export default function ConditionalExploreBar() {
               type="button"
               aria-label="Go to next page"
               title={`Next: ${nextExploreEntry.label}`}
-              onClick={() => router.push(nextExploreEntry.href)}
+              onMouseEnter={() => prefetchExploreRoute(nextExploreEntry.href)}
+              onFocus={() => prefetchExploreRoute(nextExploreEntry.href)}
+              onTouchStart={() => prefetchExploreRoute(nextExploreEntry.href)}
+              onClick={() => void navigateToHref(nextExploreEntry.href)}
               className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
             >
               →
@@ -150,7 +162,15 @@ export default function ConditionalExploreBar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(event) => {
+                      if (!item.href.startsWith("/rooms/")) {
+                        setOpen(false);
+                        return;
+                      }
+                      event.preventDefault();
+                      setOpen(false);
+                      void navigateToHref(item.href);
+                    }}
                     onMouseEnter={() => prefetchExploreRoute(item.href)}
                     onFocus={() => prefetchExploreRoute(item.href)}
                     onTouchStart={() => prefetchExploreRoute(item.href)}

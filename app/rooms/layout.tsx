@@ -4,10 +4,10 @@ import type { MouseEvent, ReactNode } from "react";
 import NextImage from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/Footer";
 import { rooms } from "@/data/rooms";
-import { warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -53,6 +53,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const router = useRouter();
   const isLobby = pathname === "/rooms/front";
+  const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
 
   // ✅ Hooks MUST be inside the component
   const [scrolled, setScrolled] = useState(false);
@@ -123,6 +124,19 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     window.dispatchEvent(new CustomEvent("emtee:open-front-modal", { detail: { modalId } }));
   }
 
+  const prefetchRoomRoute = useCallback((href: string) => {
+    if (!href.startsWith("/rooms/")) return;
+    if (prefetchedRoomRoutesRef.current.has(href)) return;
+    prefetchedRoomRoutesRef.current.add(href);
+    router.prefetch(href);
+    warmRoomAssetsByHref(href);
+  }, [router]);
+
+  async function navigateToRoom(href: string) {
+    await awaitRoomAssetsByHref(href);
+    router.push(href);
+  }
+
   const aboutActive = pathname === "/about" || pathname === "/consultation" || pathname === "/path-quiz";
   const resourcesActive = pathname === "/connect" || pathname.startsWith("/connect/") || RESOURCE_LINKS.some((item) => pathname === item.href);
   const caseStudiesActive =
@@ -133,7 +147,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const currentRoomHeader = ROOM_HEADER_LABELS[pathname];
 
   return (
-    <div className="relative min-h-[100svh] w-full bg-transparent text-white">
+    <div className="relative min-h-[100svh] w-full bg-black text-white">
       {/* Top menu bar (kept translucent to blend with room backgrounds) */}
       <header className="fixed left-0 right-0 top-0 z-50">
         <div
@@ -154,6 +168,13 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
             <div className="shrink-0">
               <Link
                 href="/rooms/front"
+                onMouseEnter={() => prefetchRoomRoute("/rooms/front")}
+                onFocus={() => prefetchRoomRoute("/rooms/front")}
+                onTouchStart={() => prefetchRoomRoute("/rooms/front")}
+                onClick={(event) => {
+                  event.preventDefault();
+                  void navigateToRoom("/rooms/front");
+                }}
                 className="inline-flex items-center gap-2.5 transition hover:opacity-100"
               >
                 <NextImage
@@ -186,6 +207,14 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                 <Link
                   key={item.label}
                   href={item.href}
+                  onMouseEnter={() => prefetchRoomRoute(item.href)}
+                  onFocus={() => prefetchRoomRoute(item.href)}
+                  onTouchStart={() => prefetchRoomRoute(item.href)}
+                  onClick={(event) => {
+                    if (!item.href.startsWith("/rooms/")) return;
+                    event.preventDefault();
+                    void navigateToRoom(item.href);
+                  }}
                   className={navLinkClass(item.href)}
                 >
                   <span className="sm:hidden">{item.mobileLabel ?? item.label}</span>
@@ -203,6 +232,9 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                         key={item.label}
                         href={item.href}
                         onClick={(event) => handleFrontModalNav(event, item.href)}
+                        onMouseEnter={() => prefetchRoomRoute(item.href)}
+                        onFocus={() => prefetchRoomRoute(item.href)}
+                        onTouchStart={() => prefetchRoomRoute(item.href)}
                         className={[
                           "block rounded-lg px-3 py-2 text-sm transition",
                           pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
@@ -221,12 +253,20 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                 <div className="pointer-events-none absolute left-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="w-64 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
                     {RESOURCE_LINKS.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        className={[
-                          "block rounded-lg px-3 py-2 text-sm transition",
-                          pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onMouseEnter={() => prefetchRoomRoute(item.href)}
+                      onFocus={() => prefetchRoomRoute(item.href)}
+                      onTouchStart={() => prefetchRoomRoute(item.href)}
+                      onClick={(event) => {
+                        if (!item.href.startsWith("/rooms/")) return;
+                        event.preventDefault();
+                        void navigateToRoom(item.href);
+                      }}
+                      className={[
+                        "block rounded-lg px-3 py-2 text-sm transition",
+                        pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
                         ].join(" ")}
                       >
                         {item.label}
@@ -242,12 +282,20 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                 <div className="pointer-events-none absolute right-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="w-64 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
                     {CASE_STUDY_LINKS.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        className={[
-                          "block rounded-lg px-3 py-2 text-sm transition",
-                          pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onMouseEnter={() => prefetchRoomRoute(item.href)}
+                      onFocus={() => prefetchRoomRoute(item.href)}
+                      onTouchStart={() => prefetchRoomRoute(item.href)}
+                      onClick={(event) => {
+                        if (!item.href.startsWith("/rooms/")) return;
+                        event.preventDefault();
+                        void navigateToRoom(item.href);
+                      }}
+                      className={[
+                        "block rounded-lg px-3 py-2 text-sm transition",
+                        pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
                         ].join(" ")}
                       >
                         {item.label}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { getResourceContext } from "@/data/resource-context";
-import { warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 export type Hotspot = {
   id: string;
@@ -889,7 +889,7 @@ export default function RoomScene({
   const navCircleClass = "flex h-9 w-9 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/85 bg-black/10 backdrop-blur-sm";
   const navPillClass = "inline-flex h-9 sm:h-7 items-center whitespace-nowrap rounded-full border border-white/85 bg-black/10 px-4 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/30 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.2)] group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.52)]";
   const compactHotspotUi = viewportW > 0 && viewportW < 1280;
-  const eagerBackgroundLoad = true;
+  const eagerBackgroundLoad = room.slug === "front" || room.slug === "live";
   const isMusicRoom = room.slug === "EMTEEMusicDept";
   const isMarketingRoomZoomedOut = room.slug === "EMTEEMarketingDept";
   const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
@@ -1052,6 +1052,11 @@ export default function RoomScene({
     prefetchedExploreRoutesRef.current.add(href);
     router.prefetch(href);
     warmRoomAssetsByHref(href);
+  }, [router]);
+
+  const navigateToRoomHref = useCallback(async (href: string) => {
+    await awaitRoomAssetsByHref(href);
+    router.push(href);
   }, [router]);
 
   useEffect(() => {
@@ -1909,7 +1914,7 @@ export default function RoomScene({
   return (
     <main
       className={[
-        "relative min-h-[100dvh] w-full overflow-hidden bg-transparent text-white",
+        "relative min-h-[100dvh] w-full overflow-hidden bg-black text-white",
         canPanRoom ? "touch-none" : "",
       ].join(" ")}
       onClickCapture={(e) => {
@@ -2645,8 +2650,13 @@ export default function RoomScene({
               href={spot.href}
               className={sharedClassName}
               style={sharedStyle}
-              onClick={() => {
+              onMouseEnter={() => prefetchExploreRoute(spot.href!)}
+              onFocus={() => prefetchExploreRoute(spot.href!)}
+              onTouchStart={() => prefetchExploreRoute(spot.href!)}
+              onClick={(event) => {
+                event.preventDefault();
                 triggerHotspotLabelGlow(spot);
+                void navigateToRoomHref(spot.href!);
               }}
             >
               {content}
@@ -2790,7 +2800,15 @@ export default function RoomScene({
                 <Link
                   key={item.label}
                   href={item.href}
-                  onClick={() => setExploreOpen(false)}
+                  onClick={(event) => {
+                    if (!item.href.startsWith("/rooms/")) {
+                      setExploreOpen(false);
+                      return;
+                    }
+                    event.preventDefault();
+                    setExploreOpen(false);
+                    void navigateToRoomHref(item.href);
+                  }}
                   onMouseEnter={() => prefetchExploreRoute(item.href)}
                   onFocus={() => prefetchExploreRoute(item.href)}
                   onTouchStart={() => prefetchExploreRoute(item.href)}

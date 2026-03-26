@@ -1,11 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { rooms } from "@/data/rooms";
-import { warmImageAsset, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, warmImageAsset, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity.png";
 const LANDING_MOBILE_IMAGE = "/rooms/stillbuildingfinal.png";
@@ -57,6 +56,7 @@ export default function Home() {
   const [isEnterVisible, setIsEnterVisible] = useState(false);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const [mobileNaturalSize, setMobileNaturalSize] = useState<{ w: number; h: number } | null>(null);
+  const [isEnteringLobby, setIsEnteringLobby] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setIsVisible(true), 760);
@@ -168,6 +168,13 @@ export default function Home() {
     };
   }, [imageMetrics, isMobileViewport, viewport.h, viewport.w]);
 
+  async function handleEnterLobby() {
+    if (isEnteringLobby) return;
+    setIsEnteringLobby(true);
+    await awaitRoomAssetsByHref("/rooms/front");
+    router.push("/rooms/front");
+  }
+
   return (
     <main className="group relative h-screen overflow-hidden bg-black text-white">
       <Image
@@ -232,19 +239,21 @@ export default function Home() {
       </div>
 
       {buttonStyle ? (
-        <Link
-          href="/rooms/front"
+        <button
+          type="button"
+          onClick={handleEnterLobby}
           className={[
             "absolute z-10 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/28 px-3 py-2 text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition-all duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-black/40",
-            isEnterVisible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none",
+            isEnterVisible && !isEnteringLobby ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none",
           ].join(" ")}
           style={buttonStyle}
+          disabled={isEnteringLobby}
         >
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/75 bg-black/18 text-xs leading-none">
             <span>{isMobileViewport ? "→" : "←"}</span>
           </span>
           ENTER
-        </Link>
+        </button>
       ) : null}
     </main>
   );

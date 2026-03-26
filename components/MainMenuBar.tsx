@@ -3,9 +3,9 @@
 import NextImage from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { rooms } from "@/data/rooms";
-import { warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -37,6 +37,7 @@ export default function MainMenuBar() {
   const pathname = usePathname() ?? "";
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -109,6 +110,19 @@ export default function MainMenuBar() {
     window.dispatchEvent(new CustomEvent("emtee:open-front-modal", { detail: { modalId } }));
   }
 
+  const prefetchRoomRoute = useCallback((href: string) => {
+    if (!href.startsWith("/rooms/")) return;
+    if (prefetchedRoomRoutesRef.current.has(href)) return;
+    prefetchedRoomRoutesRef.current.add(href);
+    router.prefetch(href);
+    warmRoomAssetsByHref(href);
+  }, [router]);
+
+  async function navigateToRoom(href: string) {
+    await awaitRoomAssetsByHref(href);
+    router.push(href);
+  }
+
   return (
     <header className="fixed left-0 right-0 top-0 z-50">
       <div
@@ -127,6 +141,13 @@ export default function MainMenuBar() {
           <div className="shrink-0">
             <Link
               href="/rooms/front"
+              onMouseEnter={() => prefetchRoomRoute("/rooms/front")}
+              onFocus={() => prefetchRoomRoute("/rooms/front")}
+              onTouchStart={() => prefetchRoomRoute("/rooms/front")}
+              onClick={(event) => {
+                event.preventDefault();
+                void navigateToRoom("/rooms/front");
+              }}
               className="inline-flex items-center gap-2.5 transition hover:opacity-100"
             >
               <NextImage
@@ -145,7 +166,19 @@ export default function MainMenuBar() {
 
           <nav className="flex min-w-0 items-center justify-end gap-1 overflow-x-auto text-sm font-semibold text-white/85 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:overflow-visible sm:gap-4 md:gap-7 sm:group/menu">
             {PRIMARY_LINKS.map((item) => (
-              <Link key={item.label} href={item.href} className={navLinkClass(item.href)}>
+              <Link
+                key={item.label}
+                href={item.href}
+                onMouseEnter={() => prefetchRoomRoute(item.href)}
+                onFocus={() => prefetchRoomRoute(item.href)}
+                onTouchStart={() => prefetchRoomRoute(item.href)}
+                onClick={(event) => {
+                  if (!item.href.startsWith("/rooms/")) return;
+                  event.preventDefault();
+                  void navigateToRoom(item.href);
+                }}
+                className={navLinkClass(item.href)}
+              >
                 <span className="sm:hidden">{item.mobileLabel ?? item.label}</span>
                 <span className="hidden sm:inline">{item.label}</span>
               </Link>
@@ -161,6 +194,9 @@ export default function MainMenuBar() {
                       key={item.label}
                       href={item.href}
                       onClick={(event) => handleFrontModalNav(event, item.href)}
+                      onMouseEnter={() => prefetchRoomRoute(item.href)}
+                      onFocus={() => prefetchRoomRoute(item.href)}
+                      onTouchStart={() => prefetchRoomRoute(item.href)}
                       className={[
                         "block rounded-lg px-3 py-2 text-sm transition",
                         pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
@@ -182,6 +218,14 @@ export default function MainMenuBar() {
                     <Link
                       key={item.label}
                       href={item.href}
+                      onMouseEnter={() => prefetchRoomRoute(item.href)}
+                      onFocus={() => prefetchRoomRoute(item.href)}
+                      onTouchStart={() => prefetchRoomRoute(item.href)}
+                      onClick={(event) => {
+                        if (!item.href.startsWith("/rooms/")) return;
+                        event.preventDefault();
+                        void navigateToRoom(item.href);
+                      }}
                       className={[
                         "block rounded-lg px-3 py-2 text-sm transition",
                         pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
@@ -203,6 +247,14 @@ export default function MainMenuBar() {
                     <Link
                       key={item.label}
                       href={item.href}
+                      onMouseEnter={() => prefetchRoomRoute(item.href)}
+                      onFocus={() => prefetchRoomRoute(item.href)}
+                      onTouchStart={() => prefetchRoomRoute(item.href)}
+                      onClick={(event) => {
+                        if (!item.href.startsWith("/rooms/")) return;
+                        event.preventDefault();
+                        void navigateToRoom(item.href);
+                      }}
                       className={[
                         "block rounded-lg px-3 py-2 text-sm transition",
                         pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",

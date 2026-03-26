@@ -136,6 +136,8 @@ export default function AboutPageClient() {
         <div className="mt-8 flex justify-center">
           <Link
             href="https://tinyurl.com/connectwithemtee"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group inline-flex items-center gap-3 rounded-full border border-[#c89b4b]/45 bg-[linear-gradient(135deg,rgba(255,255,255,0.94),rgba(214,174,102,0.14))] px-3 py-3 pr-4 text-sm font-semibold uppercase tracking-[0.14em] text-[#5d4314] shadow-[0_12px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(214,174,102,0.08)] transition duration-200 hover:border-[#b9862d]/70 hover:shadow-[0_18px_40px_rgba(0,0,0,0.12),0_0_0_1px_rgba(214,174,102,0.12)]"
           >
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#c89b4b]/40 bg-[#fff8ea] text-[#8b6a2f] transition group-hover:border-[#b9862d]/70 group-hover:bg-[#f8ebc8]">

@@ -69,6 +69,8 @@ export default function NewsClient() {
 
             <Link
               href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full bg-black px-5 py-2 text-sm font-semibold text-white transition hover:bg-black/90"
             >
               Apply For A Consultation →

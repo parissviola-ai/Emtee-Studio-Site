@@ -10,6 +10,8 @@ export default function SubscribePage() {
         </p>
         <Link
           href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
+          target="_blank"
+          rel="noopener noreferrer"
           className="mt-6 inline-flex items-center rounded-full border border-black/15 px-5 py-2 text-sm font-semibold hover:bg-black/[0.03]"
         >
           Request Consultation

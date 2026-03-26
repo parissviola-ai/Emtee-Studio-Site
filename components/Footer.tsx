@@ -21,6 +21,8 @@ export default function Footer() {
             <div className="mt-4 flex flex-wrap gap-2.5">
               <Link
                 href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black transition hover:bg-white/90"
               >
                 Request Consultation
@@ -43,7 +45,7 @@ export default function Footer() {
               <Link href="/artist-roster-releases#partners" className="text-white/75 transition hover:text-white">Partners</Link>
               <Link href="/connect" className="text-white/75 transition hover:text-white">Resource Packages</Link>
               <Link href="/artist-roster-releases" className="text-white/75 transition hover:text-white">Artists</Link>
-              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" className="text-white/75 transition hover:text-white">Consultation</Link>
+              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className="text-white/75 transition hover:text-white">Consultation</Link>
             </div>
           </div>
 

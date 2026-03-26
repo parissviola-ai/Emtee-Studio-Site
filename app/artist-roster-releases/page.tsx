@@ -453,7 +453,7 @@ export default function ArtistRosterReleasesPage() {
 
             <div className="mt-12 text-xs text-white/45">
               Want to be listed as a partner?{" "}
-              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" className="underline hover:text-white/80">
+              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/80">
                 Apply For A Consultation
               </Link>
               .

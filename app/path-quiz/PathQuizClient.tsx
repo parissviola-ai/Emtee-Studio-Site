@@ -532,6 +532,8 @@ export default function PathQuizClient() {
                   </Link>
                   <Link
                     href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-4 py-1.5 text-[13px] font-semibold text-black/75 shadow-[0_10px_24px_rgba(0,0,0,0.05)] transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
                   >
                     Book a Consultation

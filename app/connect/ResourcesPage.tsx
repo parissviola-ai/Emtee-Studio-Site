@@ -435,6 +435,8 @@ export default function ResourcesPage() {
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/18 px-5 py-2 text-sm font-semibold text-[#6f511a] shadow-[0_0_26px_rgba(214,174,102,0.28)] transition hover:bg-[#d6ae66]/26 hover:text-[#3d2b0c]"
             >
               Apply For A Consultation

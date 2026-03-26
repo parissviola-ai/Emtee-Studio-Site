@@ -176,7 +176,7 @@ export default function MainMenuBar() {
             <Link href="/news" className={[navLinkClass("/news"), "hidden sm:inline"].join(" ")}>News</Link>
 
             <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
-            <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
+            <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
             <Link href="/connect" className={[navLinkClass("/connect"), "sm:hidden"].join(" ")}>Resources</Link>
             <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
             <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>

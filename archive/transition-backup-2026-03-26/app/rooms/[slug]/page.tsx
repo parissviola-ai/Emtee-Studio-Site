@@ -1,5 +1,8 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import RoomScene from "@/components/RoomScene";
+import LobbyPage from "@/components/transitions/LobbyPage";
+import { TransitionProvider } from "@/components/transitions/TransitionProvider";
 import { rooms } from "@/data/rooms";
 
 type RoomPageParams = { slug: string };
@@ -12,13 +15,10 @@ export function generateStaticParams(): RoomPageParams[] {
 
 export default async function RoomPage({
   params,
-  searchParams,
 }: {
   params: Promise<RoomPageParams>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { slug } = await params;
-  const resolvedSearchParams = await searchParams;
   const room = rooms.find((r) => r.slug === slug);
 
   if (!room) {
@@ -39,12 +39,19 @@ export default async function RoomPage({
     );
   }
 
-  const modalQuery = resolvedSearchParams.modal;
-
-  return (
-    <RoomScene
-      room={room}
-      modalQuery={typeof modalQuery === "string" ? modalQuery : Array.isArray(modalQuery) ? modalQuery[0] : null}
-    />
+  const scene = (
+    <Suspense fallback={null}>
+      <RoomScene room={room} />
+    </Suspense>
   );
+
+  if (room.slug === "front") {
+    return (
+      <TransitionProvider>
+        <LobbyPage route="/rooms/front">{scene}</LobbyPage>
+      </TransitionProvider>
+    );
+  }
+
+  return scene;
 }

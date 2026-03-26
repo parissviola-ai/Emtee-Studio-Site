@@ -2,8 +2,10 @@
 
 import NextImage from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { rooms } from "@/data/rooms";
+import { warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -34,6 +36,7 @@ const CASE_STUDY_LINKS: NavLink[] = [
 
 export default function MainMenuBar() {
   const pathname = usePathname() ?? "";
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -42,6 +45,35 @@ export default function MainMenuBar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const routeSet = new Set<string>([
+      "/rooms/front",
+      "/about",
+      "/connect",
+      "/case-studies",
+      "/artist-roster-releases",
+      "/news",
+      "/path-quiz",
+      ...rooms.map((room) => `/rooms/${room.slug}`),
+    ]);
+
+    const warmRoutes = () => {
+      routeSet.forEach((href) => {
+        router.prefetch(href);
+        warmRoomAssetsByHref(href);
+      });
+      rooms.forEach((room) => warmRoomAssetsBySlug(room.slug));
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(warmRoutes, { timeout: 1200 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timer = globalThis.setTimeout(warmRoutes, 400);
+    return () => globalThis.clearTimeout(timer);
+  }, [router]);
 
   const aboutActive = pathname === "/about" || pathname === "/consultation" || pathname === "/path-quiz";
   const resourcesActive = pathname === "/connect" || pathname.startsWith("/connect/") || RESOURCE_LINKS.some((item) => pathname === item.href);

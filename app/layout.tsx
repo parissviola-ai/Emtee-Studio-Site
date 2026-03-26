@@ -1,7 +1,6 @@
 import ConditionalFooter from "@/components/ConditionalFooter";
 import ConditionalExploreBar from "@/components/ConditionalExploreBar";
 import ConditionalMenuBar from "@/components/ConditionalMenuBar";
-import { TransitionProvider } from "@/components/transitions/TransitionProvider";
 import "./globals.css";
 
 export default function RootLayout({
@@ -12,12 +11,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        <TransitionProvider>
-          <ConditionalMenuBar />
-          {children}
-          <ConditionalExploreBar />
-          <ConditionalFooter />
-        </TransitionProvider>
+        <ConditionalMenuBar />
+        {children}
+        <ConditionalExploreBar />
+        <ConditionalFooter />
       </body>
     </html>
   );

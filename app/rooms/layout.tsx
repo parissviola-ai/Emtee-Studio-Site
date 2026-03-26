@@ -3,9 +3,11 @@
 import type { ReactNode } from "react";
 import NextImage from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
+import { rooms } from "@/data/rooms";
+import { warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -50,6 +52,7 @@ const ROOM_HEADER_LABELS: Record<string, { kind: "ROOM" | "DEPARTMENT"; label: s
 
 export default function RoomsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
+  const router = useRouter();
   const isLobby = pathname === "/rooms/front";
 
   // ✅ Hooks MUST be inside the component
@@ -61,6 +64,34 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const routeSet = new Set<string>([
+      "/about",
+      "/connect",
+      "/case-studies",
+      "/artist-roster-releases",
+      "/news",
+      "/path-quiz",
+      ...rooms.map((room) => `/rooms/${room.slug}`),
+    ]);
+
+    const warmRoutes = () => {
+      routeSet.forEach((href) => {
+        router.prefetch(href);
+        warmRoomAssetsByHref(href);
+      });
+      rooms.forEach((room) => warmRoomAssetsBySlug(room.slug));
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(warmRoutes, { timeout: 1200 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timer = globalThis.setTimeout(warmRoutes, 400);
+    return () => globalThis.clearTimeout(timer);
+  }, [router]);
 
   function navLinkClass(href: string) {
     const isActive = pathname === href;

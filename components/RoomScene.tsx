@@ -2,9 +2,10 @@
 
 import NextImage from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { getResourceContext } from "@/data/resource-context";
+import { warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 export type Hotspot = {
   id: string;
@@ -475,9 +476,14 @@ function parseIncludesFromModalBody(text: string) {
   };
 }
 
-export default function RoomScene({ room }: { room: Room }) {
+export default function RoomScene({
+  room,
+  modalQuery,
+}: {
+  room: Room;
+  modalQuery?: string | null;
+}) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const isLiveRoom = room.slug === "live";
   const hasHydrated = useSyncExternalStore(
     () => () => {},
@@ -538,6 +544,7 @@ export default function RoomScene({ room }: { room: Room }) {
   const desktopPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const imageNaturalSizeCacheRef = useRef<Record<string, { w: number; h: number }>>({});
+  const imageMetricsCacheRef = useRef<Record<string, ReturnType<typeof getCoverImageMetrics>>>({});
   const orangePreviewVideoRef = useRef<HTMLVideoElement | null>(null);
   const orangeMobileAudioRef = useRef<HTMLVideoElement | null>(null);
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -597,14 +604,14 @@ export default function RoomScene({ room }: { room: Room }) {
 
   useEffect(() => {
     if (room.slug !== "front") return;
-    const modalId = searchParams.get("modal");
+    const modalId = modalQuery ?? null;
     if (!modalId) return;
     const targetSpot = room.hotspots.find((spot) => spot.id === modalId);
     if (!targetSpot?.modal) return;
     if (activeModal?.title === targetSpot.modal.title) return;
     setModalBackModal(null);
     openModal(targetSpot.modal);
-  }, [activeModal?.title, openModal, room.hotspots, room.slug, searchParams]);
+  }, [activeModal?.title, modalQuery, openModal, room.hotspots, room.slug]);
 
   // YouTube IFrame Player API (postMessage) unmute
   function unmuteYoutube() {
@@ -904,8 +911,11 @@ export default function RoomScene({ room }: { room: Room }) {
     () => {
       if (!(isMobileViewport || useContainedBackground)) return null;
       const fitMode = useContainedBackground ? "contain" : "cover";
+      const metricsCacheKey = `${room.slug}:${backgroundImageSrc}:${viewportW}x${viewportH}:${sceneScale}:${fitMode}`;
+      const cachedMetrics = imageMetricsCacheRef.current[metricsCacheKey];
+      if (cachedMetrics) return cachedMetrics;
       if (!imageNaturalSize) return null;
-      return getCoverImageMetrics(
+      const computed = getCoverImageMetrics(
         viewportW,
         viewportH,
         imageNaturalSize.w,
@@ -913,6 +923,10 @@ export default function RoomScene({ room }: { room: Room }) {
         sceneScale,
         fitMode
       );
+      if (computed) {
+        imageMetricsCacheRef.current[metricsCacheKey] = computed;
+      }
+      return computed;
     },
     [backgroundImageSrc, imageNaturalSize, isMobileViewport, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
   );
@@ -1049,7 +1063,27 @@ export default function RoomScene({ room }: { room: Room }) {
     if (prefetchedExploreRoutesRef.current.has(href)) return;
     prefetchedExploreRoutesRef.current.add(href);
     router.prefetch(href);
+    warmRoomAssetsByHref(href);
   }, [router]);
+
+  useEffect(() => {
+    const routesToWarm = [
+      nextRoomHotspotHref,
+      exploreArrowHref,
+      explorePrevHref,
+    ].filter((href): href is string => !!href);
+
+    for (const href of routesToWarm) {
+      if (prefetchedExploreRoutesRef.current.has(href)) continue;
+      prefetchedExploreRoutesRef.current.add(href);
+      router.prefetch(href);
+      warmRoomAssetsByHref(href);
+    }
+  }, [exploreArrowHref, explorePrevHref, nextRoomHotspotHref, router]);
+
+  useEffect(() => {
+    warmRoomAssetsBySlug(room.slug);
+  }, [room.slug]);
 
   function triggerHotspotLabelGlow(spot: Hotspot) {
     if (spot.id === "next-room") return;
@@ -1282,8 +1316,7 @@ export default function RoomScene({ room }: { room: Room }) {
 
     // Warm route + key lobby asset so "Back to Lobby" feels snappier.
     router.prefetch("/rooms/front");
-    const lobbyImg = new Image();
-    lobbyImg.src = "/rooms/finishedlobby.png";
+    warmRoomAssetsBySlug("front");
   }, [room.slug, router]);
 
   useEffect(() => {
@@ -1313,6 +1346,7 @@ export default function RoomScene({ room }: { room: Room }) {
     // Keep lobby startup light: warm only top two next-click routes.
     ["/rooms/EMTEEBusinessDept", "/rooms/EMTEEMusicDept"].forEach((href) => {
       router.prefetch(href);
+      warmRoomAssetsByHref(href);
     });
   }, [room.slug, router]);
 
@@ -1961,7 +1995,6 @@ export default function RoomScene({ room }: { room: Room }) {
     >
       {/* Background */}
       <div
-        key={`${room.slug}:${backgroundImageSrc}`}
         data-moving-layer="true"
         className={[
           "absolute inset-0 transition-[filter] duration-300 ease-out",
@@ -1976,7 +2009,6 @@ export default function RoomScene({ room }: { room: Room }) {
       >
         {useContainedBackground && shouldRenderStaticBackgroundImage ? (
           <NextImage
-            key={`${room.slug}:${backgroundImageSrc}:blur`}
             src={backgroundImageSrc}
             alt=""
             aria-hidden
@@ -1994,7 +2026,6 @@ export default function RoomScene({ room }: { room: Room }) {
         ) : null}
         {shouldRenderStaticBackgroundImage ? (
           <NextImage
-            key={`${room.slug}:${backgroundImageSrc}:main`}
             src={backgroundImageSrc}
             alt={room.title || room.slug}
             fill

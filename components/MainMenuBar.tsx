@@ -33,6 +33,21 @@ const CASE_STUDY_LINKS: NavLink[] = [
   { label: "Other Artists", href: "/artist-roster-releases" },
 ];
 
+function shouldDebugRoomNav() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem("emtee-debug-nav") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function logRoomNav(event: string, detail: Record<string, unknown>) {
+  if (!shouldDebugRoomNav()) return;
+  const stamp = typeof performance !== "undefined" ? performance.now().toFixed(1) : Date.now().toString();
+  console.log(`[emtee-nav ${stamp}ms] ${event}`, detail);
+}
+
 export default function MainMenuBar() {
   const pathname = usePathname() ?? "";
   const router = useRouter();
@@ -119,7 +134,9 @@ export default function MainMenuBar() {
   }, [router]);
 
   async function navigateToRoom(href: string) {
+    logRoomNav("nav:click", { from: pathname, to: href, source: "main-menu" });
     await awaitRoomAssetsByHref(href);
+    logRoomNav("nav:push", { from: pathname, to: href, source: "main-menu" });
     router.push(href);
   }
 

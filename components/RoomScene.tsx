@@ -1074,9 +1074,11 @@ export default function RoomScene({
   }, [router]);
 
   const navigateToRoomHref = useCallback(async (href: string) => {
+    logRoomNav("nav:click", { from: `/rooms/${room.slug}`, to: href, source: "room-scene" });
     await awaitRoomAssetsByHref(href);
+    logRoomNav("nav:push", { from: `/rooms/${room.slug}`, to: href, source: "room-scene" });
     router.push(href);
-  }, [router]);
+  }, [room.slug, router]);
 
   useEffect(() => {
     const routesToWarm = [
@@ -2693,11 +2695,11 @@ export default function RoomScene({
               onMouseEnter={() => prefetchExploreRoute(spot.href!)}
               onFocus={() => prefetchExploreRoute(spot.href!)}
               onTouchStart={() => prefetchExploreRoute(spot.href!)}
-              onClick={(event) => {
-                event.preventDefault();
-                triggerHotspotLabelGlow(spot);
-                void navigateToRoomHref(spot.href!);
-              }}
+                onClick={(event) => {
+                  event.preventDefault();
+                  triggerHotspotLabelGlow(spot);
+                  void navigateToRoomHref(spot.href!);
+                }}
             >
               {content}
             </Link>
@@ -2842,6 +2844,7 @@ export default function RoomScene({
                   href={item.href}
                   onClick={(event) => {
                     if (!item.href.startsWith("/rooms/")) {
+                      logRoomNav("nav:push", { from: `/rooms/${room.slug}`, to: item.href, source: "room-scene-explore" });
                       setExploreOpen(false);
                       return;
                     }

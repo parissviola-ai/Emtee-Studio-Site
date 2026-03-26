@@ -49,6 +49,21 @@ const ROOM_HEADER_LABELS: Record<string, { kind: "ROOM" | "DEPARTMENT"; label: s
   "/rooms/quiet": { kind: "ROOM", label: "Steeped Dream Studio" },
 };
 
+function shouldDebugRoomNav() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem("emtee-debug-nav") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function logRoomNav(event: string, detail: Record<string, unknown>) {
+  if (!shouldDebugRoomNav()) return;
+  const stamp = typeof performance !== "undefined" ? performance.now().toFixed(1) : Date.now().toString();
+  console.log(`[emtee-nav ${stamp}ms] ${event}`, detail);
+}
+
 export default function RoomsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const router = useRouter();
@@ -133,7 +148,9 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   }, [router]);
 
   async function navigateToRoom(href: string) {
+    logRoomNav("nav:click", { from: pathname, to: href, source: "rooms-layout" });
     await awaitRoomAssetsByHref(href);
+    logRoomNav("nav:push", { from: pathname, to: href, source: "rooms-layout" });
     router.push(href);
   }
 

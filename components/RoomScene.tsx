@@ -593,7 +593,10 @@ export default function RoomScene({
   // video audio state
   const [videoMuted, setVideoMuted] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const shouldStartVideoMuted = (modal: Hotspot["modal"]) => modal?.title !== "Who We Are";
+  const shouldStartVideoMuted = useCallback(
+    (modal: Hotspot["modal"]) => modal?.title !== "Who We Are" || isMobileViewportRaw,
+    [isMobileViewportRaw]
+  );
 
   const openModal = useCallback((modal: Hotspot["modal"]) => {
     if (room.slug === "lobby" && modal?.title === "Start Here") {
@@ -843,6 +846,21 @@ export default function RoomScene({
   const isCardContentVisible = contentVisibleByRoom[room.slug] ?? true;
   const isCardCompact = isCardMinimized || !isCardContentVisible;
   const isYoutubeEmbed = !!activeModal?.videoEmbed?.includes("youtube.com/embed");
+  const resolvedVideoEmbedSrc = useMemo(() => {
+    if (!activeModal?.videoEmbed) return null;
+    if (!(isMobileViewport && activeModal.title === "Who We Are")) {
+      return activeModal.videoEmbed;
+    }
+    try {
+      const url = new URL(activeModal.videoEmbed);
+      url.searchParams.set("autoplay", "1");
+      url.searchParams.set("mute", "1");
+      url.searchParams.set("playsinline", "1");
+      return url.toString();
+    } catch {
+      return activeModal.videoEmbed.replace("mute=0", "mute=1");
+    }
+  }, [activeModal?.title, activeModal?.videoEmbed, isMobileViewport]);
   const isYanchanMusicModal = activeModal?.title === "Yanchan Produced Music";
   const isYanchanDiscographyModal = activeModal?.title === "Discography";
   const isJoinCommunityModal = activeModal?.title === "Join Community";
@@ -3131,7 +3149,7 @@ export default function RoomScene({
                       <div className="relative aspect-video">
                         <iframe
                           ref={iframeRef}
-                          src={activeModal.videoEmbed}
+                          src={resolvedVideoEmbedSrc ?? activeModal.videoEmbed}
                           title={activeModal.title}
                           allow="autoplay; encrypted-media; picture-in-picture"
                           allowFullScreen

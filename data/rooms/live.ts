@@ -43,7 +43,7 @@ export const liveRoom: Room = {
         positions: {
           laptop: { x: 15, y: 27 },
           tablet: { x: 14, y: 28 },
-          mobile: { x: 13, y: 29 },
+          mobile: { x: 23.17, y: 21.4 },
         },
         direction: "right",
         variant: "dot",
@@ -57,7 +57,7 @@ export const liveRoom: Room = {
         positions: {
           laptop: { x: 84, y: 27 },
           tablet: { x: 83, y: 28 },
-          mobile: { x: 82, y: 29 },
+          mobile: { x: 77.96, y: 20.4 },
         },
         direction: "left",
         variant: "dot",

@@ -2500,14 +2500,14 @@ export default function RoomScene({
                             href={activeOverviewCard.exampleHref}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center rounded-full border border-emerald-200/35 bg-emerald-300/10 px-4 py-2 text-sm font-semibold text-emerald-100/92 transition hover:bg-emerald-300/18 hover:text-white"
+                            className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/40 bg-[#d6ae66]/12 px-4 py-2 text-sm font-semibold text-[#f6deb2] transition hover:bg-[#d6ae66]/20 hover:text-white"
                           >
                             {activeOverviewCard.exampleCta}
                           </a>
                         ) : (
                           <Link
                             href={activeOverviewCard.exampleHref}
-                            className="inline-flex items-center justify-center rounded-full border border-emerald-200/35 bg-emerald-300/10 px-4 py-2 text-sm font-semibold text-emerald-100/92 transition hover:bg-emerald-300/18 hover:text-white"
+                            className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/40 bg-[#d6ae66]/12 px-4 py-2 text-sm font-semibold text-[#f6deb2] transition hover:bg-[#d6ae66]/20 hover:text-white"
                           >
                             {activeOverviewCard.exampleCta}
                           </Link>

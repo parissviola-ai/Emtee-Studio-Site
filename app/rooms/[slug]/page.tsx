@@ -12,13 +12,10 @@ export function generateStaticParams(): RoomPageParams[] {
 
 export default async function RoomPage({
   params,
-  searchParams,
 }: {
   params: Promise<RoomPageParams>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { slug } = await params;
-  const resolvedSearchParams = await searchParams;
   const room = rooms.find((r) => r.slug === slug);
 
   if (!room) {
@@ -39,12 +36,5 @@ export default async function RoomPage({
     );
   }
 
-  const modalQuery = resolvedSearchParams.modal;
-
-  return (
-    <RoomScene
-      room={room}
-      modalQuery={typeof modalQuery === "string" ? modalQuery : Array.isArray(modalQuery) ? modalQuery[0] : null}
-    />
-  );
+  return <RoomScene room={room} />;
 }

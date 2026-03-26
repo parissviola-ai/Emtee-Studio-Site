@@ -124,7 +124,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const currentRoomHeader = ROOM_HEADER_LABELS[pathname];
 
   return (
-    <div className="relative min-h-[100svh] w-full bg-black text-white">
+    <div className="relative min-h-[100svh] w-full bg-transparent text-white">
       {/* Top menu bar (kept translucent to blend with room backgrounds) */}
       <header className="fixed left-0 right-0 top-0 z-50">
         <div

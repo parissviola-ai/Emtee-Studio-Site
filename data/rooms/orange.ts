@@ -165,8 +165,8 @@ export const orangeRoom: Room = {
       {
         id: "join-community",
         label: "Join Community",
-        x: 87,
-        y: 86,
+        x: 89.21,
+        y: 78.91,
         positions: {
           laptop: { x: 86, y: 85 },
           tablet: { x: 84, y: 84 },

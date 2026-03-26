@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
 
 const EXPLORE_LINKS = [
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
@@ -52,6 +53,7 @@ export default function ConditionalExploreBar() {
     if (prefetchedExploreRoutesRef.current.has(href)) return;
     prefetchedExploreRoutesRef.current.add(href);
     router.prefetch(href);
+    warmRoomAssetsByHref(href);
   }, [router]);
 
   // Room pages already render their own explore bar in RoomScene.

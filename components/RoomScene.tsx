@@ -478,10 +478,8 @@ function parseIncludesFromModalBody(text: string) {
 
 export default function RoomScene({
   room,
-  modalQuery,
 }: {
   room: Room;
-  modalQuery?: string | null;
 }) {
   const router = useRouter();
   const isLiveRoom = room.slug === "live";
@@ -604,14 +602,15 @@ export default function RoomScene({
 
   useEffect(() => {
     if (room.slug !== "front") return;
-    const modalId = modalQuery ?? null;
+    if (typeof window === "undefined") return;
+    const modalId = new URLSearchParams(window.location.search).get("modal");
     if (!modalId) return;
     const targetSpot = room.hotspots.find((spot) => spot.id === modalId);
     if (!targetSpot?.modal) return;
     if (activeModal?.title === targetSpot.modal.title) return;
     setModalBackModal(null);
     openModal(targetSpot.modal);
-  }, [activeModal?.title, modalQuery, openModal, room.hotspots, room.slug]);
+  }, [activeModal?.title, openModal, room.hotspots, room.slug]);
 
   // YouTube IFrame Player API (postMessage) unmute
   function unmuteYoutube() {
@@ -866,7 +865,7 @@ export default function RoomScene({
   const navCircleClass = "flex h-9 w-9 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/85 bg-black/10 backdrop-blur-sm";
   const navPillClass = "inline-flex h-9 sm:h-7 items-center whitespace-nowrap rounded-full border border-white/85 bg-black/10 px-4 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/30 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.2)] group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.52)]";
   const compactHotspotUi = viewportW > 0 && viewportW < 1280;
-  const eagerBackgroundLoad = room.slug === "front" || room.slug === "live";
+  const eagerBackgroundLoad = true;
   const isMusicRoom = room.slug === "EMTEEMusicDept";
   const isMarketingRoomZoomedOut = room.slug === "EMTEEMarketingDept";
   const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
@@ -1921,7 +1920,7 @@ export default function RoomScene({
   return (
     <main
       className={[
-        "relative min-h-[100dvh] w-full overflow-hidden bg-black text-white",
+        "relative min-h-[100dvh] w-full overflow-hidden bg-transparent text-white",
         canPanRoom ? "touch-none" : "",
       ].join(" ")}
       onClickCapture={(e) => {
@@ -2046,7 +2045,7 @@ export default function RoomScene({
                     : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
-                  : `50% ${backgroundObjectPositionY}%`,
+                    : `50% ${backgroundObjectPositionY}%`,
             }}
             draggable={false}
           />

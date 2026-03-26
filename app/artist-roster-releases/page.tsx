@@ -96,7 +96,7 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Hanumankind",
     supportLane: "Music Department",
     note: "Collaborated in the studio.",
-    imageSrc: "https://commons.wikimedia.org/wiki/Special:FilePath/2025%20cover%20photo%20Hanumankind.jpg",
+    imageSrc: "/rooms/hk.jpg",
     imageAlt: "Hanumankind portrait",
     imagePosition: "center top",
   },

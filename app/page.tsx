@@ -14,7 +14,7 @@ const LANDING_BUTTON_COORDS = {
   desktop: { x: 45.38, y: 86.04 },
 };
 const LANDING_CARD_COORDS = {
-  mobile: { x: 50, y: 50 },
+  mobile: { x: 50, y: 52 },
   desktop: { x: 46.37, y: 38.08 },
 };
 const LANDING_WARMUP_ROUTES = [

@@ -68,6 +68,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const router = useRouter();
   const isLobby = pathname === "/rooms/lobby";
+  const [mobileLobbyShowRoomsOpen, setMobileLobbyShowRoomsOpen] = useState(false);
   const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
 
   // ✅ Hooks MUST be inside the component
@@ -163,6 +164,13 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     CASE_STUDY_LINKS.some((item) => pathname === item.href);
   const currentRoomHeader = ROOM_HEADER_LABELS[pathname];
 
+  useEffect(() => {
+    if (!isLobby || typeof window === "undefined") return;
+    try {
+      setMobileLobbyShowRoomsOpen(window.sessionStorage.getItem("showMore:lobby") === "1");
+    } catch {}
+  }, [isLobby, pathname]);
+
   return (
     <div className="relative min-h-[100svh] w-full bg-black text-white">
       {/* Top menu bar (kept translucent to blend with room backgrounds) */}
@@ -209,14 +217,44 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
             </div>
 
             {currentRoomHeader ? (
-              <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 sm:flex sm:flex-col sm:items-center sm:justify-center">
-                <div className="text-[7px] font-semibold uppercase tracking-[0.2em] text-white/40">
-                  You Are Here
+              <>
+                <div className="pointer-events-none absolute left-1/2 top-[calc(100%+0.45rem)] -translate-x-1/2 sm:hidden">
+                  <div className="rounded-full border border-white/14 bg-[linear-gradient(180deg,rgba(18,18,18,0.5),rgba(18,18,18,0.26))] px-3 py-1.5 shadow-[0_10px_26px_rgba(0,0,0,0.26)] backdrop-blur-xl">
+                    <div className="text-center text-[8px] font-semibold uppercase tracking-[0.2em] text-white/48">
+                      You Are Here
+                    </div>
+                    <div className="mt-0.5 text-center text-[11px] font-semibold text-white/92 [text-shadow:0_0_10px_rgba(255,255,255,0.18)]">
+                      {currentRoomHeader.label}
+                    </div>
+                  </div>
                 </div>
-                <div className="max-w-[22rem] truncate text-center text-[13px] font-semibold text-white/92 [text-shadow:0_0_10px_rgba(255,255,255,0.22),0_0_24px_rgba(255,255,255,0.1)] md:text-[16px]">
-                  {currentRoomHeader.label}
+
+                {isLobby ? (
+                  <div className="absolute left-1/2 top-[calc(100%+3.5rem)] -translate-x-1/2 sm:hidden">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (typeof window !== "undefined") {
+                          window.dispatchEvent(new CustomEvent("emtee:toggle-lobby-room-list"));
+                        }
+                        setMobileLobbyShowRoomsOpen((prev) => !prev);
+                      }}
+                      className="inline-flex min-w-[5.6rem] items-center justify-center rounded-full border border-white/18 bg-black/24 px-2 py-[0.28rem] text-[8px] font-semibold uppercase tracking-[0.14em] text-white/86 shadow-[0_6px_14px_rgba(0,0,0,0.12)] backdrop-blur-md transition hover:border-white/26 hover:bg-black/30 hover:text-white"
+                    >
+                      {mobileLobbyShowRoomsOpen ? "Hide Rooms" : "Show Rooms"}
+                    </button>
+                  </div>
+                ) : null}
+
+                <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 sm:flex sm:flex-col sm:items-center sm:justify-center">
+                  <div className="text-[7px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                    You Are Here
+                  </div>
+                  <div className="max-w-[22rem] truncate text-center text-[13px] font-semibold text-white/92 [text-shadow:0_0_10px_rgba(255,255,255,0.22),0_0_24px_rgba(255,255,255,0.1)] md:text-[16px]">
+                    {currentRoomHeader.label}
+                  </div>
                 </div>
-              </div>
+              </>
             ) : null}
 
             <nav className="flex min-w-0 items-center justify-end gap-1 overflow-x-auto text-sm font-semibold text-white/85 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:overflow-visible sm:gap-4 md:gap-7 sm:group/menu">
@@ -338,7 +376,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
       <div>{children}</div>
 
       {/* Footer: show everywhere except lobby */}
-      {!isLobby && <Footer />}
+      {!isLobby ? <div className="hidden sm:block"><Footer /></div> : null}
     </div>
   );
 }

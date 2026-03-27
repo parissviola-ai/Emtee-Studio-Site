@@ -1200,6 +1200,20 @@ export default function RoomScene({
     } catch {}
   }
 
+  useEffect(() => {
+    if (room.slug !== "lobby") return;
+    if (typeof window === "undefined") return;
+
+    function handleLobbyShowRoomsToggle() {
+      toggleShowMoreHotspots();
+    }
+
+    window.addEventListener("emtee:toggle-lobby-room-list", handleLobbyShowRoomsToggle as EventListener);
+    return () => {
+      window.removeEventListener("emtee:toggle-lobby-room-list", handleLobbyShowRoomsToggle as EventListener);
+    };
+  }, [room.slug, showMoreHotspotsByRoom]);
+
   function minimizeOverviewCard() {
     const slug = room.slug;
     const isMin = minimizedByRoom[slug] ?? false;
@@ -2374,7 +2388,7 @@ export default function RoomScene({
         className={[
           "absolute top-28 z-50 transition-opacity duration-100",
           mobileStaticUi ? "left-8" : "left-6",
-          isLobbyRoom || !mobileStaticUi ? "hidden" : "",
+          isLobbyRoom || mobileStaticUi || !mobileStaticUi ? "hidden" : "",
           exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
         ].join(" ")}
       >
@@ -2424,14 +2438,15 @@ export default function RoomScene({
         <div
           ref={lobbyHeaderRef}
           className={[
-            "absolute left-1/2 top-24 z-50 w-[min(calc(100vw-2.5rem),18rem)] -translate-x-1/2 px-3 transition-opacity duration-100",
+            "absolute left-1/2 z-50 -translate-x-1/2 transition-opacity duration-100",
+            isMobileViewport ? "hidden" : "top-24 w-[min(calc(100vw-2.5rem),18rem)] px-3",
             exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
           ].join(" ")}
           data-no-pan
         >
-          <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(14,14,14,0.16),rgba(14,14,14,0.08))] px-3 py-3 shadow-[0_16px_34px_rgba(0,0,0,0.14)] backdrop-blur-md">
-            <div className="flex items-center justify-center rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] px-3 py-2.5">
-              {isHotspotTierPilotRoom ? (
+          {isHotspotTierPilotRoom ? (
+            <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(14,14,14,0.16),rgba(14,14,14,0.08))] px-3 py-3 shadow-[0_16px_34px_rgba(0,0,0,0.14)] backdrop-blur-md">
+              <div className="flex items-center justify-center rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] px-3 py-2.5">
                 <div className="relative flex w-full flex-col items-center gap-1.5">
                   <button
                     type="button"
@@ -2441,9 +2456,9 @@ export default function RoomScene({
                     {showAllRoomHotspots ? "Hide Rooms" : "Show Rooms"}
                   </button>
                 </div>
-              ) : null}
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       ) : null}
 

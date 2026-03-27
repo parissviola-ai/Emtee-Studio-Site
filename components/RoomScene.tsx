@@ -100,6 +100,7 @@ const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/room
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/lobbywithconcert-opt.jpg": { w: 2560, h: 1280 },
+  "/rooms/updatedttbg1-poster-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/cdshop-opt.jpg": { w: 2560, h: 1440 },
@@ -1002,7 +1003,8 @@ export default function RoomScene({
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const activeBackgroundVideo = backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const useContainedBackground = false;
-  const shouldRenderBackgroundImage = !activeBackgroundVideo || room.slug === "steeped-dreams-studio";
+  const shouldRenderBackgroundImage =
+    !activeBackgroundVideo || room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment";
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const shouldUseNativeBackgroundImage =
     shouldRenderBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
@@ -2248,7 +2250,7 @@ export default function RoomScene({
             playsInline
             disablePictureInPicture
             disableRemotePlayback
-            poster={room.slug === "steeped-dreams-studio" ? backgroundImageSrc : undefined}
+            poster={room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment" ? backgroundImageSrc : undefined}
             preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" || room.slug === "steeped-dreams-studio" ? "auto" : "metadata"}
             onLoadedData={() => {
               logRoomNav("room:videoLoadedData", { slug: room.slug, src: activeBackgroundVideo });

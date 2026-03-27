@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const liveRoom: Room = {
     slug: "ten-ten-entertainment",
     title: "Ten Ten\nEntertainment",
-    backgroundImage: "/rooms/live-opt.jpg",
+    backgroundImage: "/rooms/updatedttbg1-poster-opt.jpg",
     backgroundVideo: "/rooms/updatedttbg1.mp4",
     backgroundVideoMobile: "/rooms/mobilevideotenten.mp4",
     hotspots: [

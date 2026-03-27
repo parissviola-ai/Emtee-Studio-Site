@@ -118,28 +118,6 @@ export const lobbyRoom: Room = {
         },
       },
       {
-        id: "case-study-tour",
-        label: "Artist & Partners",
-        tier: "core",
-        x: 12.55,
-        y: 76.88,
-        modal: {
-          title: "Artist & Partners",
-          body: "Browse a quick lobby slideshow of case study cards in A&R, Business, Marketing, Publishing & Distribution, and Music order.",
-          carouselSlides: CASE_STUDY_DECK.map((card) => ({
-            src: card.imageSrc,
-            alt: card.imageAlt,
-            eyebrow: card.lane,
-            title: card.artist,
-            body: card.snapshot,
-            primaryLabel: card.caseStudyHref ? "View Full Case Study" : undefined,
-            primaryHref: card.caseStudyHref,
-          })),
-          primaryLabel: "How You Start",
-          primaryHref: "modal:how-you-start",
-        },
-      },
-      {
         id: "departments-sheet",
         label: "What We Offer",
         tier: "core",

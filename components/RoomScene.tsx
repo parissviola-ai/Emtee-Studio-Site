@@ -1856,7 +1856,6 @@ export default function RoomScene({
     const isExpanded = true;
     const isWhoWeArePin = room.slug === "lobby" && spot.id === "About";
     const isLobbyExplorePin = room.slug === "lobby" && spot.id === "explore";
-    const isCaseStudiesLobbyButton = room.slug === "lobby" && spot.id === "case-study-tour";
     const isLeftLabelLobbyPill =
       room.slug === "lobby" &&
       (
@@ -1905,18 +1904,7 @@ export default function RoomScene({
                 : undefined
             }
           >
-            {isCaseStudiesLobbyButton ? (
-              <NextImage
-                src="/logotransparent.png"
-                alt=""
-                width={18}
-                height={18}
-                aria-hidden
-                className="h-3.5 w-3.5 object-contain invert opacity-90"
-              />
-            ) : (
-              <span className="text-xs leading-none">{getArrow(spot.direction)}</span>
-            )}
+            <span className="text-xs leading-none">{getArrow(spot.direction)}</span>
           </span>
         ) : null}
 
@@ -1960,6 +1948,7 @@ export default function RoomScene({
     const isOrangeSessionDot = spot.id === "dirty-elephant-studio-room-sessions";
     const isMediaRoom = room.slug === "marketing";
     const isBrandDealsDot = room.slug === "marketing" && spot.id === "marketing-brand-deals";
+    const isBusinessRoomDot = room.slug === "business";
     const isLobbyDot = room.slug === "lobby";
     const isLiveRoomSocialDot =
       room.slug === "ten-ten-entertainment" &&
@@ -2049,14 +2038,35 @@ export default function RoomScene({
         {/* DOT */}
         <span
           className={[
-            "relative",
-            dotBase,
-            isOrangeSessionDot && !prefersReducedMotion ? "animate-[softPulse_1.35s_ease-in-out_infinite]" : "",
+            "relative inline-flex items-center justify-center",
+            isBusinessRoomDot
+              ? [
+                  isMobileViewport ? "h-7 w-7" : "h-8 w-8",
+                  "rounded-full border border-white/16 bg-black/24 backdrop-blur-[3px]",
+                  "shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_0_20px_rgba(255,255,255,0.18),0_10px_24px_rgba(0,0,0,0.26)]",
+                ].join(" ")
+              : dotBase,
+            (isOrangeSessionDot || isBusinessRoomDot) && !prefersReducedMotion ? "animate-[softPulse_1.35s_ease-in-out_infinite]" : "",
           ].join(" ")}
-          style={{ width: `${dotSize}px`, height: `${dotSize}px` }}
+          style={isBusinessRoomDot ? undefined : { width: `${dotSize}px`, height: `${dotSize}px` }}
         >
+          {isBusinessRoomDot ? (
+            <NextImage
+              src="/logotransparent.png"
+              alt=""
+              width={18}
+              height={18}
+              aria-hidden
+              className="h-3.5 w-3.5 object-contain invert opacity-90"
+            />
+          ) : null}
           {/* Soft halo */}
-          <span className={["pointer-events-none absolute -inset-2 rounded-full blur-md", haloBase].join(" ")} />
+          <span
+            className={[
+              "pointer-events-none absolute rounded-full blur-md",
+              isBusinessRoomDot ? "-inset-2 bg-white/18" : ["-inset-2", haloBase].join(" "),
+            ].join(" ")}
+          />
 
           {/* Pulse ring (subtle) */}
           <span
@@ -2076,6 +2086,8 @@ export default function RoomScene({
                             ? "border-zinc-800/85"
                             : "border-white/70"
                     )
+                  : isBusinessRoomDot
+                    ? "border-white/55"
                   : ringBase,
             ].join(" ")}
           />

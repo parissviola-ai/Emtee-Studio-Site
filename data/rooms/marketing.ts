@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const marketingRoom: Room = {
     slug: "marketing",
     title: "Marketing",
-    backgroundImage: "/rooms/colorizedmarketing-opt.jpg",
+    backgroundImage: "/rooms/marketingfinal3-opt.jpg",
     hotspots: [
       { id: "next-room", label: "Publishing and Distro", href: "/rooms/publishing-distribution", x: 90, y: 17, direction: "right" },
       {

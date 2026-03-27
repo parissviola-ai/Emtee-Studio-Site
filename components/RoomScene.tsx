@@ -3615,7 +3615,10 @@ export default function RoomScene({
                             width={1200}
                             height={840}
                             sizes="(max-width: 900px) 100vw, 900px"
-                            className="w-full max-h-[420px] object-contain"
+                            className={[
+                              "w-full max-h-[420px] object-contain transition-opacity duration-300",
+                              activeModal.title === "How You Start" ? "opacity-94 brightness-[0.97]" : "",
+                            ].join(" ")}
                           />
                         </div>
                       </div>
@@ -3863,7 +3866,10 @@ export default function RoomScene({
         width={1200}
         height={840}
         sizes="(max-width: 900px) 100vw, 900px"
-        className="w-full max-h-[420px] object-contain"
+        className={[
+          "w-full max-h-[420px] object-contain transition-opacity duration-300",
+          activeModal.title === "What We Offer" ? "opacity-94 brightness-[0.97]" : "",
+        ].join(" ")}
       />
     </div>
   </div>

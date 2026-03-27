@@ -370,7 +370,7 @@ export default function ArtistRosterReleasesPage() {
                   onClick={() => switchView("artists")}
                   className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-[#d6ae66]/45 hover:bg-white/15 hover:text-white"
                 >
-                  Other Artists
+                  Artists
                 </button>
                 <button
                   type="button"
@@ -435,12 +435,12 @@ export default function ArtistRosterReleasesPage() {
       <section className="relative mx-auto max-w-6xl px-6 pb-20 pt-28">
         <div className="accent-card min-h-[204px] rounded-2xl border border-[#d6ae66]/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(214,174,102,0.12),0_28px_75px_rgba(0,0,0,0.14)] sm:min-h-[216px]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#d6ae66]/85">
-            Artist Catalog
+            Artist Affiliates
           </div>
           <div className="mt-3 flex items-start justify-between gap-4">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-                Other Artist We&apos;ve Worked With
+                Artists We&apos;ve Worked/Collaborated With
               </h1>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-700 sm:text-base">
                 A selection of artists EMTEE has worked with through department resources, execution, and development support.
@@ -468,7 +468,7 @@ export default function ArtistRosterReleasesPage() {
                   : "border-black/15 bg-white text-black/70 hover:border-[#d6ae66]/45 hover:bg-black/[0.03]",
               ].join(" ")}
             >
-              Other Artists
+              Artists
             </button>
             <button
               type="button"
@@ -488,7 +488,7 @@ export default function ArtistRosterReleasesPage() {
 
         <section className="mt-8">
           <div className="animate-[fadeIn_220ms_ease-out]">
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {RESOURCE_SUPPORTED_ARTISTS.map((item, index) => (
                 <article
                   key={`${item.artist}-${item.supportLane}-${index}`}
@@ -502,7 +502,7 @@ export default function ArtistRosterReleasesPage() {
                         width={1200}
                         height={720}
                         className="aspect-[16/9] w-full object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1279px) 50vw, 33vw"
                         style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
                         draggable={false}
                       />

@@ -30,7 +30,7 @@ const CASE_STUDY_LINKS: NavLink[] = [
   { label: "Yanchan Produced", href: "/rooms/dirty-elephant-studio" },
   { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
   { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
-  { label: "Other Artists", href: "/artist-roster-releases" },
+  { label: "Case Studies", href: "/case-studies" },
 ];
 
 function shouldDebugRoomNav() {
@@ -256,7 +256,7 @@ export default function MainMenuBar() {
             </div>
 
             <div className="relative hidden sm:block group">
-              <Link href="/case-studies" className={desktopMenuLinkClass(caseStudiesActive)}>Case Studies</Link>
+              <Link href="/artist-roster-releases" className={desktopMenuLinkClass(caseStudiesActive)}>Artist &amp; Partners</Link>
 
               <div className="pointer-events-none absolute right-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
                 <div className="w-64 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
@@ -289,6 +289,7 @@ export default function MainMenuBar() {
             <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
             <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
             <Link href="/resources" className={[navLinkClass("/resources"), "sm:hidden"].join(" ")}>Resources</Link>
+            <Link href="/artist-roster-releases" className={[navLinkClass("/artist-roster-releases"), "sm:hidden"].join(" ")}>Artist &amp; Partners</Link>
             <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
             <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>
           </nav>

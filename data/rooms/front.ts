@@ -119,12 +119,12 @@ export const lobbyRoom: Room = {
       },
       {
         id: "case-study-tour",
-        label: "Case Studies",
+        label: "Artist & Partners",
         tier: "core",
         x: 12.55,
         y: 76.88,
         modal: {
-          title: "Case Studies",
+          title: "Artist & Partners",
           body: "Browse a quick lobby slideshow of case study cards in A&R, Business, Marketing, Publishing & Distribution, and Music order.",
           carouselSlides: CASE_STUDY_DECK.map((card) => ({
             src: card.imageSrc,
@@ -134,11 +134,9 @@ export const lobbyRoom: Room = {
             body: card.snapshot,
             primaryLabel: card.caseStudyHref ? "View Full Case Study" : undefined,
             primaryHref: card.caseStudyHref,
-            secondaryLabel: "Open Department",
-            secondaryHref: card.departmentHref,
           })),
-          primaryLabel: "View All Case Studies",
-          primaryHref: "/case-studies",
+          primaryLabel: "How You Start",
+          primaryHref: "modal:how-you-start",
         },
       },
       {
@@ -153,10 +151,8 @@ export const lobbyRoom: Room = {
           body:
             "All workings with EMTEE fall under 5 main pillars/departments. These departments help identify structural requirements to successfully launch a creative's career and business in a way that is highly sustainable. With resources and specialists in each department, EMTEE strives to develop an infrastructure for your future that will allow for strong movements in your music, brand and business. To explore the departments further please tour the rooms from the Lobby.",
           image: "/rooms/departmentdeck.png",
-          primaryLabel: "See How These Packages Perform in Case Studies",
-          primaryHref: "/case-studies",
-          secondaryLabel: "View Resources",
-          secondaryHref: "/resources",
+          primaryLabel: "What We’ve Done",
+          primaryHref: "modal:case-study-tour",
         },
       },
       {
@@ -173,6 +169,8 @@ export const lobbyRoom: Room = {
           body: "",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+          secondaryLabel: "Learn More",
+          secondaryHref: "/about",
         },
       },
       {

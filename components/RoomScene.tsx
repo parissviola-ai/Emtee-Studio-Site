@@ -128,6 +128,11 @@ const NATIVE_BACKGROUND_IMAGE_ROOMS = new Set([
   "steeped-dreams-studio",
 ]);
 const SENSITIVE_TRANSITION_ROOMS = new Set([
+  "lobby",
+  "business",
+  "music",
+  "marketing",
+  "publishing-distribution",
   "ar-sales",
   "dirty-elephant-studio",
   "ten-ten-entertainment",

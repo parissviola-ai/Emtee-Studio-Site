@@ -1244,8 +1244,8 @@ export default function RoomScene({
   function animateTiltPan() {
     const target = tiltPanTargetRef.current;
     setMobileTiltPan((prev) => {
-      const nextX = prev.x + (target.x - prev.x) * 0.066;
-      const nextY = prev.y + (target.y - prev.y) * 0.066;
+      const nextX = prev.x + (target.x - prev.x) * 0.052;
+      const nextY = prev.y + (target.y - prev.y) * 0.052;
       if (Math.abs(nextX - target.x) < 0.2 && Math.abs(nextY - target.y) < 0.2) {
         tiltPanFrameRef.current = undefined;
         return { x: target.x, y: target.y };
@@ -1588,10 +1588,10 @@ export default function RoomScene({
       const betaWithDeadzone = Math.abs(normalizedBeta) < 0.12 ? 0 : normalizedBeta;
       const shapedGamma = Math.sign(gammaWithDeadzone) * Math.pow(Math.abs(gammaWithDeadzone), 1.08);
       const shapedBeta = Math.sign(betaWithDeadzone) * Math.pow(Math.abs(betaWithDeadzone), 1.15);
-      const xRange = Math.min(mobilePanLeftLimit, mobilePanRightLimit) * 0.98;
-      const yRange = maxPanY * 0.86;
+      const xRange = Math.min(mobilePanLeftLimit, mobilePanRightLimit) * 0.88;
+      const yRange = maxPanY * 0.78;
       const nextX = clamp(
-        clamp(-shapedGamma * xRange, -xRange, xRange),
+        clamp(shapedGamma * xRange, -xRange, xRange),
         -mobilePanLeftLimit - mobilePan.x,
         mobilePanRightLimit - mobilePan.x,
       );

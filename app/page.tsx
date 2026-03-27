@@ -14,7 +14,7 @@ const LANDING_BUTTON_COORDS = {
 };
 const LANDING_CARD_COORDS = {
   mobile: { x: 50, y: 52 },
-  desktop: { x: 46.37, y: 38.08 },
+  desktop: { x: 50, y: 38.08 },
 };
 const LANDING_WARMUP_ROUTES = [
   "/about",
@@ -220,7 +220,7 @@ export default function Home() {
         >
           <div
             className={[
-              "w-[min(24rem,calc(100vw-1.5rem))] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3.5 py-3 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2400ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-full sm:max-w-[22rem] sm:px-4 sm:py-3.5",
+              "w-[min(25.5rem,calc(100vw-1.5rem))] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3.5 py-3 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2400ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-full sm:max-w-[25.5rem] sm:px-4 sm:py-3.5",
               isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             ].join(" ")}
           >
@@ -233,14 +233,14 @@ export default function Home() {
               className="mx-auto mb-2 h-auto w-[52px] object-contain invert sm:w-[58px]"
             />
 
-            <div className="mx-auto max-w-[20.75rem] text-center sm:max-w-[18rem]">
+            <div className="mx-auto max-w-[22.5rem] text-center sm:max-w-[22rem]">
               <h1 className="text-[0.98rem] font-semibold leading-[1.08] text-white sm:text-[1.2rem]">
                 Welcome to
                 <br />
                 Emtee Music Group
               </h1>
 
-              <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-white/54 sm:text-[11px]">
+              <p className="mt-1 whitespace-nowrap text-[9.5px] font-medium uppercase tracking-[0.12em] text-white/54 sm:text-[10px]">
                 The First Ever Creative Business Launchpad
               </p>
 

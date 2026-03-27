@@ -1266,7 +1266,7 @@ export default function RoomScene({
     return !!target.closest("a,button,input,textarea,select,iframe,[data-no-pan]");
   }
 
-  const canPanRoom = isMobileViewport && !isModalOpen && !exploreOpen;
+  const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
     room.slug === "lobby" &&
@@ -2155,7 +2155,7 @@ export default function RoomScene({
             src={backgroundImageSrc}
             alt={room.title || room.slug}
             className={[
-              "absolute inset-0 h-full w-full",
+              "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
               isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
@@ -2169,6 +2169,9 @@ export default function RoomScene({
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
                     : `50% ${backgroundObjectPositionY}%`,
+              WebkitTouchCallout: "none",
+              WebkitUserSelect: "none",
+              userSelect: "none",
             }}
             onLoad={() => {
               logRoomNav("room:imageLoaded", { slug: room.slug, src: backgroundImageSrc });
@@ -2185,7 +2188,7 @@ export default function RoomScene({
             priority={eagerBackgroundLoad}
             quality={70}
             className={[
-              "absolute inset-0 h-full w-full",
+              "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
               isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
@@ -2199,6 +2202,9 @@ export default function RoomScene({
                   : canDesktopCursorPan
                     ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
                     : `50% ${backgroundObjectPositionY}%`,
+              WebkitTouchCallout: "none",
+              WebkitUserSelect: "none",
+              userSelect: "none",
             }}
             onLoad={() => {
               logRoomNav("room:imageLoaded", { slug: room.slug, src: backgroundImageSrc });
@@ -2209,7 +2215,7 @@ export default function RoomScene({
         {activeBackgroundVideo ? (
           <video
             ref={setBackgroundVideoNode}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none [-webkit-user-drag:none]"
             autoPlay
             loop
             muted
@@ -2234,15 +2240,31 @@ export default function RoomScene({
                       room.slug === "ten-ten-entertainment"
                         ? `calc(50% + ${displayedPan.x}px) calc(62% + ${displayedPan.y}px)`
                         : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`,
+                    WebkitTouchCallout: "none",
+                    WebkitUserSelect: "none",
+                    userSelect: "none",
                   }
                 : room.slug === "ten-ten-entertainment"
                   ? {
                       backgroundColor: "#000000",
                       objectPosition: compactHotspotUi ? "50% 68%" : "50% 33%",
+                      WebkitTouchCallout: "none",
+                      WebkitUserSelect: "none",
+                      userSelect: "none",
                     }
                   : canDesktopCursorPan
-                    ? { objectPosition: `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%` }
-                    : { objectPosition: `50% ${backgroundObjectPositionY}%` }
+                    ? {
+                        objectPosition: `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`,
+                        WebkitTouchCallout: "none",
+                        WebkitUserSelect: "none",
+                        userSelect: "none",
+                      }
+                    : {
+                        objectPosition: `50% ${backgroundObjectPositionY}%`,
+                        WebkitTouchCallout: "none",
+                        WebkitUserSelect: "none",
+                        userSelect: "none",
+                      }
             }
             src={activeBackgroundVideo}
           />

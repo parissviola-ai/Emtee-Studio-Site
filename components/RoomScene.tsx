@@ -547,6 +547,7 @@ export default function RoomScene({
   const [minimizedByRoom, setMinimizedByRoom] = useState<Record<string, boolean>>({});
   const [contentVisibleByRoom, setContentVisibleByRoom] = useState<Record<string, boolean>>({});
   const [clickedHotspotIdByRoom, setClickedHotspotIdByRoom] = useState<Record<string, string | null>>({});
+  const [backgroundVideoVisibleByRoom, setBackgroundVideoVisibleByRoom] = useState<Record<string, boolean>>({});
   const [isOrangePreviewMuted, setIsOrangePreviewMuted] = useState(false);
   const [isOrangeSessionPreviewVisible, setIsOrangeSessionPreviewVisible] = useState(false);
   const [isOrangeMobileSessionAudioActive, setIsOrangeMobileSessionAudioActive] = useState(false);
@@ -1801,6 +1802,14 @@ export default function RoomScene({
   }, [activeBackgroundVideo, room.slug]);
 
   useEffect(() => {
+    setBackgroundVideoVisibleByRoom((prev) =>
+      prev[room.slug] === false && activeBackgroundVideo
+        ? prev
+        : { ...prev, [room.slug]: !activeBackgroundVideo }
+    );
+  }, [activeBackgroundVideo, room.slug]);
+
+  useEffect(() => {
     const known = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
     if (known) {
       imageNaturalSizeCacheRef.current[backgroundImageSrc] = known;
@@ -2274,7 +2283,10 @@ export default function RoomScene({
         {activeBackgroundVideo ? (
           <video
             ref={setBackgroundVideoNode}
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none [-webkit-user-drag:none]"
+            className={[
+              "pointer-events-none absolute inset-0 h-full w-full object-cover select-none [-webkit-user-drag:none] transition-opacity duration-150",
+              backgroundVideoVisibleByRoom[room.slug] ? "opacity-100" : "opacity-0",
+            ].join(" ")}
             autoPlay
             loop={shouldNativeLoopBackgroundVideo}
             muted
@@ -2284,12 +2296,15 @@ export default function RoomScene({
             poster={room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment" ? backgroundImageSrc : undefined}
             preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" || room.slug === "steeped-dreams-studio" ? "auto" : "metadata"}
             onLoadedData={() => {
+              setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
               logRoomNav("room:videoLoadedData", { slug: room.slug, src: activeBackgroundVideo });
             }}
             onCanPlay={() => {
+              setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
               logRoomNav("room:videoCanPlay", { slug: room.slug, src: activeBackgroundVideo });
             }}
             onPlaying={() => {
+              setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
               logRoomNav("room:videoPlaying", { slug: room.slug, src: activeBackgroundVideo });
             }}
             onTimeUpdate={(event) => {

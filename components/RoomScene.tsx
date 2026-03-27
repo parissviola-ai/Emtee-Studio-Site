@@ -721,16 +721,20 @@ export default function RoomScene({
     node.defaultMuted = true;
     node.muted = true;
     node.autoplay = true;
-    node.loop = true;
+    node.loop = room.slug !== "steeped-dreams-studio";
     node.playsInline = true;
     node.preload = "auto";
     node.setAttribute("autoplay", "");
     node.setAttribute("muted", "");
-    node.setAttribute("loop", "");
+    if (room.slug !== "steeped-dreams-studio") {
+      node.setAttribute("loop", "");
+    } else {
+      node.removeAttribute("loop");
+    }
     node.setAttribute("playsinline", "");
     node.setAttribute("webkit-playsinline", "");
     node.setAttribute("preload", "auto");
-  }, []);
+  }, [room.slug]);
 
   const toggleOrangePreviewMute = useCallback(() => {
     const video = orangeMobileAudioRef.current ?? orangePreviewVideoRef.current;
@@ -988,6 +992,7 @@ export default function RoomScene({
   const backgroundImageSrc =
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const activeBackgroundVideo = backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
+  const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
   const useContainedBackground = false;
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const shouldUseNativeBackgroundImage =
@@ -1698,14 +1703,18 @@ export default function RoomScene({
     let cancelled = false;
     video.muted = true;
     video.defaultMuted = true;
-    video.loop = true;
+    video.loop = shouldLoopBackgroundVideo;
     video.autoplay = true;
     video.playsInline = true;
     video.preload = "auto";
     video.setAttribute("preload", "auto");
     video.setAttribute("autoplay", "");
     video.setAttribute("muted", "");
-    video.setAttribute("loop", "");
+    if (shouldLoopBackgroundVideo) {
+      video.setAttribute("loop", "");
+    } else {
+      video.removeAttribute("loop");
+    }
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "");
 
@@ -1757,7 +1766,7 @@ export default function RoomScene({
       window.removeEventListener("pointerdown", handleFirstInteraction);
       window.removeEventListener("keydown", handleFirstInteraction);
     };
-  }, [activeBackgroundVideo, isMobileViewport, room.slug]);
+  }, [activeBackgroundVideo, isMobileViewport, shouldLoopBackgroundVideo]);
 
   useEffect(() => {
     const known = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
@@ -2218,7 +2227,7 @@ export default function RoomScene({
             ref={setBackgroundVideoNode}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none [-webkit-user-drag:none]"
             autoPlay
-            loop
+            loop={shouldLoopBackgroundVideo}
             muted
             playsInline
             disablePictureInPicture
@@ -2232,6 +2241,16 @@ export default function RoomScene({
             }}
             onPlaying={() => {
               logRoomNav("room:videoPlaying", { slug: room.slug, src: activeBackgroundVideo });
+            }}
+            onEnded={(event) => {
+              if (shouldLoopBackgroundVideo) return;
+              const video = event.currentTarget;
+              video.pause();
+              if (Number.isFinite(video.duration) && video.duration > 0) {
+                try {
+                  video.currentTime = Math.max(0, video.duration - 0.033);
+                } catch {}
+              }
             }}
             style={
               isMobileViewport

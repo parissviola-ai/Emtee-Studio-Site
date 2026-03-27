@@ -1267,6 +1267,7 @@ export default function RoomScene({
   }
 
   const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen;
+  const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
     room.slug === "lobby" &&
@@ -1533,7 +1534,7 @@ export default function RoomScene({
   }, []);
 
   useEffect(() => {
-    if (!isMobileViewport || !tiltEnabled || !canPanRoom) {
+    if (!canUseTilt) {
       setMobileTiltPan({ x: 0, y: 0 });
       tiltBaselineRef.current = null;
       tiltFilteredReadingRef.current = null;
@@ -1617,7 +1618,7 @@ export default function RoomScene({
       window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
       window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
     };
-  }, [canPanRoom, isMobileViewport, maxPanX, maxPanY, mobilePan.x, mobilePan.y, scheduleTiltPan, tiltEnabled]);
+  }, [canUseTilt, maxPanX, maxPanY, mobilePan.x, mobilePan.y, scheduleTiltPan]);
 
   useEffect(() => {
     if (!isOrangeRoom) return;

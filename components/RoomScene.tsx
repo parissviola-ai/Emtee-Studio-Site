@@ -127,6 +127,12 @@ const NATIVE_BACKGROUND_IMAGE_ROOMS = new Set([
   "dirty-elephant-studio",
   "steeped-dreams-studio",
 ]);
+const SENSITIVE_TRANSITION_ROOMS = new Set([
+  "ar-sales",
+  "dirty-elephant-studio",
+  "ten-ten-entertainment",
+  "steeped-dreams-studio",
+]);
 const HOTSPOT_TIER_PILOT_ROOMS = new Set(["lobby"]);
 
 const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
@@ -977,7 +983,7 @@ export default function RoomScene({
   const navCircleClass = "flex h-9 w-9 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/85 bg-black/10 backdrop-blur-sm";
   const navPillClass = "inline-flex h-9 sm:h-7 items-center whitespace-nowrap rounded-full border border-white/85 bg-black/10 px-4 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/30 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.2)] group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.52)]";
   const compactHotspotUi = viewportW > 0 && viewportW < 1280;
-  const eagerBackgroundLoad = room.slug === "lobby" || room.slug === "ten-ten-entertainment";
+  const eagerBackgroundLoad = room.slug === "lobby" || SENSITIVE_TRANSITION_ROOMS.has(room.slug);
   const isMusicRoom = room.slug === "music";
   const isMarketingRoomZoomedOut = room.slug === "marketing";
   const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
@@ -1005,6 +1011,8 @@ export default function RoomScene({
   const useContainedBackground = false;
   const shouldRenderBackgroundImage =
     !activeBackgroundVideo || room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment";
+  const shouldRenderImmediateBackgroundFallback =
+    shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug);
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const shouldUseNativeBackgroundImage =
     shouldRenderBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
@@ -1148,10 +1156,10 @@ export default function RoomScene({
     warmRoomAssetsByHref(href);
   }, [router]);
 
-  const navigateToRoomHref = useCallback(async (href: string) => {
-    logRoomNav("nav:click", { from: `/rooms/${room.slug}`, to: href, source: "room-scene" });
+  const navigateToRoomHref = useCallback(async (href: string, source = "room-scene") => {
+    logRoomNav("nav:click", { from: `/rooms/${room.slug}`, to: href, source });
     await awaitRoomAssetsByHref(href);
-    logRoomNav("nav:push", { from: `/rooms/${room.slug}`, to: href, source: "room-scene" });
+    logRoomNav("nav:push", { from: `/rooms/${room.slug}`, to: href, source });
     router.push(href);
   }, [room.slug, router]);
 
@@ -1163,11 +1171,12 @@ export default function RoomScene({
     ].filter((href): href is string => !!href);
 
     for (const href of routesToWarm) {
-      if (prefetchedExploreRoutesRef.current.has(href)) continue;
-      prefetchedExploreRoutesRef.current.add(href);
-      router.prefetch(href);
-      warmRoomAssetsByHref(href);
-    }
+        if (prefetchedExploreRoutesRef.current.has(href)) continue;
+        prefetchedExploreRoutesRef.current.add(href);
+        logRoomNav("nav:warmRoute", { from: `/rooms/${room.slug}`, to: href, source: "room-scene-effect" });
+        router.prefetch(href);
+        warmRoomAssetsByHref(href);
+      }
   }, [exploreArrowHref, explorePrevHref, nextRoomHotspotHref, router]);
 
   useEffect(() => {
@@ -2155,11 +2164,28 @@ export default function RoomScene({
           !isMobileViewport ? "will-change-transform" : "",
           exploreOpen ? "blur-xl" : "blur-0",
         ].join(" ")}
-        style={
-          isMobileViewport
+        style={{
+          ...(isMobileViewport
             ? undefined
-            : { transform: `translate3d(0, ${backgroundOffsetY}px, 0) scale(${sceneScale})` }
-        }
+            : { transform: `translate3d(0, ${backgroundOffsetY}px, 0) scale(${sceneScale})` }),
+          ...(shouldRenderImmediateBackgroundFallback
+            ? {
+                backgroundImage: `url("${backgroundImageSrc}")`,
+                backgroundSize: useContainedBackground ? "contain" : "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition:
+                  isMarketingRoom && !backgroundUsesMobileLayout
+                    ? "50% 42%"
+                    : backgroundUsesMobileLayout
+                      ? room.slug === "lobby"
+                        ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                        : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                      : canDesktopCursorPan
+                        ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
+                        : `50% ${backgroundObjectPositionY}%`,
+              }
+            : undefined),
+        }}
       >
         {useContainedBackground && shouldRenderStaticBackgroundImage ? (
           <NextImage
@@ -2932,7 +2958,7 @@ export default function RoomScene({
                 onClick={(event) => {
                   event.preventDefault();
                   triggerHotspotLabelGlow(spot);
-                  void navigateToRoomHref(spot.href!);
+                  void navigateToRoomHref(spot.href!, "room-scene-hotspot");
                 }}
             >
               {content}
@@ -2960,7 +2986,7 @@ export default function RoomScene({
                 type="button"
                 data-no-pan
                 aria-label={`Previous room: ${explorePrevLabel}`}
-                onClick={() => void navigateToRoomHref(explorePrevHref)}
+                onClick={() => void navigateToRoomHref(explorePrevHref, "room-scene-prev-mobile")}
                 className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
               >
                 ←
@@ -2970,7 +2996,7 @@ export default function RoomScene({
               type="button"
               data-no-pan
               aria-label={`Next room: ${exploreArrowLabel}`}
-              onClick={() => void navigateToRoomHref(exploreArrowHref)}
+              onClick={() => void navigateToRoomHref(exploreArrowHref, "room-scene-next-mobile")}
               className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
             >
               →
@@ -2985,7 +3011,7 @@ export default function RoomScene({
                   data-no-pan
                   aria-label="Go to previous room"
                   title={`Previous: ${explorePrevLabel}`}
-                  onClick={() => void navigateToRoomHref(explorePrevHref)}
+                  onClick={() => void navigateToRoomHref(explorePrevHref, "room-scene-prev-desktop")}
                   className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
                 >
                   ←
@@ -3014,7 +3040,7 @@ export default function RoomScene({
                 data-no-pan
                 aria-label="Go to next page"
                 title={`Next: ${exploreArrowLabel}`}
-                onClick={() => void navigateToRoomHref(exploreArrowHref)}
+                onClick={() => void navigateToRoomHref(exploreArrowHref, "room-scene-next-desktop")}
                 className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
               >
                 →

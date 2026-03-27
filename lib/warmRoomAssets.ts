@@ -90,6 +90,7 @@ function waitForVideoReady(src: string) {
 export function warmImageAsset(src?: string | null) {
   if (!src || warmedImages.has(src) || typeof window === "undefined") return;
   warmedImages.add(src);
+  logRoomNav("warmImageAsset:start", { src });
   const img = new window.Image();
   img.decoding = "async";
   img.src = src;
@@ -98,6 +99,7 @@ export function warmImageAsset(src?: string | null) {
 export function warmVideoAsset(src?: string | null) {
   if (!src || warmedVideos.has(src) || typeof document === "undefined") return;
   warmedVideos.add(src);
+  logRoomNav("warmVideoAsset:start", { src });
   const video = document.createElement("video");
   video.preload = "metadata";
   video.muted = true;
@@ -109,6 +111,12 @@ export function warmRoomAssetsBySlug(slug?: string | null) {
   if (!slug) return;
   const room = rooms.find((entry) => entry.slug === slug);
   if (!room) return;
+  logRoomNav("warmRoomAssets:start", {
+    slug,
+    backgroundImage: room.backgroundImage ?? null,
+    backgroundVideo: room.backgroundVideo ?? null,
+    backgroundVideoMobile: room.backgroundVideoMobile ?? null,
+  });
   warmImageAsset(room.backgroundImage);
   warmVideoAsset(room.backgroundVideo);
   warmVideoAsset(room.backgroundVideoMobile);

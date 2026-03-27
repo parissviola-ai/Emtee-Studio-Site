@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { rooms } from "@/data/rooms";
-import { awaitRoomAssetsByHref, warmImageAsset, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
 
 const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity.png";
 const LANDING_MOBILE_IMAGE = "/rooms/stillbuildingfinal.png";
@@ -82,7 +81,7 @@ export default function Home() {
   useEffect(() => {
     router.prefetch("/rooms/lobby");
     warmImageAsset("/rooms/lobbywithconcert-opt.jpg");
-    warmRoomAssetsBySlug("lobby");
+    warmRoomNeighborhoodBySlug("lobby");
   }, [router]);
 
   useEffect(() => {
@@ -95,10 +94,10 @@ export default function Home() {
         router.prefetch(href);
       });
 
-      rooms.forEach((room) => {
-        router.prefetch(`/rooms/${room.slug}`);
-        warmRoomAssetsBySlug(room.slug);
+      getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
+        router.prefetch(`/rooms/${slug}`);
       });
+      warmRoomNeighborhoodBySlug("lobby");
     };
 
     const timer = window.setTimeout(warmLandingNetwork, 2200);

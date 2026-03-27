@@ -2,8 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { rooms } from "@/data/rooms";
-import { warmImageAsset, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomAssetsByHref, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
 
 const GLOBAL_ROUTES = [
   "/",
@@ -22,7 +21,8 @@ export default function GlobalWarmup() {
   useEffect(() => {
     const routeSet = new Set<string>([
       ...GLOBAL_ROUTES,
-      ...rooms.map((room) => `/rooms/${room.slug}`),
+      "/rooms/business",
+      "/rooms/steeped-dreams-studio",
     ]);
 
     const warmAll = () => {
@@ -31,7 +31,10 @@ export default function GlobalWarmup() {
         warmRoomAssetsByHref(href);
       });
 
-      rooms.forEach((room) => warmRoomAssetsBySlug(room.slug));
+      getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
+        router.prefetch(`/rooms/${slug}`);
+      });
+      warmRoomNeighborhoodBySlug("lobby");
       warmImageAsset("/rooms/lobbywithconcert-opt.jpg");
       warmImageAsset("/rooms/fullimagecity.png");
       warmImageAsset("/rooms/stillbuildingfinal.png");

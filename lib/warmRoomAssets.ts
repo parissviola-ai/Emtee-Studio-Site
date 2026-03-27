@@ -6,8 +6,22 @@ const warmedImages = new Set<string>();
 const warmedVideos = new Set<string>();
 const imageReadyPromises = new Map<string, Promise<void>>();
 const videoReadyPromises = new Map<string, Promise<void>>();
+const roomWarmTimestamps = new Map<string, number>();
 
 const ROOM_NAVIGATION_WAIT_TIMEOUT_MS = 2200;
+const ROOM_WARM_DEDUP_MS = 4000;
+
+export const ROOM_FLOW_SLUGS = [
+  "lobby",
+  "business",
+  "music",
+  "marketing",
+  "publishing-distribution",
+  "ar-sales",
+  "ten-ten-entertainment",
+  "dirty-elephant-studio",
+  "steeped-dreams-studio",
+] as const;
 
 function shouldDebugRoomNav() {
   if (typeof window === "undefined") return false;
@@ -107,10 +121,54 @@ export function warmVideoAsset(src?: string | null) {
   void video.load();
 }
 
-export function warmRoomAssetsBySlug(slug?: string | null) {
+function getRoomBySlug(slug?: string | null) {
+  if (!slug) return null;
+  return rooms.find((entry) => entry.slug === slug) ?? null;
+}
+
+function shouldSkipRoomWarm(slug: string) {
+  if (typeof performance === "undefined") return false;
+  const lastWarm = roomWarmTimestamps.get(slug);
+  const now = performance.now();
+  if (lastWarm && now - lastWarm < ROOM_WARM_DEDUP_MS) {
+    return true;
+  }
+  roomWarmTimestamps.set(slug, now);
+  return false;
+}
+
+function getRoomHref(slug: string) {
+  return `/rooms/${slug}`;
+}
+
+export function getRoomWarmNeighborhoodBySlug(slug?: string | null) {
+  if (!slug) return [];
+  const flowIndex = ROOM_FLOW_SLUGS.indexOf(slug as (typeof ROOM_FLOW_SLUGS)[number]);
+  if (flowIndex < 0) return [slug];
+
+  const neighborhood = new Set<string>([
+    slug,
+    ROOM_FLOW_SLUGS[(flowIndex - 1 + ROOM_FLOW_SLUGS.length) % ROOM_FLOW_SLUGS.length],
+    ROOM_FLOW_SLUGS[(flowIndex + 1) % ROOM_FLOW_SLUGS.length],
+  ]);
+
+  const nextRoom = getRoomBySlug(ROOM_FLOW_SLUGS[(flowIndex + 1) % ROOM_FLOW_SLUGS.length]);
+  if (nextRoom?.backgroundVideo || nextRoom?.backgroundVideoMobile) {
+    neighborhood.add(ROOM_FLOW_SLUGS[(flowIndex + 2) % ROOM_FLOW_SLUGS.length]);
+  }
+
+  return Array.from(neighborhood);
+}
+
+export function getRoomWarmNeighborhoodHrefsBySlug(slug?: string | null) {
+  return getRoomWarmNeighborhoodBySlug(slug).map(getRoomHref);
+}
+
+export function warmRoomAssetsBySlug(slug?: string | null, options?: { force?: boolean }) {
   if (!slug) return;
-  const room = rooms.find((entry) => entry.slug === slug);
+  const room = getRoomBySlug(slug);
   if (!room) return;
+  if (!options?.force && shouldSkipRoomWarm(slug)) return;
   logRoomNav("warmRoomAssets:start", {
     slug,
     backgroundImage: room.backgroundImage ?? null,
@@ -128,13 +186,18 @@ export function warmRoomAssetsByHref(href?: string | null) {
   warmRoomAssetsBySlug(slug);
 }
 
+export function warmRoomNeighborhoodBySlug(slug?: string | null) {
+  const neighborhood = getRoomWarmNeighborhoodBySlug(slug);
+  neighborhood.forEach((neighborSlug) => warmRoomAssetsBySlug(neighborSlug));
+}
+
 export async function awaitRoomAssetsBySlug(slug?: string | null) {
   if (!slug || typeof window === "undefined") return;
-  const room = rooms.find((entry) => entry.slug === slug);
+  const room = getRoomBySlug(slug);
   if (!room) return;
 
   logRoomNav("awaitRoomAssets:start", { slug });
-  warmRoomAssetsBySlug(slug);
+  warmRoomAssetsBySlug(slug, { force: true });
 
   const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
   const activeVideo =

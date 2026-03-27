@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { getResourceContext } from "@/data/resource-context";
-import { awaitRoomAssetsByHref, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import {
+  awaitRoomAssetsByHref,
+  getRoomWarmNeighborhoodHrefsBySlug,
+  warmRoomAssetsByHref,
+  warmRoomNeighborhoodBySlug,
+} from "@/lib/warmRoomAssets";
 
 export type Hotspot = {
   id: string;
@@ -1170,11 +1175,14 @@ export default function RoomScene({
   }, [room.slug, router]);
 
   useEffect(() => {
-    const routesToWarm = [
-      nextRoomHotspotHref,
-      exploreArrowHref,
-      explorePrevHref,
-    ].filter((href): href is string => !!href);
+    const routesToWarm = Array.from(
+      new Set([
+        ...getRoomWarmNeighborhoodHrefsBySlug(room.slug),
+        nextRoomHotspotHref,
+        exploreArrowHref,
+        explorePrevHref,
+      ].filter((href): href is string => !!href))
+    );
 
     for (const href of routesToWarm) {
         if (prefetchedExploreRoutesRef.current.has(href)) continue;
@@ -1186,7 +1194,7 @@ export default function RoomScene({
   }, [exploreArrowHref, explorePrevHref, nextRoomHotspotHref, router]);
 
   useEffect(() => {
-    warmRoomAssetsBySlug(room.slug);
+    warmRoomNeighborhoodBySlug(room.slug);
   }, [room.slug]);
 
   useEffect(() => {
@@ -1446,7 +1454,7 @@ export default function RoomScene({
 
     // Warm route + key lobby asset so "Back to Lobby" feels snappier.
     router.prefetch("/rooms/lobby");
-    warmRoomAssetsBySlug("lobby");
+    warmRoomNeighborhoodBySlug("lobby");
   }, [room.slug, router]);
 
   useEffect(() => {
@@ -1473,8 +1481,8 @@ export default function RoomScene({
   useEffect(() => {
     if (room.slug !== "lobby") return;
 
-    // Keep lobby startup light: warm only top two next-click routes.
-    ["/rooms/business", "/rooms/music"].forEach((href) => {
+    // Keep lobby startup focused on the immediate room neighborhood.
+    getRoomWarmNeighborhoodHrefsBySlug("lobby").forEach((href) => {
       router.prefetch(href);
       warmRoomAssetsByHref(href);
     });

@@ -99,6 +99,7 @@ const EXPLORE_ROOMS = [
 const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/rooms/"));
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
+  "/rooms/lobbyupdate-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/cdshop-opt.jpg": { w: 2560, h: 1440 },
@@ -584,6 +585,8 @@ export default function RoomScene({
   const orangePreviewVideoRef = useRef<HTMLVideoElement | null>(null);
   const orangeMobileAudioRef = useRef<HTMLVideoElement | null>(null);
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
+  const backgroundVideoCompletedPlaysRef = useRef(0);
+  const backgroundVideoLastTimeRef = useRef(0);
   const orangePreviewHideTimerRef = useRef<number | undefined>(undefined);
   const lobbyExploreHoverCloseTimerRef = useRef<number | undefined>(undefined);
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
@@ -592,6 +595,10 @@ export default function RoomScene({
   const tiltBaselineRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltSignalSeenRef = useRef(false);
+  const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
+  const shouldFreezeAfterTwoPlays = room.slug === "steeped-dreams-studio";
+  const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo || shouldFreezeAfterTwoPlays;
+  const backgroundVideoPlaybackRate = room.slug === "steeped-dreams-studio" ? 0.9 : 1;
 
   // video audio state
   const [videoMuted, setVideoMuted] = useState(true);
@@ -721,12 +728,14 @@ export default function RoomScene({
     node.defaultMuted = true;
     node.muted = true;
     node.autoplay = true;
-    node.loop = room.slug !== "steeped-dreams-studio";
+    node.loop = shouldNativeLoopBackgroundVideo;
+    node.playbackRate = backgroundVideoPlaybackRate;
+    node.defaultPlaybackRate = backgroundVideoPlaybackRate;
     node.playsInline = true;
     node.preload = "auto";
     node.setAttribute("autoplay", "");
     node.setAttribute("muted", "");
-    if (room.slug !== "steeped-dreams-studio") {
+    if (shouldNativeLoopBackgroundVideo) {
       node.setAttribute("loop", "");
     } else {
       node.removeAttribute("loop");
@@ -734,7 +743,7 @@ export default function RoomScene({
     node.setAttribute("playsinline", "");
     node.setAttribute("webkit-playsinline", "");
     node.setAttribute("preload", "auto");
-  }, [room.slug]);
+  }, [backgroundVideoPlaybackRate, shouldNativeLoopBackgroundVideo]);
 
   const toggleOrangePreviewMute = useCallback(() => {
     const video = orangeMobileAudioRef.current ?? orangePreviewVideoRef.current;
@@ -992,7 +1001,6 @@ export default function RoomScene({
   const backgroundImageSrc =
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const activeBackgroundVideo = backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
-  const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
   const useContainedBackground = false;
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const shouldUseNativeBackgroundImage =
@@ -1703,14 +1711,16 @@ export default function RoomScene({
     let cancelled = false;
     video.muted = true;
     video.defaultMuted = true;
-    video.loop = shouldLoopBackgroundVideo;
+    video.loop = shouldNativeLoopBackgroundVideo;
+    video.playbackRate = backgroundVideoPlaybackRate;
+    video.defaultPlaybackRate = backgroundVideoPlaybackRate;
     video.autoplay = true;
     video.playsInline = true;
     video.preload = "auto";
     video.setAttribute("preload", "auto");
     video.setAttribute("autoplay", "");
     video.setAttribute("muted", "");
-    if (shouldLoopBackgroundVideo) {
+    if (shouldNativeLoopBackgroundVideo) {
       video.setAttribute("loop", "");
     } else {
       video.removeAttribute("loop");
@@ -1766,7 +1776,12 @@ export default function RoomScene({
       window.removeEventListener("pointerdown", handleFirstInteraction);
       window.removeEventListener("keydown", handleFirstInteraction);
     };
-  }, [activeBackgroundVideo, isMobileViewport, shouldLoopBackgroundVideo]);
+  }, [activeBackgroundVideo, backgroundVideoPlaybackRate, isMobileViewport, shouldNativeLoopBackgroundVideo]);
+
+  useEffect(() => {
+    backgroundVideoCompletedPlaysRef.current = 0;
+    backgroundVideoLastTimeRef.current = 0;
+  }, [activeBackgroundVideo, room.slug]);
 
   useEffect(() => {
     const known = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
@@ -2227,7 +2242,7 @@ export default function RoomScene({
             ref={setBackgroundVideoNode}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none [-webkit-user-drag:none]"
             autoPlay
-            loop={shouldLoopBackgroundVideo}
+            loop={shouldNativeLoopBackgroundVideo}
             muted
             playsInline
             disablePictureInPicture
@@ -2241,6 +2256,20 @@ export default function RoomScene({
             }}
             onPlaying={() => {
               logRoomNav("room:videoPlaying", { slug: room.slug, src: activeBackgroundVideo });
+            }}
+            onTimeUpdate={(event) => {
+              if (!shouldFreezeAfterTwoPlays) return;
+              const video = event.currentTarget;
+              const lastTime = backgroundVideoLastTimeRef.current;
+              const currentTime = video.currentTime;
+              if (lastTime > currentTime + 0.25) {
+                backgroundVideoCompletedPlaysRef.current += 1;
+                if (backgroundVideoCompletedPlaysRef.current >= 1) {
+                  video.loop = false;
+                  video.removeAttribute("loop");
+                }
+              }
+              backgroundVideoLastTimeRef.current = currentTime;
             }}
             onEnded={(event) => {
               if (shouldLoopBackgroundVideo) return;

@@ -5,6 +5,7 @@ export const quietRoom: Room = {
     title: "Steeped Dreams\nStudio",
     backgroundImage: "/rooms/SDSFinal-opt.jpg",
     backgroundVideo: "/rooms/quietroomvid.mp4",
+    backgroundVideoMobile: "/rooms/quietroomvid.mp4",
     hotspots: [
       { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/dirty-elephant-studio", x: 90, y: 17, direction: "right" },
       {

@@ -32,7 +32,7 @@ export default function GlobalWarmup() {
       });
 
       rooms.forEach((room) => warmRoomAssetsBySlug(room.slug));
-      warmImageAsset("/rooms/lobbyupdate-opt.jpg");
+      warmImageAsset("/rooms/lobbywithconcert-opt.jpg");
       warmImageAsset("/rooms/fullimagecity.png");
       warmImageAsset("/rooms/stillbuildingfinal.png");
       warmImageAsset("/rooms/departmentdeck.png");

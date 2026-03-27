@@ -99,7 +99,7 @@ const EXPLORE_ROOMS = [
 const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/rooms/"));
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
-  "/rooms/lobbyupdate-opt.jpg": { w: 2560, h: 1280 },
+  "/rooms/lobbywithconcert-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/cdshop-opt.jpg": { w: 2560, h: 1440 },
@@ -211,9 +211,9 @@ const PREVIOUS_ROOM_LINKS: Record<string, string> = {
   marketing: "/rooms/music",
   "publishing-distribution": "/rooms/marketing",
   "ar-sales": "/rooms/publishing-distribution",
-  "steeped-dreams-studio": "/rooms/ar-sales",
-  "dirty-elephant-studio": "/rooms/steeped-dreams-studio",
-  "ten-ten-entertainment": "/rooms/dirty-elephant-studio",
+  "ten-ten-entertainment": "/rooms/ar-sales",
+  "dirty-elephant-studio": "/rooms/ten-ten-entertainment",
+  "steeped-dreams-studio": "/rooms/dirty-elephant-studio",
 };
 const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-dirty-elephant-studio-room-session";
 const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
@@ -1002,9 +1002,10 @@ export default function RoomScene({
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const activeBackgroundVideo = backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const useContainedBackground = false;
+  const shouldRenderBackgroundImage = !activeBackgroundVideo || room.slug === "steeped-dreams-studio";
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
   const shouldUseNativeBackgroundImage =
-    shouldRenderStaticBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
+    shouldRenderBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
   const parsedModalBody = useMemo(
@@ -2175,7 +2176,7 @@ export default function RoomScene({
             draggable={false}
           />
         ) : null}
-        {shouldRenderStaticBackgroundImage && shouldUseNativeBackgroundImage ? (
+        {shouldRenderBackgroundImage && shouldUseNativeBackgroundImage ? (
           <img
             src={backgroundImageSrc}
             alt={room.title || room.slug}
@@ -2204,7 +2205,7 @@ export default function RoomScene({
             draggable={false}
           />
         ) : null}
-        {shouldRenderStaticBackgroundImage && !shouldUseNativeBackgroundImage ? (
+        {shouldRenderBackgroundImage && !shouldUseNativeBackgroundImage ? (
           <NextImage
             src={backgroundImageSrc}
             alt={room.title || room.slug}
@@ -2247,7 +2248,8 @@ export default function RoomScene({
             playsInline
             disablePictureInPicture
             disableRemotePlayback
-            preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" ? "auto" : "metadata"}
+            poster={room.slug === "steeped-dreams-studio" ? backgroundImageSrc : undefined}
+            preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" || room.slug === "steeped-dreams-studio" ? "auto" : "metadata"}
             onLoadedData={() => {
               logRoomNav("room:videoLoadedData", { slug: room.slug, src: activeBackgroundVideo });
             }}

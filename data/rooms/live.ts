@@ -7,7 +7,7 @@ export const liveRoom: Room = {
     backgroundVideo: "/rooms/updatedttbg1.mp4",
     backgroundVideoMobile: "/rooms/mobilevideotenten.mp4",
     hotspots: [
-      { id: "next-room", label: "Lobby", href: "/rooms/lobby", x: 90, y:  17, direction: "right" },
+      { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/dirty-elephant-studio", x: 90, y:  17, direction: "right" },
       {
         id: "ten-ten-showcase",
         label: "Ten Ten Showcase",

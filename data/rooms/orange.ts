@@ -5,7 +5,7 @@ export const orangeRoom: Room = {
     title: "Dirty Elephant Studio",
     backgroundImage: "/rooms/dirtyelephant2-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment", x: 90, y:  20, direction: "right" },
+      { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio", x: 90, y:  20, direction: "right" },
       {
         id: "apply-custom-production",
         label: "Custom Production",

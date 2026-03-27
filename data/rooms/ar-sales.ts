@@ -5,7 +5,7 @@ export const arSalesRoom: Room = {
     title: "A&R / Sales",
     backgroundImage: "/rooms/8-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio", x: 90, y: 17, direction: "right", tier: "core" },
+      { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment", x: 90, y: 17, direction: "right", tier: "core" },
 
       {
         id: "ar-sales-crm-set-up",

@@ -435,7 +435,7 @@ export default function ArtistRosterReleasesPage() {
       <section className="relative mx-auto max-w-6xl px-6 pb-20 pt-28">
         <div className="accent-card min-h-[204px] rounded-2xl border border-[#d6ae66]/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(214,174,102,0.12),0_28px_75px_rgba(0,0,0,0.14)] sm:min-h-[216px]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#d6ae66]/85">
-            Artist Affiliates
+            Artists & Affiliates
           </div>
           <div className="mt-3 flex items-start justify-between gap-4">
             <div>

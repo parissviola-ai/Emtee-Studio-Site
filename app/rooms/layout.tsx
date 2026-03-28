@@ -18,6 +18,7 @@ const PRIMARY_LINKS: NavLink[] = [
 const ABOUT_LINKS: NavLink[] = [
   { label: "Who We Are", href: "/rooms/lobby?modal=About" },
   { label: "What We Offer", href: "/rooms/lobby?modal=departments-sheet" },
+  { label: "What We’ve Done", href: "/rooms/lobby?modal=case-study-tour" },
   { label: "How You Can Start", href: "/rooms/lobby?modal=how-you-start" },
 ];
 

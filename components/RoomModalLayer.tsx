@@ -27,7 +27,9 @@ type RoomModalLayerProps = {
   muteYoutube: () => void;
   unmuteYoutube: () => void;
   isYanchanMusicModal: boolean;
+  isYanchanDiscographyModal: boolean;
   isJoinCommunityModal: boolean;
+  isCustomProductionModal: boolean;
   isCarouselModal: boolean;
   activeCarouselSlide: any;
   activeCarouselIndex: number;
@@ -45,7 +47,9 @@ type RoomModalLayerProps = {
   roomHotspots: any[];
   isPackageGridModal: boolean;
   isWebsiteDesignMainModal: boolean;
+  isLivePackageDetailModal: boolean;
   isLiveRoomModal: boolean;
+  yanchanDiscographySpotlight: Array<{ src: string; label: string; isJunoNominated?: boolean; objectPosition?: string }>;
   SocialIcon: ComponentType<{ label: string; className?: string }>;
   openExploreMenu: () => void;
 };
@@ -73,7 +77,9 @@ export default function RoomModalLayer({
   muteYoutube,
   unmuteYoutube,
   isYanchanMusicModal,
+  isYanchanDiscographyModal,
   isJoinCommunityModal,
+  isCustomProductionModal,
   isCarouselModal,
   activeCarouselSlide,
   activeCarouselIndex,
@@ -91,7 +97,9 @@ export default function RoomModalLayer({
   roomHotspots,
   isPackageGridModal,
   isWebsiteDesignMainModal,
+  isLivePackageDetailModal,
   isLiveRoomModal,
+  yanchanDiscographySpotlight,
   SocialIcon,
   openExploreMenu,
 }: RoomModalLayerProps) {
@@ -131,6 +139,208 @@ export default function RoomModalLayer({
       : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
   ].join(" ");
 
+  const isStructuredFooterModal = !isStartHereModal;
+  const shouldUseCompactCardBody = isStructuredFooterModal && !isCarouselModal;
+  const footerActions: ReactNode[] = [];
+
+  if (isCustomProductionModal && activeModal.primaryHref) {
+    footerActions.push(
+      activeModal.primaryHref.startsWith("http") ? (
+        <a
+          key={`custom-primary-${activeModal.primaryHref}`}
+          href={activeModal.primaryHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={closeModal}
+          className={[
+            "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
+            isOrangeModal
+              ? "border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+              : "bg-white text-black hover:bg-white/90",
+          ].join(" ")}
+        >
+          {activeModal.primaryLabel ?? "View Details"} →
+        </a>
+      ) : (
+        <Link
+          key={`custom-primary-${activeModal.primaryHref}`}
+          href={activeModal.primaryHref}
+          onClick={closeModal}
+          className={[
+            "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
+            isOrangeModal
+              ? "border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+              : "bg-white text-black hover:bg-white/90",
+          ].join(" ")}
+        >
+          {activeModal.primaryLabel ?? "View Details"} →
+        </Link>
+      )
+    );
+  }
+
+  if (activeModal.links?.length) {
+    activeModal.links.forEach((link: any) => {
+      const modalLinkId = link.href.startsWith("modal:") ? link.href.slice(6) : null;
+      if (modalLinkId) {
+        const targetSpot = roomHotspots.find((spot) => spot.id === modalLinkId);
+        if (!targetSpot?.modal) return;
+        footerActions.push(
+          <button
+            key={`${link.label}-${link.href}`}
+            type="button"
+            aria-label={link.label}
+            title={link.label}
+            onClick={() => {
+              setModalBackModal(activeModal);
+              openModal(targetSpot.modal);
+            }}
+            className={
+              isStartHereModal
+                ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                : isPackageGridModal
+                  ? isWebsiteDesignMainModal
+                    ? "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]"
+                    : "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white"
+                : isYanchanMusicModal
+                ? isOrangeModal
+                  ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+                  : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
+                : isOrangeModal
+                ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+                : isQuietModal
+                ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+            }
+          >
+            {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
+          </button>
+        );
+        return;
+      }
+
+      if (link.href.startsWith("/")) {
+        footerActions.push(
+          <Link
+            key={`${link.label}-${link.href}`}
+            href={link.href}
+            onClick={closeModal}
+            className={
+              isStartHereModal
+                ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+            }
+          >
+            {`${link.label} →`}
+          </Link>
+        );
+        return;
+      }
+
+      footerActions.push(
+        <a
+          key={`${link.label}-${link.href}`}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={link.label}
+          title={link.label}
+          className={
+            isStartHereModal
+              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+              : isPackageGridModal
+                ? isWebsiteDesignMainModal
+                  ? "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]"
+                : "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white"
+              : isYanchanMusicModal
+              ? isOrangeModal
+                ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+                : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
+              : isOrangeModal
+              ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+              : isQuietModal
+              ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+              : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+          }
+        >
+          {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
+        </a>
+      );
+    });
+  }
+
+  if (!isCustomProductionModal && (activeModal.primaryAction === "openExplore" || !!activeModal.primaryHref)) {
+    footerActions.push(
+      activeModal.primaryAction === "openExplore" ? (
+        <button key="modal-primary-open-explore" type="button" onClick={() => { closeModal(); openExploreMenu(); }} className={primaryButtonClass}>
+          {activeModal.primaryLabel ?? "Open Explore"} →
+        </button>
+      ) : activeModal.primaryHref.startsWith("modal:") ? (
+        <button key="modal-primary-modal" type="button" onClick={() => handleModalTarget(activeModal.primaryHref)} className={primaryButtonClass}>
+          {activeModal.primaryLabel ?? "View Details"} →
+        </button>
+      ) : activeModal.primaryHref.startsWith("http") ? (
+        <a key="modal-primary-http" href={activeModal.primaryHref} target="_blank" rel="noopener noreferrer" onClick={closeModal} className={primaryButtonClass}>
+          {activeModal.primaryLabel ?? "View Details"} →
+        </a>
+      ) : (
+        <Link key="modal-primary-link" href={activeModal.primaryHref} onClick={closeModal} className={primaryButtonClass}>
+          {activeModal.primaryLabel ?? "View Details"} →
+        </Link>
+      )
+    );
+  }
+
+  if (activeModal.secondaryHref && activeModal.secondaryLabel) {
+    footerActions.push(
+      activeModal.secondaryHref.startsWith("http") ? (
+        <a key="modal-secondary-http" href={activeModal.secondaryHref} target="_blank" rel="noopener noreferrer" onClick={closeModal} className={secondaryButtonClass}>
+          {activeModal.secondaryLabel} →
+        </a>
+      ) : activeModal.secondaryHref.startsWith("modal:") ? (
+        <button key="modal-secondary-modal" type="button" onClick={() => handleModalTarget(activeModal.secondaryHref)} className={secondaryButtonClass}>
+          {activeModal.secondaryLabel} →
+        </button>
+      ) : (
+        <Link key="modal-secondary-link" href={activeModal.secondaryHref} onClick={closeModal} className={secondaryButtonClass}>
+          {activeModal.secondaryLabel} →
+        </Link>
+      )
+    );
+  }
+
+  if (isCarouselModal && activeCarouselSlide?.secondaryHref && activeCarouselSlide.secondaryLabel) {
+    footerActions.push(
+      activeCarouselSlide.secondaryHref.startsWith("http") ? (
+        <a key="carousel-secondary-http" href={activeCarouselSlide.secondaryHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
+          {activeCarouselSlide.secondaryLabel} →
+        </a>
+      ) : activeCarouselSlide.secondaryHref.startsWith("modal:") ? (
+        <button key="carousel-secondary-modal" type="button" onClick={() => handleModalTarget(activeCarouselSlide.secondaryHref)} className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
+          {activeCarouselSlide.secondaryLabel} →
+        </button>
+      ) : (
+        <Link key="carousel-secondary-link" href={activeCarouselSlide.secondaryHref} onClick={closeModal} className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
+          {activeCarouselSlide.secondaryLabel} →
+        </Link>
+      )
+    );
+  }
+
+  if (isCarouselModal && activeCarouselSlide?.primaryHref && activeCarouselSlide.primaryLabel) {
+    footerActions.push(
+      activeCarouselSlide.primaryHref.startsWith("http") ? (
+        <a key="carousel-primary-http" href={activeCarouselSlide.primaryHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90">
+          {activeCarouselSlide.primaryLabel} →
+        </a>
+      ) : (
+        <Link key="carousel-primary-link" href={activeCarouselSlide.primaryHref} onClick={closeModal} className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90">
+          {activeCarouselSlide.primaryLabel} →
+        </Link>
+      )
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto p-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[calc(env(safe-area-inset-bottom)+1rem)] md:items-center md:p-6 pointer-events-auto">
       <button type="button" aria-label="Close modal" onClick={closeModal} className="absolute inset-0 bg-black/60" />
@@ -145,7 +355,7 @@ export default function RoomModalLayer({
             : "border border-white/15 bg-black/55",
         ].join(" ")}
       >
-        <div className={["flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : "p-6 pb-8 md:pb-10"].join(" ")}>
+        <div className={[shouldUseCompactCardBody ? "overflow-y-auto" : "flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : shouldUseCompactCardBody ? "p-6 pb-4 md:pb-4" : "p-6 pb-8 md:pb-10"].join(" ")}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 w-full">
               {activeModal.headerLogo ? (
@@ -333,6 +543,29 @@ export default function RoomModalLayer({
                       ))}
                     </div>
                   </div>
+                ) : activeModal.imageGallery?.length ? (
+                  <div
+                    className={[
+                      "mb-4 grid gap-3 sm:grid-cols-3 transition-all duration-700 ease-out",
+                      revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                    ].join(" ")}
+                  >
+                    {activeModal.imageGallery.map((image: any) => (
+                      <div
+                        key={image.src}
+                        className="relative overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]"
+                      >
+                        <NextImage
+                          src={image.src}
+                          alt={image.alt}
+                          width={1200}
+                          height={1600}
+                          sizes="(max-width: 640px) 100vw, 33vw"
+                          className="h-full max-h-[320px] w-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 ) : activeModal.topImage ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
                     <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
@@ -390,182 +623,218 @@ export default function RoomModalLayer({
                     {renderModalBodyWithBoldIncludes(activeModal.body)}
                   </p>
                 )}
+
+                {activeResourceContext ? (
+                  <div
+                    className={[
+                      "mt-6 space-y-4 transition-all duration-700 ease-out",
+                      revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                    ].join(" ")}
+                  >
+                    <div
+                      className={[
+                        "text-[12px] font-semibold uppercase tracking-[0.2em]",
+                        isOrangeModal ? "text-dirty-elephant-studio-200/90" : "text-dirty-elephant-studio-300/90",
+                      ].join(" ")}
+                    >
+                      Includes:
+                    </div>
+                    <ul
+                      className={[
+                        "mt-2 text-sm",
+                        isWebsiteDesignTierModal ? "columns-1 gap-x-6 space-y-1 sm:columns-2" : "space-y-1.5",
+                        isOrangeModal ? "text-white/90" : "text-white/84",
+                      ].join(" ")}
+                    >
+                      {(parsedModalBody.includes.length ? parsedModalBody.includes : activeModal.highlights ?? []).map((item: string) => (
+                        <li key={item} className={isWebsiteDesignTierModal ? "mb-1 break-inside-avoid flex gap-2 leading-snug" : "flex gap-2 leading-relaxed"}>
+                          <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.45)]" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {parsedModalBody.after ? (
+                      <p className={["leading-relaxed whitespace-pre-line", isOrangeModal ? "text-white/88" : "text-white/80"].join(" ")}>
+                        {parsedModalBody.after}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {!activeResourceContext && activeModal.highlights?.length ? (
+                  <div
+                    className={[
+                      "mt-6 space-y-4 rounded-2xl p-4 transition-all duration-700 ease-out",
+                      isOrangeModal
+                        ? "border border-dirty-elephant-studio-200/20 bg-gradient-to-b from-[#2a1b10]/78 to-[#130d08]/72"
+                        : "border border-white/15 bg-gradient-to-b from-white/[0.08] to-white/[0.02]",
+                      revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                    ].join(" ")}
+                  >
+                    <div className={["text-[12px] font-semibold uppercase tracking-[0.2em]", isOrangeModal ? "text-dirty-elephant-studio-200/90" : "text-dirty-elephant-studio-300/90"].join(" ")}>
+                      {activeModal.highlightsTitle ?? "Package Includes"}
+                    </div>
+                    {isYanchanDiscographyModal ? (
+                      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {yanchanDiscographySpotlight.map((item, index) => (
+                          <figure
+                            key={`${item.label}-${item.src}-${index}`}
+                            className="group relative overflow-hidden rounded-xl border border-dirty-elephant-studio-200/24 bg-black/45 shadow-[0_10px_24px_rgba(0,0,0,0.34)]"
+                          >
+                            {item.isJunoNominated ? (
+                              <span className="absolute right-1.5 top-1.5 z-10 inline-flex items-center rounded-md border border-[#f7c48a]/55 bg-black/65 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#ffd8a4] backdrop-blur-sm">
+                                JUNO Nominated
+                              </span>
+                            ) : null}
+                            <div className="relative aspect-[4/3]">
+                              <NextImage
+                                src={item.src}
+                                alt={item.label}
+                                fill
+                                sizes="(max-width: 640px) 50vw, 33vw"
+                                className="object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                                style={{ objectPosition: item.objectPosition ?? "center" }}
+                              />
+                              <figcaption className="absolute inset-x-0 bottom-0 border-t border-dirty-elephant-studio-200/14 bg-gradient-to-t from-black/90 to-black/45 px-2 py-1 text-[10px] font-medium leading-snug text-dirty-elephant-studio-50/92">
+                                {item.label}
+                              </figcaption>
+                            </div>
+                          </figure>
+                        ))}
+                      </div>
+                    ) : (
+                      <ul className={isLivePackageDetailModal ? "mt-2 space-y-1.5 text-sm text-white/84" : "grid gap-2 sm:grid-cols-2"}>
+                        {activeModal.highlights.map((item: string) => {
+                          const parts = item.split("::");
+                          const isFeaturedMilestone = parts.length === 2 && parts[0] === "FEATURE";
+                          const label = isFeaturedMilestone ? parts[1] : item;
+                          return (
+                            <li
+                              key={item}
+                              className={[
+                                isLivePackageDetailModal
+                                  ? "flex gap-2 leading-relaxed"
+                                  : "group rounded-xl px-3 py-2 text-sm leading-relaxed shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition",
+                                isLivePackageDetailModal
+                                  ? ""
+                                  : isOrangeModal
+                                    ? "border border-dirty-elephant-studio-200/18 bg-black/35 text-white/90 hover:border-dirty-elephant-studio-200/42 hover:bg-[#1a120b]"
+                                    : "border border-white/10 bg-black/35 text-white/84 hover:border-dirty-elephant-studio-300/40 hover:bg-black/45",
+                              ].join(" ")}
+                            >
+                              <span className="inline-flex items-center gap-2">
+                                <span className="h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                                <span>{label}</span>
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                ) : null}
               </div>
+
+              {activeResourceContext ? (
+                <aside
+                  className={[
+                    "rounded-2xl border px-4 py-3 transition-all duration-700 ease-out md:sticky md:top-28",
+                    "border-white/45 bg-white/[0.08]",
+                    "shadow-[0_0_0_1px_rgba(255,255,255,0.24),0_0_10px_rgba(255,255,255,0.16),0_12px_24px_rgba(0,0,0,0.24)]",
+                    revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                  ].join(" ")}
+                >
+                  <div>
+                    <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#d6ae66] [text-shadow:0_0_10px_rgba(214,174,102,0.35)]">
+                      What It Is
+                    </div>
+                    <p className="mt-1 text-sm leading-relaxed text-white/88">{activeResourceContext.what}</p>
+                  </div>
+                  <div className="mt-3">
+                    <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#d6ae66] [text-shadow:0_0_10px_rgba(214,174,102,0.35)]">
+                      Why It Matters for Artists
+                    </div>
+                    <p className="mt-1 text-sm leading-relaxed text-white/88">{activeResourceContext.why}</p>
+                  </div>
+                </aside>
+              ) : null}
             </div>
 
-            <div className={[isPackageGridModal ? "shrink-0 grid w-full gap-3 border-t border-white/10 bg-black/24 px-6 pb-6 pt-4 sm:grid-cols-2 transition-all duration-600 ease-out" : isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : "shrink-0 flex flex-wrap items-center gap-3 border-t border-white/10 bg-black/24 px-6 pb-6 pt-4 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
-              {activeModal.links?.length
-                ? activeModal.links.map((link: any) => {
-                    const modalLinkId = link.href.startsWith("modal:") ? link.href.slice(6) : null;
-                    if (modalLinkId) {
-                      const targetSpot = roomHotspots.find((spot) => spot.id === modalLinkId);
-                      if (!targetSpot?.modal) return null;
-                      return (
-                        <button
-                          key={`${link.label}-${link.href}`}
-                          type="button"
-                          aria-label={link.label}
-                          title={link.label}
-                          onClick={() => {
-                            setModalBackModal(activeModal);
-                            openModal(targetSpot.modal);
-                          }}
-                          className={
-                            isStartHereModal
-                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
-                              : isPackageGridModal
-                              ? isWebsiteDesignMainModal
-                                ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
-                                : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-dirty-elephant-studio-300/40 hover:bg-black/45 hover:text-white"
-                              : isYanchanMusicModal
-                              ? isOrangeModal
-                                ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
-                                : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
-                              : isOrangeModal
-                              ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
-                              : isQuietModal
-                              ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
-                              : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
-                          }
-                        >
-                          {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
-                        </button>
-                      );
-                    }
-                    if (link.href.startsWith("/")) {
-                      return (
-                        <Link
-                          key={`${link.label}-${link.href}`}
-                          href={link.href}
-                          onClick={closeModal}
-                          className={
-                            isStartHereModal
-                              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
-                              : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
-                          }
-                        >
-                          {`${link.label} →`}
-                        </Link>
-                      );
-                    }
-                    return (
-                      <a
-                        key={`${link.label}-${link.href}`}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={link.label}
-                        title={link.label}
-                        className={
-                          isStartHereModal
-                            ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
-                            : isPackageGridModal
-                            ? isWebsiteDesignMainModal
-                              ? "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-[#d6ae66] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/55 hover:bg-black/45 hover:text-[#f7deb0]"
-                              : "inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-sm font-semibold text-white/84 shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-dirty-elephant-studio-300/40 hover:bg-black/45 hover:text-white"
-                            : isYanchanMusicModal
-                            ? isOrangeModal
-                              ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
-                              : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
-                            : isOrangeModal
-                            ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
-                            : isQuietModal
-                            ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
-                            : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
-                        }
-                      >
-                        {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
-                      </a>
-                    );
-                  })
-                : null}
-
-              {!activeModal.primaryAction && !activeModal.primaryHref ? null : activeModal.primaryAction === "openExplore" ? (
-                <button type="button" onClick={() => { closeModal(); openExploreMenu(); }} className={primaryButtonClass}>
-                  {activeModal.primaryLabel ?? "Open Explore"} →
-                </button>
-              ) : activeModal.primaryHref.startsWith("modal:") ? (
-                <button type="button" onClick={() => handleModalTarget(activeModal.primaryHref)} className={primaryButtonClass}>
-                  {activeModal.primaryLabel ?? "View Details"} →
-                </button>
-              ) : activeModal.primaryHref.startsWith("http") ? (
-                <a href={activeModal.primaryHref} target="_blank" rel="noopener noreferrer" onClick={closeModal} className={primaryButtonClass}>
-                  {activeModal.primaryLabel ?? "View Details"} →
-                </a>
-              ) : (
-                <Link href={activeModal.primaryHref} onClick={closeModal} className={primaryButtonClass}>
-                  {activeModal.primaryLabel ?? "View Details"} →
-                </Link>
-              )}
-
-              {activeModal.secondaryHref && activeModal.secondaryLabel ? (
-                activeModal.secondaryHref.startsWith("http") ? (
-                  <a href={activeModal.secondaryHref} target="_blank" rel="noopener noreferrer" onClick={closeModal} className={secondaryButtonClass}>
-                    {activeModal.secondaryLabel} →
-                  </a>
-                ) : activeModal.secondaryHref.startsWith("modal:") ? (
-                  <button type="button" onClick={() => handleModalTarget(activeModal.secondaryHref)} className={secondaryButtonClass}>
-                    {activeModal.secondaryLabel} →
-                  </button>
-                ) : (
-                  <Link href={activeModal.secondaryHref} onClick={closeModal} className={secondaryButtonClass}>
-                    {activeModal.secondaryLabel} →
-                  </Link>
-                )
-              ) : null}
-
-              {isCarouselModal && activeCarouselSlide?.secondaryHref && activeCarouselSlide.secondaryLabel ? (
-                activeCarouselSlide.secondaryHref.startsWith("http") ? (
-                  <a href={activeCarouselSlide.secondaryHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
-                    {activeCarouselSlide.secondaryLabel} →
-                  </a>
-                ) : activeCarouselSlide.secondaryHref.startsWith("modal:") ? (
-                  <button type="button" onClick={() => handleModalTarget(activeCarouselSlide.secondaryHref)} className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
-                    {activeCarouselSlide.secondaryLabel} →
-                  </button>
-                ) : (
-                  <Link href={activeCarouselSlide.secondaryHref} onClick={closeModal} className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
-                    {activeCarouselSlide.secondaryLabel} →
-                  </Link>
-                )
-              ) : null}
-
-              {isCarouselModal && activeCarouselSlide?.primaryHref && activeCarouselSlide.primaryLabel ? (
-                activeCarouselSlide.primaryHref.startsWith("http") ? (
-                  <a href={activeCarouselSlide.primaryHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90">
-                    {activeCarouselSlide.primaryLabel} →
-                  </a>
-                ) : (
-                  <Link href={activeCarouselSlide.primaryHref} onClick={closeModal} className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90">
-                    {activeCarouselSlide.primaryLabel} →
-                  </Link>
-                )
-              ) : null}
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (modalBackModal) {
-                    const backModal = modalBackModal;
-                    setModalBackModal(null);
-                    openModal(backModal);
-                    return;
-                  }
-                  closeModal();
-                }}
+            {activeModal.image && !isYanchanMusicModal && !isJoinCommunityModal ? (
+              <div
                 className={[
-                  "inline-flex items-center justify-center rounded-full transition",
-                  isStartHereModal
-                    ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
-                    : isOrangeModal
-                    ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
-                    : isQuietModal
-                    ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
-                    : "border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 hover:text-white",
+                  "mt-8 transition-all duration-700 ease-out",
+                  revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                 ].join(" ")}
               >
-                {modalBackModal ? "Back" : isStartHereModal ? "Back to Lobby" : "Close"}
-              </button>
+                <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
+                  <NextImage
+                    src={activeModal.image}
+                    alt={activeModal.title}
+                    width={1200}
+                    height={840}
+                    sizes="(max-width: 900px) 100vw, 900px"
+                    className={[
+                      "w-full max-h-[420px] object-contain transition-opacity duration-300",
+                      activeModal.title === "What We Offer" ? "opacity-94 brightness-[0.97]" : "",
+                    ].join(" ")}
+                  />
+                </div>
+              </div>
+            ) : null}
+
+            <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
+              {isStructuredFooterModal ? (
+                <div className="flex w-full items-end">
+                  <div className="-ml-6 inline-flex flex-nowrap items-center gap-3 self-end">
+                    {footerActions}
+                  </div>
+
+                  <div className="flex-1" />
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (modalBackModal) {
+                        const backModal = modalBackModal;
+                        setModalBackModal(null);
+                        openModal(backModal);
+                        return;
+                      }
+                      closeModal();
+                    }}
+                    className={[
+                      "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
+                      isOrangeModal
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : "border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 hover:text-white",
+                    ].join(" ")}
+                  >
+                    {modalBackModal ? "Back" : "Close"}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {footerActions}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (modalBackModal) {
+                        const backModal = modalBackModal;
+                        setModalBackModal(null);
+                        openModal(backModal);
+                        return;
+                      }
+                      closeModal();
+                    }}
+                    className="inline-flex items-center justify-center rounded-full border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 transition hover:border-white/26 hover:bg-white/9 hover:text-white/88"
+                  >
+                    {modalBackModal ? "Back" : "Back to Lobby"}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

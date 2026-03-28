@@ -339,6 +339,14 @@ html {
   box-shadow: 0 0 0 3px rgba(214, 174, 102, 0.22);
 }
 
+:where(a[href], button:not(:disabled), [role="button"], summary, label[for]) {
+  cursor: pointer;
+}
+
+:where(button:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+}
+
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {

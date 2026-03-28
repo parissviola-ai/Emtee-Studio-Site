@@ -12,9 +12,9 @@ export const arSalesRoom: Room = {
         label: "CRM Set-Up",
         tier: "core",
         x: 70,
-        y: 13,
+        y: 20,
         positions: {
-          mobile: { x: 68, y: 9 },
+          mobile: { x: 68, y: 16 },
         },
         allowLargeResponsiveShift: true,
         direction: "right",

@@ -68,7 +68,6 @@ function getObjectPositionY(viewportW: number, isMobile: boolean) {
 export default function Home() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
-  const [isEnterVisible, setIsEnterVisible] = useState(false);
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const [mobileNaturalSize, setMobileNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const [isEnteringLobby, setIsEnteringLobby] = useState(false);
@@ -103,12 +102,6 @@ export default function Home() {
     const timer = window.setTimeout(warmLandingNetwork, 2200);
     return () => window.clearTimeout(timer);
   }, [router]);
-
-  useEffect(() => {
-    if (!isVisible) return;
-    const timer = window.setTimeout(() => setIsEnterVisible(true), 3200);
-    return () => window.clearTimeout(timer);
-  }, [isVisible]);
 
   useEffect(() => {
     const updateViewport = () => {
@@ -220,7 +213,7 @@ export default function Home() {
         >
           <div
             className={[
-              "w-[min(25.5rem,calc(100vw-1.5rem))] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3.5 py-3 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2400ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-full sm:max-w-[25.5rem] sm:px-4 sm:py-3.5",
+              "w-[min(19.25rem,calc(100vw-1.5rem))] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3 py-2.5 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2900ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-full sm:max-w-[19.25rem] sm:px-3.5 sm:py-3",
               isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             ].join(" ")}
           >
@@ -230,21 +223,21 @@ export default function Home() {
               width={180}
               height={180}
               priority
-              className="mx-auto mb-2 h-auto w-[52px] object-contain invert sm:w-[58px]"
+              className="mx-auto mb-1.5 h-auto w-[42px] object-contain invert sm:w-[46px]"
             />
 
-            <div className="mx-auto max-w-[22.5rem] text-center sm:max-w-[22rem]">
-              <h1 className="text-[0.98rem] font-semibold leading-[1.08] text-white sm:text-[1.2rem]">
+            <div className="mx-auto max-w-[17rem] text-center sm:max-w-[17.25rem]">
+              <h1 className="text-[0.9rem] font-semibold leading-[1.08] text-white sm:text-[1.05rem]">
                 Welcome to
                 <br />
                 Emtee Music Group
               </h1>
 
-              <p className="mt-1 whitespace-nowrap text-[9.5px] font-medium uppercase tracking-[0.12em] text-white/54 sm:text-[10px]">
+              <p className="mt-1 whitespace-nowrap text-[8.5px] font-medium uppercase tracking-[0.12em] text-white/54 sm:text-[9px]">
                 The First Ever Creative Business Launchpad
               </p>
 
-              <p className="mt-2.5 text-[11.5px] leading-relaxed text-white/72 sm:text-[12px]">
+              <p className="mt-2 text-[10.5px] leading-relaxed text-white/72 sm:text-[11px]">
                 When you &quot;ENTER&quot; the building, you&apos;ll notice multiple interactive rooms to explore. For
                 the best experience, click &quot;Start Here&quot; to begin the tour. To have a self-led tour click
                 &quot;Show Rooms&quot; or &quot;Explore All Rooms.&quot;
@@ -259,8 +252,8 @@ export default function Home() {
           type="button"
           onClick={handleEnterLobby}
           className={[
-            "absolute z-10 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/28 px-3 py-2 text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition-all duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-black/40",
-            isEnterVisible && !isEnteringLobby ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none",
+            "absolute z-10 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/28 px-3 py-2 text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition-all duration-[2900ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-black/40",
+            isVisible && !isEnteringLobby ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none",
           ].join(" ")}
           style={buttonStyle}
           disabled={isEnteringLobby}

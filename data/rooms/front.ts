@@ -111,6 +111,7 @@ export const lobbyRoom: Room = {
           links: [
             { label: "Who We Are", href: "modal:About" },
             { label: "What We Offer", href: "modal:departments-sheet" },
+            { label: "What We’ve Done", href: "modal:case-study-tour" },
             { label: "How You Start", href: "modal:how-you-start" },
             { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
             { label: "Learn More", href: "/about" },

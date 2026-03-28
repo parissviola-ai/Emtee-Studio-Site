@@ -419,6 +419,20 @@ function getCoverImageMetrics(
   };
 }
 
+function scheduleIdleWork(callback: () => void, timeout = 900) {
+  if (typeof window === "undefined") return () => {};
+  const idleWindow = window as Window & typeof globalThis & {
+    requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number;
+    cancelIdleCallback?: (handle: number) => void;
+  };
+  if (idleWindow.requestIdleCallback) {
+    const id = idleWindow.requestIdleCallback(() => callback(), { timeout });
+    return () => idleWindow.cancelIdleCallback?.(id);
+  }
+  const id = window.setTimeout(callback, 120);
+  return () => window.clearTimeout(id);
+}
+
 function SocialIcon({ label, className = "" }: { label: string; className?: string }) {
   const common = `h-4 w-4 ${className}`.trim();
   switch (label) {
@@ -1197,17 +1211,21 @@ export default function RoomScene({
       ].filter((href): href is string => !!href))
     );
 
-    for (const href of routesToWarm) {
+    return scheduleIdleWork(() => {
+      for (const href of routesToWarm) {
         if (prefetchedExploreRoutesRef.current.has(href)) continue;
         prefetchedExploreRoutesRef.current.add(href);
         logRoomNav("nav:warmRoute", { from: `/rooms/${room.slug}`, to: href, source: "room-scene-effect" });
         router.prefetch(href);
         warmRoomAssetsByHref(href);
       }
-  }, [exploreArrowHref, explorePrevHref, nextRoomHotspotHref, router]);
+    });
+  }, [exploreArrowHref, explorePrevHref, nextRoomHotspotHref, room.slug, router]);
 
   useEffect(() => {
-    warmRoomNeighborhoodBySlug(room.slug);
+    return scheduleIdleWork(() => {
+      warmRoomNeighborhoodBySlug(room.slug);
+    });
   }, [room.slug]);
 
   useEffect(() => {
@@ -1466,8 +1484,10 @@ export default function RoomScene({
     if (room.slug === "lobby") return;
 
     // Warm route + key lobby asset so "Back to Lobby" feels snappier.
-    router.prefetch("/rooms/lobby");
-    warmRoomNeighborhoodBySlug("lobby");
+    return scheduleIdleWork(() => {
+      router.prefetch("/rooms/lobby");
+      warmRoomNeighborhoodBySlug("lobby");
+    });
   }, [room.slug, router]);
 
   useEffect(() => {
@@ -1495,9 +1515,11 @@ export default function RoomScene({
     if (room.slug !== "lobby") return;
 
     // Keep lobby startup focused on the immediate room neighborhood.
-    getRoomWarmNeighborhoodHrefsBySlug("lobby").forEach((href) => {
-      router.prefetch(href);
-      warmRoomAssetsByHref(href);
+    return scheduleIdleWork(() => {
+      getRoomWarmNeighborhoodHrefsBySlug("lobby").forEach((href) => {
+        router.prefetch(href);
+        warmRoomAssetsByHref(href);
+      });
     });
   }, [room.slug, router]);
 
@@ -1842,21 +1864,27 @@ export default function RoomScene({
       setImageNaturalSize(cached);
       return;
     }
-    const probe = new window.Image();
-    probe.onload = () => {
-      const w = probe.naturalWidth || probe.width;
-      const h = probe.naturalHeight || probe.height;
-      if (!w || !h) return;
-      const next = { w, h };
-      imageNaturalSizeCacheRef.current[backgroundImageSrc] = next;
-      setImageNaturalSize(next);
-    };
-    probe.src = backgroundImageSrc;
+    setImageNaturalSize(null);
+    return scheduleIdleWork(() => {
+      const probe = new window.Image();
+      probe.decoding = "async";
+      probe.onload = () => {
+        const w = probe.naturalWidth || probe.width;
+        const h = probe.naturalHeight || probe.height;
+        if (!w || !h) return;
+        const next = { w, h };
+        imageNaturalSizeCacheRef.current[backgroundImageSrc] = next;
+        setImageNaturalSize(next);
+      };
+      probe.src = backgroundImageSrc;
+    }, 1200);
   }, [backgroundImageSrc]);
 
   useEffect(() => {
     if (room.slug !== "EMTEEWebDesign" && room.slug !== "publishing-distribution") return;
-    router.prefetch("/website-design-consultation");
+    return scheduleIdleWork(() => {
+      router.prefetch("/website-design-consultation");
+    });
   }, [room.slug, router]);
 
   // ===== HOTSPOT RENDERERS =====
@@ -1964,7 +1992,6 @@ export default function RoomScene({
     const isOrangeSessionDot = spot.id === "dirty-elephant-studio-room-sessions";
     const isMediaRoom = room.slug === "marketing";
     const isBrandDealsDot = room.slug === "marketing" && spot.id === "marketing-brand-deals";
-    const isBusinessRoomDot = room.slug === "business";
     const isLobbyDot = room.slug === "lobby";
     const isLiveRoomSocialDot =
       room.slug === "ten-ten-entertainment" &&
@@ -2055,32 +2082,17 @@ export default function RoomScene({
         <span
           className={[
             "relative inline-flex items-center justify-center",
-            isBusinessRoomDot
-              ? [
-                  isMobileViewport ? "h-7 w-7" : "h-8 w-8",
-                  "rounded-full border border-white/28 bg-black/32 backdrop-blur-[4px]",
-                  "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_26px_rgba(255,255,255,0.24),0_10px_26px_rgba(0,0,0,0.3)]",
-                ].join(" ")
-              : dotBase,
-            (isOrangeSessionDot || isBusinessRoomDot) && !prefersReducedMotion ? "animate-[softPulse_1.35s_ease-in-out_infinite]" : "",
+            dotBase,
+            isOrangeSessionDot && !prefersReducedMotion ? "animate-[softPulse_1.35s_ease-in-out_infinite]" : "",
           ].join(" ")}
-          style={isBusinessRoomDot ? undefined : { width: `${dotSize}px`, height: `${dotSize}px` }}
+          style={{ width: `${dotSize}px`, height: `${dotSize}px` }}
         >
-          {isBusinessRoomDot ? (
-            <NextImage
-              src="/logotransparent.png"
-              alt=""
-              width={18}
-              height={18}
-              aria-hidden
-              className="h-4 w-4 object-contain invert brightness-125 contrast-125 saturate-0 opacity-100 drop-shadow-[0_0_14px_rgba(255,255,255,0.48)]"
-            />
-          ) : null}
           {/* Soft halo */}
           <span
             className={[
               "pointer-events-none absolute rounded-full blur-md",
-              isBusinessRoomDot ? "-inset-2.5 bg-white/24" : ["-inset-2", haloBase].join(" "),
+              "-inset-2",
+              haloBase,
             ].join(" ")}
           />
 
@@ -2102,8 +2114,6 @@ export default function RoomScene({
                             ? "border-zinc-800/85"
                             : "border-white/70"
                     )
-                  : isBusinessRoomDot
-                    ? "border-white/72"
                   : ringBase,
             ].join(" ")}
           />
@@ -2258,6 +2268,9 @@ export default function RoomScene({
           <img
             src={backgroundImageSrc}
             alt={room.title || room.slug}
+            loading={eagerBackgroundLoad ? "eager" : "lazy"}
+            fetchPriority={eagerBackgroundLoad ? "high" : "auto"}
+            decoding={eagerBackgroundLoad ? "sync" : "async"}
             className={[
               "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
               isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
@@ -4101,6 +4114,31 @@ export default function RoomScene({
                   >
                     {activeModal.secondaryLabel} →
                   </a>
+                ) : activeModal.secondaryHref.startsWith("modal:") ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const modalLinkId = activeModal.secondaryHref!.slice(6);
+                      const targetSpot = room.hotspots.find((spot) => spot.id === modalLinkId);
+                      if (!targetSpot?.modal) return;
+                      setModalBackModal(activeModal);
+                      openModal(targetSpot.modal);
+                    }}
+                    className={[
+                      "inline-flex items-center justify-center rounded-full transition",
+                      isStartHereModal
+                        ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
+                        : isOrangeModal
+                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
+                        : isQuietModal
+                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+                        : isLiveRoomModal
+                        ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
+                        : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
+                    ].join(" ")}
+                  >
+                    {activeModal.secondaryLabel} →
+                  </button>
                 ) : (
                   <Link
                     href={activeModal.secondaryHref}
@@ -4132,6 +4170,20 @@ export default function RoomScene({
                   >
                     {activeCarouselSlide.secondaryLabel} →
                   </a>
+                ) : activeCarouselSlide.secondaryHref.startsWith("modal:") ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const modalLinkId = activeCarouselSlide.secondaryHref!.slice(6);
+                      const targetSpot = room.hotspots.find((spot) => spot.id === modalLinkId);
+                      if (!targetSpot?.modal) return;
+                      setModalBackModal(activeModal);
+                      openModal(targetSpot.modal);
+                    }}
+                    className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                  >
+                    {activeCarouselSlide.secondaryLabel} →
+                  </button>
                 ) : (
                   <Link
                     href={activeCarouselSlide.secondaryHref}

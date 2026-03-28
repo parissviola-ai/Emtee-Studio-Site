@@ -3502,7 +3502,7 @@ export default function RoomScene({
                           <div className="inline-flex rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/16 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-[0_0_18px_rgba(214,174,102,0.18)]">
                             {activeCarouselSlide.eyebrow}
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center justify-end gap-2">
                             <button
                               type="button"
                               onClick={() => {
@@ -3546,48 +3546,6 @@ export default function RoomScene({
                               aria-label={`Go to slide ${index + 1}`}
                             />
                           ))}
-                        </div>
-                        <div className="mt-5 flex flex-wrap gap-2">
-                          {activeCarouselSlide.secondaryHref && activeCarouselSlide.secondaryLabel ? (
-                            activeCarouselSlide.secondaryHref.startsWith("http") ? (
-                              <a
-                                href={activeCarouselSlide.secondaryHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
-                              >
-                                {activeCarouselSlide.secondaryLabel} →
-                              </a>
-                            ) : (
-                              <Link
-                                href={activeCarouselSlide.secondaryHref}
-                                onClick={closeModal}
-                                className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
-                              >
-                                {activeCarouselSlide.secondaryLabel} →
-                              </Link>
-                            )
-                          ) : null}
-                          {activeCarouselSlide.primaryHref && activeCarouselSlide.primaryLabel ? (
-                            activeCarouselSlide.primaryHref.startsWith("http") ? (
-                              <a
-                                href={activeCarouselSlide.primaryHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
-                              >
-                                {activeCarouselSlide.primaryLabel} →
-                              </a>
-                            ) : (
-                              <Link
-                                href={activeCarouselSlide.primaryHref}
-                                onClick={closeModal}
-                                className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
-                              >
-                                {activeCarouselSlide.primaryLabel} →
-                              </Link>
-                            )
-                          ) : null}
                         </div>
                       </div>
                     ) : activeModal.imageGallery?.length ? (
@@ -4145,6 +4103,46 @@ export default function RoomScene({
                     ].join(" ")}
                   >
                     {activeModal.secondaryLabel} →
+                  </Link>
+                )
+              ) : null}
+              {isCarouselModal && activeCarouselSlide?.secondaryHref && activeCarouselSlide.secondaryLabel ? (
+                activeCarouselSlide.secondaryHref.startsWith("http") ? (
+                  <a
+                    href={activeCarouselSlide.secondaryHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                  >
+                    {activeCarouselSlide.secondaryLabel} →
+                  </a>
+                ) : (
+                  <Link
+                    href={activeCarouselSlide.secondaryHref}
+                    onClick={closeModal}
+                    className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                  >
+                    {activeCarouselSlide.secondaryLabel} →
+                  </Link>
+                )
+              ) : null}
+              {isCarouselModal && activeCarouselSlide?.primaryHref && activeCarouselSlide.primaryLabel ? (
+                activeCarouselSlide.primaryHref.startsWith("http") ? (
+                  <a
+                    href={activeCarouselSlide.primaryHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+                  >
+                    {activeCarouselSlide.primaryLabel} →
+                  </a>
+                ) : (
+                  <Link
+                    href={activeCarouselSlide.primaryHref}
+                    onClick={closeModal}
+                    className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+                  >
+                    {activeCarouselSlide.primaryLabel} →
                   </Link>
                 )
               ) : null}

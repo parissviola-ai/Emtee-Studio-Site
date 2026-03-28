@@ -632,7 +632,7 @@ export default function RoomModalLayer({
                   </p>
                 )}
 
-                {!activeResourceContext && activeModal.highlights?.length ? (
+                {activeModal.highlights?.length ? (
                   <div
                     className={[
                       "mt-6 space-y-4 rounded-2xl p-4 transition-all duration-700 ease-out",

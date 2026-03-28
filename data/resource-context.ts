@@ -40,9 +40,17 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "A deeper creation package for building a structured five-song project.",
     why: "A stronger project format increases storytelling, replay value, and catalog strength.",
   },
+  "EP Creation (3 Songs)": {
+    what: "A short-form development package for creating a cohesive three-song body of work.",
+    why: "Artists can test sound direction and build momentum with more than a one-off release.",
+  },
   "Content Creation": {
     what: "A recurring content system for capture, planning, and publishing.",
     why: "Consistent content keeps audiences engaged between releases and campaigns.",
+  },
+  EPK: {
+    what: "A professional electronic press kit that packages your artist story, visuals, music, and key links in one place.",
+    why: "It makes you easier to book, feature, and pitch because partners can review your brand quickly.",
   },
   "Brand Deck": {
     what: "A concise visual and messaging deck that defines your artist brand presentation.",
@@ -60,9 +68,17 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "Expanded ten-ten-entertainment set development for longer performances with higher production demands.",
     why: "Longer sets require stamina, pacing, and structure to sustain engagement. Artists improve stage confidence, transitions, and audience retention during shows.",
   },
+  "BTS Content Production": {
+    what: "A behind-the-scenes content package for capturing and shaping process-driven reels and supporting visuals.",
+    why: "It helps audiences connect with the story behind the work, not just the final release.",
+  },
   "Brand Deals": {
     what: "Partnership development support for potential brand collaborations.",
     why: "Well-structured brand opportunities can diversify artist income and visibility.",
+  },
+  "Brand Partnership Strategies": {
+    what: "A strategy package for identifying, shaping, and pitching artist-to-brand partnership opportunities.",
+    why: "The right brand alignment can unlock additional reach, credibility, and non-streaming revenue.",
   },
   "Tour Management": {
     what: "Support for coordinating tour logistics and execution support needs.",
@@ -92,6 +108,10 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "Frameworks for growing and nurturing a core fan community.",
     why: "A loyal community increases retention, repeat support, and long-term brand strength.",
   },
+  Streaming: {
+    what: "A livestream setup and strategy lane designed to help artists show up consistently online and create new audience touchpoints.",
+    why: "It adds another monetization and community channel without depending only on in-person moments.",
+  },
   Merchandise: {
     what: "Merchandising setup and storelobby support for artist products.",
     why: "Merch can become a reliable direct-to-fan income stream and brand touchpoint.",
@@ -103,6 +123,14 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   "Event Planner": {
     what: "Hands-on event support with additional execution coordination.",
     why: "More operational support reduces risk and improves ten-ten-entertainment event consistency.",
+  },
+  "Accounting Set Up": {
+    what: "A bookkeeping and payroll system setup that organizes how money is tracked, reported, and managed.",
+    why: "Clear accounting systems reduce confusion and help artists make smarter financial decisions as they grow.",
+  },
+  "Website Design": {
+    what: "A website planning and build lane that turns your artist story, assets, and calls-to-action into a working digital home base.",
+    why: "A strong site gives fans, media, and bookers one clear place to understand your world and take action.",
   },
   "Tier 1: Starter Site": {
     what: "A focused starter website package that gives artists a clean, professional one-page home base.",
@@ -120,8 +148,35 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "These are the core milestones included across every Website Design tier from kickoff to finalization.",
     why: "A consistent meeting structure keeps strategy, design direction, and final deten-ten-entertainmentry aligned throughout the build process.",
   },
+  Packages: {
+    what: "A package selector that lets artists compare the main Ten Ten showcase support options before applying.",
+    why: "It helps artists choose the lane that best fits their stage of development, promo needs, and performance goals.",
+  },
+  "Up & Coming Artist Package": {
+    what: "A showcase package for artists building early stage confidence, ticket movement, and live audience experience.",
+    why: "It creates a lower-barrier way to sharpen performance skills while learning how to convert supporters in a real room.",
+  },
+  "Rising Star Showcase Package": {
+    what: "An expanded showcase package with added promo, content, and artist support around the live performance experience.",
+    why: "It gives developing artists more infrastructure so the performance can create stronger momentum before and after show day.",
+  },
+  "Live Set Performance Development": {
+    what: "A coaching lane focused on tightening your live set structure, pacing, transitions, and stage presence before you perform.",
+    why: "Better live preparation helps artists hold attention longer and turn performances into stronger fan conversion moments.",
+  },
+  "Ten Ten Community": {
+    what: "A recurring artist community membership built around motivation, accountability, exposure, and peer connection.",
+    why: "Consistent community support helps artists sustain momentum between releases and stay connected to opportunity.",
+  },
 };
 
 export function getResourceContext(name: string): ResourceContext | null {
-  return RESOURCE_CONTEXT_BY_NAME[name] ?? null;
+  const normalizedName =
+    {
+      "3 Song Creation": "EP Creation (3 Songs)",
+      "Brand Deck + EPK": "EPK",
+      "Brand Deals": "Brand Partnership Strategies",
+    }[name] ?? name;
+
+  return RESOURCE_CONTEXT_BY_NAME[normalizedName] ?? null;
 }

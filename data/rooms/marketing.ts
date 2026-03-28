@@ -7,14 +7,14 @@ export const marketingRoom: Room = {
     hotspots: [
       { id: "next-room", label: "A&R / Sales", href: "/rooms/ar-sales", x: 90, y: 17, direction: "right" },
       {
-        id: "marketing-content-creation",
-        label: "Content Creation",
+        id: "marketing-content-production",
+        label: "Content Production",
         x: 50,
         y: 30,
         direction: "right",
         variant: "dot",
       modal: {
-        title: "Content Creation",
+        title: "Content Production",
         body:
           "Brainstorming, shooting and editing while developing set content series'.",
           primaryLabel: "Apply For A Consultation",
@@ -132,14 +132,14 @@ export const marketingRoom: Room = {
         },
       },
       {
-        id: "marketing-website-design-packages",
-        label: "Website Design",
+        id: "marketing-website-development",
+        label: "Website Development",
         x: 85.83,
         y: 71.94,
         direction: "up",
         variant: "dot",
       modal: {
-        title: "Website Design",
+        title: "Website Development",
         body:
           "High-level website design and development.",
           primaryLabel: "Apply For A Consultation",

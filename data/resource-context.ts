@@ -16,15 +16,15 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "A finance-oriented review of current revenue channels and weak points in monetization.",
     why: "Artists can prioritize the income channels that are most realistic and sustainable for their stage.",
   },
-  "6-Month Rollout Strategy Plan": {
-    what: "A mid-term release and business action plan for the next 6 months.",
+  "6 Month Project Roll Out": {
+    what: "Developing a plan for promo, production and campaign releases.",
     why: "It creates cadence and accountability so progress is measurable rather than reactive.",
   },
-  "12-Month Rollout Strategy Plan": {
-    what: "A long-range strategy map that connects releases, business decisions, and growth milestones.",
+  "12 Month Career Roll Out": {
+    what: "Year long artist roll out taking into consideration all departments.",
     why: "Long-term planning helps artists build compounding results instead of short bursts.",
   },
-  "Business Operations Set-Up": {
+  "Business Operation Set Up": {
     what: "Business licensing, bank set up and tax set up.",
     why: "Strong operations protect the artist and make scaling opportunities easier to manage.",
   },
@@ -44,7 +44,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "Direction, production, writing and engineering for a 3-song EP.",
     why: "Artists can test sound direction and build momentum with more than a one-off release.",
   },
-  "Content Creation": {
+  "Content Production": {
     what: "Brainstorming, shooting and editing while developing set content series'.",
     why: "Consistent content keeps audiences engaged between releases and campaigns.",
   },
@@ -88,7 +88,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "On-road assistance, bookings and tour strategy.",
     why: "Artists can deten-ten-entertainmentr stronger ten-ten-entertainment campaigns with fewer operational issues on the road.",
   },
-  "Publishing/Distro Workshop": {
+  "Publishing/Distribution Workshop": {
     what: "An hour long workshop to teach artists pub/distro 101.",
     why: "Correct setup ensures artists can collect royalties and avoid preventable revenue loss.",
   },
@@ -96,11 +96,11 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "A publishing/distribution readiness review to confirm platform configuration and release setup.",
     why: "Artists reduce setup errors and protect royalty collection before launch.",
   },
-  "Split Sheet Set Up": {
+  "Split Sheet Development": {
     what: "Developing a split sheet to help organize royalty and ownership.",
     why: "Clear split sheets help everyone involved in the project receive their agreed share of the song and reduce future disputes.",
   },
-  "CRM Set-Up": {
+  "CRM Set Up": {
     what: "High level CRM set up to develop company valuation and lead generation pipelines.",
     why: "Artists can build direct audience ownership and improve conversion over time.",
   },
@@ -132,7 +132,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "Financial systemization of bookeeping and payroll.",
     why: "Clear accounting systems reduce confusion and help artists make smarter financial decisions as they grow.",
   },
-  "Website Design": {
+  "Website Development": {
     what: "High-level website design and development.",
     why: "A strong site gives fans, media, and bookers one clear place to understand your world and take action.",
   },
@@ -177,9 +177,17 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
 export function getResourceContext(name: string): ResourceContext | null {
   const normalizedName =
     {
+      "6-Month Rollout Strategy Plan": "6 Month Project Roll Out",
+      "12-Month Rollout Strategy Plan": "12 Month Career Roll Out",
+      "Business Operations Set-Up": "Business Operation Set Up",
       "3 Song Creation": "EP Creation (3 Songs)",
+      "Content Creation": "Content Production",
       "Brand Deck + EPK": "EPK",
       "Brand Deals": "Brand Partnership Strategies",
+      "Publishing/Distro Workshop": "Publishing/Distribution Workshop",
+      "Split Sheet Set Up": "Split Sheet Development",
+      "CRM Set-Up": "CRM Set Up",
+      "Website Design": "Website Development",
     }[name] ?? name;
 
   return RESOURCE_CONTEXT_BY_NAME[normalizedName] ?? null;

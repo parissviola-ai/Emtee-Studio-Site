@@ -235,14 +235,14 @@ const ARTISTS_OVERVIEW_CARD: InfoCard = {
 };
 
 const WEBSITE_DESIGN_OVERVIEW_CARD: InfoCard = {
-  title: "Website Design Overview",
+  title: "Website Development Overview",
   body:
-    "This room is a representation of EMTEE's Website Design lane. Core scope includes clarifying your artist story, structuring your digital home, and building a site fans, media, and bookers can actually use.\n\nExplore the room dots to view process and package options.",
+    "This room is a representation of EMTEE's Website Development lane. Core scope includes clarifying your artist story, structuring your digital home, and building a site fans, media, and bookers can actually use.\n\nExplore the room dots to view process and package options.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "/website-design-consultation",
   secondaryCta: "Resources",
   secondaryHref: "/resources",
-  eyebrow: "Website Design",
+  eyebrow: "Website Development",
 };
 
 const PREVIOUS_ROOM_LINKS: Record<string, string> = {
@@ -962,7 +962,7 @@ export default function RoomScene({
   const isCustomProductionModal = activeModal?.title === "Apply For Custom Production";
   const isLivePackagesModal = room.slug === "ten-ten-entertainment" && activeModal?.title === "Packages";
   const isWebsiteDesignMainModal =
-    room.slug === "marketing" && activeModal?.title === "Website Design";
+    room.slug === "marketing" && activeModal?.title === "Website Development";
   const isPackageGridModal = isLivePackagesModal || isWebsiteDesignMainModal;
   const isLivePackageDetailModal =
     room.slug === "ten-ten-entertainment" &&
@@ -2505,7 +2505,7 @@ export default function RoomScene({
           >
             <iframe
               src="/website-design"
-              title="Website Design Interactive Screen"
+              title="Website Development Interactive Screen"
               className="h-full w-full border-0"
               loading="eager"
             />

@@ -115,37 +115,38 @@ export default function RoomModalLayer({
 
   const isResourceOnlyModal = !!activeResourceContext;
   const shouldUseCompactFooterButtons = isResourceOnlyModal || isPackageGridModal;
+  const uniformModalButtonSizing = "px-3 py-1.5 text-[11px] font-medium";
   const compactFooterButtonClass =
-    "inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white";
+    `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
 
   const secondaryButtonClass = [
     "inline-flex items-center justify-center rounded-full transition",
     isStartHereModal
-      ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
+      ? `border border-white/18 bg-white/5 ${uniformModalButtonSizing} text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88`
       : shouldUseCompactFooterButtons
-      ? "border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white"
+      ? `border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white`
       : isOrangeModal
-      ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
+      ? `border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55`
       : isQuietModal
-      ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+      ? `border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
       : isLiveRoomModal
-      ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
-      : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
+      ? `border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 hover:bg-white/18 hover:text-white`
+      : `border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 hover:bg-white/18 hover:text-white`,
   ].join(" ");
 
   const primaryButtonClass = [
     "inline-flex items-center justify-center rounded-full transition",
     isStartHereModal
-      ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
+      ? `border border-white/18 bg-white/9 ${uniformModalButtonSizing} text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white`
       : shouldUseCompactFooterButtons
-      ? "border border-white/18 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-white/88 hover:border-white/30 hover:bg-white/14 hover:text-white"
+      ? `border border-white/18 bg-white/10 ${uniformModalButtonSizing} text-white/88 hover:border-white/30 hover:bg-white/14 hover:text-white`
       : isOrangeModal
-      ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+      ? `border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white`
       : isQuietModal
-      ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
+      ? `border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
       : isLiveRoomModal
-      ? "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white"
-      : "border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 hover:bg-white/18 hover:text-white",
+      ? `border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 hover:bg-white/18 hover:text-white`
+      : `border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 hover:bg-white/18 hover:text-white`,
   ].join(" ");
 
   const isStructuredFooterModal = !isStartHereModal;
@@ -162,7 +163,7 @@ export default function RoomModalLayer({
           rel="noopener noreferrer"
           onClick={closeModal}
           className={[
-            "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
+            `inline-flex items-center justify-center rounded-full ${uniformModalButtonSizing} transition`,
             isOrangeModal
               ? "border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
               : "bg-white text-black hover:bg-white/90",
@@ -176,7 +177,7 @@ export default function RoomModalLayer({
           href={activeModal.primaryHref}
           onClick={closeModal}
           className={[
-            "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition",
+            `inline-flex items-center justify-center rounded-full ${uniformModalButtonSizing} transition`,
             isOrangeModal
               ? "border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
               : "bg-white text-black hover:bg-white/90",
@@ -206,22 +207,22 @@ export default function RoomModalLayer({
             }}
             className={
               isStartHereModal
-                ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                ? `inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] ${uniformModalButtonSizing} text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white`
                 : shouldUseCompactFooterButtons
                   ? compactFooterButtonClass
                 : isPackageGridModal
                   ? isWebsiteDesignMainModal
-                    ? "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]"
-                    : "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white"
+                    ? `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]`
+                    : `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white`
                 : isYanchanMusicModal
                 ? isOrangeModal
                   ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                   : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
                 : isOrangeModal
-                ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+                ? `inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white`
                 : isQuietModal
-                ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
-                : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                ? `inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
+                : `inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`
             }
           >
             {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
@@ -238,10 +239,10 @@ export default function RoomModalLayer({
             onClick={closeModal}
             className={
               isStartHereModal
-                ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                ? `inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] ${uniformModalButtonSizing} text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white`
                 : shouldUseCompactFooterButtons
                 ? compactFooterButtonClass
-                : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+                : `inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`
             }
           >
             {`${link.label} →`}
@@ -260,22 +261,22 @@ export default function RoomModalLayer({
           title={link.label}
           className={
             isStartHereModal
-              ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+              ? `inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] ${uniformModalButtonSizing} text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white`
               : shouldUseCompactFooterButtons
               ? compactFooterButtonClass
               : isPackageGridModal
                 ? isWebsiteDesignMainModal
-                  ? "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]"
-                : "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white"
+                  ? `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]`
+                : `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white`
               : isYanchanMusicModal
               ? isOrangeModal
                 ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                 : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
               : isOrangeModal
-              ? "inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
+              ? `inline-flex items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white`
               : isQuietModal
-              ? "inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
-              : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
+              ? `inline-flex items-center justify-center rounded-full border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 transition hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
+              : `inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`
           }
         >
           {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
@@ -327,15 +328,15 @@ export default function RoomModalLayer({
   if (isCarouselModal && activeCarouselSlide?.secondaryHref && activeCarouselSlide.secondaryLabel) {
     footerActions.push(
       activeCarouselSlide.secondaryHref.startsWith("http") ? (
-        <a key="carousel-secondary-http" href={activeCarouselSlide.secondaryHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
+        <a key="carousel-secondary-http" href={activeCarouselSlide.secondaryHref} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`}>
           {activeCarouselSlide.secondaryLabel} →
         </a>
       ) : activeCarouselSlide.secondaryHref.startsWith("modal:") ? (
-        <button key="carousel-secondary-modal" type="button" onClick={() => handleModalTarget(activeCarouselSlide.secondaryHref)} className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
+        <button key="carousel-secondary-modal" type="button" onClick={() => handleModalTarget(activeCarouselSlide.secondaryHref)} className={`inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`}>
           {activeCarouselSlide.secondaryLabel} →
         </button>
       ) : (
-        <Link key="carousel-secondary-link" href={activeCarouselSlide.secondaryHref} onClick={closeModal} className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white">
+        <Link key="carousel-secondary-link" href={activeCarouselSlide.secondaryHref} onClick={closeModal} className={`inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`}>
           {activeCarouselSlide.secondaryLabel} →
         </Link>
       )
@@ -345,11 +346,11 @@ export default function RoomModalLayer({
   if (isCarouselModal && activeCarouselSlide?.primaryHref && activeCarouselSlide.primaryLabel) {
     footerActions.push(
       activeCarouselSlide.primaryHref.startsWith("http") ? (
-        <a key="carousel-primary-http" href={activeCarouselSlide.primaryHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90">
+        <a key="carousel-primary-http" href={activeCarouselSlide.primaryHref} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
           {activeCarouselSlide.primaryLabel} →
         </a>
       ) : (
-        <Link key="carousel-primary-link" href={activeCarouselSlide.primaryHref} onClick={closeModal} className="inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90">
+        <Link key="carousel-primary-link" href={activeCarouselSlide.primaryHref} onClick={closeModal} className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
           {activeCarouselSlide.primaryLabel} →
         </Link>
       )
@@ -450,7 +451,7 @@ export default function RoomModalLayer({
                     <button
                       type="button"
                       onClick={toggleOrangePreviewMute}
-                      className="inline-flex shrink-0 items-center justify-center rounded-full border border-dirty-elephant-studio-200/30 bg-black/45 px-4 py-2 text-xs font-semibold text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/50 hover:bg-black/60"
+                      className={`inline-flex shrink-0 items-center justify-center rounded-full border border-dirty-elephant-studio-200/30 bg-black/45 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/50 hover:bg-black/60`}
                     >
                       {isOrangePreviewMuted ? "Unmute Music" : "Mute Music"}
                     </button>
@@ -488,7 +489,7 @@ export default function RoomModalLayer({
                           if (nextMuted) muteYoutube();
                           else unmuteYoutube();
                         }}
-                        className="absolute bottom-3 right-3 rounded-full border border-white/25 bg-black/50 px-3 py-1.5 text-xs font-medium text-white/85 backdrop-blur-md transition hover:bg-black/65 hover:text-white"
+                        className={`absolute bottom-3 right-3 rounded-full border border-white/25 bg-black/50 ${uniformModalButtonSizing} text-white/85 backdrop-blur-md transition hover:bg-black/65 hover:text-white`}
                       >
                         {videoMuted ? "Unmute" : "Mute"}
                       </button>
@@ -532,7 +533,7 @@ export default function RoomModalLayer({
                             if (!activeModal?.carouselSlides?.length) return;
                             setActiveCarouselIndex((prev) => (prev - 1 + activeModal.carouselSlides.length) % activeModal.carouselSlides.length);
                           }}
-                          className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 px-3 py-1.5 text-xs font-semibold text-white/86 transition hover:bg-white/14 hover:text-white"
+                          className={`inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 ${uniformModalButtonSizing} text-white/86 transition hover:bg-white/14 hover:text-white`}
                         >
                           ← Prev
                         </button>
@@ -542,7 +543,7 @@ export default function RoomModalLayer({
                             if (!activeModal?.carouselSlides?.length) return;
                             setActiveCarouselIndex((prev) => (prev + 1) % activeModal.carouselSlides.length);
                           }}
-                          className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 px-3 py-1.5 text-xs font-semibold text-white/86 transition hover:bg-white/14 hover:text-white"
+                          className={`inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 ${uniformModalButtonSizing} text-white/86 transition hover:bg-white/14 hover:text-white`}
                         >
                           Next →
                         </button>
@@ -787,12 +788,12 @@ export default function RoomModalLayer({
                     className={[
                       shouldUseCompactFooterButtons ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition" : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
                       isOrangeModal
-                        ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
+                        ? `border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55`
                         : shouldUseCompactFooterButtons
-                        ? "border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white"
+                        ? `border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white`
                         : isQuietModal
-                        ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
-                        : "border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 hover:text-white",
+                        ? `border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
+                        : `border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 hover:bg-white/15 hover:text-white`,
                     ].join(" ")}
                   >
                     {modalBackModal ? "Back" : "Close"}
@@ -812,7 +813,7 @@ export default function RoomModalLayer({
                       }
                       closeModal();
                     }}
-                    className="inline-flex items-center justify-center rounded-full border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 transition hover:border-white/26 hover:bg-white/9 hover:text-white/88"
+                    className={`inline-flex items-center justify-center rounded-full border border-white/18 bg-white/5 ${uniformModalButtonSizing} text-white/76 transition hover:border-white/26 hover:bg-white/9 hover:text-white/88`}
                   >
                     {modalBackModal ? "Back" : "Back to Lobby"}
                   </button>

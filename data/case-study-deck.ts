@@ -21,7 +21,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     snapshot:
       "Business support focused on operations setup and decision structure so creative momentum could convert into repeatable execution.",
     points: [
-      "Business Operations Set-Up (Business Department)",
+      "Business Operation Set Up (Business Department)",
       "Progressed through all EMTEE department resources across Music, Marketing, Publishing/Distribution, Business, and A&R/Sales.",
     ],
     departmentHref: "/rooms/business",
@@ -38,7 +38,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
       "Song development and creative direction, backed with cross-department campaign support.",
     points: [
       "Single Creation (Music Department)",
-      "3 Song Creation (Music Department)",
+      "EP Creation (3 Songs) (Music Department)",
     ],
     departmentHref: "/rooms/music",
     departmentLabel: "Open Music Department",
@@ -53,9 +53,9 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     snapshot:
       "Strong emphasis on campaign presentation, structured content output and live performance set positioning.",
     points: [
-      "Content Creation (Marketing Department)",
+      "Content Production (Marketing Department)",
       "Brand Deck (Marketing Department)",
-      "30min Live Performance Set Development (Marketing Department)",
+      "Live Performance Development (Marketing Department)",
     ],
     departmentHref: "/rooms/marketing",
     departmentLabel: "Open Marketing Department",
@@ -70,9 +70,9 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     snapshot:
       "CRM and community-building support to improve conversion flow, campaign coordination and on-going monetization.",
     points: [
-      "CRM Set-Up (A&R / Sales Department)",
-      "CRM Fee/Retainer (A&R / Sales Department)",
-      "Event Planner (A&R / Sales Department)",
+      "CRM Set Up (A&R / Sales Department)",
+      "Community Building (A&R / Sales Department)",
+      "Streaming (A&R / Sales Department)",
     ],
     departmentHref: "/rooms/ar-sales",
     departmentLabel: "Open A&R / Sales Department",
@@ -87,7 +87,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     snapshot:
       "Publishing and distribution support including catalog management, split royalties negotiations and on-going sync.",
     points: [
-      "Publishing/Distro Workshop (Publishing / Distribution Department)",
+      "Publishing/Distribution Workshop (Publishing / Distribution Department)",
       "Progressed through all EMTEE department resources across Music, Marketing, Publishing/Distribution, Business, and A&R/Sales.",
     ],
     departmentHref: "/rooms/publishing-distribution",

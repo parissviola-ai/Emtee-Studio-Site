@@ -9,7 +9,7 @@ export const arSalesRoom: Room = {
 
       {
         id: "ar-sales-crm-set-up",
-        label: "CRM Set-Up",
+        label: "CRM Set Up",
         tier: "core",
         x: 70,
         y: 20,
@@ -20,7 +20,7 @@ export const arSalesRoom: Room = {
         direction: "right",
         variant: "dot",
       modal: {
-        title: "CRM Set-Up",
+        title: "CRM Set Up",
         body:
             "High level CRM set up to develop company valuation and lead generation pipelines.",
           primaryLabel: "Apply For A Consultation",

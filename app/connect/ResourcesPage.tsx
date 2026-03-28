@@ -45,15 +45,15 @@ const RESOURCE_CARDS: ResourceCard[] = [
         notes: ["Financial systemization of bookeeping and payroll."],
       },
       {
-        name: "6-Month Rollout Strategy Plan",
+        name: "6 Month Project Roll Out",
         notes: ["Developing a plan for promo, production and campaign releases."],
       },
       {
-        name: "12-Month Rollout Strategy Plan",
+        name: "12 Month Career Roll Out",
         notes: ["Year long artist roll out taking into consideration all departments."],
       },
       {
-        name: "Business Operations Set-Up",
+        name: "Business Operation Set Up",
         notes: ["Business licensing, bank set up and tax set up."],
       },
     ],
@@ -89,10 +89,6 @@ const RESOURCE_CARDS: ResourceCard[] = [
     exampleArtistHref: "/artist-affiliations/case-studies-2?example=kisaki-marketing",
     items: [
       {
-        name: "Content Creation",
-        notes: ["Brainstorming, shooting and editing while developing set content series'."],
-      },
-      {
         name: "Brand Deck",
         notes: ["Extensive development of set brand standards including font, colours and feelings."],
       },
@@ -125,7 +121,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
         notes: ["Assisting in the development of new events."],
       },
       {
-        name: "Website Design",
+        name: "Website Development",
         notes: ["High-level website design and development."],
       },
     ],
@@ -139,7 +135,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
     exampleArtistHref: "/artist-affiliations/case-studies-2?example=mike-ar-sales",
     items: [
       {
-        name: "CRM Set-Up",
+        name: "CRM Set Up",
         notes: ["High level CRM set up to develop company valuation and lead generation pipelines."],
       },
       {
@@ -161,11 +157,11 @@ const RESOURCE_CARDS: ResourceCard[] = [
     exampleArtistHref: "/artist-affiliations/case-studies-2?example=yanchan-publishing-distro",
     items: [
       {
-        name: "Publishing/Distro Workshop",
+        name: "Publishing/Distribution Workshop",
         notes: ["An hour long workshop to teach artists pub/distro 101."],
       },
       {
-        name: "Split Sheet Set Up",
+        name: "Split Sheet Development",
         notes: ["Developing a split sheet to help organize royalty and ownership."],
       },
     ],
@@ -182,7 +178,7 @@ function getResourceContextWithFallback(name: string, notes: string[]) {
 }
 
 function getCaseStudyForResource(name: string) {
-  if (name === "30min Live Performance Set Development" || name === "60min Live Performance Set Development") {
+  if (name === "Live Performance Development" || name === "BTS Content Production") {
     return {
       label: "Open Kisaki Case Study",
       href: "/case-studies/kisaki",

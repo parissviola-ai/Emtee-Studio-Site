@@ -54,7 +54,7 @@ export default function WebsiteDesignConsultationPage() {
         </div>
 
         <div className="mt-8">
-          <p className="text-xs uppercase tracking-[0.22em] text-[#8b6a2f]">Website Design</p>
+          <p className="text-xs uppercase tracking-[0.22em] text-[#8b6a2f]">Website Development</p>
           <h1 className="mt-3 text-4xl tracking-tight text-[#111827] md:text-5xl">
             Consultation Form
           </h1>

@@ -50,8 +50,8 @@ export const businessRoom: Room = {
       },
     },
     {
-      id: "business-operations-set-up",
-      label: "Business Operations Set-Up",
+      id: "business-operation-set-up",
+      label: "Business Operation Set Up",
       x: 64,
       y: 78,
       positions: {
@@ -62,7 +62,7 @@ export const businessRoom: Room = {
       direction: "right",
       variant: "dot",
       modal: {
-        title: "Business Operations Set-Up",
+        title: "Business Operation Set Up",
         body:
           "Business licensing, bank set up and tax set up.",
         primaryLabel: "Apply For A Consultation",
@@ -94,8 +94,8 @@ export const businessRoom: Room = {
       },
     },
     {
-      id: "business-six-month-rollout-strategy-plan",
-      label: "6-Month Rollout Strategy Plan",
+      id: "business-six-month-project-roll-out",
+      label: "6 Month Project Roll Out",
       x: 53,
       y: 63,
       positions: {
@@ -106,7 +106,7 @@ export const businessRoom: Room = {
       direction: "right",
       variant: "dot",
       modal: {
-        title: "6-Month Rollout Strategy Plan",
+        title: "6 Month Project Roll Out",
         body:
           "Developing a plan for promo, production and campaign releases.",
         primaryLabel: "Apply For A Consultation",
@@ -116,8 +116,8 @@ export const businessRoom: Room = {
       },
     },
     {
-      id: "business-twelve-month-rollout-strategy-plan",
-      label: "12-Month Rollout Strategy Plan",
+      id: "business-twelve-month-career-roll-out",
+      label: "12 Month Career Roll Out",
       x: 45,
       y: 80,
       positions: {
@@ -128,7 +128,7 @@ export const businessRoom: Room = {
       direction: "down",
       variant: "dot",
       modal: {
-        title: "12-Month Rollout Strategy Plan",
+        title: "12 Month Career Roll Out",
         body:
           "Year long artist roll out taking into consideration all departments.",
         primaryLabel: "Apply For A Consultation",

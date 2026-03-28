@@ -36,8 +36,8 @@ export default function GlobalWarmup() {
       });
       warmRoomNeighborhoodBySlug("lobby");
       warmImageAsset("/rooms/lobbywithconcert-opt.jpg");
-      warmImageAsset("/rooms/fullimagecity.png");
-      warmImageAsset("/rooms/stillbuildingfinal.png");
+      warmImageAsset("/rooms/fullimagecity-opt.jpg");
+      warmImageAsset("/rooms/stillbuildingfinal-opt.jpg");
       warmImageAsset("/rooms/departmentdeck.png");
     };
 

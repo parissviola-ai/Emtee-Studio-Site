@@ -4,8 +4,8 @@ export const quietRoom: Room = {
     slug: "steeped-dreams-studio",
     title: "Steeped Dreams\nStudio",
     backgroundImage: "/rooms/SDSFinal-opt.jpg",
-    backgroundVideo: "/rooms/quietroomvid.mp4",
-    backgroundVideoMobile: "/rooms/quietroomvid.mp4",
+    backgroundVideo: "/rooms/quietroomvid-opt.mp4",
+    backgroundVideoMobile: "/rooms/quietroomvid-opt.mp4",
     hotspots: [
       { id: "next-room", label: "Lobby", href: "/rooms/lobby", x: 90, y: 17, direction: "right" },
       {

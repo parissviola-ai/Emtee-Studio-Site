@@ -16,10 +16,10 @@ export const ROOM_FLOW_SLUGS = [
   "business",
   "music",
   "marketing",
-  "publishing-distribution",
   "ar-sales",
-  "ten-ten-entertainment",
+  "publishing-distribution",
   "dirty-elephant-studio",
+  "ten-ten-entertainment",
   "steeped-dreams-studio",
 ] as const;
 

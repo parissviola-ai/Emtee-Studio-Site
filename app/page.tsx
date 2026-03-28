@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { awaitRoomAssetsByHref, getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
 
-const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity.png";
-const LANDING_MOBILE_IMAGE = "/rooms/stillbuildingfinal.png";
+const LANDING_DESKTOP_IMAGE = "/rooms/fullimagecity-opt.jpg";
+const LANDING_MOBILE_IMAGE = "/rooms/stillbuildingfinal-opt.jpg";
 const LANDING_DESKTOP_NATURAL_SIZE = { w: 6240, h: 3510 };
 const LANDING_BUTTON_COORDS = {
   mobile: { x: 59, y: 84 },

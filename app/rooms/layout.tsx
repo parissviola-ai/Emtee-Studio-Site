@@ -31,7 +31,7 @@ const RESOURCE_LINKS: NavLink[] = [
 ];
 
 const CASE_STUDY_LINKS: NavLink[] = [
-  { label: "Yanchan Produced", href: "/rooms/dirty-elephant-studio" },
+  { label: "Dirty Elephant Studios", href: "/rooms/dirty-elephant-studio" },
   { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
   { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
   { label: "Case Studies", href: "/case-studies" },
@@ -86,7 +86,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
       "/about",
       "/resources",
       "/case-studies",
-      "/artist-roster-releases",
+      "/artist-affiliations",
       "/news",
       "/path-quiz",
       ...rooms.map((room) => `/rooms/${room.slug}`),
@@ -160,7 +160,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const caseStudiesActive =
     pathname === "/case-studies" ||
     pathname.startsWith("/case-studies") ||
-    pathname.startsWith("/artist-roster-releases") ||
+    pathname.startsWith("/artist-affiliations") ||
     CASE_STUDY_LINKS.some((item) => pathname === item.href);
   const currentRoomHeader = ROOM_HEADER_LABELS[pathname];
 
@@ -224,7 +224,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                       You Are Here
                     </div>
                     <div className="mt-0.5 text-center text-[11px] font-semibold text-white/92 [text-shadow:0_0_10px_rgba(255,255,255,0.18)]">
-                      {currentRoomHeader.label}
+                      {currentRoomHeader.label.toUpperCase()}
                     </div>
                   </div>
                 </div>
@@ -239,7 +239,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                         }
                         setMobileLobbyShowRoomsOpen((prev) => !prev);
                       }}
-                      className="inline-flex min-w-[5.6rem] items-center justify-center rounded-full border border-white/18 bg-black/24 px-2 py-[0.28rem] text-[8px] font-semibold uppercase tracking-[0.14em] text-white/86 shadow-[0_6px_14px_rgba(0,0,0,0.12)] backdrop-blur-md transition hover:border-white/26 hover:bg-black/30 hover:text-white"
+                      className="inline-flex min-w-[5.6rem] items-center justify-center px-1 py-[0.1rem] text-[8px] font-semibold uppercase tracking-[0.16em] text-white/84 transition hover:text-white"
                     >
                       {mobileLobbyShowRoomsOpen ? "Hide Rooms" : "Show Rooms"}
                     </button>
@@ -251,7 +251,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                     You Are Here
                   </div>
                   <div className="max-w-[22rem] truncate text-center text-[13px] font-semibold text-white/92 [text-shadow:0_0_10px_rgba(255,255,255,0.22),0_0_24px_rgba(255,255,255,0.1)] md:text-[16px]">
-                    {currentRoomHeader.label}
+                    {currentRoomHeader.label.toUpperCase()}
                   </div>
                 </div>
               </>
@@ -332,7 +332,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               </div>
 
               <div className="relative hidden sm:block group">
-                <Link href="/artist-roster-releases" className={desktopMenuLinkClass(caseStudiesActive)}>Artist &amp; Partners</Link>
+                <Link href="/artist-affiliations" className={desktopMenuLinkClass(caseStudiesActive)}>Artists &amp; Partners</Link>
 
                 <div className="pointer-events-none absolute right-0 top-full translate-y-1 pt-2 opacity-0 transition-all duration-260 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="w-64 rounded-xl border border-white/15 bg-black/70 p-2 backdrop-blur-xl">
@@ -365,7 +365,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
               <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
               <Link href="/resources" className={[navLinkClass("/resources"), "sm:hidden"].join(" ")}>Resources</Link>
-              <Link href="/artist-roster-releases" className={[navLinkClass("/artist-roster-releases"), "sm:hidden"].join(" ")}>Artist &amp; Partners</Link>
+              <Link href="/artist-affiliations" className={[navLinkClass("/artist-affiliations"), "sm:hidden"].join(" ")}>Artist &amp; Partners</Link>
               <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
               <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>
             </nav>

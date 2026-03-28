@@ -13,10 +13,10 @@ export const marketingRoom: Room = {
         y: 30,
         direction: "right",
         variant: "dot",
-        modal: {
-          title: "Content Creation",
-          body:
-            "Marketing department content package.\n\nIncludes:\n• 3-4 Pieces of Content (per month)\n• 1 Content Day (per month)\n• 1hr Brainstorm Meeting (per month)",
+      modal: {
+        title: "Content Creation",
+        body:
+          "Brainstorming, shooting and editing while developing set content series'.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -25,15 +25,15 @@ export const marketingRoom: Room = {
       },
       {
         id: "marketing-brand-deck-epk",
-        label: "Brand Deck + EPK",
+        label: "EPK",
         x: 9.01,
         y: 42.41,
         direction: "left",
         variant: "dot",
-        modal: {
-          title: "Brand Deck + EPK",
-          body:
-            "Marketing department branding package.\n\nIncludes:\n• 1-2 Page Electronic Press Kit\n• 1 Pager on Branding Aesthetic\n• 60-90min Meeting",
+      modal: {
+        title: "EPK",
+        body:
+          "One-pager for promo and press.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -47,10 +47,10 @@ export const marketingRoom: Room = {
         y: 81.2,
         direction: "down",
         variant: "dot",
-        modal: {
-          title: "Tour Management",
-          body:
-            "Marketing department ten-ten-entertainment support package.\n\nIncludes:\n• BTS Footage\n• Road Manager",
+      modal: {
+        title: "Tour Management",
+        body:
+          "On-road assistance, bookings and tour strategy.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -64,10 +64,10 @@ export const marketingRoom: Room = {
         y: 27.04,
         direction: "left",
         variant: "dot",
-        modal: {
-          title: "Brand Deck",
-          body:
-            "Marketing department branding package.\n\nIncludes:\n• 1 Pager on Branding Aesthetic\n• 60-90min Meeting\n• Develop Marketing Campaign",
+      modal: {
+        title: "Brand Deck",
+        body:
+          "Extensive development of set brand standards including font, colours and feelings.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -76,15 +76,15 @@ export const marketingRoom: Room = {
       },
       {
         id: "marketing-30min-ten-ten-entertainment-performance-set-development",
-        label: "30min Live Set Development",
+        label: "Live Performance Development",
         x: 80,
         y: 30,
         direction: "down",
         variant: "dot",
-        modal: {
-          title: "30min Live Performance Set Development",
-          body:
-            "Marketing department ten-ten-entertainment performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
+      modal: {
+        title: "30min Live Performance Set Development",
+        body:
+          "Assistance in the development of an artists' live set.",
           links: [
             { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
           ],
@@ -96,15 +96,15 @@ export const marketingRoom: Room = {
       },
       {
         id: "marketing-60min-ten-ten-entertainment-performance-set-development",
-        label: "60min Live Set Development",
+        label: "BTS Content Production",
         x: 23.18,
         y: 30.37,
         direction: "up",
         variant: "dot",
-        modal: {
-          title: "60min Live Performance Set Development",
-          body:
-            "Marketing department expanded ten-ten-entertainment performance package.\n\nIncludes:\n• One Emtee Music Group Executive Advisor\n• One Ten Ten Executive Advisor\n• Rehearsal Space",
+      modal: {
+        title: "BTS Content Production",
+        body:
+          "Shooting, editing and scripting BTS-style reels.",
           links: [
             { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
           ],
@@ -116,15 +116,15 @@ export const marketingRoom: Room = {
       },
       {
         id: "marketing-brand-deals",
-        label: "Brand Deals",
+        label: "Brand Partnership Strategies",
         x: 19.48,
         y: 81.39,
         direction: "up",
         variant: "dot",
-        modal: {
-          title: "Brand Deals",
-          body:
-            "Marketing department partnership package.\n\nIncludes:\n• Brand partnership strategy and activation roadmap",
+      modal: {
+        title: "Brand Partnership Strategies",
+        body:
+          "Developing a strategy for corporate partnerships and collaborations.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -138,10 +138,10 @@ export const marketingRoom: Room = {
         y: 71.94,
         direction: "up",
         variant: "dot",
-        modal: {
-          title: "Website Design",
-          body:
-            "Mock Packages: Choose a Website Design package tier to view full details.",
+      modal: {
+        title: "Website Design",
+        body:
+          "High-level website design and development.",
           links: [
             { label: "All Packages Include", href: "modal:marketing-website-design-all-packages-include" },
             { label: "Tier 1: Starter Site", href: "modal:marketing-website-design-tier-1-starter-site" },
@@ -150,6 +150,23 @@ export const marketingRoom: Room = {
           ],
           secondaryLabel: "Website Design Consultation",
           secondaryHref: "/website-design-consultation",
+        },
+      },
+      {
+        id: "marketing-event-planning",
+        label: "Event Planning",
+        x: 73,
+        y: 79,
+        direction: "up",
+        variant: "dot",
+        modal: {
+          title: "Event Planning",
+          body:
+            "Assisting in the development of new events.",
+          primaryLabel: "Apply For A Consultation",
+          primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+          secondaryLabel: "Resources",
+          secondaryHref: "/resources",
         },
       },
       {

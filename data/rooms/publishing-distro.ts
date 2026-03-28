@@ -16,7 +16,7 @@ export const publishingDistroRoom: Room = {
     modal: {
       title: "Publishing/Distro Workshop",
       body:
-        "Includes:\n• Confirming The Artist is Set-Up on All Necessary Platforms to Collect the $$ They Deserve\n• 60-90min Meeting",
+        "An hour long workshop to teach artists pub/distro 101.",
       primaryLabel: "Apply For A Consultation",
       primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
       secondaryLabel: "Resources",
@@ -24,23 +24,6 @@ export const publishingDistroRoom: Room = {
     },
   },
 
-  {
-    id: "publishing-platform-setup-review",
-    label: "Platform Setup Review",
-    x: 68,
-    y: 58,
-    direction: "right",
-    variant: "dot",
-    modal: {
-      title: "Platform Setup Review",
-      body:
-        "Publishing/distribution readiness support focused on making sure key release platforms are correctly configured.\n\nIncludes:\n• Confirming The Artist is Set-Up on All Necessary Platforms to Collect the $$ They Deserve\n• 60-90min Meeting",
-      primaryLabel: "Apply For A Consultation",
-      primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-      secondaryLabel: "Resources",
-      secondaryHref: "/resources",
-    },
-  },
   {
     id: "split-sheet-set-up",
     label: "Split Sheet Set Up",
@@ -51,7 +34,7 @@ export const publishingDistroRoom: Room = {
     modal: {
       title: "Split Sheet Set Up",
       body:
-        "Includes:\n• Split sheet development for your releases\n• Everyone involved in the project gets their share of the song",
+        "Developing a split sheet to help organize royalty and ownership.",
       primaryLabel: "Apply For A Consultation",
       primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
       secondaryLabel: "Resources",

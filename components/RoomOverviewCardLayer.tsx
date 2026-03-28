@@ -10,7 +10,8 @@ type InfoCard = {
   primaryHref: string;
   secondaryCta?: string;
   secondaryHref?: string;
-  exampleCta?: string;
+  strategyLabel?: string;
+  exampleArtist?: string;
   exampleHref?: string;
   eyebrow?: string;
   imageSrc?: string;
@@ -223,24 +224,31 @@ export default function RoomOverviewCardLayer({
                       </Link>
                     )
                   ) : null}
-                  {activeOverviewCard.exampleHref && activeOverviewCard.exampleCta ? (
-                    activeOverviewCard.exampleHref.startsWith("http") ? (
-                      <a
-                        href={activeOverviewCard.exampleHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/40 bg-[#d6ae66]/12 px-4 py-2 text-sm font-semibold text-[#f6deb2] transition hover:bg-[#d6ae66]/20 hover:text-white"
-                      >
-                        {activeOverviewCard.exampleCta}
-                      </a>
-                    ) : (
-                      <Link
-                        href={activeOverviewCard.exampleHref}
-                        className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/40 bg-[#d6ae66]/12 px-4 py-2 text-sm font-semibold text-[#f6deb2] transition hover:bg-[#d6ae66]/20 hover:text-white"
-                      >
-                        {activeOverviewCard.exampleCta}
-                      </Link>
-                    )
+                  {activeOverviewCard.exampleHref && activeOverviewCard.strategyLabel && activeOverviewCard.exampleArtist ? (
+                    <div className="rounded-2xl border border-[#d6ae66]/30 bg-[#d6ae66]/10 px-4 py-3">
+                      <div className="flex flex-wrap items-baseline gap-x-1 gap-y-1 text-sm">
+                        <span className="font-semibold text-[#f6deb2]">
+                          {activeOverviewCard.strategyLabel}:
+                        </span>
+                      {activeOverviewCard.exampleHref.startsWith("http") ? (
+                        <a
+                          href={activeOverviewCard.exampleHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex font-semibold text-white underline decoration-[#d6ae66]/70 decoration-2 underline-offset-4 transition hover:text-[#f6deb2]"
+                        >
+                          {activeOverviewCard.exampleArtist}
+                        </a>
+                      ) : (
+                        <Link
+                          href={activeOverviewCard.exampleHref}
+                          className="inline-flex font-semibold text-white underline decoration-[#d6ae66]/70 decoration-2 underline-offset-4 transition hover:text-[#f6deb2]"
+                        >
+                          {activeOverviewCard.exampleArtist}
+                        </Link>
+                      )}
+                      </div>
+                    </div>
                   ) : null}
                 </>
               )}

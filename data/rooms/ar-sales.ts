@@ -19,10 +19,10 @@ export const arSalesRoom: Room = {
         allowLargeResponsiveShift: true,
         direction: "right",
         variant: "dot",
-        modal: {
-          title: "CRM Set-Up",
-          body:
-            "A&R/Sales department CRM package.\n\nIncludes:\n• a Full CRM Automation",
+      modal: {
+        title: "CRM Set-Up",
+        body:
+            "High level CRM set up to develop company valuation and lead generation pipelines.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -41,10 +41,32 @@ export const arSalesRoom: Room = {
         allowLargeResponsiveShift: true,
         direction: "down",
         variant: "dot",
+      modal: {
+        title: "Community Building",
+        body:
+            "Assistance in the monitization of fan clubs and support groups.",
+          primaryLabel: "Apply For A Consultation",
+          primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+          secondaryLabel: "Resources",
+          secondaryHref: "/resources",
+        },
+      },
+      {
+        id: "ar-sales-streaming",
+        label: "Streaming",
+        tier: "secondary",
+        x: 24,
+        y: 47,
+        positions: {
+          mobile: { x: 27, y: 46 },
+        },
+        allowLargeResponsiveShift: true,
+        direction: "up",
+        variant: "dot",
         modal: {
-          title: "Community Building",
+          title: "Streaming",
           body:
-            "A&R/Sales audience growth package.\n\nIncludes:\n• Personal Community (for your die hard fans) Growth on All\n• Necessary Platforms Including Membership Based",
+            "Developing a live stream system to allow greater monetization.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",

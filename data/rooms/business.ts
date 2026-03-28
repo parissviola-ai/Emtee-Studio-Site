@@ -20,7 +20,7 @@ export const businessRoom: Room = {
       modal: {
         title: "Consultation",
         body:
-          "Business department resource package for first-step strategy alignment.\n\nIncludes:\n• Recommendation List\n• 60-90min Meeting\n• Artist Report",
+          "The first step is an indepth evaluation and report of an artists' career and business.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",
@@ -42,7 +42,7 @@ export const businessRoom: Room = {
       modal: {
         title: "Brand Evaluation",
         body:
-          "Business department brand-direction package.\n\nIncludes:\n• Niche\n• 2-3hr Meeting focused on Vision, Mission, Values",
+          "Extensive brand development session to clarify vision and niche.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",
@@ -64,7 +64,7 @@ export const businessRoom: Room = {
       modal: {
         title: "Business Operations Set-Up",
         body:
-          "Business operations setup package.\n\nIncludes:\n• Bookkeeping\n• Tax Advisory\n• Set-up Proper Business Bank Account\n• Set-up Proper Business Licensing\n• Income Evaluation",
+          "Business licensing, bank set up and tax set up.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",
@@ -73,7 +73,7 @@ export const businessRoom: Room = {
     },
     {
       id: "business-income-evaluation",
-      label: "Income Evaluation",
+      label: "Accounting Set Up",
       x: 43.17,
       y: 71.93,
       positions: {
@@ -84,9 +84,9 @@ export const businessRoom: Room = {
       direction: "left",
       variant: "dot",
       modal: {
-        title: "Income Evaluation",
+        title: "Accounting Set Up",
         body:
-          "Business department finance review package.\n\nIncludes:\n• Assessing Business Finance",
+          "Financial systemization of bookeeping and payroll.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",
@@ -108,7 +108,7 @@ export const businessRoom: Room = {
       modal: {
         title: "6-Month Rollout Strategy Plan",
         body:
-          "Business department strategy package.\n\nIncludes:\n• 2hr Meeting Focused on Long Term Strategy",
+          "Developing a plan for promo, production and campaign releases.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",
@@ -130,7 +130,7 @@ export const businessRoom: Room = {
       modal: {
         title: "12-Month Rollout Strategy Plan",
         body:
-          "Business department long-range strategy package.\n\nIncludes:\n• 3hr Meeting Focused on Long Term Strategy",
+          "Year long artist roll out taking into consideration all departments.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",

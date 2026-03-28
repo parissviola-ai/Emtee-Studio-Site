@@ -97,7 +97,8 @@ type InfoCard = {
   primaryHref: string;
   secondaryCta?: string;
   secondaryHref?: string;
-  exampleCta?: string;
+  strategyLabel?: string;
+  exampleArtist?: string;
   exampleHref?: string;
   eyebrow?: string;
   imageSrc?: string;
@@ -106,15 +107,16 @@ type InfoCard = {
 };
 
 const EXPLORE_ROOMS = [
+  { label: "Start Here", href: "/rooms/lobby?modal=start-here" },
+  { label: "Artists & Partners", href: "/artist-affiliations" },
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
-  { label: "Our Artists", href: "/artist-roster-releases" },
   { label: "Lobby", href: "/rooms/lobby" },
   { label: "Business Department", href: "/rooms/business" },
   { label: "Music Department", href: "/rooms/music" },
   { label: "Marketing Department", href: "/rooms/marketing" },
   { label: "Publishing / Distribution Department", href: "/rooms/publishing-distribution" },
   { label: "A&R / Sales Department", href: "/rooms/ar-sales" },
-  { label: "Dirty Elephant Studio", href: "/rooms/dirty-elephant-studio" },
+  { label: "Dirty Elephant Studios", href: "/rooms/dirty-elephant-studio" },
   { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
   { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
 ];
@@ -169,8 +171,9 @@ const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resources",
   secondaryHref: "/resources",
-  exampleCta: "Case Study Example",
-  exampleHref: "/artist-roster-releases/case-studies-2?example=mike-ar-sales",
+  strategyLabel: "A&R/Sales Strategy",
+  exampleArtist: "Mike Cannz",
+  exampleHref: "/artist-affiliations/case-studies-2?example=mike-ar-sales",
   eyebrow: "A&R / Sales",
 };
 
@@ -182,8 +185,9 @@ const STUDIO_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resources",
   secondaryHref: "/resources",
-  exampleCta: "Case Study Example",
-  exampleHref: "/artist-roster-releases/case-studies-2?example=fame-music",
+  strategyLabel: "Music Strategy",
+  exampleArtist: "Fame Holiday",
+  exampleHref: "/artist-affiliations/case-studies-2?example=fame-music",
   eyebrow: "Music Department",
 };
 
@@ -195,8 +199,9 @@ const MEDIA_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resources",
   secondaryHref: "/resources",
-  exampleCta: "Case Study Example",
-  exampleHref: "/artist-roster-releases/case-studies-2?example=kisaki-marketing",
+  strategyLabel: "Marketing Strategy",
+  exampleArtist: "KISAKI",
+  exampleHref: "/artist-affiliations/case-studies-2?example=kisaki-marketing",
   eyebrow: "Marketing Department",
 };
 
@@ -208,8 +213,9 @@ const BOARDROOM_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resources",
   secondaryHref: "/resources",
-  exampleCta: "Case Study Example",
-  exampleHref: "/artist-roster-releases/case-studies-2?example=yanchan-business",
+  strategyLabel: "Business Strategy",
+  exampleArtist: "Yanchan Produced",
+  exampleHref: "/artist-affiliations/case-studies-2?example=yanchan-business",
   eyebrow: "Business Department",
 };
 
@@ -222,8 +228,9 @@ const ARTISTS_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resources",
   secondaryHref: "/resources",
-  exampleCta: "Case Study Example",
-  exampleHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
+  strategyLabel: "Publishing/Distribution Strategy",
+  exampleArtist: "Yanchan Produced",
+  exampleHref: "/artist-affiliations/case-studies-2?example=yanchan-publishing-distro",
   eyebrow: "Distribution / Publishing",
 };
 

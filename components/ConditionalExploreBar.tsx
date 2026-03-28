@@ -7,15 +7,16 @@ import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "re
 import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
 
 const EXPLORE_LINKS = [
+  { label: "Start Here", href: "/rooms/lobby?modal=start-here" },
+  { label: "Artists & Partners", href: "/artist-affiliations" },
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
-  { label: "Our Artists", href: "/artist-roster-releases" },
   { label: "Lobby", href: "/rooms/lobby" },
   { label: "Business Department", href: "/rooms/business" },
   { label: "Music Department", href: "/rooms/music" },
   { label: "Marketing Department", href: "/rooms/marketing" },
   { label: "Publishing / Distribution Department", href: "/rooms/publishing-distribution" },
   { label: "A&R / Sales Department", href: "/rooms/ar-sales" },
-  { label: "Dirty Elephant Studio", href: "/rooms/dirty-elephant-studio" },
+  { label: "Dirty Elephant Studios", href: "/rooms/dirty-elephant-studio" },
   { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
   { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
 ];
@@ -174,8 +175,11 @@ export default function ConditionalExploreBar() {
               {EXPLORE_LINKS.map((item, index) => {
                 const isApply = false;
                 const isUtilityLink =
-                  item.label === "Apply For A Consultation" || item.label === "Our Artists";
-                const isLastUtilityLink = item.label === "Our Artists";
+                  item.label === "Start Here" ||
+                  item.label === "Artists & Partners" ||
+                  item.label === "Apply For A Consultation";
+                const isLastUtilityLink = item.label === "Apply For A Consultation";
+                const isStartHereLink = item.label === "Start Here";
                 return (
                   <Link
                     key={item.label}
@@ -207,9 +211,9 @@ export default function ConditionalExploreBar() {
                             border-b border-white/8
                             py-1.5 ${isLastUtilityLink ? "mb-8 md:mb-6" : ""}
                             text-[11px] font-semibold uppercase tracking-[0.16em]
-                            text-white/52
+                            ${isStartHereLink ? "text-white/84" : "text-white/52"}
                             transition
-                            hover:border-white/18 hover:text-white/78
+                            hover:border-white/18 ${isStartHereLink ? "hover:text-white" : "hover:text-white/78"}
                           `
                         : `
                           group relative block py-1.5 text-[18px] leading-snug font-medium

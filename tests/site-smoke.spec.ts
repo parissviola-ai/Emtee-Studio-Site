@@ -12,8 +12,8 @@ const routes = [
   "/rooms/ten-ten-entertainment",
   "/rooms/steeped-dreams-studio",
   "/resources",
-  "/artist-roster-releases",
-  "/artist-roster-releases/case-studies-2",
+  "/artist-affiliations",
+  "/artist-affiliations/case-studies-2",
   "/case-studies",
 ] as const;
 

@@ -40,7 +40,9 @@ function previousControl(page: Page, isMobile: boolean) {
 async function expectRoomStable(page: Page, route: string) {
   await expect(page).toHaveURL(new RegExp(`${route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
   await expect(page.locator("body")).toBeVisible();
-  await expect(page.getByRole("button", { name: /Explore|Open Explore menu/ })).toBeVisible();
+  await expect(
+    page.locator('button[aria-label="Open Explore menu"], button:has-text("Explore"):not([aria-label="Close Explore"])').first()
+  ).toBeVisible();
 }
 
 test.describe("room transitions", () => {

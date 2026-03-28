@@ -1,0 +1,106 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e5]:
+      - link "EMTEE Music Group EMTEE Music Group" [ref=e7] [cursor=pointer]:
+        - /url: /rooms/lobby
+        - img "EMTEE Music Group" [ref=e8]
+        - generic [ref=e9]: EMTEE Music Group
+      - generic:
+        - generic: You Are Here
+        - generic: Lobby
+      - navigation [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /rooms/lobby
+        - generic [ref=e12]:
+          - link "About" [ref=e13] [cursor=pointer]:
+            - /url: /about
+          - generic:
+            - generic:
+              - link "Who We Are":
+                - /url: /rooms/lobby?modal=About
+              - link "What We Offer":
+                - /url: /rooms/lobby?modal=departments-sheet
+              - link "How You Can Start":
+                - /url: /rooms/lobby?modal=how-you-start
+        - generic [ref=e14]:
+          - link "Resources" [ref=e15] [cursor=pointer]:
+            - /url: /resources
+          - generic:
+            - generic:
+              - link "Business":
+                - /url: /rooms/business
+              - link "Music":
+                - /url: /rooms/music
+              - link "Marketing":
+                - /url: /rooms/marketing
+              - link "A&R / Sales":
+                - /url: /rooms/ar-sales
+              - link "Publishing & Distribution":
+                - /url: /rooms/publishing-distribution
+        - generic [ref=e16]:
+          - link "Artist & Partners" [ref=e17] [cursor=pointer]:
+            - /url: /artist-roster-releases
+          - generic:
+            - generic:
+              - link "Yanchan Produced":
+                - /url: /rooms/dirty-elephant-studio
+              - link "Ten Ten Entertainment":
+                - /url: /rooms/ten-ten-entertainment
+              - link "Steeped Dreams Studio":
+                - /url: /rooms/steeped-dreams-studio
+              - link "Case Studies":
+                - /url: /case-studies
+        - link "News" [ref=e18] [cursor=pointer]:
+          - /url: /news
+  - main [ref=e20]:
+    - generic [ref=e21]:
+      - img "Lobby"
+    - generic:
+      - button "Close Explore"
+      - generic:
+        - generic:
+          - generic:
+            - generic: Explore
+            - button "Close"
+          - generic:
+            - link "Apply For A Consultation →":
+              - /url: https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy
+              - text: Apply For A Consultation
+              - generic: →
+            - link "Our Artists →":
+              - /url: /artist-roster-releases
+              - text: Our Artists
+              - generic: →
+            - link "Lobby":
+              - /url: /rooms/lobby
+              - text: Lobby
+            - link "Business Department":
+              - /url: /rooms/business
+              - text: Business Department
+            - link "Music Department":
+              - /url: /rooms/music
+              - text: Music Department
+            - link "Marketing Department":
+              - /url: /rooms/marketing
+              - text: Marketing Department
+            - link "Publishing / Distribution Department":
+              - /url: /rooms/publishing-distribution
+              - text: Publishing / Distribution Department
+            - link "A&R / Sales Department":
+              - /url: /rooms/ar-sales
+              - text: A&R / Sales Department
+            - link "Dirty Elephant Studio":
+              - /url: /rooms/dirty-elephant-studio
+              - text: Dirty Elephant Studio
+            - link "Ten Ten Entertainment":
+              - /url: /rooms/ten-ten-entertainment
+              - text: Ten Ten Entertainment
+            - link "Steeped Dreams Studio":
+              - /url: /rooms/steeped-dreams-studio
+              - text: Steeped Dreams Studio
+          - generic:
+            - img "EMTEE logo"
+```

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import lighthouse from "lighthouse";
-import chromeLauncher from "chrome-launcher";
+import { launch } from "chrome-launcher";
 
 const targetUrl = process.argv[2] ?? process.env.LIGHTHOUSE_URL ?? "http://127.0.0.1:3000/rooms/lobby";
 const outputDir = path.join(process.cwd(), "docs", "audits");
@@ -10,7 +10,7 @@ const stamp = new Date().toISOString().replaceAll(":", "-");
 const htmlPath = path.join(outputDir, `lighthouse-${stamp}.html`);
 const jsonPath = path.join(outputDir, `lighthouse-${stamp}.json`);
 
-const chrome = await chromeLauncher.launch({
+const chrome = await launch({
   chromeFlags: ["--headless=new", "--no-sandbox", "--disable-dev-shm-usage"],
 });
 

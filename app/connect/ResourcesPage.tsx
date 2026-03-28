@@ -9,8 +9,9 @@ type ResourceCard = {
   department: string;
   summary: string;
   roomHref: string;
-  artistCaseStudy: string;
-  artistCaseStudyHref?: string;
+  strategyLabel: string;
+  exampleArtist: string;
+  exampleArtistHref?: string;
   items: {
     name: string;
     notes: string[];
@@ -23,45 +24,37 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Business Department",
     summary: "Financial and operational systems that support long-term sustainability and decision quality. This also includes grant strategies.",
     roomHref: "/rooms/business",
-    artistCaseStudy: "Yanchan - Business Strategy",
-    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-business",
+    strategyLabel: "Business Strategy",
+    exampleArtist: "Yanchan Produced",
+    exampleArtistHref: "/artist-affiliations/case-studies-2?example=yanchan-business",
     items: [
       {
         name: "Consultation",
         notes: [
-          "Includes Recommendation List",
-          "Includes 60-90min Meeting",
-          "Includes Artist Report",
+          "The first step is an indepth evaluation and report of an artists' career and business.",
         ],
       },
       {
         name: "Brand Evaluation",
         notes: [
-          "Niche",
-          "Includes 2-3hr Meeting focused on Vision, Mission, Values",
+          "Extensive brand development session to clarify vision and niche.",
         ],
       },
       {
-        name: "Income Evaluation",
-        notes: ["Assessing Business Finance"],
+        name: "Accounting Set Up",
+        notes: ["Financial systemization of bookeeping and payroll."],
       },
       {
         name: "6-Month Rollout Strategy Plan",
-        notes: ["Includes 2hr Meeting Focused on Long Term Strategy"],
+        notes: ["Developing a plan for promo, production and campaign releases."],
       },
       {
         name: "12-Month Rollout Strategy Plan",
-        notes: ["Includes 3hr Meeting Focused on Long Term Strategy"],
+        notes: ["Year long artist roll out taking into consideration all departments."],
       },
       {
         name: "Business Operations Set-Up",
-        notes: [
-          "Bookkeeping",
-          "Tax Advisory",
-          "Set-up Proper Business Bank Account",
-          "Set-up Proper Business Licensing",
-          "Includes Income Evaluation",
-        ],
+        notes: ["Business licensing, bank set up and tax set up."],
       },
     ],
   },
@@ -69,38 +62,21 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Music Department",
     summary: "Creative direction, production support and release readiness built around artist identity.",
     roomHref: "/rooms/music",
-    artistCaseStudy: "Fame Holiday - Music Lane",
-    artistCaseStudyHref: "/case-studies/fame-holiday",
+    strategyLabel: "Music Strategy",
+    exampleArtist: "Fame Holiday",
+    exampleArtistHref: "/case-studies/fame-holiday",
     items: [
       {
         name: "Single Creation",
-        notes: [
-          "Includes an EMG A&R for Sound Direction / Songwriting",
-          "Includes In-Session Vocal Coaching",
-          "Includes Mix + 2 Post Edits",
-          "Includes 1 Custom Beat",
-          "Includes Two 3hr Studio Sessions",
-        ],
+        notes: ["Direction, production, writing and engineering for a single."],
       },
       {
-        name: "3 Song Creation",
-        notes: [
-          "Includes an EMG A&R for Sound Direction / Songwriting",
-          "Includes In-Session Vocal Coaching",
-          "Includes Mix + 2 Post Edits (per song)",
-          "Includes 1 Custom Beat (per song)",
-          "Includes Six 3hr Studio Sessions",
-        ],
+        name: "EP Creation (3 Songs)",
+        notes: ["Direction, production, writing and engineering for a 3-song EP."],
       },
       {
         name: "Project Creation (5 Songs)",
-        notes: [
-          "Includes an EMG A&R for Sound Direction / Songwriting",
-          "Includes In-Session Vocal Coaching",
-          "Includes Mix + 2 Post Edits (per song)",
-          "Includes 1 Custom Beat (per song)",
-          "Includes Ten 3hr Studio Sessions",
-        ],
+        notes: ["Direction, production, writing and engineering for a 5-song project."],
       },
     ],
   },
@@ -108,82 +84,49 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Marketing Department",
     summary: "Branding, content, touring and everything that fuels the reach of your brand and expansion of your audience.",
     roomHref: "/rooms/marketing",
-    artistCaseStudy: "Kisaki - Marketing",
-    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=kisaki-marketing",
+    strategyLabel: "Marketing Strategy",
+    exampleArtist: "KISAKI",
+    exampleArtistHref: "/artist-affiliations/case-studies-2?example=kisaki-marketing",
     items: [
       {
         name: "Content Creation",
-        notes: [
-          "Includes 3-4 Pieces of Content (per month)",
-          "Includes 1 Content Day (per month)",
-          "Includes 1hr Brainstorm Meeting (per month)",
-        ],
+        notes: ["Brainstorming, shooting and editing while developing set content series'."],
       },
       {
         name: "Brand Deck",
-        notes: [
-          "1 Pager on Branding Aesthetic",
-          "Includes 60-90min Meeting",
-          "Develop Marketing Campaign",
-        ],
+        notes: ["Extensive development of set brand standards including font, colours and feelings."],
       },
       {
-        name: "Brand Deck + EPK",
-        notes: [
-          "1-2 Page Electronic Press Kit",
-          "1 Pager on Branding Aesthetic",
-          "Includes 60-90min Meeting",
-        ],
+        name: "EPK",
+        notes: ["One-pager for promo and press."],
       },
       {
-        name: "30min Live Performance Set Development",
-        notes: [
-          "Includes One Emtee Music Group Executive Advisor",
-          "Includes One Ten Ten Executive Advisor",
-          "Includes Rehearsal Space",
-        ],
+        name: "Content Production",
+        notes: ["Brainstorming, shooting and editing while developing set content series'."],
       },
       {
-        name: "60min Live Performance Set Development",
-        notes: [
-          "Includes One Emtee Music Group Executive Advisor",
-          "Includes One Ten Ten Executive Advisor",
-          "Includes Rehearsal Space",
-        ],
+        name: "BTS Content Production",
+        notes: ["Shooting, editing and scripting BTS-style reels."],
       },
       {
-        name: "Brand Deals",
-        notes: ["Includes brand partnership strategy and activation roadmap"],
+        name: "Brand Partnership Strategies",
+        notes: ["Developing a strategy for corporate partnerships and collaborations."],
       },
       {
         name: "Tour Management",
-        notes: ["Includes BTS Footage", "Includes Road Manager"],
+        notes: ["On-road assistance, bookings and tour strategy."],
+      },
+      {
+        name: "Live Performance Development",
+        notes: ["Assistance in the development of an artists' live set."],
+      },
+      {
+        name: "Event Planning",
+        notes: ["Assisting in the development of new events."],
       },
       {
         name: "Website Design",
-        notes: [],
-        sectionHeading: true,
-      },
-      {
-        name: "All Packages Include",
-        notes: [
-          "60min Meeting to Solidify Details",
-          "60min Meeting to Review Rough Mock-Up",
-          "60min Meeting to Finalize Website",
-          "Final 30min Live Site Presentation",
-        ],
-      },
-      {
-        name: "Tier 1: Starter Site",
-        notes: [],
-      },
-      {
-        name: "Tier 2: Growth Site",
-        notes: [],
-      },
-      {
-        name: "Tier 3: Artist World",
-        notes: [],
+        notes: ["High-level website design and development."],
       },
     ],
   },
@@ -191,44 +134,21 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "A&R / Sales Department",
     summary: "CRMs, company valuations and the question of long-lasting, sustainable monetization of your music business.",
     roomHref: "/rooms/ar-sales",
-    artistCaseStudy: "Mike Cannz - A&R and Sales",
-    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=mike-ar-sales",
+    strategyLabel: "A&R/Sales Strategy",
+    exampleArtist: "Mike Cannz",
+    exampleArtistHref: "/artist-affiliations/case-studies-2?example=mike-ar-sales",
     items: [
       {
         name: "CRM Set-Up",
-        notes: ["Includes a Full CRM Automation"],
-      },
-      {
-        name: "CRM Fee/Retainer",
-        notes: ["Includes Oversight + Updating the CRM platform"],
+        notes: ["High level CRM set up to develop company valuation and lead generation pipelines."],
       },
       {
         name: "Community Building",
-        notes: [
-          "Personal Community (for your die hard fans) Growth on All",
-          "Necessary Platforms Including Membership Based",
-        ],
+        notes: ["Assistance in the monitization of fan clubs and support groups."],
       },
       {
-        name: "Merchandise",
-        notes: ["Includes Online Merch Store"],
-      },
-      {
-        name: "Event Planning",
-        notes: [
-          "Includes Event Strategy",
-          "Includes Revenue Strategy",
-          "Includes Promo Strategy",
-        ],
-      },
-      {
-        name: "Event Planner",
-        notes: [
-          "Includes Event Strategy",
-          "Includes Revenue Strategy",
-          "Includes Promo Strategy",
-          "Includes On-Site Manager/Coordinator",
-        ],
+        name: "Streaming",
+        notes: ["Developing a live stream system to allow greater monetization."],
       },
     ],
   },
@@ -236,22 +156,17 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "Publishing / Distribution Department",
     summary: "Catalog management, publishing administration and royalty collections.",
     roomHref: "/rooms/publishing-distribution",
-    artistCaseStudy: "Yanchan - Publishing and Distro",
-    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
+    strategyLabel: "Publishing/Distribution Strategy",
+    exampleArtist: "Yanchan Produced",
+    exampleArtistHref: "/artist-affiliations/case-studies-2?example=yanchan-publishing-distro",
     items: [
       {
         name: "Publishing/Distro Workshop",
-        notes: [
-          "Confirming The Artist is Set-Up on All Necessary Platforms to Collect the $$ They Deserve",
-          "Includes 60-90min Meeting",
-        ],
+        notes: ["An hour long workshop to teach artists pub/distro 101."],
       },
       {
         name: "Split Sheet Set Up",
-        notes: [
-          "Split sheet development for your releases",
-          "Everyone involved in the project gets their share of the song",
-        ],
+        notes: ["Developing a split sheet to help organize royalty and ownership."],
       },
     ],
   },
@@ -408,17 +323,17 @@ export default function ResourcesPage() {
                   ))}
                   <div className="border-t border-zinc-200 pt-3">
                     <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8b6a2f]">
-                      Artist Case Study
+                      {item.strategyLabel}
                     </div>
-                    {item.artistCaseStudyHref ? (
+                    {item.exampleArtistHref ? (
                       <Link
-                        href={item.artistCaseStudyHref}
+                        href={item.exampleArtistHref}
                         className="mt-1 inline-flex text-sm font-medium text-zinc-900 underline decoration-[#d6ae66]/60 decoration-2 underline-offset-4 transition hover:text-[#7a5a24] hover:[text-shadow:0_0_14px_rgba(214,174,102,0.75)]"
                       >
-                        {item.artistCaseStudy}
+                        {item.exampleArtist}
                       </Link>
                     ) : (
-                      <p className="mt-1 text-sm font-medium text-zinc-800">{item.artistCaseStudy}</p>
+                      <p className="mt-1 text-sm font-medium text-zinc-800">{item.exampleArtist}</p>
                     )}
                   </div>
                 </div>
@@ -426,6 +341,68 @@ export default function ResourcesPage() {
             </article>
           ))}
         </div>
+
+        {activeResource ? (
+          <div className="accent-card-soft relative z-10 mt-6 rounded-2xl border border-zinc-200 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.75),0_18px_55px_rgba(0,0,0,0.12)]">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8b6a2f]">
+                  {activeResource.department}
+                </div>
+                <h2 className="mt-2 text-2xl font-semibold text-zinc-900">{activeResource.name}</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveResource(null)}
+                className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="mt-5 space-y-4 text-sm text-zinc-700">
+              <div>
+                <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
+                  What It Is
+                </div>
+                <ul className="mt-2 space-y-1.5">
+                  {activeResource.notes.map((note) => (
+                    <li key={`${activeResource.name}-detail-${note}`} className="flex gap-2">
+                      <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-[#d6ae66]/90 shadow-[0_0_8px_rgba(214,174,102,0.7)]" />
+                      <span>{note}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
+                  Why It Matters
+                </div>
+                <p className="mt-1 leading-relaxed">
+                  {getResourceContextWithFallback(activeResource.name, activeResource.notes).why}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              {getCaseStudyForResource(activeResource.name) ? (
+                <Link
+                  href={getCaseStudyForResource(activeResource.name)!.href}
+                  className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/18 px-5 py-2 text-sm font-semibold text-[#6f511a] shadow-[0_0_26px_rgba(214,174,102,0.28)] transition hover:bg-[#d6ae66]/26 hover:text-[#3d2b0c]"
+                >
+                  {getCaseStudyForResource(activeResource.name)!.label}
+                </Link>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => setActiveResource(null)}
+                className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-5 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900"
+              >
+                Close Details
+              </button>
+            </div>
+          </div>
+        ) : null}
 
         <div className="accent-card-soft relative z-10 mt-6 rounded-2xl border border-zinc-200 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.75),0_18px_55px_rgba(0,0,0,0.12)]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Next Step</div>
@@ -443,67 +420,6 @@ export default function ResourcesPage() {
             </Link>
           </div>
         </div>
-
-        {activeResource ? (
-          <div
-            className="fixed inset-0 z-[120] flex items-center justify-center bg-black/50 p-5"
-            onClick={() => setActiveResource(null)}
-          >
-            <div
-              className="w-full max-w-2xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8b6a2f]">
-                    {activeResource.department}
-                  </div>
-                  <h2 className="mt-2 text-2xl font-semibold text-zinc-900">{activeResource.name}</h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveResource(null)}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-300 text-zinc-700 transition hover:bg-zinc-100"
-                  aria-label="Close resource details"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="mt-5 space-y-4 text-sm text-zinc-700">
-                <div>
-                  <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
-                    What It Is
-                  </div>
-                  <p className="mt-1 leading-relaxed">
-                    {getResourceContextWithFallback(activeResource.name, activeResource.notes).what}
-                  </p>
-                </div>
-                <div>
-                  <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
-                    Why It Matters for Artists
-                  </div>
-                  <p className="mt-1 leading-relaxed">
-                    {getResourceContextWithFallback(activeResource.name, activeResource.notes).why}
-                  </p>
-                </div>
-                {getCaseStudyForResource(activeResource.name) ? (
-                  <div>
-                    <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
-                      Related Case Study
-                    </div>
-                    <Link
-                      href={getCaseStudyForResource(activeResource.name)!.href}
-                      className="mt-1 inline-flex text-sm font-medium text-zinc-900 underline decoration-[#d6ae66]/60 decoration-2 underline-offset-4 transition hover:text-[#7a5a24] hover:[text-shadow:0_0_14px_rgba(214,174,102,0.75)]"
-                    >
-                      {getCaseStudyForResource(activeResource.name)!.label}
-                    </Link>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        ) : null}
       </section>
     </main>
   );

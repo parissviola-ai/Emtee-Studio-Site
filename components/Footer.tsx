@@ -42,9 +42,9 @@ export default function Footer() {
               <Link href="/rooms/lobby" className="text-white/75 transition hover:text-white">Lobby</Link>
               <Link href="/about" className="text-white/75 transition hover:text-white">About Us</Link>
               <Link href="/news" className="text-white/75 transition hover:text-white">News</Link>
-              <Link href="/artist-roster-releases#partners" className="text-white/75 transition hover:text-white">Partners</Link>
+              <Link href="/artist-affiliations#partners" className="text-white/75 transition hover:text-white">Partners</Link>
               <Link href="/resources" className="text-white/75 transition hover:text-white">Resources</Link>
-              <Link href="/artist-roster-releases" className="text-white/75 transition hover:text-white">Artists</Link>
+              <Link href="/artist-affiliations" className="text-white/75 transition hover:text-white">Artists</Link>
               <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className="text-white/75 transition hover:text-white">Consultation</Link>
             </div>
           </div>

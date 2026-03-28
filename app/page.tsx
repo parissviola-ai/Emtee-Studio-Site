@@ -20,7 +20,7 @@ const LANDING_WARMUP_ROUTES = [
   "/about",
   "/resources",
   "/case-studies",
-  "/artist-roster-releases",
+  "/artist-affiliations",
   "/news",
   "/path-quiz",
   "/subscribe",

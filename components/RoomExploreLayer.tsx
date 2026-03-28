@@ -173,8 +173,11 @@ export default function RoomExploreLayer({
               {exploreRooms.map((item, index) => {
                 const isApply = false;
                 const isUtilityLink =
-                  item.label === "Apply For A Consultation" || item.label === "Our Artists";
-                const isLastUtilityLink = item.label === "Our Artists";
+                  item.label === "Start Here" ||
+                  item.label === "Artists & Partners" ||
+                  item.label === "Apply For A Consultation";
+                const isLastUtilityLink = item.label === "Apply For A Consultation";
+                const isStartHereLink = item.label === "Start Here";
 
                 return (
                   <Link
@@ -197,6 +200,8 @@ export default function RoomExploreLayer({
                         ? "mb-6 inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white/90 backdrop-blur-xl shadow-lg shadow-black/25 transition hover:border-white/35 hover:bg-white/15"
                         : isUtilityLink
                           ? `group relative block border-b border-white/8 py-1.5 ${isLastUtilityLink ? "mb-8 md:mb-6" : ""} text-[11px] font-semibold uppercase tracking-[0.16em] text-white/52 transition hover:border-white/18 hover:text-white/78`
+                          .replace("text-white/52", isStartHereLink ? "text-white/84" : "text-white/52")
+                          .replace("hover:text-white/78", isStartHereLink ? "hover:text-white" : "hover:text-white/78")
                           : "group relative block py-1.5 text-[18px] font-medium leading-snug tracking-[0.01em] text-white/64 transition hover:text-white"
                     }
                     style={{

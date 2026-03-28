@@ -1,14 +1,5 @@
-import CaseStudies2Client from "./CaseStudies2Client";
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Case Studies | Artist Concept | EMTEE Music Group",
-};
-
-export default function ArtistCaseStudiesConceptPage() {
-  return (
-    <Suspense fallback={null}>
-      <CaseStudies2Client />
-    </Suspense>
-  );
+export default function ArtistRosterReleasesCaseStudiesRedirectPage() {
+  redirect("/artist-affiliations/case-studies-2");
 }

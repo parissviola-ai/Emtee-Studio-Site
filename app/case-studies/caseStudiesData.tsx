@@ -38,7 +38,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     roleTag: "Artist Development / Production",
     selectedPackageLabel: "Selected Path: Multi-Department Resource Stack",
     selectedPackageHref: "/resources",
-    imageSrc: "/case-studies/yanchan-opt.jpg",
+    imageSrc: "/rooms/yanchancasestudymar.png",
+    imageAlt: "Yanchan Produced marketing case card",
     bio:
       "Yanchan Produced is a Canadian-Tamil producer, mixing engineer, songwriter and Mridangist. Known for making beats with a South Asian twist, his release of solo and collaborative projects has garnered over 12 million streams on Spotify.\n\nYanchan’s production has been affiliated with reputable labels and high-level artists over the years including collaborators Russ, SVDP, Shruthi Hassan, Pressa, Kristina Maria, Yung Tory, and Charle$.",
     bullets: [
@@ -104,7 +105,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     roleTag: "Management / Label Services",
     selectedPackageLabel: "Selected Path: Business + Marketing + A&R/Sales",
     selectedPackageHref: "/resources",
-    imageSrc: "/case-studies/mikecannz-opt.jpg",
+    imageSrc: "/rooms/mikecasestudyar.png",
+    imageAlt: "Mike Cannz A&R and sales case card",
     bio:
       'Michael Cannataro, professionally known as Mike Cannz, is a middle-class Canadian artist and entertainment entrepreneur from Mississauga, Ontario. Mike is best known for his musical endeavours which includes his events company, Ten Ten Entertainment, where he gives local musicians the opportunity to perform. Prior to music, Cannz also ventured into acting where he starred in the featured film "Hostage." Since 2020, Mike Cannz has been an inaugural artist managed by Emtee Music Group.',
     bullets: [
@@ -168,7 +170,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     roleTag: "Label Services",
     selectedPackageLabel: "Selected Path: Music + Marketing + Publishing",
     selectedPackageHref: "/resources",
-    imageSrc: "/case-studies/kisaki-opt.jpg",
+    imageSrc: "/rooms/casestudykisakimarket.png",
+    imageAlt: "KISAKI marketing case card",
     bio:
       "KISAKI is a Korean-Canadian electronic music producer, DJ, and vocalist based in Toronto, known for her electrifying fusion of dynamic vocals with hard-hitting beats and cinematic experience. Blending elements of rock, K-Pop, J-Pop and anime, her ten-ten-entertainment performances feel like stepping into the soundtrack of a cyber dream.\nA former Touhou Vocal artist with Japan's doujin circles including EastNewSound, she channels the soul of a lost android searching for freedom and love into a dark yet melodic soundscape influenced by cyberpunk and neo noir.\nSince 2024, she has taken her sound on the road, lighting up stages in over fifteen cities across North America, and earning a growing following in the Canadian underground scene.",
     bullets: [
@@ -233,7 +236,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     roleTag: "A&R / Creative Direction",
     selectedPackageLabel: "Selected Path: A&R/Sales + Music + Marketing",
     selectedPackageHref: "/resources",
-    imageSrc: "/case-studies/fh-opt.jpg",
+    imageSrc: "/rooms/famecasestudymusic.png",
+    imageAlt: "Fame Holiday music case card",
     bio:
       "Award winning Mississauga rapper Fame Holiday has been establishing himself in the Canadian music scene since his first talent show at 14. His consistency and work ethic over the years has earned him a loyal fan-following that has streamed his music over one million times.",
     bullets: [

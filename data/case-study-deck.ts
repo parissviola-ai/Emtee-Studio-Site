@@ -16,7 +16,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     id: "yanchan-business",
     artist: "Yanchan Produced",
     lane: "Business Department",
-    imageSrc: "/rooms/Yanchan- Business .png",
+    imageSrc: "/rooms/yanchancasestudybus.png",
     imageAlt: "Yanchan business department case card",
     snapshot:
       "Business support focused on operations setup and decision structure so creative momentum could convert into repeatable execution.",
@@ -32,10 +32,10 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     id: "fame-music",
     artist: "Fame Holiday",
     lane: "Music Department",
-    imageSrc: "/rooms/Fame-Music.png",
+    imageSrc: "/rooms/famecasestudymusic.png",
     imageAlt: "Fame Holiday music department case card",
     snapshot:
-      "Fame Holiday's music lane focused on song development and tighter creative direction, backed by cross-department campaign support.",
+      "Song development and creative direction, backed with cross-department campaign support.",
     points: [
       "Single Creation (Music Department)",
       "3 Song Creation (Music Department)",
@@ -48,10 +48,10 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     id: "kisaki-marketing",
     artist: "KISAKI",
     lane: "Marketing Department",
-    imageSrc: "/rooms/Kisaki -Marketing.png",
+    imageSrc: "/rooms/casestudykisakimarket.png",
     imageAlt: "Kisaki marketing department case card",
     snapshot:
-      "KISAKI's marketing lane emphasized stronger campaign presentation, structured content output, and ten-ten-entertainment set positioning.",
+      "Strong emphasis on campaign presentation, structured content output and live performance set positioning.",
     points: [
       "Content Creation (Marketing Department)",
       "Brand Deck (Marketing Department)",
@@ -65,10 +65,10 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     id: "mike-ar-sales",
     artist: "Mike Cannz",
     lane: "A&R / Sales Department",
-    imageSrc: "/rooms/Mike Cannz- A&R Sales.png",
+    imageSrc: "/rooms/mikecasestudyar.png",
     imageAlt: "Mike Cannz A&R and sales department case card",
     snapshot:
-      "Mike Cannz received CRM and community-building support to improve conversion flow, campaign coordination, and partner readiness.",
+      "CRM and community-building support to improve conversion flow, campaign coordination and on-going monetization.",
     points: [
       "CRM Set-Up (A&R / Sales Department)",
       "CRM Fee/Retainer (A&R / Sales Department)",
@@ -82,10 +82,10 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     id: "yanchan-publishing-distro",
     artist: "Yanchan Produced",
     lane: "Publishing / Distribution Department",
-    imageSrc: "/rooms/Yanchan- Distro Publishing.png",
+    imageSrc: "/rooms/yanchancasestudypub.png",
     imageAlt: "Yanchan publishing and distribution department case card",
     snapshot:
-      "Yanchan used EMTEE publishing and distribution support to tighten release structure and set up cleaner catalog operations.",
+      "Publishing and distribution support including catalog management, split royalties negotiations and on-going sync.",
     points: [
       "Publishing/Distro Workshop (Publishing / Distribution Department)",
       "Progressed through all EMTEE department resources across Music, Marketing, Publishing/Distribution, Business, and A&R/Sales.",

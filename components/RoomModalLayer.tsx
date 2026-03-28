@@ -113,10 +113,14 @@ export default function RoomModalLayer({
     openModal(targetSpot.modal);
   };
 
+  const isResourceOnlyModal = !!activeResourceContext;
+
   const secondaryButtonClass = [
     "inline-flex items-center justify-center rounded-full transition",
     isStartHereModal
       ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
+      : isResourceOnlyModal
+      ? "border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white"
       : isOrangeModal
       ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
       : isQuietModal
@@ -130,6 +134,8 @@ export default function RoomModalLayer({
     "inline-flex items-center justify-center rounded-full transition",
     isStartHereModal
       ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
+      : isResourceOnlyModal
+      ? "border border-white/18 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-white/88 hover:border-white/30 hover:bg-white/14 hover:text-white"
       : isOrangeModal
       ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
       : isQuietModal
@@ -349,13 +355,17 @@ export default function RoomModalLayer({
         className={[
           isStartHereModal
             ? "relative z-10 my-2 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]"
+            : isResourceOnlyModal
+            ? "relative z-10 my-2 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]"
             : "relative z-10 my-2 flex w-full max-w-[900px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]",
           isOrangeModal
             ? "border border-dirty-elephant-studio-300/28 bg-[linear-gradient(160deg,rgba(15,10,6,0.9),rgba(10,8,6,0.86))] shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_30px_80px_rgba(0,0,0,0.62)]"
+            : isResourceOnlyModal
+            ? "border border-white/15 bg-black/55"
             : "border border-white/15 bg-black/55",
         ].join(" ")}
       >
-        <div className={[shouldUseCompactCardBody ? "overflow-y-auto" : "flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : shouldUseCompactCardBody ? "p-6 pb-4 md:pb-4" : "p-6 pb-8 md:pb-10"].join(" ")}>
+        <div className={[shouldUseCompactCardBody ? "overflow-y-auto" : "flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : isResourceOnlyModal ? "p-4 md:p-5" : shouldUseCompactCardBody ? "p-6 pb-4 md:pb-4" : "p-6 pb-8 md:pb-10"].join(" ")}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 w-full">
               {activeModal.headerLogo ? (
@@ -441,7 +451,7 @@ export default function RoomModalLayer({
             ) : null}
           </div>
 
-          <div className="min-w-0 w-full">
+          <div className={["min-w-0 w-full", isResourceOnlyModal ? "mx-auto max-w-[430px]" : ""].join(" ")}>
             {activeModal.videoEmbed ? (
               <div
                 className={[
@@ -495,8 +505,8 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={["mt-4 grid gap-5", activeResourceContext ? (isWebsiteDesignTierModal ? "md:grid-cols-1" : "md:grid-cols-[minmax(0,1fr)_420px] md:items-start") : ""].join(" ")}>
-              <div className="min-w-0">
+            <div className={["mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
+              {!activeResourceContext ? <div className="min-w-0">
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
                     <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
@@ -581,9 +591,7 @@ export default function RoomModalLayer({
                   </div>
                 ) : null}
 
-                {isCarouselModal ? null : activeResourceContext ? (
-                  <p className={["leading-relaxed whitespace-pre-line transition-all duration-600 ease-out", isOrangeModal ? "text-white/88" : "text-white/80", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>{parsedModalBody.before}</p>
-                ) : isPilotFoldablePackageModal ? (
+                {isCarouselModal ? null : activeResourceContext ? null : isPilotFoldablePackageModal ? (
                   <div className={["transition-all duration-600 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
                     <p className={["leading-relaxed whitespace-pre-line", isOrangeModal ? "text-white/88" : "text-white/80"].join(" ")}>{parsedModalBody.before}</p>
                     <div className="mt-4">
@@ -623,43 +631,6 @@ export default function RoomModalLayer({
                     {renderModalBodyWithBoldIncludes(activeModal.body)}
                   </p>
                 )}
-
-                {activeResourceContext ? (
-                  <div
-                    className={[
-                      "mt-6 space-y-4 transition-all duration-700 ease-out",
-                      revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
-                    ].join(" ")}
-                  >
-                    <div
-                      className={[
-                        "text-[12px] font-semibold uppercase tracking-[0.2em]",
-                        isOrangeModal ? "text-dirty-elephant-studio-200/90" : "text-dirty-elephant-studio-300/90",
-                      ].join(" ")}
-                    >
-                      Includes:
-                    </div>
-                    <ul
-                      className={[
-                        "mt-2 text-sm",
-                        isWebsiteDesignTierModal ? "columns-1 gap-x-6 space-y-1 sm:columns-2" : "space-y-1.5",
-                        isOrangeModal ? "text-white/90" : "text-white/84",
-                      ].join(" ")}
-                    >
-                      {(parsedModalBody.includes.length ? parsedModalBody.includes : activeModal.highlights ?? []).map((item: string) => (
-                        <li key={item} className={isWebsiteDesignTierModal ? "mb-1 break-inside-avoid flex gap-2 leading-snug" : "flex gap-2 leading-relaxed"}>
-                          <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.45)]" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {parsedModalBody.after ? (
-                      <p className={["leading-relaxed whitespace-pre-line", isOrangeModal ? "text-white/88" : "text-white/80"].join(" ")}>
-                        {parsedModalBody.after}
-                      </p>
-                    ) : null}
-                  </div>
-                ) : null}
 
                 {!activeResourceContext && activeModal.highlights?.length ? (
                   <div
@@ -733,14 +704,15 @@ export default function RoomModalLayer({
                     )}
                   </div>
                 ) : null}
-              </div>
+              </div> : null}
 
               {activeResourceContext ? (
                 <aside
                   className={[
-                    "rounded-2xl border px-4 py-3 transition-all duration-700 ease-out md:sticky md:top-28",
-                    "border-white/45 bg-white/[0.08]",
-                    "shadow-[0_0_0_1px_rgba(255,255,255,0.24),0_0_10px_rgba(255,255,255,0.16),0_12px_24px_rgba(0,0,0,0.24)]",
+                    "rounded-2xl border px-4 py-3 transition-all duration-700 ease-out",
+                    isResourceOnlyModal
+                      ? "border-white/16 bg-black/30 shadow-[0_16px_36px_rgba(0,0,0,0.36)]"
+                      : "border-white/45 bg-white/[0.08] shadow-[0_0_0_1px_rgba(255,255,255,0.24),0_0_10px_rgba(255,255,255,0.16),0_12px_24px_rgba(0,0,0,0.24)]",
                     revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                   ].join(" ")}
                 >
@@ -783,10 +755,10 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
+            <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
               {isStructuredFooterModal ? (
-                <div className="flex w-full items-end">
-                  <div className="-ml-6 inline-flex flex-nowrap items-center gap-3 self-end">
+                <div className={["flex w-full items-end", isResourceOnlyModal ? "max-w-[430px] mx-auto" : ""].join(" ")}>
+                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : "-ml-6 inline-flex flex-nowrap items-center gap-3 self-end"].join(" ")}>
                     {footerActions}
                   </div>
 
@@ -804,9 +776,11 @@ export default function RoomModalLayer({
                       closeModal();
                     }}
                     className={[
-                      "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
+                      isResourceOnlyModal ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition" : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
                       isOrangeModal
                         ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
+                        : isResourceOnlyModal
+                        ? "border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"
                         : "border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 hover:bg-white/15 hover:text-white",

@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function LabelsPartnersPage() {
-  redirect("/artist-roster-releases#partners");
+  redirect("/artist-affiliations#partners");
 }

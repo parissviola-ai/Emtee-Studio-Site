@@ -16,7 +16,7 @@ export const musicRoom: Room = {
       modal: {
         title: "Single Creation",
         body:
-          "Music department creation package.\n\nIncludes:\n• an EMG A&R for Sound Direction / Songwriting\n• In-Session Vocal Coaching\n• Mix + 2 Post Edits\n• 1 Custom Beat\n• Two 3hr Studio Sessions",
+          "Direction, production, writing and engineering for a single.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",
@@ -25,15 +25,15 @@ export const musicRoom: Room = {
     },
     {
       id: "music-3-song-creation",
-      label: "3 Song Creation",
+      label: "EP Creation (3 Songs)",
       x: 70.26,
       y: 46.48,
       direction: "right",
       variant: "dot",
       modal: {
-        title: "3 Song Creation",
+        title: "EP Creation (3 Songs)",
         body:
-          "Music department multi-song package.\n\nIncludes:\n• an EMG A&R for Sound Direction / Songwriting\n• In-Session Vocal Coaching\n• Mix + 2 Post Edits (per song)\n• 1 Custom Beat (per song)\n• Six 3hr Studio Sessions",
+          "Direction, production, writing and engineering for a 3-song EP.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",
@@ -50,7 +50,7 @@ export const musicRoom: Room = {
       modal: {
         title: "Project Creation (5 Songs)",
         body:
-          "Full project creation package from the music department.\n\nIncludes:\n• an EMG A&R for Sound Direction / Songwriting\n• In-Session Vocal Coaching\n• Mix + 2 Post Edits (per song)\n• 1 Custom Beat (per song)\n• Ten 3hr Studio Sessions",
+          "Direction, production, writing and engineering for a 5-song project.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Resources",

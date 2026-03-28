@@ -17,7 +17,7 @@ export const lobbyRoom: Room = {
       {
         id: "Board Rooms",
         label: "Meeting Room",
-        hoverLabel: "Business Department",
+        hoverLabel: "Business",
         tier: "secondary",
         href: "/rooms/business",
         x: 9.89,
@@ -27,7 +27,7 @@ export const lobbyRoom: Room = {
       {
         id: "Studio",
         label: "Studio",
-        hoverLabel: "Music Department",
+        hoverLabel: "Music",
         tier: "secondary",
         href: "/rooms/music",
         x: 46.53,
@@ -36,7 +36,7 @@ export const lobbyRoom: Room = {
       {
         id: "Photo Studio",
         label: "Photo Studio",
-        hoverLabel: "Marketing Department",
+        hoverLabel: "Marketing",
         tier: "secondary",
         href: "/rooms/marketing",
         x: 52.36,
@@ -45,7 +45,7 @@ export const lobbyRoom: Room = {
       {
         id: "Catalog Room",
         label: "Catalog Room",
-        hoverLabel: "Publishing / Distribution Department",
+        hoverLabel: "Pub / Distro",
         tier: "secondary",
         href: "/rooms/publishing-distribution",
         x: 56.59,
@@ -90,7 +90,7 @@ export const lobbyRoom: Room = {
       {
         id: "departments",
         label: "Board Room",
-        hoverLabel: "A&R / Sales Department",
+        hoverLabel: "A&R / Sales",
         tier: "core",
         href: "/rooms/ar-sales",
         x: 7.81,
@@ -127,7 +127,7 @@ export const lobbyRoom: Room = {
         modal: {
           title: "What We Offer",
           body:
-            "All workings with EMTEE fall under 5 main pillars/departments. These departments help identify structural requirements to successfully launch a creative's career and business in a way that is highly sustainable. With resources and specialists in each department, EMTEE strives to develop an infrastructure for your future that will allow for strong movements in your music, brand and business. To explore the departments further please tour the rooms from the Lobby.",
+            "Everything we do falls under 5 core departments that support creative careers and businesses. With resources and specialists in each department, EMTEE helps build the structure needed for long-term movement across your music, brand, and business. To explore the departments further, please tour the rooms from the Lobby.",
           image: "/rooms/departmentdeck.png",
           primaryLabel: "What We’ve Done",
           primaryHref: "modal:case-study-tour",

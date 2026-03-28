@@ -289,10 +289,23 @@ function HotspotLabelText({
   showHoverLabel,
 }: {
   spot: Hotspot;
-  showHoverLabel: boolean;
+  showHoverLabel: boolean | "hover";
 }) {
   if (!spot.hoverLabel) {
     return <>{spot.label}</>;
+  }
+
+  if (showHoverLabel === "hover") {
+    return (
+      <span className="relative inline-flex items-center">
+        <span className="transition-all duration-200 group-hover:opacity-0">
+          {spot.label}
+        </span>
+        <span className="absolute inset-0 opacity-0 transition-all duration-200 group-hover:opacity-100">
+          {spot.hoverLabel}
+        </span>
+      </span>
+    );
   }
 
   return (
@@ -1936,7 +1949,10 @@ export default function RoomScene({
                 }
               : undefined
           }>
-            <HotspotLabelText spot={spot} showHoverLabel={false} />
+            <HotspotLabelText
+              spot={spot}
+              showHoverLabel={isLobbyPill && !!spot.hoverLabel ? "hover" : false}
+            />
           </span>
         </span>
       </span>

@@ -109,7 +109,7 @@ export const orangeRoom: Room = {
           cornerLogoAlt: "Yanchan Produced logo",
           body:
             "Submit a short application to request an Orange Room Session slot.\n\nUse the preview link below to see the format and performance style.",
-          primaryLabel: "Apply (Short Form)",
+          primaryLabel: "Apply",
           primaryHref: "/dirty-elephant-studio-room-session",
           secondaryLabel: "Preview Orange Room Session",
           secondaryHref: "https://www.instagram.com/p/DUqfIvGER2F/",

@@ -114,12 +114,15 @@ export default function RoomModalLayer({
   };
 
   const isResourceOnlyModal = !!activeResourceContext;
+  const shouldUseCompactFooterButtons = isResourceOnlyModal || isPackageGridModal;
+  const compactFooterButtonClass =
+    "inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white";
 
   const secondaryButtonClass = [
     "inline-flex items-center justify-center rounded-full transition",
     isStartHereModal
       ? "border border-white/18 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/76 hover:border-white/26 hover:bg-white/9 hover:text-white/88"
-      : isResourceOnlyModal
+      : shouldUseCompactFooterButtons
       ? "border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white"
       : isOrangeModal
       ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
@@ -134,7 +137,7 @@ export default function RoomModalLayer({
     "inline-flex items-center justify-center rounded-full transition",
     isStartHereModal
       ? "border border-white/18 bg-white/9 px-3.5 py-1.5 text-[11px] font-medium text-white/86 hover:border-white/30 hover:bg-white/14 hover:text-white"
-      : isResourceOnlyModal
+      : shouldUseCompactFooterButtons
       ? "border border-white/18 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-white/88 hover:border-white/30 hover:bg-white/14 hover:text-white"
       : isOrangeModal
       ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 shadow-[0_0_0_1px_rgba(247,196,138,0.16),0_10px_24px_rgba(0,0,0,0.32)] hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
@@ -204,6 +207,8 @@ export default function RoomModalLayer({
             className={
               isStartHereModal
                 ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                : shouldUseCompactFooterButtons
+                  ? compactFooterButtonClass
                 : isPackageGridModal
                   ? isWebsiteDesignMainModal
                     ? "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]"
@@ -234,6 +239,8 @@ export default function RoomModalLayer({
             className={
               isStartHereModal
                 ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+                : shouldUseCompactFooterButtons
+                ? compactFooterButtonClass
                 : "inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/18 hover:text-white"
             }
           >
@@ -254,6 +261,8 @@ export default function RoomModalLayer({
           className={
             isStartHereModal
               ? "inline-flex w-full items-center justify-between rounded-2xl border border-white/14 bg-white/[0.06] px-3 py-2.25 text-[13px] font-semibold text-white/88 transition hover:border-white/24 hover:bg-white/[0.1] hover:text-white"
+              : shouldUseCompactFooterButtons
+              ? compactFooterButtonClass
               : isPackageGridModal
                 ? isWebsiteDesignMainModal
                   ? "inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]"
@@ -776,10 +785,10 @@ export default function RoomModalLayer({
                       closeModal();
                     }}
                     className={[
-                      isResourceOnlyModal ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition" : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
+                      shouldUseCompactFooterButtons ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition" : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
                       isOrangeModal
                         ? "border border-dirty-elephant-studio-200/28 bg-black/35 px-5 py-2 text-sm font-semibold text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55"
-                        : isResourceOnlyModal
+                        : shouldUseCompactFooterButtons
                         ? "border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-medium text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white"
                         : isQuietModal
                         ? "border border-emerald-200/38 bg-emerald-300/12 px-5 py-2 text-sm font-semibold text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]"

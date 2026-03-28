@@ -5,11 +5,11 @@ export type ResourceContext = {
 
 const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   Consultation: {
-    what: "A strategic intake and planning session that audits your current position, goals, and gaps before execution starts.",
+    what: "The first step is an indepth evaluation and report of an artists' career and business.",
     why: "Artists avoid random moves and start with a focused roadmap that saves time, money, and momentum.",
   },
   "Brand Evaluation": {
-    what: "A review of your identity, niche, positioning, and overall market fit.",
+    what: "Extensive brand development session to clarify vision and niche.",
     why: "Clear brand direction helps audiences, collaborators, and partners instantly understand your value.",
   },
   "Income Evaluation": {
@@ -25,11 +25,11 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Long-term planning helps artists build compounding results instead of short bursts.",
   },
   "Business Operations Set-Up": {
-    what: "Foundational setup for business structure, banking, licensing, and financial process.",
+    what: "Business licensing, bank set up and tax set up.",
     why: "Strong operations protect the artist and make scaling opportunities easier to manage.",
   },
   "Single Creation": {
-    what: "A focused production path to create one release-ready record with guided creative direction.",
+    what: "Direction, production, writing and engineering for a single.",
     why: "It helps artists improve quality control and release stronger music consistently.",
   },
   "3 Song Creation": {
@@ -37,23 +37,23 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Artists can test sound direction and build momentum with more than a one-off release.",
   },
   "Project Creation (5 Songs)": {
-    what: "A deeper creation package for building a structured five-song project.",
+    what: "Direction, production, writing and engineering for a 5-song project.",
     why: "A stronger project format increases storytelling, replay value, and catalog strength.",
   },
   "EP Creation (3 Songs)": {
-    what: "A short-form development package for creating a cohesive three-song body of work.",
+    what: "Direction, production, writing and engineering for a 3-song EP.",
     why: "Artists can test sound direction and build momentum with more than a one-off release.",
   },
   "Content Creation": {
-    what: "A recurring content system for capture, planning, and publishing.",
+    what: "Brainstorming, shooting and editing while developing set content series'.",
     why: "Consistent content keeps audiences engaged between releases and campaigns.",
   },
   EPK: {
-    what: "A professional electronic press kit that packages your artist story, visuals, music, and key links in one place.",
+    what: "One-pager for promo and press.",
     why: "It makes you easier to book, feature, and pitch because partners can review your brand quickly.",
   },
   "Brand Deck": {
-    what: "A concise visual and messaging deck that defines your artist brand presentation.",
+    what: "Extensive development of set brand standards including font, colours and feelings.",
     why: "It improves clarity when pitching to partners, media, and collaborators.",
   },
   "Brand Deck + EPK": {
@@ -64,12 +64,16 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "Performance coaching and rehearsal support for a 30-minute set.",
     why: "Artists improve stage confidence, transitions, and audience retention during shows.",
   },
+  "Live Performance Development": {
+    what: "Assistance in the development of an artists' live set.",
+    why: "Artists improve stage confidence, transitions, and audience retention during shows.",
+  },
   "60min Live Performance Set Development": {
     what: "Expanded ten-ten-entertainment set development for longer performances with higher production demands.",
     why: "Longer sets require stamina, pacing, and structure to sustain engagement. Artists improve stage confidence, transitions, and audience retention during shows.",
   },
   "BTS Content Production": {
-    what: "A behind-the-scenes content package for capturing and shaping process-driven reels and supporting visuals.",
+    what: "Shooting, editing and scripting BTS-style reels.",
     why: "It helps audiences connect with the story behind the work, not just the final release.",
   },
   "Brand Deals": {
@@ -77,15 +81,15 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Well-structured brand opportunities can diversify artist income and visibility.",
   },
   "Brand Partnership Strategies": {
-    what: "A strategy package for identifying, shaping, and pitching artist-to-brand partnership opportunities.",
+    what: "Developing a strategy for corporate partnerships and collaborations.",
     why: "The right brand alignment can unlock additional reach, credibility, and non-streaming revenue.",
   },
   "Tour Management": {
-    what: "Support for coordinating tour logistics and execution support needs.",
+    what: "On-road assistance, bookings and tour strategy.",
     why: "Artists can deten-ten-entertainmentr stronger ten-ten-entertainment campaigns with fewer operational issues on the road.",
   },
   "Publishing/Distro Workshop": {
-    what: "A release-readiness workshop to confirm publishing and distribution setup.",
+    what: "An hour long workshop to teach artists pub/distro 101.",
     why: "Correct setup ensures artists can collect royalties and avoid preventable revenue loss.",
   },
   "Platform Setup Review": {
@@ -93,11 +97,11 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Artists reduce setup errors and protect royalty collection before launch.",
   },
   "Split Sheet Set Up": {
-    what: "Split sheet development support for your releases so song ownership is documented clearly.",
+    what: "Developing a split sheet to help organize royalty and ownership.",
     why: "Clear split sheets help everyone involved in the project receive their agreed share of the song and reduce future disputes.",
   },
   "CRM Set-Up": {
-    what: "Implementation of a CRM system to organize fan and business relationships.",
+    what: "High level CRM set up to develop company valuation and lead generation pipelines.",
     why: "Artists can build direct audience ownership and improve conversion over time.",
   },
   "CRM Fee/Retainer": {
@@ -105,11 +109,11 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Long-term CRM upkeep keeps audience systems active, accurate, and revenue-ready.",
   },
   "Community Building": {
-    what: "Frameworks for growing and nurturing a core fan community.",
+    what: "Assistance in the monitization of fan clubs and support groups.",
     why: "A loyal community increases retention, repeat support, and long-term brand strength.",
   },
   Streaming: {
-    what: "A livestream setup and strategy lane designed to help artists show up consistently online and create new audience touchpoints.",
+    what: "Developing a live stream system to allow greater monetization.",
     why: "It adds another monetization and community channel without depending only on in-person moments.",
   },
   Merchandise: {
@@ -117,7 +121,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Merch can become a reliable direct-to-fan income stream and brand touchpoint.",
   },
   "Event Planning": {
-    what: "Strategic planning for event structure, promo, and revenue model.",
+    what: "Assisting in the development of new events.",
     why: "Good planning increases turnout, experience quality, and financial outcomes.",
   },
   "Event Planner": {
@@ -125,11 +129,11 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "More operational support reduces risk and improves ten-ten-entertainment event consistency.",
   },
   "Accounting Set Up": {
-    what: "A bookkeeping and payroll system setup that organizes how money is tracked, reported, and managed.",
+    what: "Financial systemization of bookeeping and payroll.",
     why: "Clear accounting systems reduce confusion and help artists make smarter financial decisions as they grow.",
   },
   "Website Design": {
-    what: "A website planning and build lane that turns your artist story, assets, and calls-to-action into a working digital home base.",
+    what: "High-level website design and development.",
     why: "A strong site gives fans, media, and bookers one clear place to understand your world and take action.",
   },
   "Tier 1: Starter Site": {

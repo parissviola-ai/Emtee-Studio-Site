@@ -11,8 +11,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-crm-set-up",
         label: "CRM Set Up",
         tier: "core",
-        x: 70,
-        y: 20,
+        x: 65.9,
+        y: 59.08,
         positions: {
           mobile: { x: 68, y: 16 },
         },
@@ -33,8 +33,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-community-building",
         label: "Community Building",
         tier: "core",
-        x: 44.17,
-        y: 45.19,
+        x: 41.18,
+        y: 70.33,
         positions: {
           mobile: { x: 48, y: 42 },
         },
@@ -55,8 +55,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-streaming",
         label: "Streaming",
         tier: "secondary",
-        x: 24,
-        y: 47,
+        x: 44.32,
+        y: 44.8,
         positions: {
           mobile: { x: 27, y: 46 },
         },

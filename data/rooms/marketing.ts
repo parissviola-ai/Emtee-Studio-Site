@@ -151,8 +151,8 @@ export const marketingRoom: Room = {
       {
         id: "marketing-event-planning",
         label: "Event Planning",
-        x: 73,
-        y: 79,
+        x: 4.97,
+        y: 37.11,
         direction: "up",
         variant: "dot",
         modal: {

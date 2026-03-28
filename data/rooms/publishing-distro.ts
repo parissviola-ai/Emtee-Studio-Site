@@ -27,8 +27,8 @@ export const publishingDistroRoom: Room = {
   {
     id: "split-sheet-development",
     label: "Split Sheet Development",
-    x: 52,
-    y: 38,
+    x: 58.57,
+    y: 67.13,
     direction: "down",
     variant: "dot",
     modal: {

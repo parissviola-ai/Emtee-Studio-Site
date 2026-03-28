@@ -5,7 +5,7 @@ export const marketingRoom: Room = {
     title: "Marketing",
     backgroundImage: "/rooms/marketingfinal3-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Publishing and Distro", href: "/rooms/publishing-distribution", x: 90, y: 17, direction: "right" },
+      { id: "next-room", label: "A&R / Sales", href: "/rooms/ar-sales", x: 90, y: 17, direction: "right" },
       {
         id: "marketing-content-creation",
         label: "Content Creation",

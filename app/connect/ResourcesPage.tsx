@@ -188,29 +188,6 @@ const RESOURCE_CARDS: ResourceCard[] = [
     ],
   },
   {
-    department: "Publishing / Distribution Department",
-    summary: "Catalog management, publishing administration and royalty collections.",
-    roomHref: "/rooms/publishing-distribution",
-    artistCaseStudy: "Yanchan - Publishing and Distro",
-    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
-    items: [
-      {
-        name: "Publishing/Distro Workshop",
-        notes: [
-          "Confirming The Artist is Set-Up on All Necessary Platforms to Collect the $$ They Deserve",
-          "Includes 60-90min Meeting",
-        ],
-      },
-      {
-        name: "Split Sheet Set Up",
-        notes: [
-          "Split sheet development for your releases",
-          "Everyone involved in the project gets their share of the song",
-        ],
-      },
-    ],
-  },
-  {
     department: "A&R / Sales Department",
     summary: "CRMs, company valuations and the question of long-lasting, sustainable monetization of your music business.",
     roomHref: "/rooms/ar-sales",
@@ -251,6 +228,29 @@ const RESOURCE_CARDS: ResourceCard[] = [
           "Includes Revenue Strategy",
           "Includes Promo Strategy",
           "Includes On-Site Manager/Coordinator",
+        ],
+      },
+    ],
+  },
+  {
+    department: "Publishing / Distribution Department",
+    summary: "Catalog management, publishing administration and royalty collections.",
+    roomHref: "/rooms/publishing-distribution",
+    artistCaseStudy: "Yanchan - Publishing and Distro",
+    artistCaseStudyHref: "/artist-roster-releases/case-studies-2?example=yanchan-publishing-distro",
+    items: [
+      {
+        name: "Publishing/Distro Workshop",
+        notes: [
+          "Confirming The Artist is Set-Up on All Necessary Platforms to Collect the $$ They Deserve",
+          "Includes 60-90min Meeting",
+        ],
+      },
+      {
+        name: "Split Sheet Set Up",
+        notes: [
+          "Split sheet development for your releases",
+          "Everyone involved in the project gets their share of the song",
         ],
       },
     ],

@@ -226,11 +226,11 @@ const PREVIOUS_ROOM_LINKS: Record<string, string> = {
   business: "/rooms/lobby",
   music: "/rooms/business",
   marketing: "/rooms/music",
-  "publishing-distribution": "/rooms/marketing",
-  "ar-sales": "/rooms/publishing-distribution",
-  "ten-ten-entertainment": "/rooms/ar-sales",
-  "dirty-elephant-studio": "/rooms/ten-ten-entertainment",
-  "steeped-dreams-studio": "/rooms/dirty-elephant-studio",
+  "ar-sales": "/rooms/marketing",
+  "publishing-distribution": "/rooms/ar-sales",
+  "dirty-elephant-studio": "/rooms/publishing-distribution",
+  "ten-ten-entertainment": "/rooms/dirty-elephant-studio",
+  "steeped-dreams-studio": "/rooms/ten-ten-entertainment",
 };
 const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-dirty-elephant-studio-room-session";
 const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
@@ -2042,8 +2042,8 @@ export default function RoomScene({
             isBusinessRoomDot
               ? [
                   isMobileViewport ? "h-7 w-7" : "h-8 w-8",
-                  "rounded-full border border-white/16 bg-black/24 backdrop-blur-[3px]",
-                  "shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_0_20px_rgba(255,255,255,0.18),0_10px_24px_rgba(0,0,0,0.26)]",
+                  "rounded-full border border-white/28 bg-black/32 backdrop-blur-[4px]",
+                  "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_26px_rgba(255,255,255,0.24),0_10px_26px_rgba(0,0,0,0.3)]",
                 ].join(" ")
               : dotBase,
             (isOrangeSessionDot || isBusinessRoomDot) && !prefersReducedMotion ? "animate-[softPulse_1.35s_ease-in-out_infinite]" : "",
@@ -2057,14 +2057,14 @@ export default function RoomScene({
               width={18}
               height={18}
               aria-hidden
-              className="h-3.5 w-3.5 object-contain invert opacity-90"
+              className="h-4 w-4 object-contain invert brightness-125 contrast-125 saturate-0 opacity-100 drop-shadow-[0_0_14px_rgba(255,255,255,0.48)]"
             />
           ) : null}
           {/* Soft halo */}
           <span
             className={[
               "pointer-events-none absolute rounded-full blur-md",
-              isBusinessRoomDot ? "-inset-2 bg-white/18" : ["-inset-2", haloBase].join(" "),
+              isBusinessRoomDot ? "-inset-2.5 bg-white/24" : ["-inset-2", haloBase].join(" "),
             ].join(" ")}
           />
 
@@ -2087,7 +2087,7 @@ export default function RoomScene({
                             : "border-white/70"
                     )
                   : isBusinessRoomDot
-                    ? "border-white/55"
+                    ? "border-white/72"
                   : ringBase,
             ].join(" ")}
           />

@@ -7,7 +7,7 @@ export const liveRoom: Room = {
     backgroundVideo: "/rooms/updatedttbg1.mp4",
     backgroundVideoMobile: "/rooms/mobilevideotenten.mp4",
     hotspots: [
-      { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/dirty-elephant-studio", x: 90, y:  17, direction: "right" },
+      { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio", x: 90, y:  17, direction: "right" },
       {
         id: "ten-ten-showcase",
         label: "Ten Ten Showcase",
@@ -27,8 +27,8 @@ export const liveRoom: Room = {
           cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Ten Ten supports motivation + self-development while helping creatives and entrepreneurs achieve their dreams.",
-          primaryLabel: "Apply to Perform",
-          primaryHref: "/ten-ten-showcase-apply",
+          primaryLabel: "DM on IG Apply",
+          primaryHref: "https://ig.me/m/tenten_ent",
           links: [
             { label: "Ten Ten Website", href: "https://www.mikecannzentertainment.com/" },
             { label: "Ten Ten IG", href: "https://www.instagram.com/tenten_ent/" },
@@ -115,8 +115,8 @@ export const liveRoom: Room = {
             "Access to networking event",
             "1 song placement on Ten Ten Playlist for 7 days",
           ],
-          primaryLabel: "Apply to Perform",
-          primaryHref: "/ten-ten-showcase-apply",
+          primaryLabel: "DM on IG Apply",
+          primaryHref: "https://ig.me/m/tenten_ent",
         },
       },
       {
@@ -151,8 +151,8 @@ export const liveRoom: Room = {
             "Free one month trial for Ten Ten Membership (valued at $35 +tax per month)",
             "Cities: Toronto, London, Barrie, Montreal, Vancouver, DC",
           ],
-          primaryLabel: "Apply to Perform",
-          primaryHref: "/ten-ten-showcase-apply",
+          primaryLabel: "DM on IG Apply",
+          primaryHref: "https://ig.me/m/tenten_ent",
         },
       },
       {
@@ -173,8 +173,8 @@ export const liveRoom: Room = {
           cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Make your performance stand out.\n\nGet development support to tighten your ten-ten-entertainment set, pacing, transitions, stage presence, and audience engagement before showcase day.",
-          primaryLabel: "Apply for Live Set Development",
-          primaryHref: "/ten-ten-entertainment-set-development-apply",
+          primaryLabel: "DM on IG Apply",
+          primaryHref: "https://ig.me/m/tenten_ent",
         },
       },
       {
@@ -206,8 +206,8 @@ export const liveRoom: Room = {
             "Access to monthly networking event",
             "VIP access to yearly Ten Ten private parties",
           ],
-          primaryLabel: "Join Community",
-          primaryHref: "/ten-ten-community-join",
+          primaryLabel: "DM on IG Apply",
+          primaryHref: "https://ig.me/m/tenten_ent",
           links: [
             { label: "Ten Ten IG", href: "https://www.instagram.com/tenten_ent/" },
             { label: "Ten Ten Website", href: "https://www.mikecannzentertainment.com/" },

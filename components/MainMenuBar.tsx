@@ -14,16 +14,15 @@ const PRIMARY_LINKS: NavLink[] = [{ label: "Home", href: "/rooms/lobby" }];
 const ABOUT_LINKS: NavLink[] = [
   { label: "Who We Are", href: "/rooms/lobby?modal=About" },
   { label: "What We Offer", href: "/rooms/lobby?modal=departments-sheet" },
-  { label: "When Artists Have Taken Our Offers", href: "/case-studies" },
   { label: "How You Can Start", href: "/rooms/lobby?modal=how-you-start" },
 ];
 
 const RESOURCE_LINKS: NavLink[] = [
-  { label: "A&R / Sales", href: "/rooms/ar-sales" },
   { label: "Business", href: "/rooms/business" },
-  { label: "Marketing", href: "/rooms/marketing" },
-  { label: "Publishing & Distribution", href: "/rooms/publishing-distribution" },
   { label: "Music", href: "/rooms/music" },
+  { label: "Marketing", href: "/rooms/marketing" },
+  { label: "A&R / Sales", href: "/rooms/ar-sales" },
+  { label: "Publishing & Distribution", href: "/rooms/publishing-distribution" },
 ];
 
 const CASE_STUDY_LINKS: NavLink[] = [

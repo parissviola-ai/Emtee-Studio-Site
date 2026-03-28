@@ -63,6 +63,7 @@ export const lobbyRoom: Room = {
       {
         id: "Dirty Elephant Studios",
         label: "Dirty Elephant Studios",
+        hoverLabel: "Yanchan Produced",
         tier: "secondary",
         href: "/rooms/dirty-elephant-studio",
         x: 91.04,
@@ -72,6 +73,7 @@ export const lobbyRoom: Room = {
       {
         id: "Ten Ten Entertainment",
         label: "Ten Ten Entertainment",
+        hoverLabel: "Mike Cannz",
         tier: "secondary",
         href: "/rooms/ten-ten-entertainment",
         x: 98.11,
@@ -81,6 +83,7 @@ export const lobbyRoom: Room = {
       {
         id: "Steeped Dreams Studio",
         label: "Steeped Dreams Studio",
+        hoverLabel: "Kym Tea",
         tier: "secondary",
         href: "/rooms/steeped-dreams-studio",
         x: 95.94,

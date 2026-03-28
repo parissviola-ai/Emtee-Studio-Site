@@ -19,6 +19,15 @@ const OrangeRoomExtras = dynamic(() => import("@/components/OrangeRoomExtras"), 
 const RoomModalLayer = dynamic(() => import("@/components/RoomModalLayer"), {
   ssr: false,
 });
+const RoomExploreLayer = dynamic(() => import("@/components/RoomExploreLayer"), {
+  ssr: false,
+});
+const RoomOverviewCardLayer = dynamic(() => import("@/components/RoomOverviewCardLayer"), {
+  ssr: false,
+});
+const RoomHotspotLayer = dynamic(() => import("@/components/RoomHotspotLayer"), {
+  ssr: false,
+});
 
 export type Hotspot = {
   id: string;
@@ -304,11 +313,11 @@ function HotspotLabelText({
 
   if (showHoverLabel === "hover") {
     return (
-      <span className="relative inline-flex items-center">
+      <span className="relative inline-flex w-full items-center justify-center text-center">
         <span className="transition-all duration-200 group-hover:opacity-0">
           {spot.label}
         </span>
-        <span className="absolute inset-0 opacity-0 transition-all duration-200 group-hover:opacity-100">
+        <span className="absolute inset-0 inline-flex items-center justify-center text-center opacity-0 transition-all duration-200 group-hover:opacity-100">
           {spot.hoverLabel}
         </span>
       </span>
@@ -316,7 +325,7 @@ function HotspotLabelText({
   }
 
   return (
-    <span className="relative inline-flex items-center">
+    <span className="relative inline-flex w-full items-center justify-center text-center">
       <span
         className={[
           "transition-all duration-200",
@@ -327,7 +336,7 @@ function HotspotLabelText({
       </span>
       <span
         className={[
-          "absolute inset-0 transition-all duration-200",
+          "absolute inset-0 inline-flex items-center justify-center text-center transition-all duration-200",
           showHoverLabel ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >
@@ -651,6 +660,8 @@ export default function RoomScene({
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
   const backgroundVideoPlaybackRate = room.slug === "steeped-dreams-studio" ? 0.9 : 1;
+  const shouldDeferBackgroundVideoMount = room.slug === "ten-ten-entertainment";
+  const [backgroundVideoEnabled, setBackgroundVideoEnabled] = useState(!shouldDeferBackgroundVideoMount);
 
   // video audio state
   const [videoMuted, setVideoMuted] = useState(true);
@@ -970,6 +981,8 @@ export default function RoomScene({
     isOrangeRoom &&
     isMobileViewport &&
     (isOrangeSessionModalOpen || isOrangeMobileSessionAudioActive);
+  const shouldMountOrangeExtras =
+    shouldShowOrangeSessionPreview || shouldRenderOrangeMobileAudioWidget;
   const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
   const suppressLobbyResponsiveUiUntilHydrated = isLobbyRoom && !hasHydrated;
   const activeCarouselSlide =
@@ -1056,7 +1069,9 @@ export default function RoomScene({
   const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "ten-ten-entertainment" ? 50 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
-  const activeBackgroundVideo = backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
+  const baseActiveBackgroundVideo =
+    backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
+  const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const useContainedBackground = false;
   const shouldRenderBackgroundImage =
     !activeBackgroundVideo || room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment";
@@ -1775,6 +1790,39 @@ export default function RoomScene({
     setIsOrangeMobileSessionAudioActive(false);
   }, [isMobileViewport, isOrangeSessionModalOpen]);
 
+  useEffect(() => {
+    if (!shouldDeferBackgroundVideoMount) {
+      setBackgroundVideoEnabled(true);
+      return;
+    }
+    setBackgroundVideoEnabled(false);
+
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    let idleId: number | undefined;
+
+    const enableVideo = () => {
+      if (cancelled) return;
+      setBackgroundVideoEnabled(true);
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      idleId = window.requestIdleCallback(enableVideo, { timeout: 1200 });
+    } else if (typeof window !== "undefined") {
+      timeoutId = setTimeout(enableVideo, 700);
+    }
+
+    return () => {
+      cancelled = true;
+      if (typeof window !== "undefined" && idleId !== undefined && "cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [shouldDeferBackgroundVideoMount, room.slug]);
+
   useLayoutEffect(() => {
     if (!isMobileViewport || !activeBackgroundVideo) return;
     const video = backgroundVideoRef.current;
@@ -2488,7 +2536,7 @@ export default function RoomScene({
         </div>
       ) : null}
 
-      {isOrangeRoom ? (
+      {shouldMountOrangeExtras ? (
         <OrangeRoomExtras
           shouldShowOrangeSessionPreview={shouldShowOrangeSessionPreview}
           onPreviewMouseEnter={showOrangeSessionPreview}
@@ -2643,593 +2691,98 @@ export default function RoomScene({
       )}
 
       {/* Room overview cards */}
-      {activeOverviewCard && (
-        <div
-          className={[
-            "absolute z-40 origin-right transition-[width] duration-300 ease-out",
-            mobileStaticUi && isCardCompact ? "overflow-visible" : "overflow-hidden",
-            showOrangeCard
-                ? "bottom-32 left-4 md:bottom-24"
-              : mobileStaticUi
-                ? "bottom-32 left-4 md:bottom-28"
-              : "bottom-52 left-4 md:bottom-28",
-            isCardMinimized
-              ? mobileStaticUi
-                ? "w-8"
-                : "w-12"
-              : showOrangeCard
-                ? "w-[min(84vw,340px)]"
-                : "w-[min(94vw,420px)]",
-            isModalOpen || exploreOpen
-              ? "pointer-events-none opacity-0"
-              : "pointer-events-auto opacity-100",
-          ].join(" ")}
-        >
-          <div
-            className={[
-              "relative",
-              isCardCompact && mobileStaticUi
-                ? "h-8 w-8 rounded-full border-0 bg-transparent p-0 backdrop-blur-0 shadow-none"
-                : "rounded-2xl border border-white/15 bg-black/45 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]",
-              isCardCompact
-                ? mobileStaticUi
-                  ? ""
-                  : "h-12 p-2"
-                : showOrangeCard
-                  ? "p-4"
-                  : "p-5",
-            ].join(" ")}
-          >
-            <button
-              type="button"
-              onClick={() => {
-                const slug = room.slug;
-                const isMin = minimizedByRoom[slug] ?? false;
-                const pending = cardToggleTimerRef.current[slug];
-                if (pending) window.clearTimeout(pending);
+      {activeOverviewCard ? (
+        <RoomOverviewCardLayer
+          activeOverviewCard={activeOverviewCard}
+          roomSlug={room.slug}
+          showOrangeCard={showOrangeCard}
+          mobileStaticUi={mobileStaticUi}
+          isCardCompact={isCardCompact}
+          isCardMinimized={isCardMinimized}
+          isCardContentVisible={isCardContentVisible}
+          isModalOpen={isModalOpen}
+          exploreOpen={exploreOpen}
+          prefersReducedMotion={prefersReducedMotion}
+          onToggleCard={() => {
+            const slug = room.slug;
+            const isMin = minimizedByRoom[slug] ?? false;
+            const pending = cardToggleTimerRef.current[slug];
+            if (pending) window.clearTimeout(pending);
 
-                if (isMin) {
-                  setMinimizedByRoom((prev) => ({ ...prev, [slug]: false }));
-                  cardToggleTimerRef.current[slug] = window.setTimeout(() => {
-                    setContentVisibleByRoom((prev) => ({ ...prev, [slug]: true }));
-                  }, 240);
-                } else {
-                  minimizeOverviewCard();
-                }
-              }}
-              aria-label={isCardMinimized ? "Expand overview card" : "Minimize overview card"}
-              className={[
-                "absolute inline-flex items-center justify-center rounded-full overflow-visible",
-                mobileStaticUi && isCardCompact
-                  ? "border border-black/70 bg-black/68 text-white"
-                  : "border border-white/35 bg-white/12 text-xs font-semibold text-white",
-                mobileStaticUi && isCardCompact ? "mobile-overview-toggle-glow" : "",
-                mobileStaticUi && isCardCompact
-                  ? "shadow-[0_0_0_1px_rgba(0,0,0,0.42),0_0_24px_rgba(0,0,0,0.5),0_0_46px_rgba(0,0,0,0.34)]"
-                  : mobileStaticUi
-                    ? "shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_24px_rgba(255,255,255,0.48),0_0_46px_rgba(255,255,255,0.28)]"
-                  : "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.32),0_0_34px_rgba(255,255,255,0.18)]",
-                mobileStaticUi && isCardCompact
-                  ? "transition hover:bg-black/78 hover:text-white hover:shadow-[0_0_0_1px_rgba(0,0,0,0.5),0_0_28px_rgba(0,0,0,0.58),0_0_52px_rgba(0,0,0,0.38)]"
-                  : mobileStaticUi
-                    ? "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.32),0_0_28px_rgba(255,255,255,0.56),0_0_52px_rgba(255,255,255,0.32)]"
-                  : "transition hover:bg-white/24 hover:text-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.28),0_0_22px_rgba(255,255,255,0.4),0_0_40px_rgba(255,255,255,0.24)]",
-                isCardCompact
-                  ? mobileStaticUi
-                    ? "left-0 top-0 h-8 w-8"
-                    : "right-2 top-2 h-8 w-8"
-                  : mobileStaticUi
-                    ? "right-3 top-3 h-8 w-8"
-                    : "right-3 top-3 h-8 w-8",
-              ].join(" ")}
-            >
-              {!mobileStaticUi ? (
-                <span
-                  className={[
-                    "pointer-events-none absolute -inset-1 rounded-full border border-white/35",
-                    prefersReducedMotion ? "opacity-80" : "animate-[softPulse_1.8s_ease-in-out_infinite]",
-                  ].join(" ")}
-                />
-              ) : null}
-              {isCardMinimized ? ">" : "<"}
-            </button>
-
-            {!isCardMinimized && isCardContentVisible ? (
-              <div
-                className={
-                  showOrangeCard
-                    ? "max-h-[330px] overflow-y-auto pr-1 [scrollbar-width:thin] [scrollbar-color:rgba(214,214,214,0.6)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/45"
-                    : ""
-                }
-              >
-                <div className="text-[10px] font-semibold tracking-[0.22em] uppercase text-white/60">
-                  {activeOverviewCard.eyebrow}
-                </div>
-                {activeOverviewCard.imageSrc ? (
-                  <div className="mt-3 overflow-hidden rounded-xl border border-white/15">
-                    <NextImage
-                      src={activeOverviewCard.imageSrc}
-                      alt={activeOverviewCard.imageAlt ?? activeOverviewCard.title}
-                      width={1000}
-                      height={400}
-                      sizes="(max-width: 768px) 94vw, 420px"
-                      className="h-40 w-full object-cover object-[center_35%]"
-                      draggable={false}
-                    />
-                  </div>
-                ) : null}
-                <div className="mt-3 text-base font-semibold text-white/92">{activeOverviewCard.title}</div>
-                <p
-                  className={[
-                    "mt-3 text-sm leading-relaxed text-white/75",
-                    "",
-                  ].join(" ")}
-                >
-                  {activeOverviewCard.body}
-                </p>
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {activeOverviewCard.socialLinks?.length ? (
-                    activeOverviewCard.socialLinks.map((social) => (
-                      <a
-                        key={social.label}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={social.label}
-                        title={social.label}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/90 transition hover:bg-white/15 hover:text-white"
-                      >
-                        <SocialIcon label={social.label} />
-                      </a>
-                    ))
-                  ) : (
-                    <>
-                      {activeOverviewCard.primaryHref.startsWith("http") ? (
-                        <a
-                          href={activeOverviewCard.primaryHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/15 hover:text-white"
-                        >
-                          {activeOverviewCard.primaryCta}
-                        </a>
-                      ) : (
-                        <Link
-                          href={activeOverviewCard.primaryHref}
-                          className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/15 hover:text-white"
-                        >
-                          {activeOverviewCard.primaryCta}
-                        </Link>
-                      )}
-                      {activeOverviewCard.secondaryHref && activeOverviewCard.secondaryCta ? (
-                        activeOverviewCard.secondaryHref.startsWith("http") ? (
-                          <a
-                            href={activeOverviewCard.secondaryHref}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 hover:text-white"
-                          >
-                            {activeOverviewCard.secondaryCta}
-                          </a>
-                        ) : (
-                          <Link
-                            href={activeOverviewCard.secondaryHref}
-                            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 hover:text-white"
-                          >
-                            {activeOverviewCard.secondaryCta}
-                          </Link>
-                        )
-                      ) : null}
-                      {activeOverviewCard.exampleHref && activeOverviewCard.exampleCta ? (
-                        activeOverviewCard.exampleHref.startsWith("http") ? (
-                          <a
-                            href={activeOverviewCard.exampleHref}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/40 bg-[#d6ae66]/12 px-4 py-2 text-sm font-semibold text-[#f6deb2] transition hover:bg-[#d6ae66]/20 hover:text-white"
-                          >
-                            {activeOverviewCard.exampleCta}
-                          </a>
-                        ) : (
-                          <Link
-                            href={activeOverviewCard.exampleHref}
-                            className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/40 bg-[#d6ae66]/12 px-4 py-2 text-sm font-semibold text-[#f6deb2] transition hover:bg-[#d6ae66]/20 hover:text-white"
-                          >
-                            {activeOverviewCard.exampleCta}
-                          </Link>
-                        )
-                      ) : null}
-                    </>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="h-8" />
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Hotspots */}
-      <div
-        className={[
-          "pointer-events-none absolute inset-0 z-30 transition-opacity duration-50",
-          hotspotsReady ? "opacity-100" : "opacity-0",
-        ].join(" ")}
-        style={
-          canDesktopCursorPan && !isMobileViewport
-            ? { transform: `translate3d(${desktopCursorPan.x}px, 0, 0)` }
-            : undefined
-        }
-      >
-        {areHotspotsPositionReady
-          ? visibleHotspots.map((spot) => {
-          const isMobileNextRoomPin = isMobileViewport && spot.id === "next-room";
-          const hotspotTransform = getHotspotAnchorTransform(spot);
-          const sharedClassName = [
-            isMobileNextRoomPin
-              ? "absolute z-40 transition-opacity duration-100"
-              : "absolute z-20 transition-opacity duration-100",
-            isModalOpen || exploreOpen || (isLobbyRoom && isLobbyExploreHoverOpen)
-              ? "pointer-events-none opacity-0"
-              : "pointer-events-auto opacity-100",
-          ].join(" ");
-
-          const sharedStyle = {
-            ...getMobileHotspotStyle(spot),
-            ...(hotspotTransform ? { transform: hotspotTransform } : {}),
-          };
-
-          const variant = spot.variant ?? "pill";
-          const content =
-            variant === "dot" ? DotHotspotContent(spot) : PillHotspotContent(spot);
-
-          // Action hotspot (opens Explore panel)
-          if (spot.action === "explore") {
-            if (isLobbyRoom && !hasHydrated) {
-              return null;
+            if (isMin) {
+              setMinimizedByRoom((prev) => ({ ...prev, [slug]: false }));
+              cardToggleTimerRef.current[slug] = window.setTimeout(() => {
+                setContentVisibleByRoom((prev) => ({ ...prev, [slug]: true }));
+              }, 240);
+            } else {
+              minimizeOverviewCard();
             }
-            const isLobbyDesktopExplorePin = room.slug === "lobby" && !lobbyResponsiveIsMobile && spot.id === "explore";
-            if (isLobbyDesktopExplorePin) {
-              return null;
-            }
-            return (
-              <button
-                key={spot.id}
-                type="button"
-                className={sharedClassName}
-                style={sharedStyle}
-                onClick={() => {
-                  triggerHotspotLabelGlow(spot);
-                  setExploreOpen(true);
-                }}
-              >
-                {content}
-              </button>
-            );
-          }
-
-          // Modal hotspot
-          if (spot.modal) {
-            return (
-              <button
-                key={spot.id}
-                type="button"
-                className={sharedClassName}
-                style={sharedStyle}
-                onMouseEnter={
-                  isOrangeRoom && spot.id === ORANGE_SESSION_PREVIEW_DOT_ID
-                    ? showOrangeSessionPreview
-                    : undefined
-                }
-                onMouseLeave={
-                  isOrangeRoom && spot.id === ORANGE_SESSION_PREVIEW_DOT_ID
-                    ? hideOrangeSessionPreview
-                    : undefined
-                }
-                onClick={() => {
-                  triggerHotspotLabelGlow(spot);
-                  setModalBackModal(null);
-                  if (isOrangeRoom && isMobileViewport && spot.id === ORANGE_SESSION_PREVIEW_DOT_ID) {
-                    startOrangeMobileSessionAudio();
-                  }
-                  openModal(spot.modal!);
-                }}
-              >
-                {content}
-              </button>
-            );
-          }
-
-          // Link hotspot
-          if (!spot.href) {
-            return (
-              <div key={spot.id} className={sharedClassName} style={sharedStyle}>
-                {content}
-              </div>
-            );
-          }
-
-          if (spot.href.startsWith("http")) {
-            return (
-              <a
-                key={spot.id}
-                href={spot.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={sharedClassName}
-                style={sharedStyle}
-                onClick={() => {
-                  triggerHotspotLabelGlow(spot);
-                }}
-              >
-                {content}
-              </a>
-            );
-          }
-
-          return (
-            <Link
-              key={spot.id}
-              href={spot.href}
-              className={sharedClassName}
-              style={sharedStyle}
-              onMouseEnter={() => prefetchExploreRoute(spot.href!)}
-              onFocus={() => prefetchExploreRoute(spot.href!)}
-              onTouchStart={() => prefetchExploreRoute(spot.href!)}
-                onClick={(event) => {
-                  event.preventDefault();
-                  triggerHotspotLabelGlow(spot);
-                  void navigateToRoomHref(spot.href!, "room-scene-hotspot");
-                }}
-            >
-              {content}
-            </Link>
-          );
-        })
-          : null}
-      </div>
-
-      {/* Bottom Explore bar */}
-      {!suppressLobbyResponsiveUiUntilHydrated ? (
-        isMobileViewport ? (
-          <div className={["absolute bottom-6 right-6 flex items-center gap-2", isStartHereModal ? "z-[10010]" : "z-50"].join(" ")}>
-            <button
-              type="button"
-              aria-label="Open Explore menu"
-              onClick={openExploreMenu}
-              data-no-pan
-              className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white backdrop-blur-xl transition hover:bg-black/60"
-            >
-              <span className="text-white/85">⌕</span>
-            </button>
-            {!isLobbyRoom ? (
-              <button
-                type="button"
-                data-no-pan
-                aria-label={`Previous room: ${explorePrevLabel}`}
-                onClick={() => void navigateToRoomHref(explorePrevHref, "room-scene-prev-mobile")}
-                className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
-              >
-                ←
-              </button>
-            ) : null}
-            <button
-              type="button"
-              data-no-pan
-              aria-label={`Next room: ${exploreArrowLabel}`}
-              onClick={() => void navigateToRoomHref(exploreArrowHref, "room-scene-next-mobile")}
-              className="inline-flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/80 backdrop-blur-xl transition hover:bg-black/60 hover:text-white"
-            >
-              →
-            </button>
-          </div>
-        ) : (
-          <div className={["absolute bottom-6 right-6", isStartHereModal ? "z-[10010]" : "z-40"].join(" ")}>
-            <div className="flex items-stretch justify-end gap-2">
-              {!isLobbyRoom ? (
-                <button
-                  type="button"
-                  data-no-pan
-                  aria-label="Go to previous room"
-                  title={`Previous: ${explorePrevLabel}`}
-                  onClick={() => void navigateToRoomHref(explorePrevHref, "room-scene-prev-desktop")}
-                  className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
-                >
-                  ←
-                  <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
-                    {explorePrevLabel}
-                  </span>
-                </button>
-              ) : null}
-              <button
-                type="button"
-                onClick={openExploreMenu}
-                data-no-pan
-                className="flex h-11 w-[min(25vw,188px)] min-w-[148px] touch-manipulation select-none items-center gap-2.5 rounded-2xl border border-white/14 bg-black/30 px-3.5 py-2 text-left backdrop-blur-xl transition-[width,background-color,border-color] duration-250 ease-out hover:w-[min(30vw,220px)] hover:bg-black/42"
-              >
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/18 bg-black/26">
-                  <span className="text-white/76">⌕</span>
-                </span>
-
-                <div className="flex-1">
-                  <div className="text-[13px] font-semibold text-white/88">Explore</div>
-                  <div className="text-[10px] uppercase tracking-[0.12em] text-white/52">All Rooms</div>
-                </div>
-              </button>
-              <button
-                type="button"
-                data-no-pan
-                aria-label="Go to next page"
-                title={`Next: ${exploreArrowLabel}`}
-                onClick={() => void navigateToRoomHref(exploreArrowHref, "room-scene-next-desktop")}
-                className="group relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/14 bg-black/30 text-white/66 backdrop-blur-xl transition hover:bg-black/42 hover:text-white"
-              >
-                →
-                <span className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-lg border border-white/15 bg-black/80 px-2 py-1 text-[11px] font-medium text-white/90 opacity-0 shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
-                  {exploreArrowLabel}
-                </span>
-              </button>
-            </div>
-          </div>
-        )
+          }}
+        />
       ) : null}
 
-      {/* Explore overlay */}
-      <div
-        className={[
-          "fixed inset-0",
-          isStartHereModal ? "z-[10020]" : "z-[60]",
-          exploreOpen ? "pointer-events-auto" : "pointer-events-none",
-          isMobileViewport ? "" : "transition-opacity duration-300 ease-out",
-          exploreOpen ? "opacity-100" : "opacity-0",
-        ].join(" ")}
-      >
-        <button
-          type="button"
-          aria-label="Close Explore"
-          className={[
-            "absolute inset-0 transition-opacity ease-out",
-            isMobileViewport ? "bg-black/60 duration-150" : "bg-black/40 duration-300",
-            exploreOpen ? "opacity-100" : "opacity-0",
-          ].join(" ")}
-          onClick={() => setExploreOpen(false)}
-        />
+      {/* Hotspots */}
+      <RoomHotspotLayer
+        visibleHotspots={visibleHotspots}
+        areHotspotsPositionReady={areHotspotsPositionReady}
+        isMobileViewport={isMobileViewport}
+        isModalOpen={isModalOpen}
+        exploreOpen={exploreOpen}
+        isLobbyRoom={isLobbyRoom}
+        isLobbyExploreHoverOpen={isLobbyExploreHoverOpen}
+        canDesktopCursorPan={canDesktopCursorPan}
+        desktopCursorPanX={desktopCursorPan.x}
+        hasHydrated={hasHydrated}
+        roomSlug={room.slug}
+        lobbyResponsiveIsMobile={lobbyResponsiveIsMobile}
+        isOrangeRoom={isOrangeRoom}
+        orangeSessionPreviewDotId={ORANGE_SESSION_PREVIEW_DOT_ID}
+        getMobileHotspotStyle={getMobileHotspotStyle}
+        getHotspotAnchorTransform={getHotspotAnchorTransform}
+        renderHotspotContent={(spot) =>
+          (spot.variant ?? "pill") === "dot" ? DotHotspotContent(spot) : PillHotspotContent(spot)
+        }
+        onOpenExplore={(spot) => {
+          triggerHotspotLabelGlow(spot);
+          setExploreOpen(true);
+        }}
+        onOpenModal={(spot) => {
+          triggerHotspotLabelGlow(spot);
+          setModalBackModal(null);
+          if (isOrangeRoom && isMobileViewport && spot.id === ORANGE_SESSION_PREVIEW_DOT_ID) {
+            startOrangeMobileSessionAudio();
+          }
+          openModal(spot.modal!);
+        }}
+        onExternalLinkClick={(spot) => {
+          triggerHotspotLabelGlow(spot);
+        }}
+        onInternalLinkClick={(event, spot) => {
+          event.preventDefault();
+          triggerHotspotLabelGlow(spot);
+          void navigateToRoomHref(spot.href!, "room-scene-hotspot");
+        }}
+        onOrangePreviewEnter={showOrangeSessionPreview}
+        onOrangePreviewLeave={hideOrangeSessionPreview}
+        prefetchExploreRoute={prefetchExploreRoute}
+      />
 
-        <div
-          className={[
-            "absolute left-0 top-0 h-full w-[272px] max-w-[72vw] border-r border-white/10 bg-black/45 backdrop-blur-2xl p-5 pt-[max(1rem,env(safe-area-inset-top))] md:w-[340px] md:max-w-[85vw] md:p-6",
-            "transform-gpu will-change-[transform,opacity] transition-[transform,opacity] duration-[380ms] ease-out",
-            exploreOpen ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0",
-          ].join(" ")}
-        >
-          <div className="flex h-full flex-col">
-          <div className="flex shrink-0 items-center justify-between">
-            <div className="text-[11px] font-medium tracking-[0.28em] uppercase text-white/55">
-              Explore
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setExploreOpen(false)}
-              className="rounded-full border border-white/15 bg-black/30 px-3 py-1 text-sm text-white/75 hover:text-white transition"
-            >
-              Close
-            </button>
-          </div>
-
-          <div className="mt-6 flex-1 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-2 pb-[calc(env(safe-area-inset-bottom)+6rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {EXPLORE_ROOMS.map((item, index) => {
-              const isApply = false;
-              const isUtilityLink =
-                item.label === "Apply For A Consultation" || item.label === "Our Artists";
-              const isLastUtilityLink = item.label === "Our Artists";
-
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={(event) => {
-                    if (!item.href.startsWith("/rooms/")) {
-                      logRoomNav("nav:push", { from: `/rooms/${room.slug}`, to: item.href, source: "room-scene-explore" });
-                      setExploreOpen(false);
-                      return;
-                    }
-                    event.preventDefault();
-                    setExploreOpen(false);
-                    void navigateToRoomHref(item.href);
-                  }}
-                  onMouseEnter={() => prefetchExploreRoute(item.href)}
-                  onFocus={() => prefetchExploreRoute(item.href)}
-                  onTouchStart={() => prefetchExploreRoute(item.href)}
-                  className={
-                    isApply
-                      ? `
-                        mb-6 inline-flex items-center justify-center gap-2
-                        rounded-full
-                        border border-white/20
-                        bg-white/10
-                        px-5 py-2.5
-                        text-sm font-semibold text-white/90
-                        backdrop-blur-xl
-                        shadow-lg shadow-black/25
-                        transition
-                        hover:border-white/35 hover:bg-white/15
-                      `
-                      : isUtilityLink
-                        ? `
-                          group relative block
-                          border-b border-white/8
-                          py-1.5 ${isLastUtilityLink ? "mb-8 md:mb-6" : ""}
-                          text-[11px] font-semibold uppercase tracking-[0.16em]
-                          text-white/52
-                          transition
-                          hover:border-white/18 hover:text-white/78
-                        `
-                      : `
-                        group relative block
-                        py-1.5
-                        text-[18px] leading-snug
-                        font-medium
-                        tracking-[0.01em]
-                        text-white/64
-                        transition
-                        hover:text-white
-                      `
-                  }
-                  style={{
-                    transitionDelay: exploreOpen
-                      ? `${Math.min(index * (isMobileViewport ? 72 : 56), isMobileViewport ? 720 : 560)}ms`
-                      : "80ms",
-                    transitionProperty: "opacity, transform",
-                    transitionDuration: isMobileViewport ? "760ms" : "620ms",
-                    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-                    opacity: exploreOpen ? 1 : 0,
-                    transform: exploreOpen ? "translate3d(0,0,0)" : "translate3d(-8px,0,0)",
-                    willChange: "opacity, transform",
-                  }}
-                >
-                  {isApply ? (
-                    <>
-                      <span>{item.label}</span>
-                      <span className="text-white/75">→</span>
-                    </>
-                  ) : isUtilityLink ? (
-                    <>
-                      <span className="pointer-events-none absolute left-0 top-1/2 h-[1px] w-0 -translate-y-1/2 bg-white/28 transition-all duration-300 group-hover:w-4" />
-                      <span className="pl-0 transition-all duration-300 group-hover:pl-5">{item.label}</span>
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 text-white/44 transition group-hover:text-white/75">→</span>
-                    </>
-                  ) : (
-                    <>
-                      <span
-                        className="
-                          pointer-events-none absolute left-0 top-1/2 h-[1px] w-0
-                          -translate-y-1/2 bg-white/35
-                          transition-all duration-300
-                          group-hover:w-6
-                        "
-                      />
-                      <span className="pl-0 group-hover:pl-8 transition-all duration-300">{item.label}</span>
-                    </>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="mt-4 shrink-0">
-            <NextImage
-              src="/logotransparent.png"
-              alt="EMTEE logo"
-              width={132}
-              height={40}
-              className="h-7 w-auto object-contain brightness-0 invert opacity-75 md:h-8"
-            />
-          </div>
-          </div>
-        </div>
-      </div>
+      <RoomExploreLayer
+        suppressLobbyResponsiveUiUntilHydrated={suppressLobbyResponsiveUiUntilHydrated}
+        isMobileViewport={isMobileViewport}
+        isStartHereModal={isStartHereModal}
+        isLobbyRoom={isLobbyRoom}
+        explorePrevLabel={explorePrevLabel}
+        explorePrevHref={explorePrevHref}
+        exploreArrowLabel={exploreArrowLabel}
+        exploreArrowHref={exploreArrowHref}
+        navigateToRoomHref={navigateToRoomHref}
+        openExploreMenu={openExploreMenu}
+        exploreOpen={exploreOpen}
+        setExploreOpen={setExploreOpen}
+        exploreRooms={EXPLORE_ROOMS}
+        prefetchExploreRoute={prefetchExploreRoute}
+      />
 
       {/* MODAL OVERLAY */}
       <RoomModalLayer
@@ -3255,7 +2808,9 @@ export default function RoomScene({
         muteYoutube={muteYoutube}
         unmuteYoutube={unmuteYoutube}
         isYanchanMusicModal={isYanchanMusicModal}
+        isYanchanDiscographyModal={isYanchanDiscographyModal}
         isJoinCommunityModal={isJoinCommunityModal}
+        isCustomProductionModal={isCustomProductionModal}
         isCarouselModal={isCarouselModal}
         activeCarouselSlide={activeCarouselSlide}
         activeCarouselIndex={activeCarouselIndex}
@@ -3273,7 +2828,9 @@ export default function RoomScene({
         roomHotspots={resolvedHotspots}
         isPackageGridModal={isPackageGridModal}
         isWebsiteDesignMainModal={isWebsiteDesignMainModal}
+        isLivePackageDetailModal={isLivePackageDetailModal}
         isLiveRoomModal={isLiveRoomModal}
+        yanchanDiscographySpotlight={YANCHAN_DISCOGRAPHY_SPOTLIGHT}
         SocialIcon={SocialIcon}
         openExploreMenu={openExploreMenu}
       />

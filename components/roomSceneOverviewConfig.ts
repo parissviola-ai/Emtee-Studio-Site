@@ -78,7 +78,7 @@ const ARTISTS_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   secondaryCta: "Resources",
   secondaryHref: "/resources",
-  strategyLabel: "Publishing/Distribution Strategy",
+  strategyLabel: "Pub/Distro Strategy",
   exampleArtist: "Yanchan Produced",
   exampleHref: "/artist-affiliations/case-studies-2?example=yanchan-publishing-distro",
   eyebrow: "Distribution / Publishing",

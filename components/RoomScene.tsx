@@ -14,6 +14,10 @@ import {
 import type { OrangeRoomExtrasHandle } from "@/components/OrangeRoomExtras";
 import RoomDotHotspotContent from "@/components/RoomDotHotspotContent";
 import RoomPillHotspotContent from "@/components/RoomPillHotspotContent";
+import {
+  getKnownRoomImageSize,
+  getRoomSceneBackgroundConfig,
+} from "@/components/roomSceneBackgroundConfig";
 import { getActiveOverviewCard } from "@/components/roomSceneOverviewConfig";
 import { getDotPresentationState } from "@/components/roomHotspotPresentation";
 
@@ -109,49 +113,12 @@ const EXPLORE_ROOMS = [
   { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
 ];
 const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/rooms/"));
-const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
-  "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
-  "/rooms/finallobby-opt.jpg": { w: 2560, h: 1280 },
-  "/rooms/finallobby2-opt.jpg": { w: 2560, h: 1280 },
-  "/rooms/lobbywithconcert-opt.jpg": { w: 2560, h: 1280 },
-  "/rooms/updatedttbg1-poster-opt.jpg": { w: 2560, h: 1440 },
-  "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
-  "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
-  "/rooms/cdshop-opt.jpg": { w: 2560, h: 1440 },
-  "/rooms/marketing1.png": { w: 3840, h: 2160 },
-  "/rooms/finalfinalmarketing.png": { w: 4320, h: 2430 },
-  "/rooms/front.jpg": { w: 2048, h: 1365 },
-  "/rooms/live-opt.jpg": { w: 2560, h: 1440 },
-  "/rooms/kymteabg-opt.jpg": { w: 1536, h: 1024 },
-  "/rooms/SDSFinal-opt.jpg": { w: 3840, h: 2160 },
-  "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
-  "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
-  "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
-  "/rooms/10-refresh-opt.jpg": { w: 1920, h: 1080 },
-  "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
-  "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
-};
-const NATIVE_BACKGROUND_IMAGE_ROOMS = new Set([
-  "lobby",
-  "business",
-  "music",
-  "marketing",
-  "publishing-distribution",
-  "ar-sales",
-  "steeped-dreams-studio",
-]);
-const SENSITIVE_TRANSITION_ROOMS = new Set([
-  "lobby",
-  "business",
-  "music",
-  "marketing",
-  "publishing-distribution",
-  "ar-sales",
-  "dirty-elephant-studio",
-  "ten-ten-entertainment",
-  "steeped-dreams-studio",
-]);
 const HOTSPOT_TIER_PILOT_ROOMS = new Set(["lobby"]);
+const TEN_TEN_FIXED_NON_MOBILE_HOTSPOT_IDS = new Set([
+  "mike-cannz-youtube",
+  "mike-cannz-spotify",
+  "ten-ten-entertainment-packages",
+]);
 
 const PREVIOUS_ROOM_LINKS: Record<string, string> = {
   business: "/rooms/lobby",
@@ -789,6 +756,8 @@ export default function RoomScene({
             ? room.slug === "ten-ten-entertainment"
               ? spot.positions?.mobile
               : undefined
+            : room.slug === "ten-ten-entertainment" && TEN_TEN_FIXED_NON_MOBILE_HOTSPOT_IDS.has(spot.id)
+              ? undefined
             : spot.positions?.[hotspotBreakpoint] ??
               (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
@@ -808,43 +777,31 @@ export default function RoomScene({
   const navCircleClass = "flex h-9 w-9 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/85 bg-black/10 backdrop-blur-sm";
   const navPillClass = "inline-flex h-9 sm:h-7 items-center whitespace-nowrap rounded-full border border-white/85 bg-black/10 px-4 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/30 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.2)] group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.52)]";
   const compactHotspotUi = viewportW > 0 && viewportW < 1280;
-  const eagerBackgroundLoad = room.slug === "lobby" || SENSITIVE_TRANSITION_ROOMS.has(room.slug);
-  const isMusicRoom = room.slug === "music";
-  const isMarketingRoomZoomedOut = room.slug === "marketing";
-  const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
-  const desktopSceneScale =
-    room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom
-      ? 1
-        : isMusicRoom
-          ? 1
-        : isMarketingRoomZoomedOut
-          ? 1
-        : 1.06;
-  const sceneScale = backgroundUsesMobileLayout ? mobileSceneScale : desktopSceneScale;
-  const backgroundObjectPositionY =
-    room.slug === "EMTEEWebDesign"
-      ? 60
-      : room.slug === "ar-sales"
-        ? 64
-        : room.slug === "lobby"
-          ? 58
-          : 50;
-  const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "ten-ten-entertainment" ? 50 : 0;
-  const backgroundImageSrc =
-    isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
-  const baseActiveBackgroundVideo =
-    backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
-  const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
-  const useContainedBackground = false;
-  const shouldRenderBackgroundImage =
-    !activeBackgroundVideo || room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment";
-  const shouldRenderImmediateBackgroundFallback =
-    shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug);
-  const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
-  const shouldUseNativeBackgroundImage =
-    shouldRenderBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
-  const showWebsiteDesignEmbed =
-    isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
+  const {
+    activeBackgroundVideo,
+    backgroundImageSrc,
+    backgroundObjectPositionY,
+    backgroundOffsetY,
+    eagerBackgroundLoad,
+    sceneScale,
+    shouldRenderBackgroundImage,
+    shouldRenderImmediateBackgroundFallback,
+    shouldRenderStaticBackgroundImage,
+    shouldUseNativeBackgroundImage,
+    showWebsiteDesignEmbed,
+    useContainedBackground,
+  } = getRoomSceneBackgroundConfig({
+    roomSlug: room.slug,
+    backgroundImage: room.backgroundImage,
+    backgroundVideo: room.backgroundVideo,
+    backgroundVideoMobile: room.backgroundVideoMobile,
+    backgroundUsesMobileLayout,
+    isMobileViewport,
+    isModalOpen,
+    exploreOpen,
+    tiltEnabled,
+    backgroundVideoEnabled,
+  });
   const mobileImageMetrics = useMemo(
     () => {
       if (!(backgroundUsesMobileLayout || useContainedBackground)) return null;
@@ -1567,7 +1524,7 @@ export default function RoomScene({
   }, [activeBackgroundVideo, room.slug]);
 
   useEffect(() => {
-    const known = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
+    const known = getKnownRoomImageSize(backgroundImageSrc);
     if (known) {
       imageNaturalSizeCacheRef.current[backgroundImageSrc] = known;
       setImageNaturalSize(known);

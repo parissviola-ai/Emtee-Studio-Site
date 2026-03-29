@@ -175,8 +175,8 @@ export default function MainMenuBar() {
                 className="h-6 w-auto object-contain invert opacity-80 sm:h-7"
                 priority
               />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/88 sm:text-sm">
-                EMTEE <span className="text-white">Music Group</span>
+              <span className="text-[11px] font-semibold tracking-[0.08em] text-white/88 sm:text-sm">
+                <span className="text-white">Emtee Music Group</span>
               </span>
             </Link>
           </div>

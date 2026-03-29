@@ -2624,18 +2624,14 @@ export default function RoomScene({
           data-no-pan
         >
           {isHotspotTierPilotRoom ? (
-            <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(14,14,14,0.16),rgba(14,14,14,0.08))] px-3 py-3 shadow-[0_16px_34px_rgba(0,0,0,0.14)] backdrop-blur-md">
-              <div className="flex items-center justify-center rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] px-3 py-2.5">
-                <div className="relative flex w-full flex-col items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={toggleShowMoreHotspots}
-                    className="inline-flex min-w-[7.25rem] items-center justify-center rounded-full border border-white/20 bg-black/20 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/88 shadow-[0_6px_14px_rgba(0,0,0,0.1)] backdrop-blur-md transition hover:border-white/28 hover:bg-black/28 hover:text-white"
-                  >
-                    {showAllRoomHotspots ? "Hide Rooms" : "Show Rooms"}
-                  </button>
-                </div>
-              </div>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={toggleShowMoreHotspots}
+                className="inline-flex min-w-[7.25rem] items-center justify-center rounded-full border border-white/20 bg-black/20 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/88 shadow-[0_6px_14px_rgba(0,0,0,0.1)] backdrop-blur-md transition hover:border-white/28 hover:bg-black/28 hover:text-white"
+              >
+                {showAllRoomHotspots ? "Hide Rooms" : "Show Rooms"}
+              </button>
             </div>
           ) : null}
         </div>

@@ -44,7 +44,7 @@ const ROOM_HEADER_LABELS: Record<string, { kind: "ROOM" | "DEPARTMENT"; label: s
   "/rooms/marketing": { kind: "DEPARTMENT", label: "Marketing" },
   "/rooms/publishing-distribution": { kind: "DEPARTMENT", label: "Distribution / Publishing" },
   "/rooms/ar-sales": { kind: "DEPARTMENT", label: "A&R / Sales" },
-  "/rooms/dirty-elephant-studio": { kind: "ROOM", label: "Dirty Elephant Studio" },
+  "/rooms/dirty-elephant-studio": { kind: "ROOM", label: "Dirty Elephant Studios" },
   "/rooms/ten-ten-entertainment": { kind: "ROOM", label: "Ten Ten Entertainment" },
   "/rooms/steeped-dreams-studio": { kind: "ROOM", label: "Steeped Dreams Studio" },
 };

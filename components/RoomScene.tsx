@@ -2369,14 +2369,16 @@ export default function RoomScene({
         </div>
       ) : null}
 
-      <OrangeRoomExtras
-        ref={orangeExtrasRef}
-        isOrangeRoom={isOrangeRoom}
-        isMobileViewport={isMobileViewport}
-        isSessionModalOpen={isOrangeSessionModalOpen}
-        isPreviewMuted={isOrangePreviewMuted}
-        onPreviewMutedChange={setIsOrangePreviewMuted}
-      />
+      {isOrangeRoom ? (
+        <OrangeRoomExtras
+          ref={orangeExtrasRef}
+          isOrangeRoom={isOrangeRoom}
+          isMobileViewport={isMobileViewport}
+          isSessionModalOpen={isOrangeSessionModalOpen}
+          isPreviewMuted={isOrangePreviewMuted}
+          onPreviewMutedChange={setIsOrangePreviewMuted}
+        />
+      ) : null}
 
       {/* Room label */}
       <div

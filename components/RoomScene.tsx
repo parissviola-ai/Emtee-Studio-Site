@@ -12,6 +12,7 @@ import {
   warmRoomNeighborhoodBySlug,
 } from "@/lib/warmRoomAssets";
 import type { OrangeRoomExtrasHandle } from "@/components/OrangeRoomExtras";
+import RoomDotHotspotContent from "@/components/RoomDotHotspotContent";
 import { getDotPresentationState, getPillPresentationState } from "@/components/roomHotspotPresentation";
 
 const OrangeRoomExtras = dynamic(() => import("@/components/OrangeRoomExtras"), {
@@ -1863,127 +1864,23 @@ export default function RoomScene({
   }
 
   function DotHotspotContent(spot: Hotspot) {
-    const {
-      isOrangeSessionDot,
-      isLobbyDot,
-      isLiveRoomSocialDot,
-      liveRoomSocialLabel,
-      dotSize,
-      dotLabelMaxWidth,
-      dotLabelFontSize,
-      resolvedTooltipDirection,
-      customTooltipOffsetClass,
-      isChillOutCommunityDot,
-      isQuietAccentDot,
-      dotBase,
-      haloBase,
-      ringBase,
-    } = getDotPresentationState({
-      roomSlug: room.slug,
-      spot,
-      isMobileViewport,
-      compactHotspotUi,
-      viewportW,
-      isOrangeRoom,
-    });
-    const isClickedLabelVisible = clickedHotspotId === spot.id;
-
-    if (isLiveRoomSocialDot && liveRoomSocialLabel) {
-      const isYoutube = liveRoomSocialLabel === "YouTube";
-      return (
-        <span className="group relative inline-flex items-center">
-          <span
-            className={[
-              "relative inline-flex items-center justify-center rounded-full text-white",
-              isMobileViewport ? "h-8 w-8" : "h-9 w-9",
-              "border border-white/14 bg-black/24 backdrop-blur-[3px]",
-              "shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_0_20px_rgba(255,255,255,0.18),0_10px_24px_rgba(0,0,0,0.26)] transition-all duration-200",
-              "group-hover:border-white/28 group-hover:bg-black/34 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_28px_rgba(255,255,255,0.3),0_10px_26px_rgba(0,0,0,0.3)]",
-            ].join(" ")}
-          >
-            {isYoutube ? (
-              <span className="inline-flex h-4 w-5.5 items-center justify-center rounded-[5px] bg-[#FF0033]/88">
-                <span className="ml-0.5 h-0 w-0 border-y-[4px] border-y-transparent border-l-[6px] border-l-white" />
-              </span>
-            ) : (
-              <span className="inline-flex items-center justify-center text-[#1ED760]/90">
-                <SocialIcon label="Spotify" className="h-4 w-4" />
-              </span>
-            )}
-          </span>
-        </span>
-      );
-    }
-
-    // Pure dot + hover label tooltip (NO pill markup => no stray border line)
     return (
-      <span className="group relative inline-flex items-center">
-        {/* DOT */}
-        <span
-          className={[
-            "relative inline-flex items-center justify-center",
-            dotBase,
-            isOrangeSessionDot && !prefersReducedMotion ? "animate-[softPulse_1.35s_ease-in-out_infinite]" : "",
-          ].join(" ")}
-          style={{ width: `${dotSize}px`, height: `${dotSize}px` }}
-        >
-          {/* Soft halo */}
-          <span
-            className={[
-              "pointer-events-none absolute rounded-full blur-md",
-              "-inset-2",
-              haloBase,
-            ].join(" ")}
-          />
-
-          {/* Pulse ring (subtle) */}
-          <span
-            className={[
-              "pointer-events-none absolute rounded-full border-2",
-              isLobbyDot
-                ? "-inset-2 animate-[ping_1.9s_cubic-bezier(0,0,0.2,1)_infinite]"
-                : "-inset-4 animate-[ping_1.55s_cubic-bezier(0,0,0.2,1)_infinite]",
-              prefersReducedMotion ? "animate-none" : "",
-              isLobbyDot
-                ? "border-white/35"
-                : isOrangeSessionDot
-                  ? (
-                      isOrangeRoom
-                        ? "border-[#ff9f3f]/85"
-                        : "border-white/70"
-                    )
-                  : ringBase,
-            ].join(" ")}
-          />
-        </span>
-
-        {/* Dot label */}
-        <span
-          className={[
-            "absolute z-50",
-            tooltipPosition(resolvedTooltipDirection, spot.x, spot.y, isMobileViewport, viewportW),
-            customTooltipOffsetClass,
-            isChillOutCommunityDot
-              ? "whitespace-pre-line break-words md:whitespace-pre-line rounded-full leading-tight"
-              : "whitespace-nowrap rounded-full leading-tight",
-            "border border-white/18 bg-black/55 backdrop-blur-xl",
-            "px-2.5 py-1 font-semibold text-white/85 sm:px-3 sm:py-1.5 md:px-3.5",
-            "shadow-[0_12px_40px_rgba(0,0,0,0.45)]",
-            "pointer-events-auto cursor-pointer",
-            "opacity-100 translate-y-0",
-            "transition-all duration-200",
-            isQuietAccentDot
-              ? "border-emerald-200/24 bg-emerald-300/8 text-emerald-50/88 shadow-[0_0_0_1px_rgba(110,231,183,0.14),0_14px_40px_rgba(0,0,0,0.52),0_0_18px_rgba(16,185,129,0.16)] group-hover:border-emerald-200/38 group-hover:bg-emerald-300/12 group-hover:text-emerald-50 group-hover:[text-shadow:0_0_8px_rgba(110,231,183,0.36)] group-hover:shadow-[0_0_0_1px_rgba(110,231,183,0.2),0_14px_40px_rgba(0,0,0,0.52),0_0_20px_rgba(16,185,129,0.24)]"
-              : "group-hover:border-white/40 group-hover:bg-black/72 group-hover:text-white group-hover:[text-shadow:0_0_10px_rgba(255,255,255,0.48)] group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.16),0_14px_40px_rgba(0,0,0,0.52),0_0_22px_rgba(255,255,255,0.16)]",
-            isClickedLabelVisible
-              ? "pointer-events-auto cursor-pointer opacity-100 translate-y-0 border-white/45 bg-black/75 text-white [text-shadow:0_0_12px_rgba(255,255,255,0.52)] shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_16px_44px_rgba(0,0,0,0.55),0_0_24px_rgba(255,255,255,0.18)]"
-              : "",
-          ].join(" ")}
-          style={{ maxWidth: `${dotLabelMaxWidth}px`, fontSize: dotLabelFontSize }}
-        >
-          <HotspotLabelText spot={spot} showHoverLabel />
-        </span>
-      </span>
+      <RoomDotHotspotContent
+        spot={spot}
+        clickedHotspotId={clickedHotspotId}
+        prefersReducedMotion={prefersReducedMotion}
+        isOrangeRoom={isOrangeRoom}
+        isMobileViewport={isMobileViewport}
+        viewportW={viewportW}
+        compactHotspotUi={compactHotspotUi}
+        roomSlug={room.slug}
+        tooltipPosition={tooltipPosition}
+        showHoverLabel
+        renderLabelText={(currentSpot, currentShowHoverLabel) => (
+          <HotspotLabelText spot={currentSpot} showHoverLabel={currentShowHoverLabel ?? false} />
+        )}
+        getDotPresentationState={getDotPresentationState}
+      />
     );
   }
 

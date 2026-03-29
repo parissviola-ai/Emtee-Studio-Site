@@ -255,14 +255,7 @@ function CaseStudyCard({
               {cs.name}
             </h2>
 
-            {cs.selectedPackageLabel ? (
-              <Link
-                href={cs.selectedPackageHref ?? "/resources"}
-                className="rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-xs font-semibold text-[#7a5a24] transition hover:bg-[#d6ae66]/18"
-              >
-                {cs.selectedPackageLabel}
-              </Link>
-            ) : cs.roleTag ? (
+            {cs.roleTag ? (
               <span className="rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-xs font-semibold text-[#7a5a24]">
                 {cs.roleTag}
               </span>
@@ -282,40 +275,25 @@ function CaseStudyCard({
             </div>
           ) : null}
 
-          <div className="mt-6">
-            <div className="text-xs font-semibold tracking-widest uppercase text-[#8b6a2f]/80">
-              Resources Used
-            </div>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Link
+              href={`/case-studies/${cs.slug}`}
+              className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/16 px-4 py-2 text-sm font-semibold text-[#6f511a] transition hover:bg-[#d6ae66]/24 hover:text-[#3e2d0d]"
+            >
+              Read Full Case Study →
+            </Link>
 
-            <ul className="mt-3 space-y-2 text-black/75">
-              {cs.bullets.slice(0, 3).map((b, idx) => (
-                <li key={idx} className="flex gap-2">
-                  <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-[#b88b3a] shadow-[0_0_8px_rgba(184,139,58,0.55)]" />
-                  <span className="leading-relaxed">{b}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Link
-                href={`/case-studies/${cs.slug}`}
-                className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/16 px-4 py-2 text-sm font-semibold text-[#6f511a] transition hover:bg-[#d6ae66]/24 hover:text-[#3e2d0d]"
+            {cs.instagramUrl && (
+              <a
+                href={cs.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
               >
-                Read Full Case Study →
-              </Link>
-
-              {cs.instagramUrl && (
-                <a
-                  href={cs.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-semibold text-black/75 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03]"
-                >
-                  Instagram{" "}
-                  {cs.instagramHandle ? `(${cs.instagramHandle})` : ""} →
-                </a>
-              )}
-            </div>
+                Instagram{" "}
+                {cs.instagramHandle ? `(${cs.instagramHandle})` : ""} →
+              </a>
+            )}
           </div>
 
         </div>

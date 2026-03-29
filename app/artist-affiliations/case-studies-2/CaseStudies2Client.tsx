@@ -163,14 +163,6 @@ export default function CaseStudies2Client() {
               </div>
               <h3 className="mt-2 text-2xl font-semibold tracking-tight text-black">{activeCard.artist}</h3>
               <p className="mt-3 text-sm leading-relaxed text-black/72 sm:text-base">{activeCard.snapshot}</p>
-              <ul className="mt-4 space-y-2 text-sm text-black/80">
-                {activeCard.points.map((point) => (
-                  <li key={point} className="flex items-start gap-2">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#b88b3a]" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
               <div className="mt-5 flex flex-wrap gap-2">
                 <Link
                   href="/case-studies"

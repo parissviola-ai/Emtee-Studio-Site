@@ -102,12 +102,12 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
   }
 
   return (
-    <main className="relative min-h-[100svh] w-full overflow-hidden bg-white text-black">
+    <main className="relative min-h-[100svh] w-full flex-1 bg-white text-black">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_320px_at_50%_-10%,rgba(214,174,102,0.2),transparent_72%),radial-gradient(780px_420px_at_5%_95%,rgba(15,23,42,0.05),transparent_70%)]"
       />
-      <div className="relative mx-auto max-w-7xl px-5 pb-20 pt-24 sm:px-6 sm:pt-28">
+      <div className="relative mx-auto max-w-7xl px-5 pb-32 pt-24 sm:px-6 sm:pb-36 sm:pt-28">
         {/* Top nav */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link
@@ -127,7 +127,7 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
 
         <div className="mt-8 grid grid-cols-1 gap-7 xl:grid-cols-12">
           <div className="xl:col-span-7">
-            <div className="relative rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_14px_70px_rgba(0,0,0,0.08),0_0_0_1px_rgba(214,174,102,0.08)] sm:p-8">
+            <div className="relative flex flex-col rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_14px_70px_rgba(0,0,0,0.08),0_0_0_1px_rgba(214,174,102,0.08)] sm:p-8">
               <Image
                 src="/Logo2.png"
                 alt="EMTEE logo"
@@ -137,14 +137,7 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
               />
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{cs.name}</h1>
-                {cs.selectedPackageLabel ? (
-                  <Link
-                    href={cs.selectedPackageHref ?? "/resources"}
-                    className="rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-sm font-semibold text-[#7a5a24] transition hover:bg-[#d6ae66]/18"
-                  >
-                    {cs.selectedPackageLabel}
-                  </Link>
-                ) : cs.roleTag ? (
+                {cs.roleTag ? (
                   <span className="rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-sm font-semibold text-[#7a5a24]">
                     {cs.roleTag}
                   </span>
@@ -165,14 +158,14 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
                 </div>
               ) : null}
 
-              <div className="relative mt-6 h-[280px] overflow-hidden rounded-2xl border border-black/10 bg-white sm:h-[440px]">
+              <div className="relative mt-6 flex min-h-[280px] items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-3 sm:min-h-[440px] sm:p-4">
                 <Image
                   src={cs.imageSrc}
                   alt={cs.imageAlt ?? cs.name}
                   fill
                   draggable={false}
                   sizes="(max-width: 640px) 100vw, (max-width: 1280px) 66vw, 50vw"
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
 
@@ -193,12 +186,8 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
                   ))}
                 </div>
               ) : null}
-              <p className="mt-4 max-w-3xl text-black/60">
-                This mock strategic breakdown shows how EMTEE applies a consistent method:
-                philosophy, pillars, and foundations translated into execution systems that drive outcomes.
-              </p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-auto pt-6 flex flex-wrap gap-3">
                 <Link
                   href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy"
                   target="_blank"
@@ -228,7 +217,29 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
             ) : null}
           </div>
 
-          <div className="xl:col-span-5 space-y-7">
+          <div className="flex flex-col gap-7 xl:col-span-5">
+            <div className="rounded-[28px] border border-black/10 bg-white p-4 shadow-[0_10px_40px_rgba(0,0,0,0.06),0_0_0_1px_rgba(214,174,102,0.07)] sm:p-5">
+              <div className="px-1 text-xs font-semibold tracking-[0.18em] uppercase text-[#8b6a2f]/80">
+                Featured Instagram
+              </div>
+              {embedSrc ? (
+                <div className="mt-3 h-[430px] overflow-hidden rounded-2xl border border-black/10 bg-white">
+                  <iframe
+                    src={embedSrc}
+                    title={`${cs.name} Instagram`}
+                    className="h-full w-full border-0"
+                    loading="lazy"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    scrolling="yes"
+                  />
+                </div>
+              ) : (
+                <div className="mt-3 text-sm text-black/55">
+                  Add a specific Reel/Post URL as <span className="font-semibold">featuredLink</span> in the data file to embed it here.
+                </div>
+              )}
+            </div>
+
             <div className="rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.06),0_0_0_1px_rgba(214,174,102,0.07)] sm:p-7">
               <div className="text-xs font-semibold tracking-[0.18em] uppercase text-[#8b6a2f]/80">
                 Resources Used
@@ -256,47 +267,6 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
                 ))}
               </ul>
             </div>
-
-            <div className="rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.06),0_0_0_1px_rgba(214,174,102,0.07)] sm:p-7">
-              <div className="text-xs font-semibold tracking-[0.18em] uppercase text-[#8b6a2f]/80">
-                EMTEE Roadmap (Mock)
-              </div>
-
-              <div className="mt-5 space-y-4">
-                {(cs.roadmap ?? []).map((step) => (
-                  <div key={`${step.phase}-${step.title}`} className="rounded-2xl border border-[#d6ae66]/28 bg-[#d6ae66]/6 p-4">
-                    <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8b6a2f]/80">
-                      {step.phase}
-                    </div>
-                    <div className="mt-1 text-base font-semibold text-black/90">{step.title}</div>
-                    <p className="mt-2 text-sm leading-relaxed text-black/70">{step.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-[28px] border border-black/10 bg-white p-4 shadow-[0_10px_40px_rgba(0,0,0,0.06),0_0_0_1px_rgba(214,174,102,0.07)] sm:p-5">
-              <div className="px-1 text-xs font-semibold tracking-[0.18em] uppercase text-[#8b6a2f]/80">
-                Featured Instagram
-              </div>
-              {embedSrc ? (
-                <div className="mt-3 h-[430px] overflow-hidden rounded-2xl border border-black/10 bg-white">
-                  <iframe
-                    src={embedSrc}
-                    title={`${cs.name} Instagram`}
-                    className="h-full w-full border-0"
-                    loading="lazy"
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    scrolling="yes"
-                  />
-                </div>
-              ) : (
-                <div className="mt-3 text-sm text-black/55">
-                  Add a specific Reel/Post URL as <span className="font-semibold">featuredLink</span> in the data file to embed it here.
-                </div>
-              )}
-            </div>
-
           </div>
         </div>
 

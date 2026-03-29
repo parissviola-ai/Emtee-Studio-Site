@@ -43,6 +43,29 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     note: "Currently developing Steeped Dreams Studio together.",
   },
   {
+    artist: "Soji",
+    supportLane: "Marketing",
+    note: "Live performance planning.",
+  },
+  {
+    artist: "Ary Roberto",
+    supportLane: "Business",
+    note: "Management assistance.",
+  },
+  {
+    artist: "KISAKI",
+    supportLane: "Marketing",
+    note: "Management and live tour assistance.",
+    caseStudyHref: "/artist-affiliations/case-studies-2?example=kisaki-marketing",
+    imageSrc: "/case-studies/kisaki-opt.jpg",
+    imageAlt: "KISAKI artwork",
+  },
+  {
+    artist: "Dillon Antony",
+    supportLane: "Business",
+    note: "Management assistance.",
+  },
+  {
     artist: "Lil Durk",
     supportLane: "Music",
     note: "Co-production on the song \"Think You Glowed\" from his ninth studio album, \"Deep Thoughts.\"",
@@ -91,9 +114,6 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Killy",
     supportLane: "Music",
     note: "Studio collaborations.",
-    imageSrc: "https://i.scdn.co/image/ab676161000051745e7e0070e0e8ab2e3e44917f",
-    imageAlt: "Killy portrait",
-    imagePosition: "center 18%",
   },
   {
     artist: "Yung Tory",
@@ -143,15 +163,12 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     note: "Opening act support for \"The DIY Tour.\"",
     imageSrc: "https://i.ytimg.com/vi/k6ARKKvNaRg/sddefault.jpg?v=6339cf8c",
     imageAlt: "Karl Wolf artwork",
-    imagePosition: "center 22%",
+    imagePosition: "center center",
   },
   {
     artist: "Kristina Maria",
     supportLane: "Business",
     note: "6-Month developmental strategy rollout with Vito Luprano (Celine Dion) and Cash Money Records.",
-    imageSrc: "https://r2.theaudiodb.com/images/media/artist/widethumb/qpquvu1545303993.jpg/medium",
-    imageAlt: "Kristina Maria portrait",
-    imagePosition: "center 20%",
   },
   {
     artist: "Birdman",
@@ -233,7 +250,7 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     note: "Executive production on single \"Fun\" from the children's album \"Ajay's Dreams.\"",
     imageSrc: "https://www.shedoesthecity.com/wp-content/uploads/files/2021/09/Tome-copy.jpg",
     imageAlt: "Tome portrait",
-    imagePosition: "center 18%",
+    imagePosition: "center 10%",
   },
   {
     artist: "Aquila",
@@ -247,9 +264,6 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Trey Joshua",
     supportLane: "Music",
     note: "Executive production on single \"Need A Friend\" from \"Ajay's Dreams.\"",
-    imageSrc: "https://static.wixstatic.com/media/d759fc_ccc2ac10428b498d98d2d1aa1134b385~mv2.jpg/v1/fill/w_980,h_1470,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/d759fc_ccc2ac10428b498d98d2d1aa1134b385~mv2.jpg",
-    imageAlt: "Trey Joshua portrait",
-    imagePosition: "center 18%",
   },
   {
     artist: "Saukrates",
@@ -652,7 +666,7 @@ export default function ArtistRosterReleasesPage() {
               {RESOURCE_SUPPORTED_ARTISTS.map((item, index) => (
                 <article
                   key={`${item.artist}-${item.supportLane}-${index}`}
-                  className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_34px_rgba(0,0,0,0.08)]"
+                  className="flex h-full flex-col rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_34px_rgba(0,0,0,0.08)]"
                 >
                   {item.imageSrc ? (
                     <div className="overflow-hidden rounded-lg border border-black/8 bg-black/[0.02]">
@@ -661,14 +675,18 @@ export default function ArtistRosterReleasesPage() {
                         alt={item.imageAlt ?? `${item.artist} image`}
                         width={1200}
                         height={720}
-                        className="aspect-[16/9] w-full object-cover"
+                        className={[
+                          item.artist === "Karl Wolf" ? "aspect-[4/5]" : "aspect-[16/9]",
+                          "w-full",
+                          item.artist === "Karl Wolf" ? "object-contain bg-black/[0.03]" : "object-cover",
+                        ].join(" ")}
                         sizes="(max-width: 768px) 100vw, (max-width: 1279px) 50vw, 33vw"
                         style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
                         draggable={false}
                       />
                     </div>
                   ) : null}
-                  <div className="inline-flex rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7c5b20]">
+                  <div className="mt-3 inline-flex w-fit self-start rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7c5b20]">
                     {item.supportLane}
                   </div>
                   <h2 className="mt-2 text-lg font-semibold text-zinc-900">{item.artist}</h2>
@@ -676,7 +694,7 @@ export default function ArtistRosterReleasesPage() {
                   {item.caseStudyHref ? (
                     <Link
                       href={item.caseStudyHref}
-                      className="mt-3 inline-flex items-center text-sm font-semibold text-[#7c5b20] transition hover:text-[#5b4217]"
+                      className="mt-auto pt-4 inline-flex items-center text-sm font-semibold text-[#7c5b20] transition hover:text-[#5b4217]"
                     >
                       View Case Study →
                     </Link>

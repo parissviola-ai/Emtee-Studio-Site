@@ -13,8 +13,8 @@ const LANDING_BUTTON_COORDS = {
   desktop: { x: 45.38, y: 86.04 },
 };
 const LANDING_CARD_COORDS = {
-  mobile: { x: 50, y: 52 },
-  desktop: { x: 50, y: 38.08 },
+  mobile: { x: 50, y: 50 },
+  desktop: { x: 50, y: 50 },
 };
 const LANDING_WARMUP_ROUTES = [
   "/about",
@@ -204,16 +204,14 @@ export default function Home() {
           className={[
             "flex flex-col items-center gap-4",
             viewportReady
-              ? isMobileViewport
-                ? "absolute -translate-x-1/2 -translate-y-1/2"
-                : "absolute -translate-x-1/2"
+              ? "absolute -translate-x-1/2 -translate-y-1/2"
               : "",
           ].join(" ")}
           style={cardStyle}
         >
           <div
             className={[
-              "w-[min(19.25rem,calc(100vw-1.5rem))] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3 py-2.5 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2900ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-full sm:max-w-[19.25rem] sm:px-3.5 sm:py-3",
+              "w-[min(21rem,calc(100vw-1.5rem))] rounded-[20px] border border-white/14 bg-[linear-gradient(180deg,rgba(10,10,10,0.44),rgba(10,10,10,0.28))] px-3 py-2.5 text-center shadow-[0_12px_28px_rgba(0,0,0,0.24)] backdrop-blur-[9px] transition-all duration-[2900ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-full sm:max-w-[21rem] sm:px-3.5 sm:py-3",
               isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             ].join(" ")}
           >
@@ -226,7 +224,7 @@ export default function Home() {
               className="mx-auto mb-1.5 h-auto w-[42px] object-contain invert sm:w-[46px]"
             />
 
-            <div className="mx-auto max-w-[17rem] text-center sm:max-w-[17.25rem]">
+            <div className="mx-auto max-w-[18.5rem] text-center sm:max-w-[18.75rem]">
               <h1 className="text-[0.9rem] font-semibold leading-[1.08] text-white sm:text-[1.05rem]">
                 Welcome to
                 <br />
@@ -239,7 +237,7 @@ export default function Home() {
 
               <p className="mt-2 text-[10.5px] leading-relaxed text-white/72 sm:text-[11px]">
                 When you &quot;ENTER&quot; the building, you&apos;ll notice multiple interactive rooms to explore. For
-                the best experience, click &quot;Start Here&quot; to begin the tour. To have a self-led tour click
+                the best experience, click &quot;Start Here&quot; to begin the tour.&nbsp;To have a self-led tour click
                 &quot;Show Rooms&quot; or &quot;Explore All Rooms.&quot;
               </p>
             </div>

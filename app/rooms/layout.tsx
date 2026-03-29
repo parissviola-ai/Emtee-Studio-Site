@@ -154,7 +154,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     router.push(href);
   }
 
-  const aboutActive = pathname === "/about" || pathname === "/consultation" || pathname === "/path-quiz";
+  const aboutActive = pathname === "/about" || pathname === "/consultation";
   const resourcesActive = pathname === "/resources" || pathname.startsWith("/resources/") || RESOURCE_LINKS.some((item) => pathname === item.href);
   const caseStudiesActive =
     pathname === "/case-studies" ||

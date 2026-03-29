@@ -89,7 +89,7 @@ export default function MainMenuBar() {
     return () => globalThis.clearTimeout(timer);
   }, [router]);
 
-  const aboutActive = pathname === "/about" || pathname === "/consultation" || pathname === "/path-quiz";
+  const aboutActive = pathname === "/about" || pathname === "/consultation";
   const resourcesActive = pathname === "/resources" || pathname.startsWith("/resources/") || RESOURCE_LINKS.some((item) => pathname === item.href);
   const caseStudiesActive =
     pathname === "/case-studies" ||

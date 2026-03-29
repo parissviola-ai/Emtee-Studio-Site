@@ -124,6 +124,7 @@ const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/room
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/finallobby-opt.jpg": { w: 2560, h: 1280 },
+  "/rooms/finallobby2-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/lobbywithconcert-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/updatedttbg1-poster-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/8-opt.jpg": { w: 2560, h: 1440 },

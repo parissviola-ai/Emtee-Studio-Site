@@ -8,12 +8,12 @@ export const businessRoom: Room = {
     {
       id: "business-consultation",
       label: "Consultation",
-      x: 80,
-      y: 46,
+      x: 48,
+      y: 47,
       positions: {
-        laptop: { x: 79, y: 49 },
-        tablet: { x: 77, y: 50 },
-        mobile: { x: 75, y: 52 },
+        laptop: { x: 47, y: 50 },
+        tablet: { x: 46, y: 51 },
+        mobile: { x: 45, y: 53 },
       },
       direction: "right",
       variant: "dot",
@@ -30,12 +30,12 @@ export const businessRoom: Room = {
     {
       id: "business-brand-evaluation",
       label: "Brand Evaluation",
-      x: 48,
-      y: 47,
+      x: 80,
+      y: 46,
       positions: {
-        laptop: { x: 47, y: 50 },
-        tablet: { x: 46, y: 51 },
-        mobile: { x: 45, y: 53 },
+        laptop: { x: 79, y: 49 },
+        tablet: { x: 77, y: 50 },
+        mobile: { x: 75, y: 52 },
       },
       direction: "right",
       variant: "dot",
@@ -96,8 +96,8 @@ export const businessRoom: Room = {
     {
       id: "business-six-month-project-roll-out",
       label: "6 Month Project Roll Out",
-      x: 53,
-      y: 63,
+      x: 27.1,
+      y: 62.4,
       positions: {
         laptop: { x: 22, y: 52 },
         tablet: { x: 21, y: 53 },
@@ -118,8 +118,8 @@ export const businessRoom: Room = {
     {
       id: "business-twelve-month-career-roll-out",
       label: "12 Month Career Roll Out",
-      x: 45,
-      y: 80,
+      x: 25.09,
+      y: 63.54,
       positions: {
         laptop: { x: 49, y: 80 },
         tablet: { x: 48, y: 78 },

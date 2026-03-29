@@ -53,7 +53,7 @@ const MEDIA_OVERVIEW_CARD: InfoCard = {
 const BOARDROOM_OVERVIEW_CARD: InfoCard = {
   title: "Business Department",
   body:
-    "This room is a representation of EMTEE's Business department. Core scope includes accounting system setup, grant writing, and vision building so artists can operate with structure and long-term decision clarity.\n\nExplore the room dots to view each package lane and what support is included.",
+    "The meeting room is where we discuss all business related projects and tasks. The business department is responsible for the initial consultation and brand sessions. This department will also help set up your business licensing, accounting, banking and grant strategies.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   strategyLabel: "Case Study",

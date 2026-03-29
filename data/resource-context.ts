@@ -6,7 +6,7 @@ export type ResourceContext = {
 const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   Consultation: {
     what: "The first step is an indepth evaluation and report of an artists' career and business.",
-    why: "Artists avoid random moves and start with a focused roadmap that saves time, money, and momentum.",
+    why: "Artists avoid random moves and start with a focused roadmap that saves time, money and momentum.",
   },
   "Brand Evaluation": {
     what: "Extensive brand development session to clarify vision and niche.",

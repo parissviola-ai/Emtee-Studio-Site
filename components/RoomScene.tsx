@@ -669,6 +669,15 @@ export default function RoomScene({
     : null;
   const [mobilePanByContext, setMobilePanByContext] = useState<Record<string, { x: number; y: number }>>({});
   const [desktopCursorPan, setDesktopCursorPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [showPinHelper, setShowPinHelper] = useState(false);
+  const [pinHelperLocked, setPinHelperLocked] = useState(false);
+  const pinHelperLockedRef = useRef(false);
+  const [pinHelperPoint, setPinHelperPoint] = useState<{
+    left: number;
+    top: number;
+    x: number;
+    y: number;
+  } | null>(null);
   const viewportKeyRaw = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -834,6 +843,7 @@ export default function RoomScene({
     [backgroundUsesMobileLayout, imageNaturalSize, sceneScale, viewportH, viewportW]
   );
   const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
+  const canShowPinHelper = !!hotspotImageMetrics && !isModalOpen && !exploreOpen;
   const lobbyMobileHotspotsReady = !isMobileViewport || !!hotspotImageMetrics;
   const sceneReady =
     hasHydrated && viewportKnown && !!imageNaturalSize && (!requiresMetricBasedHotspots || !!hotspotImageMetrics);
@@ -862,6 +872,40 @@ export default function RoomScene({
 
   function clamp(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function updatePinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!canShowPinHelper || !showPinHelper || pinHelperLockedRef.current || !hotspotImageMetrics) return;
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedHotspotPan.x : desktopCursorPan.x);
+    const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedHotspotPan.y;
+    const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
+    const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
+    const x = clamp(Number(rawX.toFixed(2)), 0, 100);
+    const y = clamp(Number(rawY.toFixed(2)), 0, 100);
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+  }
+
+  function lockPinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!canShowPinHelper || !showPinHelper || !hotspotImageMetrics) return;
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedHotspotPan.x : desktopCursorPan.x);
+    const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedHotspotPan.y;
+    const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
+    const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
+    const x = clamp(Number(rawX.toFixed(2)), 0, 100);
+    const y = clamp(Number(rawY.toFixed(2)), 0, 100);
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+    pinHelperLockedRef.current = true;
+    setPinHelperLocked(true);
   }
 
   async function enableTiltPan() {
@@ -1591,6 +1635,9 @@ export default function RoomScene({
         canPanRoom ? "touch-none" : "",
       ].join(" ")}
       onClickCapture={(e) => {
+        if (showPinHelper && canShowPinHelper && !isInteractiveTarget(e.target)) {
+          lockPinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+        }
         if (!isMobileViewport) return;
         if (!activeOverviewCard) return;
         if (isModalOpen || exploreOpen) return;
@@ -1631,8 +1678,9 @@ export default function RoomScene({
       onTouchCancel={canPanRoom ? (() => {
         touchPanStartRef.current = null;
       }) : undefined}
-      onMouseMove={canDesktopCursorPan ? ((e) => {
-        if (!desktopCoverMetrics) return;
+      onMouseMove={(canDesktopCursorPan || canShowPinHelper) ? ((e) => {
+        updatePinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+        if (!canDesktopCursorPan || !desktopCoverMetrics) return;
         const rect = e.currentTarget.getBoundingClientRect();
         if (!rect.width) return;
         const rawNormalizedX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
@@ -1649,7 +1697,11 @@ export default function RoomScene({
         const targetX = clamp(rawTargetX, -rightPanLimit, leftPanLimit);
         scheduleDesktopPan({ x: targetX, y: 0 });
       }) : undefined}
-      onMouseLeave={() => {}}
+      onMouseLeave={(canDesktopCursorPan || canShowPinHelper) ? (() => {
+        if (!pinHelperLockedRef.current) {
+          setPinHelperPoint(null);
+        }
+      }) : undefined}
     >
       {/* Background */}
       <div
@@ -1910,6 +1962,86 @@ export default function RoomScene({
           )}
 
         </div>
+      ) : null}
+
+      {showPinHelper || canShowPinHelper ? (
+        <div className="absolute left-3 top-3 z-[70] flex flex-col items-start gap-2" data-no-pan>
+          <button
+            type="button"
+            onClick={() => {
+              setShowPinHelper((prev) => {
+                const next = !prev;
+                if (!next) {
+                  setPinHelperPoint(null);
+                  pinHelperLockedRef.current = false;
+                  setPinHelperLocked(false);
+                }
+                return next;
+              });
+            }}
+            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/55 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-md transition hover:bg-black/70"
+          >
+            {showPinHelper ? "Pin Helper On" : "Pin Helper Off"}
+          </button>
+
+          {showPinHelper ? (
+            <div className="min-w-[11rem] rounded-2xl border border-white/14 bg-black/60 px-3 py-2 text-[11px] text-white/84 shadow-[0_14px_36px_rgba(0,0,0,0.35)] backdrop-blur-md">
+              <div className="font-semibold uppercase tracking-[0.14em] text-white/62">Pin Coordinates</div>
+              <div className="mt-1">
+                {pinHelperPoint ? `x: ${pinHelperPoint.x}%` : "x: move cursor"}
+              </div>
+              <div>
+                {pinHelperPoint ? `y: ${pinHelperPoint.y}%` : "y: move cursor"}
+              </div>
+              <div className="mt-1 text-[10px] text-white/58">
+                {pinHelperLocked ? "Locked. Click Unlock or click scene after unlocking." : "Move cursor, then click scene to lock."}
+              </div>
+              <div className="mt-2 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    pinHelperLockedRef.current = false;
+                    setPinHelperLocked(false);
+                  }}
+                  disabled={!pinHelperLocked}
+                  className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Unlock
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPinHelperPoint(null);
+                    pinHelperLockedRef.current = false;
+                    setPinHelperLocked(false);
+                  }}
+                  disabled={!pinHelperPoint}
+                  className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Clear
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!pinHelperPoint || typeof navigator === "undefined" || !navigator.clipboard) return;
+                  await navigator.clipboard.writeText(`x: ${pinHelperPoint.x}, y: ${pinHelperPoint.y}`);
+                }}
+                disabled={!pinHelperPoint}
+                className="mt-2 inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                Copy Coordinates
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {showPinHelper && pinHelperPoint && canShowPinHelper ? (
+        <div
+          className="pointer-events-none absolute z-[65] h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/80 bg-cyan-300/35 shadow-[0_0_0_4px_rgba(103,232,249,0.12),0_0_18px_rgba(34,211,238,0.45)]"
+          style={{ left: `${pinHelperPoint.left}px`, top: `${pinHelperPoint.top}px` }}
+        />
       ) : null}
 
       {isOrangeRoom ? (

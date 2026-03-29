@@ -33,7 +33,7 @@ const PACKAGE_OPTIONS_BY_DEPARTMENT: Record<string, string[]> = {
   "A&R / Sales Department": [
     "CRM Set Up",
     "Community Building",
-    "Streaming",
+    "Live Stream Strategy",
   ],
 };
 

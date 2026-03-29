@@ -25,6 +25,24 @@ export const publishingDistroRoom: Room = {
   },
 
   {
+    id: "publishing-platform-setup-review",
+    label: "Platform Setup Review",
+    x: 68,
+    y: 58,
+    direction: "right",
+    variant: "dot",
+    modal: {
+      title: "Platform Setup Review",
+      body:
+        "A publishing/distribution readiness review to confirm platform configuration and release setup.",
+      primaryLabel: "Apply For A Consultation",
+      primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+      secondaryLabel: "Resources",
+      secondaryHref: "/resources",
+    },
+  },
+
+  {
     id: "split-sheet-development",
     label: "Split Sheet Development",
     x: 58.57,

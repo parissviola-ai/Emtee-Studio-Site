@@ -26,7 +26,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
     roomHref: "/rooms/business",
     strategyLabel: "Business Strategy",
     exampleArtist: "Yanchan Produced",
-    exampleArtistHref: "/artist-affiliations/case-studies-2?example=yanchan-business",
+    exampleArtistHref: "/case-studies/yanchan",
     items: [
       {
         name: "Consultation",
@@ -86,7 +86,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
     roomHref: "/rooms/marketing",
     strategyLabel: "Marketing Strategy",
     exampleArtist: "KISAKI",
-    exampleArtistHref: "/artist-affiliations/case-studies-2?example=kisaki-marketing",
+    exampleArtistHref: "/case-studies/kisaki",
     items: [
       {
         name: "Brand Deck",
@@ -130,9 +130,9 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "A&R / Sales Department",
     summary: "CRMs, company valuations and the question of long-lasting, sustainable monetization of your music business.",
     roomHref: "/rooms/ar-sales",
-    strategyLabel: "A&R/Sales Strategy",
+    strategyLabel: "Case Study",
     exampleArtist: "Mike Cannz",
-    exampleArtistHref: "/artist-affiliations/case-studies-2?example=mike-ar-sales",
+    exampleArtistHref: "/case-studies/mike-cannz",
     items: [
       {
         name: "CRM Set Up",
@@ -143,8 +143,16 @@ const RESOURCE_CARDS: ResourceCard[] = [
         notes: ["Assistance in the monitization of fan clubs and support groups."],
       },
       {
-        name: "Streaming",
+        name: "Live Stream Strategy",
         notes: ["Developing a live stream system to allow greater monetization."],
+      },
+      {
+        name: "Merchandise",
+        notes: ["Merchandising setup and storefront support for artist products."],
+      },
+      {
+        name: "Event Planner",
+        notes: ["Hands-on event support with additional execution coordination."],
       },
     ],
   },
@@ -154,11 +162,15 @@ const RESOURCE_CARDS: ResourceCard[] = [
     roomHref: "/rooms/publishing-distribution",
     strategyLabel: "Publishing/Distribution Strategy",
     exampleArtist: "Yanchan Produced",
-    exampleArtistHref: "/artist-affiliations/case-studies-2?example=yanchan-publishing-distro",
+    exampleArtistHref: "/case-studies/yanchan",
     items: [
       {
         name: "Publishing/Distribution Workshop",
         notes: ["An hour long workshop to teach artists pub/distro 101."],
+      },
+      {
+        name: "Platform Setup Review",
+        notes: ["A publishing/distribution readiness review to confirm platform configuration and release setup."],
       },
       {
         name: "Split Sheet Development",

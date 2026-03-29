@@ -88,7 +88,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Live Performance Development (Marketing Department)",
       "CRM Set Up (A&R / Sales Department)",
       "Community Building (A&R / Sales Department)",
-      "Streaming (A&R / Sales Department)",
+      "Live Stream Strategy (A&R / Sales Department)",
     ],
     accomplishments: [
       "Improved consistency in release execution and turnaround times",

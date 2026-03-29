@@ -72,7 +72,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     points: [
       "CRM Set Up (A&R / Sales Department)",
       "Community Building (A&R / Sales Department)",
-      "Streaming (A&R / Sales Department)",
+      "Live Stream Strategy (A&R / Sales Department)",
     ],
     departmentHref: "/rooms/ar-sales",
     departmentLabel: "Open A&R / Sales Department",

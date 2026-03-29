@@ -70,7 +70,7 @@ export default function CaseStudies2Client() {
             Case Studies
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-black/65 sm:text-base">
-            Explore artist case studies through individual department lanes, with each card highlighting the specific EMTEE resources used to support development, rollout and execution.
+            Explore artist case studies through individual department resources they’ve used. Each card highlights the specific resources used to support development, rollout and execution for each artist.
           </p>
         </div>
 

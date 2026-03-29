@@ -15,83 +15,71 @@ export type InfoCard = {
 };
 
 const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
-  title: "A&R / Sales Department Overview",
+  title: "A&R / Sales Department",
   body:
-    "This room is a representation of EMTEE's A&R / Sales department. Core scope includes audience strategizing, community building, and revenue development so creative momentum turns into commercial momentum.\n\nExplore the room dots to view each package lane and what support is included.",
+    "The board room holds all A&R/Sales department ventures. Core scope of work in this department includes audience strategy, community building and revenue generation.\n\nExplore the room dots to view what EMTEE is able to do with your A&R/Sales Department.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "A&R/Sales Strategy",
+  strategyLabel: "Case Study",
   exampleArtist: "Mike Cannz",
-  exampleHref: "/artist-affiliations/case-studies-2?example=mike-ar-sales",
-  eyebrow: "A&R / Sales",
+  exampleHref: "/case-studies/mike-cannz",
+  eyebrow: "Board Room",
 };
 
 const STUDIO_OVERVIEW_CARD: InfoCard = {
-  title: "Music Department Overview",
+  title: "Music Department",
   body:
     "This room is a representation of EMTEE's Music department. Core scope includes studio sessions, custom production, and mixing/mastering so artists move from creative direction to release-ready execution.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Music Strategy",
+  strategyLabel: "Case Study",
   exampleArtist: "Fame Holiday",
-  exampleHref: "/artist-affiliations/case-studies-2?example=fame-music",
-  eyebrow: "Music Department",
+  exampleHref: "/case-studies/fame-holiday",
+  eyebrow: "Studio",
 };
 
 const MEDIA_OVERVIEW_CARD: InfoCard = {
-  title: "Marketing Department Overview",
+  title: "Marketing Department",
   body:
     "This room is a representation of EMTEE's Marketing department. Core scope includes content production, brand deck/media kits, and set/tour development to drive campaign clarity and repeatable audience growth.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Marketing Strategy",
+  strategyLabel: "Case Study",
   exampleArtist: "KISAKI",
-  exampleHref: "/artist-affiliations/case-studies-2?example=kisaki-marketing",
-  eyebrow: "Marketing Department",
+  exampleHref: "/case-studies/kisaki",
+  eyebrow: "Photo Studio",
 };
 
 const BOARDROOM_OVERVIEW_CARD: InfoCard = {
-  title: "Business Department Overview",
+  title: "Business Department",
   body:
     "This room is a representation of EMTEE's Business department. Core scope includes accounting system setup, grant writing, and vision building so artists can operate with structure and long-term decision clarity.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Business Strategy",
+  strategyLabel: "Case Study",
   exampleArtist: "Yanchan Produced",
-  exampleHref: "/artist-affiliations/case-studies-2?example=yanchan-business",
-  eyebrow: "Business Department",
+  exampleHref: "/case-studies/yanchan",
+  eyebrow: "Meeting Room",
 };
 
 const ARTISTS_OVERVIEW_CARD: InfoCard = {
-  title: "Distribution / Publishing Department Overview",
+  title: "Distribution / Publishing Department",
   body:
     "This room is a representation of EMTEE's Distribution / Publishing department. Core scope includes publishing workshops, catalog organization, and television/film sync preparation for cleaner release operations and stronger long-term rights monetization.\n\nExplore the room dots to view each package lane and what support is included.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Pub/Distro Strategy",
+  strategyLabel: "Case Study",
   exampleArtist: "Yanchan Produced",
-  exampleHref: "/artist-affiliations/case-studies-2?example=yanchan-publishing-distro",
-  eyebrow: "Distribution / Publishing",
+  exampleHref: "/case-studies/yanchan",
+  eyebrow: "Catalog Room",
 };
 
 const WEBSITE_DESIGN_OVERVIEW_CARD: InfoCard = {
-  title: "Website Development Overview",
+  title: "Website Development",
   body:
     "This room is a representation of EMTEE's Website Development lane. Core scope includes clarifying your artist story, structuring your digital home, and building a site fans, media, and bookers can actually use.\n\nExplore the room dots to view process and package options.",
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
   eyebrow: "Website Development",
 };
 

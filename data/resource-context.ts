@@ -112,7 +112,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "Assistance in the monitization of fan clubs and support groups.",
     why: "A loyal community increases retention, repeat support, and long-term brand strength.",
   },
-  Streaming: {
+  "Live Stream Strategy": {
     what: "Developing a live stream system to allow greater monetization.",
     why: "It adds another monetization and community channel without depending only on in-person moments.",
   },

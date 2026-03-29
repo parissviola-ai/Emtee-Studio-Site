@@ -5,13 +5,13 @@ import NextImage from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
-import { getResourceContext } from "@/data/resource-context";
 import {
   awaitRoomAssetsByHref,
   getRoomWarmNeighborhoodHrefsBySlug,
   warmRoomAssetsByHref,
   warmRoomNeighborhoodBySlug,
 } from "@/lib/warmRoomAssets";
+import type { OrangeRoomExtrasHandle } from "@/components/OrangeRoomExtras";
 
 const OrangeRoomExtras = dynamic(() => import("@/components/OrangeRoomExtras"), {
   ssr: false,
@@ -606,8 +606,6 @@ export default function RoomScene({
   const [clickedHotspotIdByRoom, setClickedHotspotIdByRoom] = useState<Record<string, string | null>>({});
   const [backgroundVideoVisibleByRoom, setBackgroundVideoVisibleByRoom] = useState<Record<string, boolean>>({});
   const [isOrangePreviewMuted, setIsOrangePreviewMuted] = useState(false);
-  const [isOrangeSessionPreviewVisible, setIsOrangeSessionPreviewVisible] = useState(false);
-  const [isOrangeMobileSessionAudioActive, setIsOrangeMobileSessionAudioActive] = useState(false);
   const [isLobbyExploreHoverOpen, setIsLobbyExploreHoverOpen] = useState(false);
   const [showMoreHotspotsByRoom, setShowMoreHotspotsByRoom] = useState<Record<string, boolean>>({});
   const [expandedPackageIncludesByModal, setExpandedPackageIncludesByModal] = useState<Record<string, boolean>>({});
@@ -615,7 +613,6 @@ export default function RoomScene({
   const [tiltAvailable, setTiltAvailable] = useState(false);
   const [tiltPermissionNeeded, setTiltPermissionNeeded] = useState(false);
   const [tiltStatus, setTiltStatus] = useState<"idle" | "listening" | "active" | "blocked">("idle");
-  const [isSecureContextState, setIsSecureContextState] = useState(false);
   const [mobileTiltPan, setMobileTiltPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const prefetchedExploreRoutesRef = useRef<Set<string>>(new Set());
   const isMobileViewportRaw = useSyncExternalStore(
@@ -652,12 +649,10 @@ export default function RoomScene({
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const imageNaturalSizeCacheRef = useRef<Record<string, { w: number; h: number }>>({});
   const imageMetricsCacheRef = useRef<Record<string, ReturnType<typeof getCoverImageMetrics>>>({});
-  const orangePreviewVideoRef = useRef<HTMLVideoElement | null>(null);
-  const orangeMobileAudioRef = useRef<HTMLVideoElement | null>(null);
+  const orangeExtrasRef = useRef<OrangeRoomExtrasHandle | null>(null);
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
   const backgroundVideoCompletedPlaysRef = useRef(0);
   const backgroundVideoLastTimeRef = useRef(0);
-  const orangePreviewHideTimerRef = useRef<number | undefined>(undefined);
   const lobbyExploreHoverCloseTimerRef = useRef<number | undefined>(undefined);
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
@@ -738,7 +733,7 @@ export default function RoomScene({
   }, [activeModal?.title, openModal, room.hotspots, room.slug]);
 
   useEffect(() => {
-    if (room.slug !== "lobby") return;
+    if (!hasHydrated || !isHotspotTierPilotRoom || room.slug !== "lobby") return;
     if (typeof window === "undefined") return;
 
     function handleFrontModalOpen(event: Event) {
@@ -775,25 +770,6 @@ export default function RoomScene({
     win.postMessage(JSON.stringify({ event: "command", func: "playVideo", args: [] }), "*");
   }
 
-  const forcePlayOrangePreviewWithSound = useCallback(() => {
-    const video = orangeMobileAudioRef.current ?? orangePreviewVideoRef.current;
-    if (!video) return;
-    video.muted = false;
-    video.defaultMuted = false;
-    video.removeAttribute("muted");
-    video.volume = Math.max(video.volume, 0.2);
-    const playPromise = video.play();
-    if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {});
-    }
-    requestAnimationFrame(() => {
-      video.muted = false;
-      video.defaultMuted = false;
-      video.removeAttribute("muted");
-    });
-    setIsOrangePreviewMuted(false);
-  }, []);
-
   const setBackgroundVideoNode = useCallback((node: HTMLVideoElement | null) => {
     backgroundVideoRef.current = node;
     if (!node) return;
@@ -818,55 +794,19 @@ export default function RoomScene({
   }, [backgroundVideoPlaybackRate, shouldNativeLoopBackgroundVideo]);
 
   const toggleOrangePreviewMute = useCallback(() => {
-    const video = orangeMobileAudioRef.current ?? orangePreviewVideoRef.current;
-    if (!video) return;
-    const nextMuted = !isOrangePreviewMuted;
-    video.muted = nextMuted;
-    video.defaultMuted = nextMuted;
-    if (nextMuted) {
-      video.setAttribute("muted", "true");
-    } else {
-      video.removeAttribute("muted");
-      video.volume = Math.max(video.volume, 0.2);
-      const playPromise = video.play();
-      if (playPromise && typeof playPromise.catch === "function") {
-        playPromise.catch(() => {});
-      }
-    }
-    setIsOrangePreviewMuted(nextMuted);
-  }, [isOrangePreviewMuted]);
+    orangeExtrasRef.current?.togglePreviewMute();
+  }, []);
 
   const startOrangeMobileSessionAudio = useCallback(() => {
-    const video = orangeMobileAudioRef.current;
-    if (!video) return;
-    video.muted = false;
-    video.defaultMuted = false;
-    video.removeAttribute("muted");
-    video.volume = Math.max(video.volume, 0.2);
-    const playPromise = video.play();
-    if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {});
-    }
-    setIsOrangePreviewMuted(false);
-    setIsOrangeMobileSessionAudioActive(true);
+    orangeExtrasRef.current?.startMobileSessionAudio();
   }, []);
 
   const showOrangeSessionPreview = useCallback(() => {
-    if (orangePreviewHideTimerRef.current !== undefined) {
-      window.clearTimeout(orangePreviewHideTimerRef.current);
-      orangePreviewHideTimerRef.current = undefined;
-    }
-    setIsOrangeSessionPreviewVisible(true);
+    orangeExtrasRef.current?.openSessionPreview();
   }, []);
 
   const hideOrangeSessionPreview = useCallback(() => {
-    if (orangePreviewHideTimerRef.current !== undefined) {
-      window.clearTimeout(orangePreviewHideTimerRef.current);
-    }
-    orangePreviewHideTimerRef.current = window.setTimeout(() => {
-      setIsOrangeSessionPreviewVisible(false);
-      orangePreviewHideTimerRef.current = undefined;
-    }, 140);
+    orangeExtrasRef.current?.closeSessionPreview();
   }, []);
 
   const closeLobbyExploreHover = useCallback(() => {
@@ -958,41 +898,10 @@ export default function RoomScene({
       return activeModal.videoEmbed.replace("mute=0", "mute=1");
     }
   }, [activeModal?.title, activeModal?.videoEmbed, isMobileViewport]);
-  const isYanchanMusicModal = activeModal?.title === "Yanchan Produced Music";
-  const isYanchanDiscographyModal = activeModal?.title === "Discography";
-  const isJoinCommunityModal = activeModal?.title === "Join Community";
-  const isCustomProductionModal = activeModal?.title === "Apply For Custom Production";
-  const isLivePackagesModal = room.slug === "ten-ten-entertainment" && activeModal?.title === "Packages";
-  const isWebsiteDesignMainModal =
-    room.slug === "marketing" && activeModal?.title === "Website Development";
-  const isPackageGridModal = isLivePackagesModal || isWebsiteDesignMainModal;
-  const isLivePackageDetailModal =
-    room.slug === "ten-ten-entertainment" &&
-    (
-      activeModal?.title === "Up & Coming Artist Package" ||
-      activeModal?.title === "Rising Star Showcase Package" ||
-      activeModal?.title === "Ten Ten Community"
-    );
-  const isWebsiteDesignTierModal =
-    room.slug === "marketing" &&
-    (
-      activeModal?.title === "Tier 1: Starter Site" ||
-      activeModal?.title === "Tier 2: Growth Site" ||
-      activeModal?.title === "Tier 3: Artist World"
-    );
   const isOrangeModal = isOrangeRoom && !!activeModal;
   const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Apply For An Orange Room Session";
   const isStartHereModal = activeModal?.title === "Start Here";
   const isCarouselModal = !!activeModal?.carouselSlides?.length;
-  const isLiveRoomModal = room.slug === "ten-ten-entertainment" && !!activeModal && !isPackageGridModal;
-  const shouldShowOrangeSessionPreview = isOrangeRoom && !isMobileViewport && (isOrangeSessionPreviewVisible || isOrangeSessionModalOpen);
-  const shouldRenderOrangeMobileAudioWidget =
-    isOrangeRoom &&
-    isMobileViewport &&
-    (isOrangeSessionModalOpen || isOrangeMobileSessionAudioActive);
-  const shouldMountOrangeExtras =
-    shouldShowOrangeSessionPreview || shouldRenderOrangeMobileAudioWidget;
-  const activeResourceContext = activeModal ? getResourceContext(activeModal.title) : null;
   const suppressLobbyResponsiveUiUntilHydrated = isLobbyRoom && !hasHydrated;
   const activeCarouselSlide =
     isCarouselModal && activeModal?.carouselSlides
@@ -1091,18 +1000,6 @@ export default function RoomScene({
     shouldRenderBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
-  const parsedModalBody = useMemo(
-    () => (activeModal ? parseIncludesFromModalBody(activeModal.body) : { before: "", includes: [] as string[], after: "" }),
-    [activeModal]
-  );
-  const modalIncludesKey = activeModal ? `${room.slug}:${activeModal.title}` : "";
-  const isPilotFoldablePackageModal =
-    room.slug === "ar-sales" && !!activeModal && parsedModalBody.includes.length > 0;
-  const isPilotModalIncludesExpanded = modalIncludesKey ? (expandedPackageIncludesByModal[modalIncludesKey] ?? false) : false;
-  const visiblePilotModalIncludes =
-    isPilotFoldablePackageModal && !isPilotModalIncludesExpanded
-      ? parsedModalBody.includes.slice(0, 3)
-      : parsedModalBody.includes;
   const mobileImageMetrics = useMemo(
     () => {
       if (!(backgroundUsesMobileLayout || useContainedBackground)) return null;
@@ -1318,7 +1215,7 @@ export default function RoomScene({
     return () => {
       window.removeEventListener("emtee:toggle-lobby-room-list", handleLobbyShowRoomsToggle as EventListener);
     };
-  }, [room.slug, showMoreHotspotsByRoom]);
+  }, [hasHydrated, isHotspotTierPilotRoom, room.slug, showMoreHotspotsByRoom]);
 
   function minimizeOverviewCard() {
     const slug = room.slug;
@@ -1373,6 +1270,7 @@ export default function RoomScene({
 
   const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen;
   const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen;
+  const shouldProbeTiltSupport = hasHydrated && isMobileViewportRaw;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
     room.slug === "lobby" &&
@@ -1630,9 +1528,13 @@ export default function RoomScene({
   }, [closeLobbyExploreHover, isLobbyExploreHoverOpen, isLobbyRoom]);
 
   useEffect(() => {
+    if (!shouldProbeTiltSupport) {
+      setTiltAvailable(false);
+      setTiltPermissionNeeded(false);
+      return;
+    }
     if (typeof window === "undefined") return;
     const hasDeviceOrientation = "DeviceOrientationEvent" in window;
-    setIsSecureContextState(window.isSecureContext);
     setTiltAvailable(hasDeviceOrientation);
     if (!hasDeviceOrientation) return;
 
@@ -1640,7 +1542,7 @@ export default function RoomScene({
       requestPermission?: () => Promise<"granted" | "denied">;
     };
     setTiltPermissionNeeded(typeof DeviceOrientationEventWithPermission.requestPermission === "function");
-  }, []);
+  }, [shouldProbeTiltSupport]);
 
   useEffect(() => {
     if (!canUseTilt) {
@@ -1730,74 +1632,12 @@ export default function RoomScene({
   }, [canUseTilt, maxPanX, maxPanY, mobilePan.x, mobilePan.y, scheduleTiltPan]);
 
   useEffect(() => {
-    if (!isOrangeRoom) return;
-    const video = orangePreviewVideoRef.current;
-    if (!video) return;
-    video.muted = false;
-    video.defaultMuted = false;
-    video.removeAttribute("muted");
-    video.pause();
-    setIsOrangePreviewMuted(false);
-  }, [isOrangeRoom]);
-
-  useEffect(() => {
-    if (isOrangeRoom) return;
-    setIsOrangeSessionPreviewVisible(false);
-  }, [isOrangeRoom]);
-
-  useEffect(() => {
-    if (isOrangeSessionModalOpen) return;
-    setIsOrangeSessionPreviewVisible(false);
-  }, [isOrangeSessionModalOpen]);
-
-  useEffect(() => {
     return () => {
-      if (orangePreviewHideTimerRef.current !== undefined) {
-        window.clearTimeout(orangePreviewHideTimerRef.current);
-      }
       if (lobbyExploreHoverCloseTimerRef.current !== undefined) {
         window.clearTimeout(lobbyExploreHoverCloseTimerRef.current);
       }
     };
   }, []);
-
-  useEffect(() => {
-    const video = orangePreviewVideoRef.current;
-    if (!video) return;
-    if (!shouldShowOrangeSessionPreview) {
-      video.pause();
-      return;
-    }
-    const playPromise = video.play();
-    if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {});
-    }
-  }, [shouldShowOrangeSessionPreview]);
-
-  useEffect(() => {
-    if (!isOrangeRoom || !isMobileViewport) return;
-    const video = orangeMobileAudioRef.current;
-    if (!video) return;
-
-    video.muted = isOrangePreviewMuted;
-    video.defaultMuted = isOrangePreviewMuted;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "true");
-  }, [isOrangeRoom, isMobileViewport, isOrangePreviewMuted]);
-
-  useEffect(() => {
-    if (!isMobileViewport) return;
-    if (isOrangeSessionModalOpen) return;
-    const video = orangeMobileAudioRef.current;
-    if (!video) return;
-    video.pause();
-    video.currentTime = 0;
-    video.muted = true;
-    video.defaultMuted = true;
-    video.setAttribute("muted", "true");
-    setIsOrangePreviewMuted(true);
-    setIsOrangeMobileSessionAudioActive(false);
-  }, [isMobileViewport, isOrangeSessionModalOpen]);
 
   useEffect(() => {
     if (!shouldDeferBackgroundVideoMount) {
@@ -2058,8 +1898,6 @@ export default function RoomScene({
   function DotHotspotContent(spot: Hotspot) {
     const isClickedLabelVisible = clickedHotspotId === spot.id;
     const isOrangeSessionDot = spot.id === "dirty-elephant-studio-room-sessions";
-    const isMediaRoom = room.slug === "marketing";
-    const isBrandDealsDot = room.slug === "marketing" && spot.id === "marketing-brand-deals";
     const isLobbyDot = room.slug === "lobby";
     const isLiveRoomSocialDot =
       room.slug === "ten-ten-entertainment" &&
@@ -2090,30 +1928,18 @@ export default function RoomScene({
       room.slug === "EMTEEWebDesign" && spot.id === "website-design-enter-website";
     const dotBase = isOrangeRoom
       ? "rounded-full bg-[#ff9f3f] shadow-[0_0_0_2px_rgba(255,159,63,0.35),0_0_22px_rgba(255,159,63,0.7)]"
-      : isBrandDealsDot
-        ? "rounded-full bg-black shadow-[0_0_0_2px_rgba(0,0,0,0.34),0_0_18px_rgba(0,0,0,0.45)]"
       : isWebsiteDesignEnterDot
         ? "rounded-full bg-[#d6ae66] shadow-[0_0_0_2px_rgba(214,174,102,0.45),0_0_24px_rgba(214,174,102,0.8)]"
-        : isMediaRoom
-        ? "rounded-full bg-zinc-800 shadow-[0_0_0_2px_rgba(39,39,42,0.48),0_0_18px_rgba(39,39,42,0.42)]"
         : "rounded-full bg-white shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_18px_rgba(255,255,255,0.55)]";
     const haloBase = isOrangeRoom
       ? "bg-[#ff9f3f]/35"
-      : isBrandDealsDot
-        ? "bg-black/28"
       : isWebsiteDesignEnterDot
         ? "bg-[#d6ae66]/40"
-      : isMediaRoom
-          ? "bg-zinc-800/35"
           : "bg-white/20";
     const ringBase = isOrangeRoom
       ? "border-[#ff9f3f]/70"
-      : isBrandDealsDot
-          ? "border-black/70"
       : isWebsiteDesignEnterDot
           ? "border-[#d6ae66]/85"
-      : isMediaRoom
-          ? "border-zinc-800/65"
           : "border-white/45";
 
     if (isLiveRoomSocialDot && liveRoomSocialLabel) {
@@ -2178,9 +2004,7 @@ export default function RoomScene({
                   ? (
                       isOrangeRoom
                         ? "border-[#ff9f3f]/85"
-                        : isMediaRoom
-                            ? "border-zinc-800/85"
-                            : "border-white/70"
+                        : "border-white/70"
                     )
                   : ringBase,
             ].join(" ")}
@@ -2230,8 +2054,8 @@ export default function RoomScene({
         if (isCardMinimized) return;
         minimizeOverviewCard();
       }}
-      onTouchStart={(e) => {
-        if (!canPanRoom || e.touches.length !== 1) return;
+      onTouchStart={canPanRoom ? ((e) => {
+        if (e.touches.length !== 1) return;
         if (isInteractiveTarget(e.target)) return;
         const t = e.touches[0];
         touchPanStartRef.current = {
@@ -2241,10 +2065,10 @@ export default function RoomScene({
           panY: displayedPan.y,
           dragging: false,
         };
-      }}
-      onTouchMove={(e) => {
+      }) : undefined}
+      onTouchMove={canPanRoom ? ((e) => {
         const start = touchPanStartRef.current;
-        if (!canPanRoom || !start || e.touches.length !== 1) return;
+        if (!start || e.touches.length !== 1) return;
         const t = e.touches[0];
         const dx = t.clientX - start.x;
         const dy = t.clientY - start.y;
@@ -2257,15 +2081,15 @@ export default function RoomScene({
         const nextX = clamp(start.panX + dx * 0.7, -mobilePanLeftLimit, mobilePanRightLimit);
         const nextY = clamp(start.panY + dy * 0.58, -maxPanY, maxPanY);
         scheduleMobilePan({ x: nextX, y: nextY });
-      }}
-      onTouchEnd={() => {
+      }) : undefined}
+      onTouchEnd={canPanRoom ? (() => {
         touchPanStartRef.current = null;
-      }}
-      onTouchCancel={() => {
+      }) : undefined}
+      onTouchCancel={canPanRoom ? (() => {
         touchPanStartRef.current = null;
-      }}
-      onMouseMove={(e) => {
-        if (!canDesktopCursorPan || !desktopCoverMetrics) return;
+      }) : undefined}
+      onMouseMove={canDesktopCursorPan ? ((e) => {
+        if (!desktopCoverMetrics) return;
         const rect = e.currentTarget.getBoundingClientRect();
         if (!rect.width) return;
         const rawNormalizedX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
@@ -2281,7 +2105,7 @@ export default function RoomScene({
         const rawTargetX = -edgeWeightedX * desktopCoverMetrics.maxPanX;
         const targetX = clamp(rawTargetX, -rightPanLimit, leftPanLimit);
         scheduleDesktopPan({ x: targetX, y: 0 });
-      }}
+      }) : undefined}
       onMouseLeave={() => {}}
     >
       {/* Background */}
@@ -2545,24 +2369,14 @@ export default function RoomScene({
         </div>
       ) : null}
 
-      {shouldMountOrangeExtras ? (
-        <OrangeRoomExtras
-          shouldShowOrangeSessionPreview={shouldShowOrangeSessionPreview}
-          onPreviewMouseEnter={showOrangeSessionPreview}
-          onPreviewMouseLeave={hideOrangeSessionPreview}
-          orangePreviewVideoRef={orangePreviewVideoRef}
-          isOrangePreviewMuted={isOrangePreviewMuted}
-          onPreviewVolumeChange={setIsOrangePreviewMuted}
-          onPreviewLoadedMetadata={(video) => {
-            video.volume = 0.2;
-          }}
-          onPreviewClick={forcePlayOrangePreviewWithSound}
-          shouldRenderOrangeMobileAudioWidget={shouldRenderOrangeMobileAudioWidget}
-          orangeMobileAudioRef={orangeMobileAudioRef}
-          isOrangeMobileSessionAudioActive={isOrangeMobileSessionAudioActive}
-          onToggleOrangePreviewMute={toggleOrangePreviewMute}
-        />
-      ) : null}
+      <OrangeRoomExtras
+        ref={orangeExtrasRef}
+        isOrangeRoom={isOrangeRoom}
+        isMobileViewport={isMobileViewport}
+        isSessionModalOpen={isOrangeSessionModalOpen}
+        isPreviewMuted={isOrangePreviewMuted}
+        onPreviewMutedChange={setIsOrangePreviewMuted}
+      />
 
       {/* Room label */}
       <div
@@ -2791,6 +2605,7 @@ export default function RoomScene({
 
       {/* MODAL OVERLAY */}
       <RoomModalLayer
+        roomSlug={room.slug}
         activeModal={activeModal}
         closeModal={closeModal}
         openModal={openModal}
@@ -2812,29 +2627,15 @@ export default function RoomScene({
         setVideoMuted={setVideoMuted}
         muteYoutube={muteYoutube}
         unmuteYoutube={unmuteYoutube}
-        isYanchanMusicModal={isYanchanMusicModal}
-        isYanchanDiscographyModal={isYanchanDiscographyModal}
-        isJoinCommunityModal={isJoinCommunityModal}
-        isCustomProductionModal={isCustomProductionModal}
         isCarouselModal={isCarouselModal}
         activeCarouselSlide={activeCarouselSlide}
         activeCarouselIndex={activeCarouselIndex}
         setActiveCarouselIndex={setActiveCarouselIndex}
-        activeResourceContext={activeResourceContext}
-        isWebsiteDesignTierModal={isWebsiteDesignTierModal}
-        parsedModalBody={parsedModalBody}
-        isPilotFoldablePackageModal={isPilotFoldablePackageModal}
-        visiblePilotModalIncludes={visiblePilotModalIncludes}
-        modalIncludesKey={modalIncludesKey}
-        isPilotModalIncludesExpanded={isPilotModalIncludesExpanded}
         setExpandedPackageIncludesByModal={setExpandedPackageIncludesByModal}
         renderModalBodyWithBoldIncludes={renderModalBodyWithBoldIncludes}
         renderStartHereStepsWithBoldTitles={renderStartHereStepsWithBoldTitles}
         roomHotspots={resolvedHotspots}
-        isPackageGridModal={isPackageGridModal}
-        isWebsiteDesignMainModal={isWebsiteDesignMainModal}
-        isLivePackageDetailModal={isLivePackageDetailModal}
-        isLiveRoomModal={isLiveRoomModal}
+        expandedPackageIncludesByModal={expandedPackageIncludesByModal}
         yanchanDiscographySpotlight={YANCHAN_DISCOGRAPHY_SPOTLIGHT}
         SocialIcon={SocialIcon}
         openExploreMenu={openExploreMenu}

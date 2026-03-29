@@ -1,10 +1,12 @@
 "use client";
 
+import { getResourceContext } from "@/data/resource-context";
 import NextImage from "next/image";
 import Link from "next/link";
 import { Fragment, type ComponentType, type MutableRefObject, type ReactNode } from "react";
 
 type RoomModalLayerProps = {
+  roomSlug: string;
   activeModal: any;
   closeModal: () => void;
   openModal: (modal: any) => void;
@@ -26,35 +28,22 @@ type RoomModalLayerProps = {
   setVideoMuted: (muted: boolean) => void;
   muteYoutube: () => void;
   unmuteYoutube: () => void;
-  isYanchanMusicModal: boolean;
-  isYanchanDiscographyModal: boolean;
-  isJoinCommunityModal: boolean;
-  isCustomProductionModal: boolean;
   isCarouselModal: boolean;
   activeCarouselSlide: any;
   activeCarouselIndex: number;
   setActiveCarouselIndex: (value: number | ((prev: number) => number)) => void;
-  activeResourceContext: any;
-  isWebsiteDesignTierModal: boolean;
-  parsedModalBody: { before: string; includes: string[]; after: string };
-  isPilotFoldablePackageModal: boolean;
-  visiblePilotModalIncludes: string[];
-  modalIncludesKey: string;
-  isPilotModalIncludesExpanded: boolean;
   setExpandedPackageIncludesByModal: (value: any) => void;
   renderModalBodyWithBoldIncludes: (text: string) => ReactNode;
   renderStartHereStepsWithBoldTitles: (text: string) => ReactNode;
   roomHotspots: any[];
-  isPackageGridModal: boolean;
-  isWebsiteDesignMainModal: boolean;
-  isLivePackageDetailModal: boolean;
-  isLiveRoomModal: boolean;
+  expandedPackageIncludesByModal: Record<string, boolean>;
   yanchanDiscographySpotlight: Array<{ src: string; label: string; isJunoNominated?: boolean; objectPosition?: string }>;
   SocialIcon: ComponentType<{ label: string; className?: string }>;
   openExploreMenu: () => void;
 };
 
 export default function RoomModalLayer({
+  roomSlug,
   activeModal,
   closeModal,
   openModal,
@@ -76,34 +65,54 @@ export default function RoomModalLayer({
   setVideoMuted,
   muteYoutube,
   unmuteYoutube,
-  isYanchanMusicModal,
-  isYanchanDiscographyModal,
-  isJoinCommunityModal,
-  isCustomProductionModal,
   isCarouselModal,
   activeCarouselSlide,
   activeCarouselIndex,
   setActiveCarouselIndex,
-  activeResourceContext,
-  isWebsiteDesignTierModal,
-  parsedModalBody,
-  isPilotFoldablePackageModal,
-  visiblePilotModalIncludes,
-  modalIncludesKey,
-  isPilotModalIncludesExpanded,
   setExpandedPackageIncludesByModal,
   renderModalBodyWithBoldIncludes,
   renderStartHereStepsWithBoldTitles,
   roomHotspots,
-  isPackageGridModal,
-  isWebsiteDesignMainModal,
-  isLivePackageDetailModal,
-  isLiveRoomModal,
+  expandedPackageIncludesByModal,
   yanchanDiscographySpotlight,
   SocialIcon,
   openExploreMenu,
 }: RoomModalLayerProps) {
   if (!activeModal) return null;
+
+  const activeResourceContext = getResourceContext(activeModal.title);
+  const isYanchanMusicModal = activeModal.title === "Yanchan Produced Music";
+  const isYanchanDiscographyModal = activeModal.title === "Discography";
+  const isJoinCommunityModal = activeModal.title === "Join Community";
+  const isCustomProductionModal = activeModal.title === "Apply For Custom Production";
+  const isLivePackagesModal = roomSlug === "ten-ten-entertainment" && activeModal.title === "Packages";
+  const isWebsiteDesignMainModal =
+    roomSlug === "marketing" && activeModal.title === "Website Development";
+  const isPackageGridModal = isLivePackagesModal || isWebsiteDesignMainModal;
+  const isLivePackageDetailModal =
+    roomSlug === "ten-ten-entertainment" &&
+    (
+      activeModal.title === "Up & Coming Artist Package" ||
+      activeModal.title === "Rising Star Showcase Package" ||
+      activeModal.title === "Ten Ten Community"
+    );
+  const isWebsiteDesignTierModal =
+    roomSlug === "marketing" &&
+    (
+      activeModal.title === "Tier 1: Starter Site" ||
+      activeModal.title === "Tier 2: Growth Site" ||
+      activeModal.title === "Tier 3: Artist World"
+    );
+  const isLiveRoomModal = roomSlug === "ten-ten-entertainment" && !isPackageGridModal;
+  const parsedModalBody = parseIncludesFromModalBody(activeModal.body);
+  const isPilotFoldablePackageModal =
+    roomSlug === "ar-sales" && parsedModalBody.includes.length > 0;
+  const modalIncludesKey = `${roomSlug}:${activeModal.title}`;
+  const isPilotModalIncludesExpanded = expandedPackageIncludesByModal[modalIncludesKey] ?? false;
+  const visiblePilotModalIncludes =
+    isPilotFoldablePackageModal && !isPilotModalIncludesExpanded
+      ? parsedModalBody.includes.slice(0, 3)
+      : parsedModalBody.includes;
 
   const handleModalTarget = (href: string, backModal?: any) => {
     const modalLinkId = href.slice(6);
@@ -825,4 +834,39 @@ export default function RoomModalLayer({
       </div>
     </div>
   );
+}
+
+function parseIncludesFromModalBody(text: string) {
+  const marker = "Includes:";
+  const markerIndex = text.indexOf(marker);
+  if (markerIndex === -1) {
+    return {
+      before: text,
+      includes: [] as string[],
+      after: "",
+    };
+  }
+
+  const before = text.slice(0, markerIndex).trimEnd();
+  const afterMarker = text.slice(markerIndex + marker.length).trimStart();
+  const lines = afterMarker.split("\n");
+  const includes: string[] = [];
+  const trailingLines: string[] = [];
+  let readingIncludes = true;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (readingIncludes && line.startsWith("•")) {
+      includes.push(line.replace(/^•\s*/, "").trim());
+      continue;
+    }
+    readingIncludes = false;
+    trailingLines.push(rawLine);
+  }
+
+  return {
+    before,
+    includes,
+    after: trailingLines.join("\n").trim(),
+  };
 }

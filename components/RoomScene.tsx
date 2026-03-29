@@ -972,10 +972,6 @@ export default function RoomScene({
     [hotspotBreakpoint, room.hotspots, room.slug]
   );
   const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
-  const lobbyStartHereSpot =
-    isLobbyRoom && lobbyStartHereAnchor
-      ? { ...lobbyStartHereAnchor, id: "start-here-floating" }
-      : undefined;
   const isPortraitViewport = viewportH >= viewportW;
   const mobileOrientationKey = isPortraitViewport ? "portrait" : "landscape";
   const panContextKey = `${room.slug}:${isMobileViewport ? mobileOrientationKey : "desktop"}`;
@@ -1059,29 +1055,6 @@ export default function RoomScene({
   const hotspotsReady =
     hasHydrated && viewportKnown && (!requiresMetricBasedHotspots || !!hotspotImageMetrics);
   const areHotspotsPositionReady = hotspotsReady;
-  const visibleHotspots = useMemo(
-    () =>
-      resolvedHotspots.filter((spot) => {
-        if (spot.hidden) return false;
-        if (spot.id === "next-room") return false;
-        if (isLobbyRoom && !hasHydrated && spot.id === "explore") return false;
-        if (isLobbyRoom && lobbyResponsiveIsMobile && spot.id === "explore") return false;
-        if (isLobbyRoom && !showAllRoomHotspots) return false;
-        if (!isHotspotTierPilotRoom) return true;
-        if (showAllRoomHotspots) return true;
-        return (spot.tier ?? "core") === "core";
-      }),
-    [hasHydrated, isHotspotTierPilotRoom, isLobbyRoom, lobbyResponsiveIsMobile, resolvedHotspots, showAllRoomHotspots]
-  );
-  const connectableDots = visibleHotspots.filter((spot) => spot.variant === "dot");
-  const showDotConnectors =
-    sceneReady &&
-    !!activeOverviewCard &&
-    connectableDots.length > 0 &&
-    !isModalOpen &&
-    !exploreOpen &&
-    !isCardCompact &&
-    !isMobileViewport;
   const nextRoomHotspot = room.hotspots.find((spot) => spot.id === "next-room");
   const nextRoomHotspotHref = nextRoomHotspot?.href;
   const nextRoomExploreEntry = nextRoomHotspotHref
@@ -2453,62 +2426,6 @@ export default function RoomScene({
         </div>
       ) : null}
 
-      {isLobbyRoom && lobbyStartHereSpot && !suppressLobbyResponsiveUiUntilHydrated && lobbyMobileHotspotsReady ? (
-        <div
-          className={[
-            "absolute z-40 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-100",
-            isModalOpen || exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
-          ].join(" ")}
-          style={{
-            ...getMobileHotspotStyle(lobbyStartHereSpot),
-            transform:
-              canDesktopCursorPan && !isMobileViewport
-                ? `translate3d(${desktopCursorPan.x}px, 0, 0) translate(-50%, -50%)`
-                : "translate(-50%, -50%)",
-          }}
-          data-no-pan
-        >
-          <button
-            type="button"
-            onClick={() => {
-              if (room.slug === "lobby") {
-                lobbyStartHereOpenedRef.current = true;
-              }
-              const startSpot =
-                room.hotspots.find((spot) => spot.id === "About") ??
-                room.hotspots.find((spot) => spot.id === "start-here") ??
-                room.hotspots.find((spot) => spot.id === "how-you-start") ??
-                room.hotspots.find((spot) => spot.id === "departments");
-              if (!startSpot?.modal) return;
-              setModalBackModal(null);
-              openModal(startSpot.modal);
-            }}
-            className="start-here-priority inline-flex min-w-[6.5rem] items-center justify-center whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-semibold tracking-[0.02em] transition"
-          >
-            Start Here
-          </button>
-        </div>
-      ) : null}
-
-      {showDotConnectors && (
-        <div
-          className="pointer-events-none absolute inset-0 z-[35] opacity-100 transition-opacity duration-150"
-          style={
-            canDesktopCursorPan && !isMobileViewport
-              ? { transform: `translate3d(${desktopCursorPan.x}px, 0, 0)` }
-              : undefined
-          }
-        >
-          {connectableDots.map((spot) => (
-            <div
-              key={`connector-${spot.id}`}
-              className="connector-line"
-              style={connectorStyle(spot, cardConnectorAnchor)}
-            />
-          ))}
-        </div>
-      )}
-
       {/* Room overview cards */}
       {activeOverviewCard ? (
         <RoomOverviewCardLayer
@@ -2542,25 +2459,42 @@ export default function RoomScene({
 
       {/* Hotspots */}
       <RoomHotspotLayer
-        visibleHotspots={visibleHotspots}
+        resolvedHotspots={resolvedHotspots}
         areHotspotsPositionReady={areHotspotsPositionReady}
+        sceneReady={sceneReady}
         isMobileViewport={isMobileViewport}
         isModalOpen={isModalOpen}
         exploreOpen={exploreOpen}
         isLobbyRoom={isLobbyRoom}
         isLobbyExploreHoverOpen={isLobbyExploreHoverOpen}
+        isHotspotTierPilotRoom={isHotspotTierPilotRoom}
+        showAllRoomHotspots={showAllRoomHotspots}
+        showOverviewCard={!!activeOverviewCard}
+        isCardCompact={isCardCompact}
         canDesktopCursorPan={canDesktopCursorPan}
         desktopCursorPanX={desktopCursorPan.x}
         hasHydrated={hasHydrated}
         roomSlug={room.slug}
         lobbyResponsiveIsMobile={lobbyResponsiveIsMobile}
+        lobbyMobileHotspotsReady={lobbyMobileHotspotsReady}
+        suppressLobbyResponsiveUiUntilHydrated={suppressLobbyResponsiveUiUntilHydrated}
         isOrangeRoom={isOrangeRoom}
         orangeSessionPreviewDotId={ORANGE_SESSION_PREVIEW_DOT_ID}
+        cardConnectorAnchor={cardConnectorAnchor}
         getMobileHotspotStyle={getMobileHotspotStyle}
         getHotspotAnchorTransform={getHotspotAnchorTransform}
+        connectorStyle={connectorStyle}
         renderHotspotContent={(spot) =>
           (spot.variant ?? "pill") === "dot" ? DotHotspotContent(spot) : PillHotspotContent(spot)
         }
+        onOpenStartHere={(spot) => {
+          if (room.slug === "lobby") {
+            lobbyStartHereOpenedRef.current = true;
+          }
+          if (!spot.modal) return;
+          setModalBackModal(null);
+          openModal(spot.modal);
+        }}
         onOpenExplore={(spot) => {
           triggerHotspotLabelGlow(spot);
           setExploreOpen(true);

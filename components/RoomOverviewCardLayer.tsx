@@ -2,22 +2,7 @@
 
 import NextImage from "next/image";
 import Link from "next/link";
-
-type InfoCard = {
-  title: string;
-  body: string;
-  primaryCta: string;
-  primaryHref: string;
-  secondaryCta?: string;
-  secondaryHref?: string;
-  strategyLabel?: string;
-  exampleArtist?: string;
-  exampleHref?: string;
-  eyebrow?: string;
-  imageSrc?: string;
-  imageAlt?: string;
-  socialLinks?: Array<{ label: string; href: string }>;
-};
+import type { InfoCard } from "@/components/roomSceneOverviewConfig";
 
 type RoomOverviewCardLayerProps = {
   activeOverviewCard: InfoCard;

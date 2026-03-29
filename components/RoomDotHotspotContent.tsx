@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import type { Hotspot } from "@/data/rooms/types";
 
 type RoomDotHotspotContentProps = {
@@ -19,8 +18,6 @@ type RoomDotHotspotContentProps = {
     isMobileViewport: boolean,
     viewportW: number
   ) => string;
-  showHoverLabel: boolean | "hover";
-  renderLabelText: (spot: Hotspot, showHoverLabel?: boolean | "hover") => ReactNode;
   getDotPresentationState: (input: {
     roomSlug: string;
     spot: Hotspot;
@@ -45,6 +42,52 @@ type RoomDotHotspotContentProps = {
     ringBase: string;
   };
 };
+
+function HotspotLabelText({
+  spot,
+  showHoverLabel,
+}: {
+  spot: Hotspot;
+  showHoverLabel: boolean | "hover";
+}) {
+  if (!spot.hoverLabel) {
+    return <>{spot.label}</>;
+  }
+
+  if (showHoverLabel === "hover") {
+    return (
+      <span className="relative inline-flex w-full items-center justify-center text-center">
+        <span className="transition-all duration-200 group-hover:opacity-0">
+          {spot.label}
+        </span>
+        <span className="absolute inset-0 inline-flex items-center justify-center text-center opacity-0 transition-all duration-200 group-hover:opacity-100">
+          {spot.hoverLabel}
+        </span>
+      </span>
+    );
+  }
+
+  return (
+    <span className="relative inline-flex w-full items-center justify-center text-center">
+      <span
+        className={[
+          "transition-all duration-200",
+          showHoverLabel ? "opacity-0" : "opacity-100",
+        ].join(" ")}
+      >
+        {spot.label}
+      </span>
+      <span
+        className={[
+          "absolute inset-0 inline-flex items-center justify-center text-center transition-all duration-200",
+          showHoverLabel ? "opacity-100" : "opacity-0",
+        ].join(" ")}
+      >
+        {spot.hoverLabel}
+      </span>
+    </span>
+  );
+}
 
 function SocialIcon({ label, className = "" }: { label: string; className?: string }) {
   const common = `h-4 w-4 ${className}`.trim();
@@ -86,8 +129,6 @@ export default function RoomDotHotspotContent({
   compactHotspotUi,
   roomSlug,
   tooltipPosition,
-  showHoverLabel,
-  renderLabelText,
   getDotPresentationState,
 }: RoomDotHotspotContentProps) {
   const {
@@ -203,7 +244,7 @@ export default function RoomDotHotspotContent({
         ].join(" ")}
         style={{ maxWidth: `${dotLabelMaxWidth}px`, fontSize: dotLabelFontSize }}
       >
-        {renderLabelText(spot, showHoverLabel)}
+        <HotspotLabelText spot={spot} showHoverLabel={false} />
       </span>
     </span>
   );

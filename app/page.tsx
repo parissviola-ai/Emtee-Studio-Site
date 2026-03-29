@@ -22,7 +22,6 @@ const LANDING_WARMUP_ROUTES = [
   "/case-studies",
   "/artist-affiliations",
   "/news",
-  "/path-quiz",
   "/subscribe",
   "/labels-partners",
 ];

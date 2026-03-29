@@ -88,7 +88,6 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
       "/case-studies",
       "/artist-affiliations",
       "/news",
-      "/path-quiz",
       ...rooms.map((room) => `/rooms/${room.slug}`),
     ]);
 

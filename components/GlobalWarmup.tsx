@@ -12,7 +12,6 @@ const GLOBAL_ROUTES = [
   "/case-studies",
   "/artist-affiliations",
   "/news",
-  "/path-quiz",
 ];
 
 export default function GlobalWarmup() {

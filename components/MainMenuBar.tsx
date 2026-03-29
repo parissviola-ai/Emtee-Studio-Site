@@ -69,7 +69,6 @@ export default function MainMenuBar() {
       "/case-studies",
       "/artist-affiliations",
       "/news",
-      "/path-quiz",
       ...rooms.map((room) => `/rooms/${room.slug}`),
     ]);
 

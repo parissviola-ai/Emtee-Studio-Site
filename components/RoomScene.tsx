@@ -458,6 +458,27 @@ function scheduleIdleWork(callback: () => void, timeout = 900) {
   return () => window.clearTimeout(id);
 }
 
+function ensureTenTenInstagramPreconnect() {
+  if (typeof document === "undefined") return;
+
+  const preconnectTargets = [
+    { rel: "preconnect", href: "https://www.instagram.com", crossOrigin: "anonymous" },
+    { rel: "preconnect", href: "https://static.cdninstagram.com", crossOrigin: "anonymous" },
+    { rel: "dns-prefetch", href: "https://www.instagram.com" },
+    { rel: "dns-prefetch", href: "https://static.cdninstagram.com" },
+  ];
+
+  preconnectTargets.forEach((target) => {
+    const existing = document.querySelector(`link[rel="${target.rel}"][href="${target.href}"]`);
+    if (existing) return;
+    const link = document.createElement("link");
+    link.rel = target.rel;
+    link.href = target.href;
+    if (target.crossOrigin) link.crossOrigin = target.crossOrigin;
+    document.head.appendChild(link);
+  });
+}
+
 function SocialIcon({ label, className = "" }: { label: string; className?: string }) {
   const common = `h-4 w-4 ${className}`.trim();
   switch (label) {
@@ -1425,23 +1446,7 @@ export default function RoomScene({
 
   useEffect(() => {
     if (!isLiveRoom) return;
-
-    const preconnectTargets = [
-      { rel: "preconnect", href: "https://www.instagram.com", crossOrigin: "anonymous" },
-      { rel: "preconnect", href: "https://static.cdninstagram.com", crossOrigin: "anonymous" },
-      { rel: "dns-prefetch", href: "https://www.instagram.com" },
-      { rel: "dns-prefetch", href: "https://static.cdninstagram.com" },
-    ];
-
-    preconnectTargets.forEach((target) => {
-      const existing = document.querySelector(`link[rel="${target.rel}"][href="${target.href}"]`);
-      if (existing) return;
-      const link = document.createElement("link");
-      link.rel = target.rel;
-      link.href = target.href;
-      if (target.crossOrigin) link.crossOrigin = target.crossOrigin;
-      document.head.appendChild(link);
-    });
+    ensureTenTenInstagramPreconnect();
   }, [isLiveRoom]);
 
   useEffect(() => {
@@ -1787,13 +1792,6 @@ export default function RoomScene({
       probe.src = backgroundImageSrc;
     }, 1200);
   }, [backgroundImageSrc]);
-
-  useEffect(() => {
-    if (room.slug !== "EMTEEWebDesign" && room.slug !== "publishing-distribution") return;
-    return scheduleIdleWork(() => {
-      router.prefetch("/website-design-consultation");
-    });
-  }, [room.slug, router]);
 
   // ===== HOTSPOT RENDERERS =====
 

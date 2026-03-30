@@ -118,8 +118,8 @@ export default function CaseStudies2Client() {
             className="absolute inset-0 bg-black/45 backdrop-blur-[1px]"
             aria-label="Close modal"
           />
-          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
-            <div className="border-b border-black/8 p-4 sm:p-5">
+          <div className="relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
+            <div className="shrink-0 border-b border-black/8 p-4 sm:p-5">
               <div className="flex items-center justify-center rounded-2xl border border-black/10 bg-[#f8f8f8] p-3">
                 <Image
                   src={activeCard.imageSrc}
@@ -127,7 +127,7 @@ export default function CaseStudies2Client() {
                   width={1400}
                   height={1600}
                   sizes="(max-width: 1024px) 100vw, 900px"
-                  className="h-auto max-h-[420px] w-full object-contain"
+                  className="h-auto max-h-[min(42vh,420px)] w-full object-contain"
                 />
               </div>
               <button
@@ -139,8 +139,8 @@ export default function CaseStudies2Client() {
                 ×
               </button>
             </div>
-            <div className="p-5 sm:p-6">
-              <div className="mb-4 flex items-center justify-end gap-2">
+            <div className="flex-1 overflow-y-auto p-5 sm:p-6">
+              <div className="mb-5 flex flex-wrap items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => goToAdjacentCard("prev")}
@@ -161,7 +161,7 @@ export default function CaseStudies2Client() {
               </div>
               <h3 className="mt-2 text-2xl font-semibold tracking-tight text-black">{activeCard.artist}</h3>
               <p className="mt-3 text-sm leading-relaxed text-black/72 sm:text-base">{activeCard.snapshot}</p>
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-black/8 pt-5">
                 <Link
                   href="/case-studies"
                   onClick={closeCard}

@@ -78,21 +78,23 @@ export default function CaseStudies2Client() {
               key={card.id}
               type="button"
               onClick={() => openCard(card)}
-              className="group overflow-hidden rounded-3xl border border-black/10 bg-white text-left shadow-[0_12px_38px_rgba(0,0,0,0.07)] transition hover:border-[#d6ae66]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6ae66]/60"
+              className="group flex h-full min-h-[34rem] flex-col overflow-hidden rounded-3xl border border-black/10 bg-white text-left shadow-[0_12px_38px_rgba(0,0,0,0.07)] transition hover:border-[#d6ae66]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d6ae66]/60"
               aria-label={`Open snapshot for ${card.artist} - ${card.lane}`}
             >
-              <div className="p-5 sm:p-6">
-                <div className="flex items-center justify-center rounded-2xl border border-black/10 bg-[#f8f8f8] p-4">
+              <div className="shrink-0 border-b border-black/8 p-4 sm:p-5">
+                <div className="flex h-[min(42vh,420px)] items-center justify-center rounded-2xl border border-black/10 bg-[#f8f8f8] p-3">
                   <Image
                     src={card.imageSrc}
                     alt={card.imageAlt}
                     width={1400}
                     height={1600}
                     sizes="(max-width: 768px) 100vw, (max-width: 1400px) 50vw, 33vw"
-                    className="h-auto max-h-[560px] w-full object-contain"
+                    className="h-full w-full object-contain"
                     draggable={false}
                   />
                 </div>
+              </div>
+              <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="mt-4 inline-flex rounded-full border border-[#c69a45]/34 bg-[linear-gradient(135deg,rgba(255,248,232,0.98),rgba(233,212,166,0.74))] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6c4b14] shadow-[0_10px_24px_rgba(180,137,59,0.14)]">
                   {card.lane}
                 </div>
@@ -118,16 +120,16 @@ export default function CaseStudies2Client() {
             className="absolute inset-0 bg-black/45 backdrop-blur-[1px]"
             aria-label="Close modal"
           />
-          <div className="relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
+          <div className="relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-[900px] flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
             <div className="shrink-0 border-b border-black/8 p-4 sm:p-5">
-              <div className="flex items-center justify-center rounded-2xl border border-black/10 bg-[#f8f8f8] p-3">
+              <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_18px_48px_rgba(0,0,0,0.16)]">
                 <Image
                   src={activeCard.imageSrc}
                   alt={activeCard.imageAlt}
                   width={1400}
                   height={1600}
                   sizes="(max-width: 1024px) 100vw, 900px"
-                  className="h-auto max-h-[min(42vh,420px)] w-full object-contain"
+                  className="w-full max-h-[460px] object-contain"
                 />
               </div>
               <button
@@ -146,7 +148,7 @@ export default function CaseStudies2Client() {
                   onClick={() => goToAdjacentCard("prev")}
                   className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-3 py-1.5 text-xs font-semibold text-black/70 transition hover:bg-black/[0.04]"
                 >
-                  ← Previous
+                  ← Prev
                 </button>
                 <button
                   type="button"

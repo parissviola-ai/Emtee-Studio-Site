@@ -114,7 +114,7 @@ export function getRoomSceneBackgroundConfig({
     backgroundUsesMobileLayout && backgroundVideoMobile ? backgroundVideoMobile : backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const shouldRenderBackgroundImage =
-    !activeBackgroundVideo || roomSlug === "steeped-dreams-studio" || roomSlug === "ten-ten-entertainment";
+    !activeBackgroundVideo || roomSlug === "ten-ten-entertainment";
   const shouldRenderImmediateBackgroundFallback =
     shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(roomSlug);
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;

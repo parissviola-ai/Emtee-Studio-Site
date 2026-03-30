@@ -563,8 +563,7 @@ export default function RoomScene({
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
   const backgroundVideoCompletedPlaysRef = useRef(0);
   const backgroundVideoLastTimeRef = useRef(0);
-  const [backgroundVideoStartedByRoom, setBackgroundVideoStartedByRoom] = useState<Record<string, boolean>>({});
-  const [backgroundVideoEndedByRoom, setBackgroundVideoEndedByRoom] = useState<Record<string, boolean>>({});
+  const backgroundVideoShouldStayPausedRef = useRef(false);
   const lobbyExploreHoverCloseTimerRef = useRef<number | undefined>(undefined);
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
@@ -573,7 +572,6 @@ export default function RoomScene({
   const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltSignalSeenRef = useRef(false);
   const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
-  const shouldFreezeOnBackgroundVideoEnd = room.slug === "steeped-dreams-studio";
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
   const backgroundVideoPlaybackRate = room.slug === "steeped-dreams-studio" ? 0.9 : 1;
@@ -945,12 +943,9 @@ export default function RoomScene({
   const baseActiveBackgroundVideo =
     backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
-  const isSteepedDreamsVideoFrozen = room.slug === "steeped-dreams-studio" && !!backgroundVideoEndedByRoom[room.slug];
   const useContainedBackground = false;
   const shouldRenderBackgroundImage =
-    !activeBackgroundVideo ||
-    room.slug === "ten-ten-entertainment" ||
-    (room.slug === "steeped-dreams-studio" && !backgroundVideoStartedByRoom[room.slug]);
+    !activeBackgroundVideo || room.slug === "ten-ten-entertainment";
   const shouldRenderImmediateBackgroundFallback =
     shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug);
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
@@ -1275,8 +1270,8 @@ export default function RoomScene({
     return !!target.closest("a,button,input,textarea,select,iframe,[data-no-pan]");
   }
 
-  const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen && !isSteepedDreamsVideoFrozen;
-  const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen && !isSteepedDreamsVideoFrozen;
+  const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen;
+  const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
     room.slug === "lobby" &&
@@ -1702,6 +1697,7 @@ export default function RoomScene({
     if (!video) return;
 
     let cancelled = false;
+    backgroundVideoShouldStayPausedRef.current = false;
     video.muted = true;
     video.defaultMuted = true;
     video.loop = shouldNativeLoopBackgroundVideo;
@@ -1723,6 +1719,7 @@ export default function RoomScene({
 
     const tryPlay = () => {
       if (cancelled) return;
+      if (backgroundVideoShouldStayPausedRef.current) return;
       const playPromise = video.play();
       if (playPromise && typeof playPromise.catch === "function") {
         playPromise.catch(() => {});
@@ -1777,19 +1774,8 @@ export default function RoomScene({
   }, [activeBackgroundVideo, room.slug]);
 
   useEffect(() => {
-    if (activeBackgroundVideo) {
-      setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: false }));
-      return;
-    }
-    setBackgroundVideoStartedByRoom((prev) => ({ ...prev, [room.slug]: false }));
-    setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: false }));
-  }, [activeBackgroundVideo, room.slug]);
-
-  useEffect(() => {
     setBackgroundVideoVisibleByRoom((prev) =>
-      room.slug === "steeped-dreams-studio" && activeBackgroundVideo
-        ? { ...prev, [room.slug]: true }
-        : prev[room.slug] === false && activeBackgroundVideo
+      prev[room.slug] === false && activeBackgroundVideo
         ? prev
         : { ...prev, [room.slug]: !activeBackgroundVideo }
     );
@@ -2306,12 +2292,7 @@ export default function RoomScene({
             playsInline
             disablePictureInPicture
             disableRemotePlayback
-            poster={
-              room.slug === "ten-ten-entertainment" ||
-              (room.slug === "steeped-dreams-studio" && !backgroundVideoStartedByRoom[room.slug])
-                ? backgroundImageSrc
-                : undefined
-            }
+            poster={room.slug === "ten-ten-entertainment" ? backgroundImageSrc : undefined}
             preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" || room.slug === "steeped-dreams-studio" ? "auto" : "metadata"}
             onLoadedData={() => {
               setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
@@ -2322,8 +2303,7 @@ export default function RoomScene({
               logRoomNav("room:videoCanPlay", { slug: room.slug, src: activeBackgroundVideo });
             }}
             onPlaying={() => {
-              setBackgroundVideoStartedByRoom((prev) => ({ ...prev, [room.slug]: true }));
-              setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: false }));
+              backgroundVideoShouldStayPausedRef.current = false;
               setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
               logRoomNav("room:videoPlaying", { slug: room.slug, src: activeBackgroundVideo });
             }}
@@ -2342,10 +2322,9 @@ export default function RoomScene({
               backgroundVideoLastTimeRef.current = currentTime;
             }}
             onEnded={(event) => {
-              if (!shouldFreezeOnBackgroundVideoEnd) return;
+              if (shouldLoopBackgroundVideo) return;
               const video = event.currentTarget;
-              setBackgroundVideoStartedByRoom((prev) => ({ ...prev, [room.slug]: true }));
-              setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: true }));
+              backgroundVideoShouldStayPausedRef.current = true;
               video.pause();
               if (Number.isFinite(video.duration) && video.duration > 0) {
                 try {

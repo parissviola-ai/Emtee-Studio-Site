@@ -2507,7 +2507,7 @@ export default function RoomScene({
         <div
           ref={lobbyHeaderRef}
           className={[
-            "absolute left-1/2 z-50 -translate-x-1/2 transition-opacity duration-100",
+            "absolute left-1/2 z-50 flex justify-center -translate-x-1/2 transition-opacity duration-100",
             isMobileViewport ? "hidden" : "top-24 w-[min(calc(100vw-2.5rem),18rem)] px-3",
             exploreOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
           ].join(" ")}

@@ -81,6 +81,7 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     imageSrc: "/artist-affiliations/dillon-antony-opt.jpg",
     imageAlt: "Dillon Antony portrait",
     imagePosition: "center 20%",
+    imageFit: "contain",
   },
   {
     artist: "Lil Durk",

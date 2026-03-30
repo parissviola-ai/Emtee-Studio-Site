@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "static.wikia.nocookie.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "static.wixstatic.com",
         pathname: "/**",
       },
@@ -80,6 +85,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "theshaderoom.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "pagesix.com",
         pathname: "/**",
       },
       {

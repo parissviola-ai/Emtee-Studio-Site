@@ -50,7 +50,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   },
   EPK: {
     what: "One-pager for promo and press.",
-    why: "It makes you easier to book, feature, and pitch because partners can review your brand quickly.",
+    why: "It makes you easier to book, feature and pitch because partners can review your brand quickly.",
   },
   "Brand Deck": {
     what: "Extensive development of set brand standards including font, colours and feelings.",

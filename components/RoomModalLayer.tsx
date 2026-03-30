@@ -78,37 +78,43 @@ export default function RoomModalLayer({
   SocialIcon,
   openExploreMenu,
 }: RoomModalLayerProps) {
-  if (!activeModal) return null;
+  const currentModal = activeModal ?? {
+    title: "",
+    body: "",
+    links: [] as Array<{ label: string; href: string }>,
+  };
 
-  const isYanchanMusicModal = activeModal.title === "Yanchan Produced Music";
-  const isYanchanDiscographyModal = activeModal.title === "Discography";
-  const isJoinCommunityModal = activeModal.title === "Join Community";
-  const isCustomProductionModal = activeModal.title === "Apply For Custom Production";
-  const isLivePackagesModal = roomSlug === "ten-ten-entertainment" && activeModal.title === "Packages";
+  const isYanchanMusicModal = currentModal.title === "Yanchan Produced Music";
+  const isYanchanDiscographyModal = currentModal.title === "Discography";
+  const isJoinCommunityModal = currentModal.title === "Join Community";
+  const isSteepedDreamsChillOutModal = currentModal.title === "Overstimulated? Chill Out";
+  const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
+  const isCustomProductionModal = currentModal.title === "Apply For Custom Production";
+  const isLivePackagesModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Packages";
   const isWebsiteDesignMainModal =
-    roomSlug === "marketing" && activeModal.title === "Website Development";
+    roomSlug === "marketing" && currentModal.title === "Website Development";
   const isPackageGridModal = isLivePackagesModal || isWebsiteDesignMainModal;
   const isLivePackageDetailModal =
     roomSlug === "ten-ten-entertainment" &&
     (
-      activeModal.title === "Up & Coming Artist Package" ||
-      activeModal.title === "Rising Star Showcase Package" ||
-      activeModal.title === "Ten Ten Community"
+      currentModal.title === "Up & Coming Artist Package" ||
+      currentModal.title === "Rising Star Showcase Package" ||
+      currentModal.title === "Ten Ten Community"
     );
   const isWebsiteDesignTierModal =
     roomSlug === "marketing" &&
     (
-      activeModal.title === "Tier 1: Starter Site" ||
-      activeModal.title === "Tier 2: Growth Site" ||
-      activeModal.title === "Tier 3: Artist World"
+      currentModal.title === "Tier 1: Starter Site" ||
+      currentModal.title === "Tier 2: Growth Site" ||
+      currentModal.title === "Tier 3: Artist World"
     );
   const isLiveRoomModal = roomSlug === "ten-ten-entertainment" && !isPackageGridModal;
-  const isTenTenCommunityModal = roomSlug === "ten-ten-entertainment" && activeModal.title === "Ten Ten Community";
-  const activeResourceContext = isLivePackagesModal ? null : getResourceContext(activeModal.title);
-  const parsedModalBody = parseIncludesFromModalBody(activeModal.body);
+  const isTenTenCommunityModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Community";
+  const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
+  const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
   const isPilotFoldablePackageModal =
     roomSlug === "ar-sales" && parsedModalBody.includes.length > 0;
-  const modalIncludesKey = `${roomSlug}:${activeModal.title}`;
+  const modalIncludesKey = `${roomSlug}:${currentModal.title}`;
   const isPilotModalIncludesExpanded = expandedPackageIncludesByModal[modalIncludesKey] ?? false;
   const visiblePilotModalIncludes =
     isPilotFoldablePackageModal && !isPilotModalIncludesExpanded
@@ -130,9 +136,9 @@ export default function RoomModalLayer({
     `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
 
   const livePackageOptions = useMemo(() => {
-    if (!isLivePackagesModal || !activeModal.links?.length) return [];
+    if (!isLivePackagesModal || !currentModal.links?.length) return [];
 
-    return activeModal.links
+    return currentModal.links
       .map((link: any) => {
         if (!link.href?.startsWith("modal:")) return null;
         const modalLinkId = link.href.slice(6);
@@ -141,7 +147,7 @@ export default function RoomModalLayer({
         return { id: modalLinkId, label: link.label, modal: targetSpot.modal };
       })
       .filter(Boolean) as Array<{ id: string; label: string; modal: any }>;
-  }, [activeModal.links, isLivePackagesModal, roomHotspots]);
+  }, [currentModal.links, isLivePackagesModal, roomHotspots]);
   const [selectedLivePackageId, setSelectedLivePackageId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -157,6 +163,8 @@ export default function RoomModalLayer({
 
   const selectedLivePackage =
     livePackageOptions.find((option) => option.id === selectedLivePackageId) ?? livePackageOptions[0] ?? null;
+
+  if (!activeModal) return null;
 
   const secondaryButtonClass = [
     "inline-flex items-center justify-center rounded-full transition",
@@ -418,7 +426,7 @@ export default function RoomModalLayer({
         ].join(" ")}
       >
         <div className={[shouldUseCompactCardBody ? "overflow-y-auto" : "flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : isResourceOnlyModal ? "p-4 md:p-5" : shouldUseCompactCardBody ? "p-6 pb-4 md:pb-4" : "p-6 pb-8 md:pb-10"].join(" ")}>
-          <div className="flex items-start justify-between gap-4">
+          <div className={["flex items-start justify-between gap-4", shouldOverlayCornerLogo ? "relative pr-24 sm:pr-28" : ""].join(" ")}>
             <div className="min-w-0 w-full">
               {activeModal.headerLogo ? (
                 <div
@@ -468,7 +476,8 @@ export default function RoomModalLayer({
             {resolvedCornerLogo ? (
               <div
                 className={[
-                  "shrink-0 transition-all duration-700 ease-out",
+                  shouldOverlayCornerLogo ? "absolute right-0 top-0 shrink-0" : "shrink-0",
+                  "transition-all duration-700 ease-out",
                   revealStep >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                 ].join(" ")}
               >
@@ -476,17 +485,25 @@ export default function RoomModalLayer({
                   <NextImage
                     src={resolvedCornerLogo}
                     alt={resolvedCornerLogoAlt ?? activeModal.title}
-                    width={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 144 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 120 : 66}
-                    height={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 72 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 48 : 26}
-                    sizes={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? "144px" : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? "120px" : "66px"}
+                    width={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 144 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 120 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 120 : 66}
+                    height={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 72 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 48 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 48 : 26}
+                    sizes={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? "144px" : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? "120px" : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "120px" : "66px"}
                     className={[
                       resolvedCornerLogo === "/rooms/TenTenlogo.png"
                         ? "h-auto w-auto max-w-[132px] object-contain"
                         : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png"
                         ? "h-auto w-auto max-w-[110px] object-contain"
+                        : resolvedCornerLogo === "/rooms/sdslogoforcard.png"
+                        ? shouldOverlayCornerLogo
+                          ? "h-auto w-auto max-w-[88px] object-contain"
+                          : "h-auto w-auto max-w-[110px] object-contain"
                         : "h-auto w-auto max-w-[60px] object-contain",
                       resolvedCornerLogo === "/logotransparent.png" ? "invert" : "",
-                      resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" || resolvedCornerLogo === "/rooms/TenTenlogo.png" ? "invert" : "",
+                      resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ||
+                      resolvedCornerLogo === "/rooms/TenTenlogo.png" ||
+                      resolvedCornerLogo === "/rooms/sdslogoforcard.png"
+                        ? "invert"
+                        : "",
                     ].join(" ")}
                   />
                   {isOrangeSessionModalOpen ? (
@@ -557,7 +574,7 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={["mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
+            <div className={[isSteepedDreamsChillOutModal ? "mt-1 grid gap-4" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
               {!activeResourceContext ? <div className="min-w-0">
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>

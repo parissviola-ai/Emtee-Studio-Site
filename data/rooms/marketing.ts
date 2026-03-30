@@ -9,14 +9,14 @@ export const marketingRoom: Room = {
       {
         id: "marketing-content-production",
         label: "Content Production",
-        x: 50,
-        y: 30,
+        x: 9.01,
+        y: 42.69,
         direction: "right",
         variant: "dot",
       modal: {
         title: "Content Production",
         body:
-          "Brainstorming, shooting and editing while developing set content series'.",
+          "Brainstorming, shooting and editing while developing set content series.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -26,8 +26,8 @@ export const marketingRoom: Room = {
       {
         id: "marketing-brand-deck-epk",
         label: "EPK",
-        x: 9.01,
-        y: 42.41,
+        x: 3.49,
+        y: 25.74,
         direction: "left",
         variant: "dot",
       modal: {

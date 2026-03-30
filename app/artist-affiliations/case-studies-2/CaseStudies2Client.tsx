@@ -7,13 +7,11 @@ import { useCallback, useEffect, useMemo } from "react";
 import { CASE_STUDY_DECK, type CaseStudyDeckItem } from "@/data/case-study-deck";
 
 type DepartmentCaseCard = CaseStudyDeckItem & {
-  note: string;
   yearTag: string;
 };
 
 const DEPARTMENT_CASE_CARDS: DepartmentCaseCard[] = CASE_STUDY_DECK.map((card, index) => ({
   ...card,
-  note: "",
   yearTag: `CS2-0${index + 1}`,
 }));
 
@@ -99,7 +97,7 @@ export default function CaseStudies2Client() {
                   {card.lane}
                 </div>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight text-black">{card.artist}</h2>
-                <p className="mt-1 text-base font-medium text-black/62">{card.note}</p>
+                <p className="mt-3 text-sm leading-relaxed text-black/72 sm:text-base">{card.snapshot}</p>
               </div>
             </button>
           ))}
@@ -142,7 +140,7 @@ export default function CaseStudies2Client() {
               </button>
             </div>
             <div className="p-5 sm:p-6">
-              <div className="mb-4 flex items-center justify-between gap-2">
+              <div className="mb-4 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => goToAdjacentCard("prev")}

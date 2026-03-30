@@ -5,6 +5,7 @@ import NextImage from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { getActiveOverviewCard } from "@/components/roomSceneOverviewConfig";
 import { getResourceContext } from "@/data/resource-context";
 import type { OrangeRoomExtrasHandle } from "@/components/OrangeRoomExtras";
 import {
@@ -29,6 +30,7 @@ const RoomOverviewCardLayer = dynamic(() => import("@/components/RoomOverviewCar
 const RoomHotspotLayer = dynamic(() => import("@/components/RoomHotspotLayer"), {
   ssr: false,
 });
+const PIN_HELPER_ENABLED = process.env.NEXT_PUBLIC_ENABLE_PIN_HELPER === "1";
 
 export type Hotspot = {
   id: string;
@@ -91,22 +93,6 @@ type Room = {
   hotspots: Hotspot[];
 };
 
-type InfoCard = {
-  title: string;
-  body: string;
-  primaryCta: string;
-  primaryHref: string;
-  secondaryCta?: string;
-  secondaryHref?: string;
-  strategyLabel?: string;
-  exampleArtist?: string;
-  exampleHref?: string;
-  eyebrow?: string;
-  imageSrc?: string;
-  imageAlt?: string;
-  socialLinks?: Array<{ label: string; href: string }>;
-};
-
 const EXPLORE_ROOMS = [
   { label: "Start Here", href: "/rooms/lobby?modal=start-here" },
   { label: "Artists & Partners", href: "/artist-affiliations" },
@@ -164,88 +150,6 @@ const SENSITIVE_TRANSITION_ROOMS = new Set([
   "steeped-dreams-studio",
 ]);
 const HOTSPOT_TIER_PILOT_ROOMS = new Set(["lobby"]);
-
-const BANK_VAULT_OVERVIEW_CARD: InfoCard = {
-  title: "A&R / Sales Department Overview",
-  body:
-    "This room is a representation of EMTEE's A&R / Sales department. Core scope includes audience strategizing, community building, and revenue development so creative momentum turns into commercial momentum.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Apply For A Consultation",
-  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "A&R/Sales Strategy",
-  exampleArtist: "Mike Cannz",
-  exampleHref: "/artist-affiliations/case-studies-2?example=mike-ar-sales",
-  eyebrow: "A&R / Sales",
-};
-
-const STUDIO_OVERVIEW_CARD: InfoCard = {
-  title: "Music Department Overview",
-  body:
-    "This room is a representation of EMTEE's Music department. Core scope includes studio sessions, custom production, and mixing/mastering so artists move from creative direction to release-ready execution.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Apply For A Consultation",
-  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Music Strategy",
-  exampleArtist: "Fame Holiday",
-  exampleHref: "/artist-affiliations/case-studies-2?example=fame-music",
-  eyebrow: "Music Department",
-};
-
-const MEDIA_OVERVIEW_CARD: InfoCard = {
-  title: "Marketing Department Overview",
-  body:
-    "This room is a representation of EMTEE's Marketing department. Core scope includes content production, brand deck/media kits, and set/tour development to drive campaign clarity and repeatable audience growth.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Apply For A Consultation",
-  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Marketing Strategy",
-  exampleArtist: "KISAKI",
-  exampleHref: "/artist-affiliations/case-studies-2?example=kisaki-marketing",
-  eyebrow: "Marketing Department",
-};
-
-const BOARDROOM_OVERVIEW_CARD: InfoCard = {
-  title: "Business Department Overview",
-  body:
-    "This room is a representation of EMTEE's Business department. Core scope includes accounting system setup, grant writing, and vision building so artists can operate with structure and long-term decision clarity.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Apply For A Consultation",
-  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Business Strategy",
-  exampleArtist: "Yanchan Produced",
-  exampleHref: "/artist-affiliations/case-studies-2?example=yanchan-business",
-  eyebrow: "Business Department",
-};
-
-
-const ARTISTS_OVERVIEW_CARD: InfoCard = {
-  title: "Distribution / Publishing Department Overview",
-  body:
-    "This room is a representation of EMTEE's Distribution / Publishing department. Core scope includes publishing workshops, catalog organization, and television/film sync preparation for cleaner release operations and stronger long-term rights monetization.\n\nExplore the room dots to view each package lane and what support is included.",
-  primaryCta: "Apply For A Consultation",
-  primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  strategyLabel: "Publishing/Distribution Strategy",
-  exampleArtist: "Yanchan Produced",
-  exampleHref: "/artist-affiliations/case-studies-2?example=yanchan-publishing-distro",
-  eyebrow: "Distribution / Publishing",
-};
-
-const WEBSITE_DESIGN_OVERVIEW_CARD: InfoCard = {
-  title: "Website Design Overview",
-  body:
-    "This room is a representation of EMTEE's Website Design lane. Core scope includes clarifying your artist story, structuring your digital home, and building a site fans, media, and bookers can actually use.\n\nExplore the room dots to view process and package options.",
-  primaryCta: "Apply For A Consultation",
-  primaryHref: "/website-design-consultation",
-  secondaryCta: "Resources",
-  secondaryHref: "/resources",
-  eyebrow: "Website Design",
-};
 
 const PREVIOUS_ROOM_LINKS: Record<string, string> = {
   business: "/rooms/lobby",
@@ -837,25 +741,25 @@ export default function RoomScene({
   const isArSalesRoom = room.slug === "ar-sales";
   const isHotspotTierPilotRoom = HOTSPOT_TIER_PILOT_ROOMS.has(room.slug);
   const showAllRoomHotspots = !isHotspotTierPilotRoom || (showMoreHotspotsByRoom[room.slug] ?? false);
-  const activeOverviewCard = showVaultCards
-    ? BANK_VAULT_OVERVIEW_CARD
-    : showStudioCard
-      ? STUDIO_OVERVIEW_CARD
-      : showMediaCard
-        ? MEDIA_OVERVIEW_CARD
-        : showBoardRoomCard
-          ? BOARDROOM_OVERVIEW_CARD
-        : showArtistsCard
-          ? ARTISTS_OVERVIEW_CARD
-        : showWebsiteDesignCard
-          ? WEBSITE_DESIGN_OVERVIEW_CARD
-          : null;
+  const activeOverviewCard =
+    showVaultCards || showStudioCard || showMediaCard || showBoardRoomCard || showArtistsCard || showWebsiteDesignCard
+      ? getActiveOverviewCard(room.slug)
+      : null;
   const previousRoomHref = PREVIOUS_ROOM_LINKS[room.slug];
   const previousRoomExploreEntry = previousRoomHref
     ? ROOM_SEQUENCE.find((item) => item.href === previousRoomHref)
     : null;
   const [mobilePanByContext, setMobilePanByContext] = useState<Record<string, { x: number; y: number }>>({});
   const [desktopCursorPan, setDesktopCursorPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [showPinHelper, setShowPinHelper] = useState(false);
+  const [pinHelperLocked, setPinHelperLocked] = useState(false);
+  const pinHelperLockedRef = useRef(false);
+  const [pinHelperPoint, setPinHelperPoint] = useState<{
+    left: number;
+    top: number;
+    x: number;
+    y: number;
+  } | null>(null);
   const viewportKeyRaw = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -954,8 +858,24 @@ export default function RoomScene({
         )
       )
     );
-  const resolvedCornerLogo = activeModal?.cornerLogo ?? (shouldShowDefaultEmteeCornerLogo ? "/logotransparent.png" : undefined);
-  const resolvedCornerLogoAlt = activeModal?.cornerLogoAlt ?? (shouldShowDefaultEmteeCornerLogo ? "EMTEE logo" : undefined);
+  const shouldShowSteepedDreamsCornerLogo =
+    !!activeModal &&
+    room.slug === "steeped-dreams-studio" &&
+    activeModal.title !== "Kym Tea Music";
+  const resolvedCornerLogo =
+    activeModal?.cornerLogo ??
+    (shouldShowSteepedDreamsCornerLogo
+      ? "/rooms/sdslogoforcard.png"
+      : shouldShowDefaultEmteeCornerLogo
+      ? "/logotransparent.png"
+      : undefined);
+  const resolvedCornerLogoAlt =
+    activeModal?.cornerLogoAlt ??
+    (shouldShowSteepedDreamsCornerLogo
+      ? "Steeped Dreams Studio logo"
+      : shouldShowDefaultEmteeCornerLogo
+      ? "EMTEE logo"
+      : undefined);
   const [viewportW, viewportH] = viewportKey.split("x").map((n) => Number(n) || 0);
   const viewportKnown = viewportW > 0 && viewportH > 0;
   const hotspotBreakpoint = getHotspotBreakpoint(viewportW);
@@ -1071,6 +991,7 @@ export default function RoomScene({
     [backgroundUsesMobileLayout, imageNaturalSize, sceneScale, viewportH, viewportW]
   );
   const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
+  const canShowPinHelper = PIN_HELPER_ENABLED && !!hotspotImageMetrics && !isModalOpen && !exploreOpen;
   const lobbyMobileHotspotsReady = !isMobileViewport || !!hotspotImageMetrics;
   const sceneReady =
     hasHydrated && viewportKnown && !!imageNaturalSize && (!requiresMetricBasedHotspots || !!hotspotImageMetrics);
@@ -1122,6 +1043,40 @@ export default function RoomScene({
 
   function clamp(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function updatePinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!canShowPinHelper || !showPinHelper || pinHelperLockedRef.current || !hotspotImageMetrics) return;
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedPan.x : desktopCursorPan.x);
+    const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedPan.y;
+    const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
+    const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
+    const x = clamp(Number(rawX.toFixed(2)), 0, 100);
+    const y = clamp(Number(rawY.toFixed(2)), 0, 100);
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+  }
+
+  function lockPinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
+    if (!canShowPinHelper || !showPinHelper || !hotspotImageMetrics) return;
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedPan.x : desktopCursorPan.x);
+    const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedPan.y;
+    const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
+    const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
+    const x = clamp(Number(rawX.toFixed(2)), 0, 100);
+    const y = clamp(Number(rawY.toFixed(2)), 0, 100);
+    setPinHelperPoint({
+      left: clientX - rect.left,
+      top: clientY - rect.top,
+      x,
+      y,
+    });
+    pinHelperLockedRef.current = true;
+    setPinHelperLocked(true);
   }
 
   async function enableTiltPan() {
@@ -1729,7 +1684,7 @@ export default function RoomScene({
   }, [shouldDeferBackgroundVideoMount, room.slug]);
 
   useLayoutEffect(() => {
-    if (!isMobileViewport || !activeBackgroundVideo) return;
+    if (!activeBackgroundVideo) return;
     const video = backgroundVideoRef.current;
     if (!video) return;
 
@@ -1801,7 +1756,7 @@ export default function RoomScene({
       window.removeEventListener("pointerdown", handleFirstInteraction);
       window.removeEventListener("keydown", handleFirstInteraction);
     };
-  }, [activeBackgroundVideo, backgroundVideoPlaybackRate, isMobileViewport, shouldNativeLoopBackgroundVideo]);
+  }, [activeBackgroundVideo, backgroundVideoPlaybackRate, shouldNativeLoopBackgroundVideo]);
 
   useEffect(() => {
     backgroundVideoCompletedPlaysRef.current = 0;
@@ -2120,6 +2075,9 @@ export default function RoomScene({
         canPanRoom ? "touch-none" : "",
       ].join(" ")}
       onClickCapture={(e) => {
+        if (PIN_HELPER_ENABLED && showPinHelper && canShowPinHelper && !isInteractiveTarget(e.target)) {
+          lockPinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+        }
         if (!isMobileViewport) return;
         if (!activeOverviewCard) return;
         if (isModalOpen || exploreOpen) return;
@@ -2161,6 +2119,9 @@ export default function RoomScene({
         touchPanStartRef.current = null;
       }}
       onMouseMove={(e) => {
+        if (PIN_HELPER_ENABLED) {
+          updatePinHelperPosition(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+        }
         if (!canDesktopCursorPan || !desktopCoverMetrics) return;
         const rect = e.currentTarget.getBoundingClientRect();
         if (!rect.width) return;
@@ -2178,7 +2139,11 @@ export default function RoomScene({
         const targetX = clamp(rawTargetX, -rightPanLimit, leftPanLimit);
         scheduleDesktopPan({ x: targetX, y: 0 });
       }}
-      onMouseLeave={() => {}}
+      onMouseLeave={() => {
+        if (!pinHelperLockedRef.current) {
+          setPinHelperPoint(null);
+        }
+      }}
     >
       {/* Background */}
       <div
@@ -2410,6 +2375,86 @@ export default function RoomScene({
           </div>
         ) : null}
       </div>
+
+      {PIN_HELPER_ENABLED && (showPinHelper || canShowPinHelper) ? (
+        <div className="absolute left-3 top-3 z-[120] flex flex-col items-start gap-2" data-no-pan>
+          <button
+            type="button"
+            onClick={() => {
+              setShowPinHelper((prev) => {
+                const next = !prev;
+                if (!next) {
+                  setPinHelperPoint(null);
+                  pinHelperLockedRef.current = false;
+                  setPinHelperLocked(false);
+                }
+                return next;
+              });
+            }}
+            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/55 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-md transition hover:bg-black/70"
+          >
+            {showPinHelper ? "Pin Helper On" : "Pin Helper Off"}
+          </button>
+
+          {showPinHelper ? (
+            <div className="min-w-[11rem] rounded-2xl border border-white/14 bg-black/60 px-3 py-2 text-[11px] text-white/84 shadow-[0_14px_36px_rgba(0,0,0,0.35)] backdrop-blur-md">
+              <div className="font-semibold uppercase tracking-[0.14em] text-white/62">Pin Coordinates</div>
+              <div className="mt-1">
+                {pinHelperPoint ? `x: ${pinHelperPoint.x}%` : "x: move cursor"}
+              </div>
+              <div>
+                {pinHelperPoint ? `y: ${pinHelperPoint.y}%` : "y: move cursor"}
+              </div>
+              <div className="mt-1 text-[10px] text-white/58">
+                {pinHelperLocked ? "Locked. Click Unlock or click scene after unlocking." : "Move cursor, then click scene to lock."}
+              </div>
+              <div className="mt-2 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    pinHelperLockedRef.current = false;
+                    setPinHelperLocked(false);
+                  }}
+                  disabled={!pinHelperLocked}
+                  className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Unlock
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPinHelperPoint(null);
+                    pinHelperLockedRef.current = false;
+                    setPinHelperLocked(false);
+                  }}
+                  disabled={!pinHelperPoint}
+                  className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Clear
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!pinHelperPoint || typeof navigator === "undefined" || !navigator.clipboard) return;
+                  await navigator.clipboard.writeText(`x: ${pinHelperPoint.x}, y: ${pinHelperPoint.y}`);
+                }}
+                disabled={!pinHelperPoint}
+                className="mt-2 inline-flex items-center justify-center rounded-full border border-white/16 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/86 transition hover:bg-white/14 disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                Copy Coordinates
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {PIN_HELPER_ENABLED && showPinHelper && pinHelperPoint && canShowPinHelper ? (
+        <div
+          className="pointer-events-none absolute z-[115] h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/80 bg-cyan-300/35 shadow-[0_0_0_4px_rgba(103,232,249,0.12),0_0_18px_rgba(34,211,238,0.45)]"
+          style={{ left: `${pinHelperPoint.left}px`, top: `${pinHelperPoint.top}px` }}
+        />
+      ) : null}
 
       {isMobileViewport && tiltAvailable && !exploreOpen && !isModalOpen ? (
         <div className="absolute bottom-20 right-2 z-50 flex flex-col items-end gap-1.5 md:hidden" data-no-pan>

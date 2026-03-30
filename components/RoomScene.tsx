@@ -792,7 +792,8 @@ export default function RoomScene({
     () => "0x0"
   );
   const isMobileViewport = hasHydrated ? isMobileViewportRaw : false;
-  const mobileStaticUi = isMobileViewportRaw;
+  const [rawViewportW] = viewportKeyRaw.split("x").map((n) => Number(n) || 0);
+  const mobileStaticUi = isMobileViewportRaw || (rawViewportW > 0 && rawViewportW < 1024);
   const prefersReducedMotion = hasHydrated ? prefersReducedMotionRaw : false;
   const viewportKey = hasHydrated ? viewportKeyRaw : "0x0";
   const backgroundUsesMobileLayout = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;

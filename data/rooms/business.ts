@@ -12,7 +12,7 @@ export const businessRoom: Room = {
       y: 59.18,
       positions: {
         laptop: { x: 47, y: 50 },
-        tablet: { x: 46, y: 51 },
+        tablet: { x: 46.9, y: 59.18 },
         mobile: { x: 45, y: 53 },
       },
       direction: "right",
@@ -34,7 +34,7 @@ export const businessRoom: Room = {
       y: 54.9,
       positions: {
         laptop: { x: 79, y: 49 },
-        tablet: { x: 77, y: 50 },
+        tablet: { x: 75.89, y: 54.9 },
         mobile: { x: 75, y: 52 },
       },
       direction: "right",
@@ -56,7 +56,7 @@ export const businessRoom: Room = {
       y: 76.04,
       positions: {
         laptop: { x: 64, y: 78 },
-        tablet: { x: 62, y: 76 },
+        tablet: { x: 43.32, y: 76.04 },
         mobile: { x: 60, y: 74 },
       },
       direction: "right",
@@ -78,7 +78,7 @@ export const businessRoom: Room = {
       y: 85.56,
       positions: {
         laptop: { x: 32, y: 64 },
-        tablet: { x: 31, y: 65 },
+        tablet: { x: 69.85, y: 85.56 },
         mobile: { x: 30, y: 66 },
       },
       direction: "left",
@@ -100,7 +100,7 @@ export const businessRoom: Room = {
       y: 65.12,
       positions: {
         laptop: { x: 22, y: 52 },
-        tablet: { x: 21, y: 53 },
+        tablet: { x: 25.04, y: 65.12 },
         mobile: { x: 20, y: 54 },
       },
       direction: "right",
@@ -122,7 +122,7 @@ export const businessRoom: Room = {
       y: 67.48,
       positions: {
         laptop: { x: 49, y: 80 },
-        tablet: { x: 48, y: 78 },
+        tablet: { x: 24.74, y: 67.48 },
         mobile: { x: 47, y: 76 },
       },
       direction: "down",
@@ -146,7 +146,7 @@ export const businessRoom: Room = {
       y: 17,
       positions: {
         laptop: { x: 89, y: 18 },
-        tablet: { x: 87, y: 19 },
+        tablet: { x: 90, y: 17 },
         mobile: { x: 85, y: 21 },
       },
       direction: "right",

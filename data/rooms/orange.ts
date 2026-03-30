@@ -13,7 +13,7 @@ export const orangeRoom: Room = {
         y: 54,
         positions: {
           laptop: { x: 24, y: 55 },
-          tablet: { x: 23, y: 56 },
+          tablet: { x: 25, y: 54 },
           mobile: { x: 22, y: 58 },
         },
         direction: "up",
@@ -40,7 +40,7 @@ export const orangeRoom: Room = {
         y: 59,
         positions: {
           laptop: { x: 36, y: 60 },
-          tablet: { x: 35, y: 61 },
+          tablet: { x: 37, y: 59 },
           mobile: { x: 34, y: 63 },
         },
         direction: "left",
@@ -68,7 +68,7 @@ export const orangeRoom: Room = {
         y: 70,
         positions: {
           laptop: { x: 49, y: 70 },
-          tablet: { x: 48, y: 71 },
+          tablet: { x: 50, y: 70 },
           mobile: { x: 47, y: 72 },
         },
         direction: "up",
@@ -98,7 +98,7 @@ export const orangeRoom: Room = {
         y: 46.24,
         positions: {
           laptop: { x: 94, y: 48 },
-          tablet: { x: 92, y: 49 },
+          tablet: { x: 91.62, y: 46.24 },
           mobile: { x: 89, y: 50 },
         },
         direction: "left",
@@ -122,7 +122,7 @@ export const orangeRoom: Room = {
         y: 54,
         positions: {
           laptop: { x: 42, y: 55 },
-          tablet: { x: 41, y: 56 },
+          tablet: { x: 43, y: 54 },
           mobile: { x: 40, y: 57 },
         },
         direction: "right",
@@ -136,7 +136,7 @@ export const orangeRoom: Room = {
         y: 54,
         positions: {
           laptop: { x: 69, y: 55 },
-          tablet: { x: 68, y: 56 },
+          tablet: { x: 70, y: 54 },
           mobile: { x: 66, y: 58 },
         },
         direction: "down",
@@ -169,7 +169,7 @@ export const orangeRoom: Room = {
         y: 78.91,
         positions: {
           laptop: { x: 86, y: 85 },
-          tablet: { x: 84, y: 84 },
+          tablet: { x: 89.21, y: 78.91 },
           mobile: { x: 82, y: 82 },
         },
         direction: "up",

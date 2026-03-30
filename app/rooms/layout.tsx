@@ -238,7 +238,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                         }
                         setMobileLobbyShowRoomsOpen((prev) => !prev);
                       }}
-                      className="inline-flex min-w-[5.6rem] items-center justify-center px-1 py-[0.1rem] text-[8px] font-semibold uppercase tracking-[0.16em] text-white/84 transition hover:text-white"
+                      className="inline-flex min-w-[6.4rem] items-center justify-center rounded-full border border-[#d6ae66]/40 bg-black/38 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-white/92 shadow-[0_10px_24px_rgba(0,0,0,0.26),0_0_18px_rgba(214,174,102,0.16)] backdrop-blur-xl transition hover:border-[#d6ae66]/56 hover:bg-black/48 hover:text-white"
                     >
                       {mobileLobbyShowRoomsOpen ? "Hide Rooms" : "Show Rooms"}
                     </button>

@@ -21,6 +21,9 @@ type Partner = {
   src?: string;
   href?: string;
   invert?: boolean;
+  imagePosition?: string;
+  imageScale?: number;
+  regionLabel?: string;
 };
 
 const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
@@ -171,9 +174,9 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Charlie B",
     supportLane: "Music",
     note: "Co-production of the children's album \"Ajay's Dreams.\"",
-    imageSrc: "https://i.scdn.co/image/ab67616d0000b27389a4cc45a9b423e83ffda3f2",
-    imageAlt: "Charlie B artwork",
-    imagePosition: "center 18%",
+    imageSrc: "/artist-affiliations/charlie-b-opt.jpg",
+    imageAlt: "Charlie B portrait",
+    imagePosition: "center 22%",
   },
   {
     artist: "Bugus",
@@ -324,8 +327,8 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Anjulie",
     supportLane: "Music",
     note: "Production on \"Chai & Sunshine.\"",
-    imageSrc: "https://i.ytimg.com/vi/lH3SdlkeudA/mqdefault.jpg",
-    imageAlt: "Chai & Sunshine artwork",
+    imageSrc: "/artist-affiliations/anjulie-opt.jpg",
+    imageAlt: "Anjulie portrait",
     imagePosition: "center 20%",
   },
   {
@@ -594,19 +597,23 @@ const PARTNERS: Partner[] = [
   { name: "Steeped Dreams Studio" },
   { name: "Universal Canada", src: "/partners/umusic.png", href: "https://www.universalmusic.com", invert: true },
   { name: "Republic", src: "/partners/republic.png", href: "https://www.republicrecords.com", invert: true },
-  { name: "Sony France", src: "/partners/sony.png", href: "https://www.sonymusic.fr", invert: true },
+  { name: "Sony France", src: "/partners/sony.png", href: "https://www.sonymusic.fr", invert: true, regionLabel: "France" },
   { name: "Cadence Music Group", src: "/partners/cadence.png", href: "https://cadencemusicgroup.com/" },
   { name: "Dharma Records", src: "/partners/dharmastudio.png", href: "https://www.dharmaworldwide.com/", invert: true },
   { name: "Bon Fire Records", src: "/partners/bonfire.png", href: "https://www.bonfiremusicgroup.com/about/", invert: true },
   { name: "Spinnin' Records", src: "/partners/spinnin2.svg", href: "https://www.spinninrecords.com", invert: true },
-  { name: "Warner Canada", src: "/partners/warner-canada.png", href: "https://www.warnermusic.ca/" },
-  { name: "Sony Canada", src: "/partners/sony.png", href: "https://www.sonymusic.ca", invert: true },
+  { name: "Warner Canada", src: "/partners/warner-canada-20260329.png", href: "https://www.warnermusic.ca/" },
+  { name: "Sony Canada", src: "/partners/sony.png", href: "https://www.sonymusic.ca", invert: true, regionLabel: "Canada" },
   { name: "Art Haus", href: "https://www.arthausmusic.com/" },
   { name: "Rockstar", href: "https://www.rockstarenergy.com/" },
-  { name: "Prime Video", src: "/partners/prime-video.png", href: "https://www.primevideo.com/", invert: true },
+  { name: "Prime Video", src: "/partners/prime-video-20260329.png", href: "https://www.primevideo.com/" },
   { name: "Desifest", src: "/partners/desifest-logo.svg", href: "https://www.desifest.ca/" },
   { name: "Cash Money Records", src: "/partners/cash-money-records-20260329.png", href: "https://www.cashmoney-records.com/" },
-  { name: "Coke Studios Tamil", src: "/partners/coke-studio.png", href: "https://www.coca-cola.com/ca/en/offerings/coke-studio" },
+  {
+    name: "Coke Studios Tamil",
+    src: "/partners/coke-studio-tamil-opt.jpg",
+    href: "https://www.coca-cola.com/ca/en/offerings/coke-studio",
+  },
   { name: "The Junos", src: "/partners/the-junos.png", href: "https://junoawards.ca/" },
   { name: "MLSE", src: "/partners/mlse.png", href: "https://www.mlse.com/" },
   { name: "Toronto Raptors", src: "/partners/toronto-raptors.png", href: "https://www.nba.com/raptors/" },
@@ -709,7 +716,7 @@ export default function ArtistRosterReleasesPage() {
                   className="group relative flex items-center justify-center rounded-3xl border border-black/10 bg-white px-8 py-10 shadow-[0_0_0_1px_rgba(214,174,102,0.05),0_25px_80px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[#d6ae66]/45 hover:bg-[#fffdf8] hover:shadow-[0_0_0_1px_rgba(214,174,102,0.14),0_30px_90px_rgba(0,0,0,0.14)] hover:after:absolute hover:after:bottom-6 hover:after:h-px hover:after:w-12 hover:after:bg-gradient-to-r hover:after:from-[#d6ae66]/85 hover:after:via-black/20 hover:after:to-transparent hover:after:content-[''] sm:px-12 sm:py-16"
                 >
                   {partner.src ? (
-                    <div className="relative h-16 w-full sm:h-24">
+                    <div className="relative h-16 w-full overflow-hidden sm:h-24">
                       <Image
                         src={partner.src}
                         alt={partner.name}
@@ -720,6 +727,10 @@ export default function ArtistRosterReleasesPage() {
                           "object-contain opacity-90 transition group-hover:opacity-100 group-hover:drop-shadow-[0_0_18px_rgba(0,0,0,0.08)] group-hover:drop-shadow-[0_0_24px_rgba(214,174,102,0.16)]",
                           partner.invert ? "invert" : "",
                         ].join(" ")}
+                        style={{
+                          ...(partner.imagePosition ? { objectPosition: partner.imagePosition } : {}),
+                          ...(partner.imageScale ? { transform: `scale(${partner.imageScale})` } : {}),
+                        }}
                       />
                     </div>
                   ) : (
@@ -727,6 +738,11 @@ export default function ArtistRosterReleasesPage() {
                       {partner.name}
                     </div>
                   )}
+                  {partner.regionLabel ? (
+                    <div className="pointer-events-none absolute right-4 top-4 rounded-full border border-black/10 bg-white/92 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500 shadow-[0_6px_18px_rgba(0,0,0,0.08)]">
+                      {partner.regionLabel}
+                    </div>
+                  ) : null}
                   {partner.href ? (
                     <Link
                       href={partner.href}

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { getResourceContext } from "@/data/resource-context";
 
 type ResourceCard = {
   department: string;
@@ -180,15 +179,6 @@ const RESOURCE_CARDS: ResourceCard[] = [
   },
 ];
 
-function getResourceContextWithFallback(name: string, notes: string[]) {
-  return (
-    getResourceContext(name) ?? {
-      what: `${name} is a structured resource package designed to support execution in this department.`,
-      why: `It helps artists move with clarity and consistency. Key support includes: ${notes.slice(0, 2).join("; ")}.`,
-    }
-  );
-}
-
 function getCaseStudyForResource(name: string) {
   if (name === "Live Performance Development" || name === "BTS Content Production") {
     return {
@@ -203,11 +193,6 @@ function getCaseStudyForResource(name: string) {
 export default function ResourcesPage() {
   const [openDepartments, setOpenDepartments] = useState<string[]>([]);
   const [hoveredDepartment, setHoveredDepartment] = useState<string | null>(null);
-  const [activeResource, setActiveResource] = useState<{
-    department: string;
-    name: string;
-    notes: string[];
-  } | null>(null);
   const toggleDepartment = (department: string) => {
     setOpenDepartments((prev) =>
       prev.includes(department)
@@ -304,19 +289,9 @@ export default function ResourcesPage() {
                         </div>
                       ) : (
                       <>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setActiveResource({
-                            department: item.department,
-                            name: resource.name,
-                            notes: resource.notes,
-                          })
-                        }
-                        className="text-left text-base font-semibold text-zinc-900 underline decoration-[#d6ae66]/60 decoration-2 underline-offset-4 transition hover:text-[#7a5a24] hover:[text-shadow:0_0_14px_rgba(214,174,102,0.75)]"
-                      >
+                      <div className="text-base font-semibold text-zinc-900">
                         {resource.name}
-                      </button>
+                      </div>
                       <ul className="mt-2 space-y-1.5 text-sm text-zinc-700">
                         {resource.notes.map((note) => (
                           <li key={`${resource.name}-${note}`} className="flex gap-2">
@@ -349,68 +324,6 @@ export default function ResourcesPage() {
             </article>
           ))}
         </div>
-
-        {activeResource ? (
-          <div className="accent-card-soft relative z-10 mt-6 rounded-2xl border border-zinc-200 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.75),0_18px_55px_rgba(0,0,0,0.12)]">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8b6a2f]">
-                  {activeResource.department}
-                </div>
-                <h2 className="mt-2 text-2xl font-semibold text-zinc-900">{activeResource.name}</h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setActiveResource(null)}
-                className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
-              >
-                Close
-              </button>
-            </div>
-
-            <div className="mt-5 space-y-4 text-sm text-zinc-700">
-              <div>
-                <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
-                  What It Is
-                </div>
-                <ul className="mt-2 space-y-1.5">
-                  {activeResource.notes.map((note) => (
-                    <li key={`${activeResource.name}-detail-${note}`} className="flex gap-2">
-                      <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-[#d6ae66]/90 shadow-[0_0_8px_rgba(214,174,102,0.7)]" />
-                      <span>{note}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <div className="text-sm font-bold uppercase tracking-[0.16em] text-[#8b6a2f]">
-                  Why It Matters
-                </div>
-                <p className="mt-1 leading-relaxed">
-                  {getResourceContextWithFallback(activeResource.name, activeResource.notes).why}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-wrap gap-3">
-              {getCaseStudyForResource(activeResource.name) ? (
-                <Link
-                  href={getCaseStudyForResource(activeResource.name)!.href}
-                  className="inline-flex items-center justify-center rounded-full border border-[#d6ae66]/55 bg-[#d6ae66]/18 px-5 py-2 text-sm font-semibold text-[#6f511a] shadow-[0_0_26px_rgba(214,174,102,0.28)] transition hover:bg-[#d6ae66]/26 hover:text-[#3d2b0c]"
-                >
-                  {getCaseStudyForResource(activeResource.name)!.label}
-                </Link>
-              ) : null}
-              <button
-                type="button"
-                onClick={() => setActiveResource(null)}
-                className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-5 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900"
-              >
-                Close Details
-              </button>
-            </div>
-          </div>
-        ) : null}
 
         <div className="accent-card-soft relative z-10 mt-6 rounded-2xl border border-zinc-200 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,255,255,0.88))] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.75),0_18px_55px_rgba(0,0,0,0.12)]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Next Step</div>

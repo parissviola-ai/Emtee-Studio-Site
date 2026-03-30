@@ -206,11 +206,10 @@ export const liveRoom: Room = {
             "Access to monthly networking event",
             "VIP access to yearly Ten Ten private parties",
           ],
-          primaryLabel: "DM on IG Apply",
+          primaryLabel: "DM on IG to Apply",
           primaryHref: "https://ig.me/m/tenten_ent",
           links: [
-            { label: "Ten Ten IG", href: "https://www.instagram.com/tenten_ent/" },
-            { label: "Ten Ten Website", href: "https://www.mikecannzentertainment.com/" },
+            { label: "Instagram", href: "https://www.instagram.com/tenten_ent/" },
           ],
         },
       },

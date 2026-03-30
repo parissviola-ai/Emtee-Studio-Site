@@ -125,6 +125,7 @@ const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/room
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/lobbywithconcert-opt.jpg": { w: 2560, h: 1280 },
+  "/rooms/finallobby2-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/updatedttbg1-poster-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
@@ -984,7 +985,7 @@ export default function RoomScene({
   const isPortraitViewport = viewportH >= viewportW;
   const mobileOrientationKey = isPortraitViewport ? "portrait" : "landscape";
   const panContextKey = `${room.slug}:${isMobileViewport ? mobileOrientationKey : "desktop"}`;
-  const mobilePan = mobilePanByContext[panContextKey] ?? { x: 0, y: 0 };
+  const storedMobilePan = mobilePanByContext[panContextKey];
   const cardConnectorAnchor = isMobileViewport ? { x: 50, y: 66 } : { x: 23, y: 70 };
   const navCircleClass = "flex h-9 w-9 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/85 bg-black/10 backdrop-blur-sm";
   const navPillClass = "inline-flex h-9 sm:h-7 items-center whitespace-nowrap rounded-full border border-white/85 bg-black/10 px-4 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-out group-hover:border-white/95 group-hover:bg-black/30 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_18px_rgba(255,255,255,0.2)] group-hover:[text-shadow:0_0_12px_rgba(255,255,255,0.52)]";
@@ -1321,6 +1322,28 @@ export default function RoomScene({
   const mobilePanLeftLimit = isLobbyRoom && isMobileViewport ? rawMaxPanX * 1.02 : rawMaxPanX;
   const mobilePanRightLimit = rawMaxPanX;
   const maxPanY = rawMaxPanY;
+  const mobilePan = useMemo(() => {
+    if (storedMobilePan) return storedMobilePan;
+    if (!isLobbyRoom || !isMobileViewport || !hotspotImageMetrics || !lobbyStartHereAnchor) {
+      return { x: 0, y: 0 };
+    }
+
+    const currentHotspotX =
+      hotspotImageMetrics.offsetX + (lobbyStartHereAnchor.x / 100) * hotspotImageMetrics.renderedW;
+    const desiredHotspotX = viewportW * 0.44;
+    const initialPanX = clamp(desiredHotspotX - currentHotspotX, -mobilePanLeftLimit, mobilePanRightLimit);
+
+    return { x: initialPanX, y: 0 };
+  }, [
+    hotspotImageMetrics,
+    isLobbyRoom,
+    isMobileViewport,
+    lobbyStartHereAnchor,
+    mobilePanLeftLimit,
+    mobilePanRightLimit,
+    storedMobilePan,
+    viewportW,
+  ]);
   const displayedPan = isMobileViewport
     ? {
         x: clamp(mobilePan.x + mobileTiltPan.x, -mobilePanLeftLimit, mobilePanRightLimit),
@@ -2491,19 +2514,13 @@ export default function RoomScene({
           data-no-pan
         >
           {isHotspotTierPilotRoom ? (
-            <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(14,14,14,0.16),rgba(14,14,14,0.08))] px-3 py-3 shadow-[0_16px_34px_rgba(0,0,0,0.14)] backdrop-blur-md">
-              <div className="flex items-center justify-center rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] px-3 py-2.5">
-                <div className="relative flex w-full flex-col items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={toggleShowMoreHotspots}
-                    className="inline-flex min-w-[7.25rem] items-center justify-center rounded-full border border-white/20 bg-black/20 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/88 shadow-[0_6px_14px_rgba(0,0,0,0.1)] backdrop-blur-md transition hover:border-white/28 hover:bg-black/28 hover:text-white"
-                  >
-                    {showAllRoomHotspots ? "Hide Rooms" : "Show Rooms"}
-                  </button>
-                </div>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={toggleShowMoreHotspots}
+              className="inline-flex min-w-[7.25rem] items-center justify-center rounded-full border border-white/20 bg-black/30 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/88 shadow-[0_10px_24px_rgba(0,0,0,0.16)] backdrop-blur-md transition hover:border-white/28 hover:bg-black/40 hover:text-white"
+            >
+              {showAllRoomHotspots ? "Hide Rooms" : "Show Rooms"}
+            </button>
           ) : null}
         </div>
       ) : null}

@@ -3,7 +3,7 @@
 import { getResourceContext } from "@/data/resource-context";
 import NextImage from "next/image";
 import Link from "next/link";
-import { Fragment, type ComponentType, type MutableRefObject, type ReactNode } from "react";
+import { Fragment, useEffect, useMemo, useState, type ComponentType, type MutableRefObject, type ReactNode } from "react";
 
 type RoomModalLayerProps = {
   roomSlug: string;
@@ -80,7 +80,6 @@ export default function RoomModalLayer({
 }: RoomModalLayerProps) {
   if (!activeModal) return null;
 
-  const activeResourceContext = getResourceContext(activeModal.title);
   const isYanchanMusicModal = activeModal.title === "Yanchan Produced Music";
   const isYanchanDiscographyModal = activeModal.title === "Discography";
   const isJoinCommunityModal = activeModal.title === "Join Community";
@@ -104,6 +103,8 @@ export default function RoomModalLayer({
       activeModal.title === "Tier 3: Artist World"
     );
   const isLiveRoomModal = roomSlug === "ten-ten-entertainment" && !isPackageGridModal;
+  const isTenTenCommunityModal = roomSlug === "ten-ten-entertainment" && activeModal.title === "Ten Ten Community";
+  const activeResourceContext = isLivePackagesModal ? null : getResourceContext(activeModal.title);
   const parsedModalBody = parseIncludesFromModalBody(activeModal.body);
   const isPilotFoldablePackageModal =
     roomSlug === "ar-sales" && parsedModalBody.includes.length > 0;
@@ -127,6 +128,35 @@ export default function RoomModalLayer({
   const uniformModalButtonSizing = "px-3 py-1.5 text-[11px] font-medium";
   const compactFooterButtonClass =
     `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
+
+  const livePackageOptions = useMemo(() => {
+    if (!isLivePackagesModal || !activeModal.links?.length) return [];
+
+    return activeModal.links
+      .map((link: any) => {
+        if (!link.href?.startsWith("modal:")) return null;
+        const modalLinkId = link.href.slice(6);
+        const targetSpot = roomHotspots.find((spot) => spot.id === modalLinkId);
+        if (!targetSpot?.modal) return null;
+        return { id: modalLinkId, label: link.label, modal: targetSpot.modal };
+      })
+      .filter(Boolean) as Array<{ id: string; label: string; modal: any }>;
+  }, [activeModal.links, isLivePackagesModal, roomHotspots]);
+  const [selectedLivePackageId, setSelectedLivePackageId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!livePackageOptions.length) {
+      setSelectedLivePackageId(null);
+      return;
+    }
+
+    setSelectedLivePackageId((prev) =>
+      prev && livePackageOptions.some((option) => option.id === prev) ? prev : livePackageOptions[0].id
+    );
+  }, [livePackageOptions]);
+
+  const selectedLivePackage =
+    livePackageOptions.find((option) => option.id === selectedLivePackageId) ?? livePackageOptions[0] ?? null;
 
   const secondaryButtonClass = [
     "inline-flex items-center justify-center rounded-full transition",
@@ -198,9 +228,12 @@ export default function RoomModalLayer({
     );
   }
 
-  if (activeModal.links?.length) {
+  if (!isLivePackagesModal && activeModal.links?.length) {
     activeModal.links.forEach((link: any) => {
       const modalLinkId = link.href.startsWith("modal:") ? link.href.slice(6) : null;
+      const shouldUseIconOnlySocialLink =
+        (isYanchanMusicModal || isTenTenCommunityModal) &&
+        ["Instagram", "TikTok", "YouTube", "Spotify", "Facebook", "Wikipedia"].includes(link.label);
       if (modalLinkId) {
         const targetSpot = roomHotspots.find((spot) => spot.id === modalLinkId);
         if (!targetSpot?.modal) return;
@@ -223,7 +256,7 @@ export default function RoomModalLayer({
                   ? isWebsiteDesignMainModal
                     ? `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]`
                     : `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white`
-                : isYanchanMusicModal
+                : shouldUseIconOnlySocialLink
                 ? isOrangeModal
                   ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                   : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
@@ -234,7 +267,7 @@ export default function RoomModalLayer({
                 : `inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`
             }
           >
-            {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
+            {shouldUseIconOnlySocialLink ? <SocialIcon label={link.label} /> : `${link.label} →`}
           </button>
         );
         return;
@@ -277,7 +310,7 @@ export default function RoomModalLayer({
                 ? isWebsiteDesignMainModal
                   ? `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-[#d6ae66] transition hover:border-[#d6ae66]/55 hover:bg-white/14 hover:text-[#f7deb0]`
                 : `inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 transition hover:border-white/28 hover:bg-white/15 hover:text-white`
-              : isYanchanMusicModal
+              : shouldUseIconOnlySocialLink
               ? isOrangeModal
                 ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-dirty-elephant-studio-200/28 bg-black/35 text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/45 hover:bg-black/55 hover:text-white"
                 : "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/90 transition hover:bg-white/18 hover:text-white"
@@ -288,7 +321,7 @@ export default function RoomModalLayer({
               : `inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`
           }
         >
-          {isYanchanMusicModal ? <SocialIcon label={link.label} /> : `${link.label} →`}
+          {shouldUseIconOnlySocialLink ? <SocialIcon label={link.label} /> : `${link.label} →`}
         </a>
       );
     });
@@ -367,16 +400,16 @@ export default function RoomModalLayer({
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto p-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[calc(env(safe-area-inset-bottom)+1rem)] md:items-center md:p-6 pointer-events-auto">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[calc(env(safe-area-inset-bottom)+1rem)] md:p-6 pointer-events-auto">
       <button type="button" aria-label="Close modal" onClick={closeModal} className="absolute inset-0 bg-black/60" />
 
       <div
         className={[
           isStartHereModal
-            ? "relative z-10 my-2 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]"
+            ? "relative z-10 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isResourceOnlyModal
-            ? "relative z-10 my-2 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]"
-            : "relative z-10 my-2 flex w-full max-w-[900px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:my-0 md:max-h-[85svh]",
+            ? "relative z-10 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : "relative z-10 flex w-full max-w-[900px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]",
           isOrangeModal
             ? "border border-dirty-elephant-studio-300/28 bg-[linear-gradient(160deg,rgba(15,10,6,0.9),rgba(10,8,6,0.86))] shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_30px_80px_rgba(0,0,0,0.62)]"
             : isResourceOnlyModal
@@ -610,7 +643,73 @@ export default function RoomModalLayer({
                   </div>
                 ) : null}
 
-                {isCarouselModal ? null : activeResourceContext ? null : isPilotFoldablePackageModal ? (
+                {isLivePackagesModal && selectedLivePackage ? (
+                  <div className={["transition-all duration-600 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
+                    <p className={["leading-relaxed whitespace-pre-line", isOrangeModal ? "text-white/88" : "text-white/80"].join(" ")}>
+                      {activeModal.body}
+                    </p>
+
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {livePackageOptions.map((option) => (
+                        <button
+                          key={option.id}
+                          type="button"
+                          onClick={() => setSelectedLivePackageId(option.id)}
+                          className={option.id === selectedLivePackage.id ? primaryButtonClass : compactFooterButtonClass}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="mt-5 space-y-4 rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-4">
+                      <div className="text-[12px] font-semibold uppercase tracking-[0.2em] text-dirty-elephant-studio-300/90">
+                        {selectedLivePackage.modal.title}
+                      </div>
+                      <p className="leading-relaxed whitespace-pre-line text-white/84">
+                        {selectedLivePackage.modal.body}
+                      </p>
+
+                      {selectedLivePackage.modal.highlights?.length ? (
+                        <div className="space-y-3">
+                          <div className="text-[12px] font-semibold uppercase tracking-[0.2em] text-dirty-elephant-studio-300/90">
+                            {selectedLivePackage.modal.highlightsTitle ?? "Package Includes"}
+                          </div>
+                          <ul className="space-y-1.5 text-sm text-white/84">
+                            {selectedLivePackage.modal.highlights.map((item: string) => (
+                              <li key={item} className="flex gap-2 leading-relaxed">
+                                <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
+
+                      {selectedLivePackage.modal.primaryHref ? (
+                        selectedLivePackage.modal.primaryHref.startsWith("http") ? (
+                          <a
+                            href={selectedLivePackage.modal.primaryHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={closeModal}
+                            className={primaryButtonClass}
+                          >
+                            {selectedLivePackage.modal.primaryLabel ?? "View Details"} →
+                          </a>
+                        ) : (
+                          <Link
+                            href={selectedLivePackage.modal.primaryHref}
+                            onClick={closeModal}
+                            className={primaryButtonClass}
+                          >
+                            {selectedLivePackage.modal.primaryLabel ?? "View Details"} →
+                          </Link>
+                        )
+                      ) : null}
+                    </div>
+                  </div>
+                ) : isCarouselModal ? null : activeResourceContext ? null : isPilotFoldablePackageModal ? (
                   <div className={["transition-all duration-600 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
                     <p className={["leading-relaxed whitespace-pre-line", isOrangeModal ? "text-white/88" : "text-white/80"].join(" ")}>{parsedModalBody.before}</p>
                     <div className="mt-4">

@@ -110,8 +110,6 @@ export const marketingRoom: Room = {
           ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-          secondaryLabel: "Resources",
-          secondaryHref: "/resources",
         },
       },
       {

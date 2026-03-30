@@ -63,16 +63,20 @@ export default function RoomOverviewCardLayer({
   prefersReducedMotion,
   onToggleCard,
 }: RoomOverviewCardLayerProps) {
+  const cardPositionClass = showOrangeCard
+    ? "bottom-32 left-4 md:bottom-24"
+    : mobileStaticUi
+      ? isCardMinimized
+        ? "bottom-32 left-4 md:bottom-28"
+        : "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      : "bottom-52 left-4 md:bottom-28";
+
   return (
     <div
       className={[
         "absolute z-40 origin-right transition-[width] duration-300 ease-out",
         mobileStaticUi && isCardCompact ? "overflow-visible" : "overflow-hidden",
-        showOrangeCard
-          ? "bottom-32 left-4 md:bottom-24"
-          : mobileStaticUi
-            ? "bottom-32 left-4 md:bottom-28"
-            : "bottom-52 left-4 md:bottom-28",
+        cardPositionClass,
         isCardMinimized
           ? mobileStaticUi
             ? "w-8"

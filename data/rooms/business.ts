@@ -3,13 +3,13 @@ import type { Room } from "./types";
 export const businessRoom: Room = {
   slug: "business",
   title: "Meeting Room",
-  backgroundImage: "/rooms/boardroom-opt.jpg",
+  backgroundImage: "/rooms/finalmeetingroom.png",
   hotspots: [
     {
       id: "business-consultation",
       label: "Consultation",
-      x: 48,
-      y: 47,
+      x: 46.9,
+      y: 59.18,
       positions: {
         laptop: { x: 47, y: 50 },
         tablet: { x: 46, y: 51 },
@@ -30,8 +30,8 @@ export const businessRoom: Room = {
     {
       id: "business-brand-evaluation",
       label: "Brand Evaluation",
-      x: 80,
-      y: 46,
+      x: 75.89,
+      y: 54.9,
       positions: {
         laptop: { x: 79, y: 49 },
         tablet: { x: 77, y: 50 },
@@ -52,8 +52,8 @@ export const businessRoom: Room = {
     {
       id: "business-operation-set-up",
       label: "Business Operation Set Up",
-      x: 64,
-      y: 78,
+      x: 43.32,
+      y: 76.04,
       positions: {
         laptop: { x: 64, y: 78 },
         tablet: { x: 62, y: 76 },
@@ -74,8 +74,8 @@ export const businessRoom: Room = {
     {
       id: "business-income-evaluation",
       label: "Accounting Set Up",
-      x: 43.17,
-      y: 71.93,
+      x: 69.85,
+      y: 85.56,
       positions: {
         laptop: { x: 32, y: 64 },
         tablet: { x: 31, y: 65 },
@@ -96,8 +96,8 @@ export const businessRoom: Room = {
     {
       id: "business-six-month-project-roll-out",
       label: "6 Month Project Roll Out",
-      x: 27.1,
-      y: 62.4,
+      x: 25.04,
+      y: 65.12,
       positions: {
         laptop: { x: 22, y: 52 },
         tablet: { x: 21, y: 53 },
@@ -118,8 +118,8 @@ export const businessRoom: Room = {
     {
       id: "business-twelve-month-career-roll-out",
       label: "12 Month Career Roll Out",
-      x: 25.09,
-      y: 63.54,
+      x: 24.74,
+      y: 67.48,
       positions: {
         laptop: { x: 49, y: 80 },
         tablet: { x: 48, y: 78 },

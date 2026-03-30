@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const arSalesRoom: Room = {
     slug: "ar-sales",
     title: "Board Room",
-    backgroundImage: "/rooms/finalarsales.png",
+    backgroundImage: "/rooms/finalarsales-opt.jpg",
     hotspots: [
       { id: "next-room", label: "Publishing and Distro", href: "/rooms/publishing-distribution", x: 90, y: 17, direction: "right", tier: "core" },
 
@@ -11,8 +11,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-crm-set-up",
         label: "CRM Set Up",
         tier: "core",
-        x: 68.65,
-        y: 65.19,
+        x: 68.33,
+        y: 58.67,
         positions: {
           mobile: { x: 68, y: 16 },
         },
@@ -34,7 +34,7 @@ export const arSalesRoom: Room = {
         label: "Community Building",
         tier: "core",
         x: 43.54,
-        y: 77.13,
+        y: 70.53,
         positions: {
           mobile: { x: 48, y: 42 },
         },
@@ -53,8 +53,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-streaming",
         label: "Live Stream Strategy",
         tier: "secondary",
-        x: 45.42,
-        y: 55.46,
+        x: 45.31,
+        y: 48.49,
         positions: {
           mobile: { x: 27, y: 46 },
         },
@@ -75,8 +75,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-merchandise",
         label: "Merchandise",
         tier: "secondary",
-        x: 81.61,
-        y: 55.74,
+        x: 81.25,
+        y: 50.62,
         positions: {
           mobile: { x: 86, y: 60 },
         },

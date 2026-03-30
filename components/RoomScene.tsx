@@ -129,6 +129,10 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/meetingroom4.png": { w: 1920, h: 1080 },
+  "/rooms/finalmeetingroom.png": { w: 1920, h: 1080 },
+  "/rooms/finalmarketingdj-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/finalarsales-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/finalmarketingdj.png": { w: 1920, h: 1080 },
   "/rooms/finalarsales.png": { w: 1920, h: 1080 },
   "/rooms/musicwithelephant-opt.jpg": { w: 1920, h: 1080 },
@@ -751,9 +755,7 @@ export default function RoomScene({
   const isLobbyRoom = room.slug === "lobby";
   const hasLobbyStyleDesktopPan =
     room.slug === "lobby" ||
-    room.slug === "marketing" ||
-    room.slug === "dirty-elephant-studio" ||
-    room.slug === "steeped-dreams-studio";
+    room.slug === "marketing";
   const isArSalesRoom = room.slug === "ar-sales";
   const isHotspotTierPilotRoom = HOTSPOT_TIER_PILOT_ROOMS.has(room.slug);
   const showAllRoomHotspots = !isHotspotTierPilotRoom || (showMoreHotspotsByRoom[room.slug] ?? false);
@@ -942,6 +944,8 @@ export default function RoomScene({
   const backgroundObjectPositionY =
     room.slug === "EMTEEWebDesign"
       ? 60
+      : room.slug === "business"
+        ? 110
       : room.slug === "ar-sales"
         ? -6
         : room.slug === "lobby"

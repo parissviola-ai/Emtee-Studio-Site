@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const marketingRoom: Room = {
     slug: "marketing",
     title: "Photo Studio",
-    backgroundImage: "/rooms/marketingfinal3-opt.jpg",
+    backgroundImage: "/rooms/finalmarketingdj.png",
     hotspots: [
       { id: "next-room", label: "A&R / Sales", href: "/rooms/ar-sales", x: 90, y: 17, direction: "right" },
       {
@@ -27,7 +27,7 @@ export const marketingRoom: Room = {
         id: "marketing-brand-deck-epk",
         label: "EPK",
         x: 3.49,
-        y: 25.74,
+        y: 22.74,
         direction: "left",
         variant: "dot",
       modal: {
@@ -77,8 +77,8 @@ export const marketingRoom: Room = {
       {
         id: "marketing-30min-ten-ten-entertainment-performance-set-development",
         label: "Live Performance Development",
-        x: 80,
-        y: 30,
+        x: 88.18,
+        y: 25.37,
         direction: "down",
         variant: "dot",
       modal: {
@@ -149,14 +149,31 @@ export const marketingRoom: Room = {
       {
         id: "marketing-event-planning",
         label: "Event Planning",
-        x: 4.97,
-        y: 37.11,
+        x: 62.81,
+        y: 36.2,
         direction: "up",
         variant: "dot",
         modal: {
           title: "Event Planning",
           body:
             "Assisting in the development of new events.",
+          primaryLabel: "Apply For A Consultation",
+          primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+          secondaryLabel: "Resources",
+          secondaryHref: "/resources",
+        },
+      },
+      {
+        id: "marketing-on-site-dj",
+        label: "On-site DJ",
+        x: 72.29,
+        y: 42.87,
+        direction: "up",
+        variant: "dot",
+        modal: {
+          title: "On-site DJ",
+          body:
+            "On-site DJ support for events, activations and live experiences.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",

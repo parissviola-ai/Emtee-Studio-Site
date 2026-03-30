@@ -124,6 +124,10 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     what: "Assisting in the development of new events.",
     why: "Good planning increases turnout, experience quality, and financial outcomes.",
   },
+  "On-site DJ": {
+    what: "On-site DJ support for events, activations and live experiences.",
+    why: "A strong DJ presence helps shape energy, pacing, and audience experience during branded and live events.",
+  },
   "Event Planner": {
     what: "Hands-on event support with additional execution coordination.",
     why: "More operational support reduces risk and improves ten-ten-entertainment event consistency.",

@@ -120,6 +120,10 @@ const RESOURCE_CARDS: ResourceCard[] = [
         notes: ["Assisting in the development of new events."],
       },
       {
+        name: "On-site DJ",
+        notes: ["On-site DJ support for events, activations and live experiences."],
+      },
+      {
         name: "Website Development",
         notes: ["High-level website design and development."],
       },

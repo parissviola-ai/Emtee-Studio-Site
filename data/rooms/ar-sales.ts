@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const arSalesRoom: Room = {
     slug: "ar-sales",
     title: "Board Room",
-    backgroundImage: "/rooms/8-opt.jpg",
+    backgroundImage: "/rooms/finalarsales.png",
     hotspots: [
       { id: "next-room", label: "Publishing and Distro", href: "/rooms/publishing-distribution", x: 90, y: 17, direction: "right", tier: "core" },
 
@@ -11,8 +11,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-crm-set-up",
         label: "CRM Set Up",
         tier: "core",
-        x: 65.9,
-        y: 59.08,
+        x: 68.65,
+        y: 65.19,
         positions: {
           mobile: { x: 68, y: 16 },
         },
@@ -33,8 +33,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-community-building",
         label: "Community Building",
         tier: "core",
-        x: 41.18,
-        y: 70.33,
+        x: 43.54,
+        y: 77.13,
         positions: {
           mobile: { x: 48, y: 42 },
         },
@@ -53,8 +53,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-streaming",
         label: "Live Stream Strategy",
         tier: "secondary",
-        x: 44.32,
-        y: 44.8,
+        x: 45.42,
+        y: 55.46,
         positions: {
           mobile: { x: 27, y: 46 },
         },
@@ -75,8 +75,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-merchandise",
         label: "Merchandise",
         tier: "secondary",
-        x: 78.49,
-        y: 49.35,
+        x: 81.61,
+        y: 55.74,
         positions: {
           mobile: { x: 86, y: 60 },
         },

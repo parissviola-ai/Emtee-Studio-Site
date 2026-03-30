@@ -129,6 +129,8 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/finalmarketingdj.png": { w: 1920, h: 1080 },
+  "/rooms/finalarsales.png": { w: 1920, h: 1080 },
   "/rooms/musicwithelephant-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/mrlargeelephant.png": { w: 1920, h: 1080 },
   "/rooms/mrlargeelephant-opt.jpg": { w: 1920, h: 1080 },
@@ -329,7 +331,9 @@ function getCoverImageMetrics(
   naturalW: number,
   naturalH: number,
   scale = 1,
-  fitMode: "cover" | "contain" = "cover"
+  fitMode: "cover" | "contain" = "cover",
+  objectPositionX = 50,
+  objectPositionY = 50
 ) {
   if (!viewportW || !viewportH || !naturalW || !naturalH) {
     return null;
@@ -341,8 +345,8 @@ function getCoverImageMetrics(
       : Math.max(viewportW / naturalW, viewportH / naturalH);
   const renderedW = naturalW * imageScale * scale;
   const renderedH = naturalH * imageScale * scale;
-  const offsetX = (viewportW - renderedW) / 2;
-  const offsetY = (viewportH - renderedH) / 2;
+  const offsetX = (viewportW - renderedW) * (objectPositionX / 100);
+  const offsetY = (viewportH - renderedH) * (objectPositionY / 100);
 
   return {
     renderedW,
@@ -745,6 +749,11 @@ export default function RoomScene({
   const isWebsiteDesignRoom = room.slug === "EMTEEWebDesign";
   const isOrangeRoom = room.slug === "dirty-elephant-studio";
   const isLobbyRoom = room.slug === "lobby";
+  const hasLobbyStyleDesktopPan =
+    room.slug === "lobby" ||
+    room.slug === "marketing" ||
+    room.slug === "dirty-elephant-studio" ||
+    room.slug === "steeped-dreams-studio";
   const isArSalesRoom = room.slug === "ar-sales";
   const isHotspotTierPilotRoom = HOTSPOT_TIER_PILOT_ROOMS.has(room.slug);
   const showAllRoomHotspots = !isHotspotTierPilotRoom || (showMoreHotspotsByRoom[room.slug] ?? false);
@@ -934,7 +943,7 @@ export default function RoomScene({
     room.slug === "EMTEEWebDesign"
       ? 60
       : room.slug === "ar-sales"
-        ? 64
+        ? -6
         : room.slug === "lobby"
           ? 58
           : 50;
@@ -945,6 +954,12 @@ export default function RoomScene({
     backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const useContainedBackground = false;
+  const baseBackgroundObjectPositionY = isMarketingRoom && !backgroundUsesMobileLayout ? 42 : backgroundObjectPositionY;
+  const coverMetricsObjectPositionY = backgroundUsesMobileLayout
+    ? room.slug === "lobby"
+      ? 58
+      : backgroundObjectPositionY
+    : baseBackgroundObjectPositionY;
   const shouldRenderBackgroundImage =
     !activeBackgroundVideo ||
     room.slug === "ten-ten-entertainment" ||
@@ -982,22 +997,33 @@ export default function RoomScene({
         imageNaturalSize.w,
         imageNaturalSize.h,
         sceneScale,
-        fitMode
+        fitMode,
+        50,
+        coverMetricsObjectPositionY
       );
       if (computed) {
         imageMetricsCacheRef.current[metricsCacheKey] = computed;
       }
       return computed;
     },
-    [backgroundImageSrc, backgroundUsesMobileLayout, imageNaturalSize, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
+    [backgroundImageSrc, backgroundUsesMobileLayout, coverMetricsObjectPositionY, imageNaturalSize, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
   );
   const requiresMetricBasedHotspots = true;
   const desktopCoverMetrics = useMemo(
     () =>
       !backgroundUsesMobileLayout && imageNaturalSize
-        ? getCoverImageMetrics(viewportW, viewportH, imageNaturalSize.w, imageNaturalSize.h, sceneScale, "cover")
+        ? getCoverImageMetrics(
+            viewportW,
+            viewportH,
+            imageNaturalSize.w,
+            imageNaturalSize.h,
+            sceneScale,
+            "cover",
+            50,
+            coverMetricsObjectPositionY
+          )
         : null,
-    [backgroundUsesMobileLayout, imageNaturalSize, sceneScale, viewportH, viewportW]
+    [backgroundUsesMobileLayout, coverMetricsObjectPositionY, imageNaturalSize, sceneScale, viewportH, viewportW]
   );
   const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
   const canShowPinHelper = PIN_HELPER_ENABLED && !!hotspotImageMetrics && !isModalOpen && !exploreOpen;
@@ -1277,7 +1303,7 @@ export default function RoomScene({
   const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
-    room.slug === "lobby" &&
+    hasLobbyStyleDesktopPan &&
     !isModalOpen &&
     !exploreOpen &&
     !!desktopCoverMetrics &&
@@ -1969,8 +1995,6 @@ export default function RoomScene({
         ? "rounded-full bg-black shadow-[0_0_0_2px_rgba(0,0,0,0.34),0_0_18px_rgba(0,0,0,0.45)]"
       : isWebsiteDesignEnterDot
         ? "rounded-full bg-[#d6ae66] shadow-[0_0_0_2px_rgba(214,174,102,0.45),0_0_24px_rgba(214,174,102,0.8)]"
-        : isMediaRoom
-        ? "rounded-full bg-zinc-800 shadow-[0_0_0_2px_rgba(39,39,42,0.48),0_0_18px_rgba(39,39,42,0.42)]"
         : "rounded-full bg-white shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_18px_rgba(255,255,255,0.55)]";
     const haloBase = isOrangeRoom
       ? "bg-[#ff9f3f]/35"
@@ -1978,18 +2002,14 @@ export default function RoomScene({
         ? "bg-black/28"
       : isWebsiteDesignEnterDot
         ? "bg-[#d6ae66]/40"
-      : isMediaRoom
-          ? "bg-zinc-800/35"
-          : "bg-white/20";
+      : "bg-white/20";
     const ringBase = isOrangeRoom
       ? "border-[#ff9f3f]/70"
       : isBrandDealsDot
           ? "border-black/70"
       : isWebsiteDesignEnterDot
           ? "border-[#d6ae66]/85"
-      : isMediaRoom
-          ? "border-zinc-800/65"
-          : "border-white/45";
+      : "border-white/45";
 
     if (isLiveRoomSocialDot && liveRoomSocialLabel) {
       const isYoutube = liveRoomSocialLabel === "YouTube";
@@ -2187,15 +2207,13 @@ export default function RoomScene({
                 backgroundSize: useContainedBackground ? "contain" : "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition:
-                  isMarketingRoom && !backgroundUsesMobileLayout
-                    ? "50% 42%"
-                    : backgroundUsesMobileLayout
-                      ? room.slug === "lobby"
-                        ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
-                        : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
-                      : canDesktopCursorPan
-                        ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
-                        : `50% ${backgroundObjectPositionY}%`,
+                  backgroundUsesMobileLayout
+                    ? room.slug === "lobby"
+                      ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                      : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                    : canDesktopCursorPan
+                      ? `calc(50% + ${desktopCursorPan.x}px) ${baseBackgroundObjectPositionY}%`
+                      : `50% ${baseBackgroundObjectPositionY}%`,
               }
             : undefined),
         }}
@@ -2230,15 +2248,13 @@ export default function RoomScene({
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
             style={{
-              objectPosition: isMarketingRoom && !backgroundUsesMobileLayout
-                ? "50% 42%"
-                : backgroundUsesMobileLayout
-                  ? room.slug === "lobby"
-                    ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
-                    : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
-                  : canDesktopCursorPan
-                    ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
-                    : `50% ${backgroundObjectPositionY}%`,
+              objectPosition: backgroundUsesMobileLayout
+                ? room.slug === "lobby"
+                  ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                  : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                : canDesktopCursorPan
+                  ? `calc(50% + ${desktopCursorPan.x}px) ${baseBackgroundObjectPositionY}%`
+                  : `50% ${baseBackgroundObjectPositionY}%`,
               WebkitTouchCallout: "none",
               WebkitUserSelect: "none",
               userSelect: "none",
@@ -2263,15 +2279,13 @@ export default function RoomScene({
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
             style={{
-              objectPosition: isMarketingRoom && !backgroundUsesMobileLayout
-                ? "50% 42%"
-                : backgroundUsesMobileLayout
-                  ? room.slug === "lobby"
-                    ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
-                    : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
-                  : canDesktopCursorPan
-                    ? `calc(50% + ${desktopCursorPan.x}px) ${backgroundObjectPositionY}%`
-                    : `50% ${backgroundObjectPositionY}%`,
+              objectPosition: backgroundUsesMobileLayout
+                ? room.slug === "lobby"
+                  ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
+                  : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                : canDesktopCursorPan
+                  ? `calc(50% + ${desktopCursorPan.x}px) ${baseBackgroundObjectPositionY}%`
+                  : `50% ${baseBackgroundObjectPositionY}%`,
               WebkitTouchCallout: "none",
               WebkitUserSelect: "none",
               userSelect: "none",

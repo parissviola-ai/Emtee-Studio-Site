@@ -15,7 +15,7 @@ export const liveRoom: Room = {
         y: 50,
         positions: {
           laptop: { x: 50, y: 50 },
-          tablet: { x: 50, y: 57 },
+          tablet: { x: 50, y: 50 },
           mobile: { x: 50, y: 50 },
         },
         allowLargeResponsiveShift: true,
@@ -42,7 +42,7 @@ export const liveRoom: Room = {
         y: 27.99,
         positions: {
           laptop: { x: 15, y: 27 },
-          tablet: { x: 14, y: 28 },
+          tablet: { x: 23.17, y: 27.99 },
           mobile: { x: 23.17, y: 21.4 },
         },
         direction: "right",
@@ -56,7 +56,7 @@ export const liveRoom: Room = {
         y: 26.94,
         positions: {
           laptop: { x: 84, y: 27 },
-          tablet: { x: 83, y: 28 },
+          tablet: { x: 77.96, y: 26.94 },
           mobile: { x: 77.96, y: 20.4 },
         },
         direction: "left",
@@ -70,7 +70,7 @@ export const liveRoom: Room = {
         y: 63.32,
         positions: {
           laptop: { x: 18, y: 33 },
-          tablet: { x: 17, y: 37 },
+          tablet: { x: 21.85, y: 63.32 },
         },
         allowLargeResponsiveShift: true,
         direction: "up",
@@ -95,7 +95,7 @@ export const liveRoom: Room = {
         hidden: true,
         positions: {
           laptop: { x: 18, y: 45 },
-          tablet: { x: 17, y: 48 },
+          tablet: { x: 15, y: 22 },
           mobile: { x: 16, y: 51 },
         },
         direction: "right",
@@ -127,7 +127,7 @@ export const liveRoom: Room = {
         hidden: true,
         positions: {
           laptop: { x: 79, y: 45 },
-          tablet: { x: 80, y: 48 },
+          tablet: { x: 84, y: 22 },
           mobile: { x: 81, y: 51 },
         },
         direction: "right",
@@ -162,7 +162,7 @@ export const liveRoom: Room = {
         y: 78,
         positions: {
           laptop: { x: 50, y: 79 },
-          tablet: { x: 50, y: 78 },
+          tablet: { x: 50.05, y: 78 },
           mobile: { x: 50, y: 76 },
         },
         direction: "right",
@@ -184,7 +184,7 @@ export const liveRoom: Room = {
         y: 63.45,
         positions: {
           laptop: { x: 73, y: 63 },
-          tablet: { x: 72, y: 62 },
+          tablet: { x: 74, y: 63.45 },
           mobile: { x: 70, y: 61 },
         },
         direction: "up",
@@ -220,7 +220,7 @@ export const liveRoom: Room = {
         y: 35,
         positions: {
           laptop: { x: 50, y: 36 },
-          tablet: { x: 50, y: 37 },
+          tablet: { x: 50, y: 35 },
           mobile: { x: 52, y: 39 },
         },
         direction: "left",

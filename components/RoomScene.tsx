@@ -664,7 +664,9 @@ export default function RoomScene({
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
   const backgroundVideoPlaybackRate = room.slug === "steeped-dreams-studio" ? 0.9 : 1;
-  const shouldDeferBackgroundVideoMount = room.slug === "ten-ten-entertainment";
+  // Keep Ten Ten on the standard room startup path so the poster-to-video
+  // handoff happens immediately without the visible delayed swap.
+  const shouldDeferBackgroundVideoMount = false;
   const [backgroundVideoEnabled, setBackgroundVideoEnabled] = useState(!shouldDeferBackgroundVideoMount);
 
   // video audio state

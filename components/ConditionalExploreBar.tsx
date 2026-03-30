@@ -58,21 +58,54 @@ export default function ConditionalExploreBar() {
     () => false
   );
   const isMobileViewport = hasHydrated ? isMobileViewportRaw : false;
+  const hash = useSyncExternalStore(
+    (onStoreChange) => {
+      if (typeof window === "undefined") return () => {};
+      const handler = () => onStoreChange();
+      window.addEventListener("hashchange", handler);
+      window.addEventListener("popstate", handler);
+      window.addEventListener("emtee:artist-view-change", handler);
+      return () => {
+        window.removeEventListener("hashchange", handler);
+        window.removeEventListener("popstate", handler);
+        window.removeEventListener("emtee:artist-view-change", handler);
+      };
+    },
+    () => (typeof window !== "undefined" ? window.location.hash : ""),
+    () => ""
+  );
   const nextExploreEntry = useMemo(() => {
+    if (pathname === "/artist-affiliations" && hash === "#partners") {
+      return { href: "/news", label: "News" };
+    }
+    if (pathname === "/artist-affiliations") {
+      return { href: "/artist-affiliations#partners", label: "Labels & Partners" };
+    }
     const currentIndex = EXPLORE_LINKS.findIndex((item) => item.href === pathname);
     if (currentIndex === -1) return { href: "/rooms/lobby", label: "Lobby" };
     if (currentIndex >= EXPLORE_LINKS.length - 1) return EXPLORE_LINKS[0];
     return EXPLORE_LINKS[currentIndex + 1];
-  }, [pathname]);
+  }, [hash, pathname]);
 
   const prefetchExploreRoute = useCallback((href: string) => {
-    if (prefetchedExploreRoutesRef.current.has(href)) return;
-    prefetchedExploreRoutesRef.current.add(href);
-    router.prefetch(href);
-    warmRoomAssetsByHref(href);
+    const routeHref = href.split("#")[0];
+    if (!routeHref) return;
+    if (prefetchedExploreRoutesRef.current.has(routeHref)) return;
+    prefetchedExploreRoutesRef.current.add(routeHref);
+    router.prefetch(routeHref);
+    warmRoomAssetsByHref(routeHref);
   }, [router]);
 
   async function navigateToHref(href: string) {
+    const [routeHref, rawHash] = href.split("#");
+    if (routeHref === pathname && rawHash && typeof window !== "undefined") {
+      const nextUrl = `${routeHref}#${rawHash}`;
+      window.history.pushState(null, "", nextUrl);
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+      window.dispatchEvent(new Event("emtee:artist-view-change"));
+      return;
+    }
+
     if (!href.startsWith("/rooms/")) {
       logRoomNav("nav:push", { from: pathname, to: href, source: "conditional-explore-bar" });
       router.push(href);

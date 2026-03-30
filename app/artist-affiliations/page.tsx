@@ -78,7 +78,7 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Dillon Antony",
     supportLane: "Business",
     note: "Management assistance.",
-    imageSrc: "/artist-affiliations/dillon-antony-opt.jpg",
+    imageSrc: "/artist-affiliations/dillon-antony-20260329.jpg",
     imageAlt: "Dillon Antony portrait",
     imagePosition: "center 20%",
     imageFit: "contain",
@@ -646,6 +646,7 @@ export default function ArtistRosterReleasesPage() {
     setActiveView(nextView);
     const nextHash = nextView === "partners" ? "#partners" : "#artists";
     window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${nextHash}`);
+    window.dispatchEvent(new Event("emtee:artist-view-change"));
   }
 
   if (activeView === "partners") {

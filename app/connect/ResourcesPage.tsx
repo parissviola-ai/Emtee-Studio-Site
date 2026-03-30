@@ -129,7 +129,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
     department: "A&R / Sales Department",
     summary: "CRMs, company valuations and the question of long-lasting, sustainable monetization of your music business.",
     roomHref: "/rooms/ar-sales",
-    strategyLabel: "Case Study",
+    strategyLabel: "A&R/Sales Strategy",
     exampleArtist: "Mike Cannz",
     exampleArtistHref: "/case-studies/mike-cannz",
     items: [

@@ -2,7 +2,7 @@ import type { Room } from "./types";
 
 export const arSalesRoom: Room = {
     slug: "ar-sales",
-    title: "A&R / Sales",
+    title: "Board Room",
     backgroundImage: "/rooms/8-opt.jpg",
     hotspots: [
       { id: "next-room", label: "Publishing and Distro", href: "/rooms/publishing-distribution", x: 90, y: 17, direction: "right", tier: "core" },
@@ -87,28 +87,6 @@ export const arSalesRoom: Room = {
           title: "Merchandise",
           body:
             "Merchandising setup and storefront support for artist products.",
-          primaryLabel: "Apply For A Consultation",
-          primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-          secondaryLabel: "Resources",
-          secondaryHref: "/resources",
-        },
-      },
-      {
-        id: "ar-sales-event-planner",
-        label: "Event Planner",
-        tier: "secondary",
-        x: 58.96,
-        y: 73.06,
-        positions: {
-          mobile: { x: 42, y: 71 },
-        },
-        allowLargeResponsiveShift: true,
-        direction: "right",
-        variant: "dot",
-        modal: {
-          title: "Event Planner",
-          body:
-            "Hands-on event support with additional execution coordination.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",

@@ -122,10 +122,15 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/live-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/kymteabg-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/SDSFinal-opt.jpg": { w: 3840, h: 2160 },
+  "/rooms/finalsds.png": { w: 3840, h: 2160 },
+  "/rooms/sdspagefinal.png": { w: 1920, h: 1080 },
+  "/rooms/sdspagefinal-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/musicwithelephant-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/mrlargeelephant.png": { w: 1920, h: 1080 },
+  "/rooms/mrlargeelephant-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };
@@ -558,6 +563,8 @@ export default function RoomScene({
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
   const backgroundVideoCompletedPlaysRef = useRef(0);
   const backgroundVideoLastTimeRef = useRef(0);
+  const [backgroundVideoStartedByRoom, setBackgroundVideoStartedByRoom] = useState<Record<string, boolean>>({});
+  const [backgroundVideoEndedByRoom, setBackgroundVideoEndedByRoom] = useState<Record<string, boolean>>({});
   const lobbyExploreHoverCloseTimerRef = useRef<number | undefined>(undefined);
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
@@ -566,6 +573,7 @@ export default function RoomScene({
   const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltSignalSeenRef = useRef(false);
   const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
+  const shouldFreezeOnBackgroundVideoEnd = room.slug === "steeped-dreams-studio";
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
   const backgroundVideoPlaybackRate = room.slug === "steeped-dreams-studio" ? 0.9 : 1;
@@ -937,9 +945,12 @@ export default function RoomScene({
   const baseActiveBackgroundVideo =
     backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
+  const isSteepedDreamsVideoFrozen = room.slug === "steeped-dreams-studio" && !!backgroundVideoEndedByRoom[room.slug];
   const useContainedBackground = false;
   const shouldRenderBackgroundImage =
-    !activeBackgroundVideo || room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment";
+    !activeBackgroundVideo ||
+    room.slug === "ten-ten-entertainment" ||
+    (room.slug === "steeped-dreams-studio" && !backgroundVideoStartedByRoom[room.slug]);
   const shouldRenderImmediateBackgroundFallback =
     shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug);
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
@@ -1005,7 +1016,9 @@ export default function RoomScene({
         if (spot.id === "next-room") return false;
         if (isLobbyRoom && !hasHydrated && spot.id === "explore") return false;
         if (isLobbyRoom && lobbyResponsiveIsMobile && spot.id === "explore") return false;
-        if (isLobbyRoom && !showAllRoomHotspots) return false;
+        if (isLobbyRoom && !showAllRoomHotspots) {
+          return spot.id === "News";
+        }
         if (!isHotspotTierPilotRoom) return true;
         if (showAllRoomHotspots) return true;
         return (spot.tier ?? "core") === "core";
@@ -1262,8 +1275,8 @@ export default function RoomScene({
     return !!target.closest("a,button,input,textarea,select,iframe,[data-no-pan]");
   }
 
-  const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen;
-  const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen;
+  const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen && !isSteepedDreamsVideoFrozen;
+  const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen && !isSteepedDreamsVideoFrozen;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
     room.slug === "lobby" &&
@@ -1764,8 +1777,19 @@ export default function RoomScene({
   }, [activeBackgroundVideo, room.slug]);
 
   useEffect(() => {
+    if (activeBackgroundVideo) {
+      setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: false }));
+      return;
+    }
+    setBackgroundVideoStartedByRoom((prev) => ({ ...prev, [room.slug]: false }));
+    setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: false }));
+  }, [activeBackgroundVideo, room.slug]);
+
+  useEffect(() => {
     setBackgroundVideoVisibleByRoom((prev) =>
-      prev[room.slug] === false && activeBackgroundVideo
+      room.slug === "steeped-dreams-studio" && activeBackgroundVideo
+        ? { ...prev, [room.slug]: true }
+        : prev[room.slug] === false && activeBackgroundVideo
         ? prev
         : { ...prev, [room.slug]: !activeBackgroundVideo }
     );
@@ -2282,7 +2306,12 @@ export default function RoomScene({
             playsInline
             disablePictureInPicture
             disableRemotePlayback
-            poster={room.slug === "steeped-dreams-studio" || room.slug === "ten-ten-entertainment" ? backgroundImageSrc : undefined}
+            poster={
+              room.slug === "ten-ten-entertainment" ||
+              (room.slug === "steeped-dreams-studio" && !backgroundVideoStartedByRoom[room.slug])
+                ? backgroundImageSrc
+                : undefined
+            }
             preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" || room.slug === "steeped-dreams-studio" ? "auto" : "metadata"}
             onLoadedData={() => {
               setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
@@ -2293,6 +2322,8 @@ export default function RoomScene({
               logRoomNav("room:videoCanPlay", { slug: room.slug, src: activeBackgroundVideo });
             }}
             onPlaying={() => {
+              setBackgroundVideoStartedByRoom((prev) => ({ ...prev, [room.slug]: true }));
+              setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: false }));
               setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
               logRoomNav("room:videoPlaying", { slug: room.slug, src: activeBackgroundVideo });
             }}
@@ -2311,8 +2342,10 @@ export default function RoomScene({
               backgroundVideoLastTimeRef.current = currentTime;
             }}
             onEnded={(event) => {
-              if (shouldLoopBackgroundVideo) return;
+              if (!shouldFreezeOnBackgroundVideoEnd) return;
               const video = event.currentTarget;
+              setBackgroundVideoStartedByRoom((prev) => ({ ...prev, [room.slug]: true }));
+              setBackgroundVideoEndedByRoom((prev) => ({ ...prev, [room.slug]: true }));
               video.pause();
               if (Number.isFinite(video.duration) && video.duration > 0) {
                 try {
@@ -2569,7 +2602,7 @@ export default function RoomScene({
           ].join(" ")}
           data-no-pan
         >
-          {isHotspotTierPilotRoom ? (
+          {isHotspotTierPilotRoom && !isLobbyRoom ? (
             <button
               type="button"
               onClick={toggleShowMoreHotspots}

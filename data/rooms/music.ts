@@ -2,8 +2,8 @@ import type { Room } from "./types";
 
 export const musicRoom: Room = {
     slug: "music",
-    title: "Music",
-    backgroundImage: "/rooms/musicwithelephant-opt.jpg",
+    title: "Studio",
+    backgroundImage: "/rooms/mrlargeelephant-opt.jpg",
   hotspots: [
     { id: "next-room", label: "Media Room", href: "/rooms/marketing", x: 90, y: 17, direction: "right" },
     {

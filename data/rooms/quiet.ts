@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const quietRoom: Room = {
     slug: "steeped-dreams-studio",
     title: "Steeped Dreams\nStudio",
-    backgroundImage: "/rooms/SDSFinal-opt.jpg",
+    backgroundImage: "/rooms/sdspagefinal-opt.jpg",
     backgroundVideo: "/rooms/quietroomvid-opt.mp4",
     backgroundVideoMobile: "/rooms/quietroomvid-opt.mp4",
     hotspots: [
@@ -14,8 +14,8 @@ export const quietRoom: Room = {
         x: 80,
         y: 57,
         positions: {
-          laptop: { x: 66, y: 52 },
-          tablet: { x: 65, y: 53 },
+          laptop: { x: 80, y: 57 },
+          tablet: { x: 80, y: 57 },
           mobile: { x: 64, y: 54 },
         },
         direction: "left",
@@ -42,8 +42,8 @@ export const quietRoom: Room = {
         x: 10.5,
         y: 41.96,
         positions: {
-          laptop: { x: 42, y: 36 },
-          tablet: { x: 41, y: 37 },
+          laptop: { x: 10.5, y: 41.96 },
+          tablet: { x: 10.5, y: 41.96 },
           mobile: { x: 40, y: 38 },
         },
         direction: "right",
@@ -63,8 +63,8 @@ export const quietRoom: Room = {
         x: 63,
         y: 65,
         positions: {
-          laptop: { x: 53, y: 67 },
-          tablet: { x: 52, y: 68 },
+          laptop: { x: 63, y: 65 },
+          tablet: { x: 63, y: 65 },
           mobile: { x: 51, y: 69 },
         },
         direction: "up",
@@ -85,8 +85,8 @@ export const quietRoom: Room = {
         x: 50,
         y: 50,
         positions: {
-          laptop: { x: 24, y: 61 },
-          tablet: { x: 23, y: 62 },
+          laptop: { x: 50, y: 50 },
+          tablet: { x: 50, y: 50 },
           mobile: { x: 22, y: 63 },
         },
         direction: "left",
@@ -94,10 +94,7 @@ export const quietRoom: Room = {
         modal: {
           title: "Overstimulated? Chill Out",
           body:
-            "Join our community!",
-          links: [
-            { label: "Join Community", href: "#" },
-          ],
+            "A peaceful community space is on the way. Stay tuned for gentle updates, future gatherings, and new ways to connect with Steeped Dreams Studio.",
         },
       },
     ],

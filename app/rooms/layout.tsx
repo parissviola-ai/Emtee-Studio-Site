@@ -39,11 +39,11 @@ const CASE_STUDY_LINKS: NavLink[] = [
 
 const ROOM_HEADER_LABELS: Record<string, { kind: "ROOM" | "DEPARTMENT"; label: string }> = {
   "/rooms/lobby": { kind: "ROOM", label: "Lobby" },
-  "/rooms/business": { kind: "DEPARTMENT", label: "Business" },
-  "/rooms/music": { kind: "DEPARTMENT", label: "Music" },
-  "/rooms/marketing": { kind: "DEPARTMENT", label: "Marketing" },
-  "/rooms/publishing-distribution": { kind: "DEPARTMENT", label: "Distribution / Publishing" },
-  "/rooms/ar-sales": { kind: "DEPARTMENT", label: "A&R / Sales" },
+  "/rooms/business": { kind: "ROOM", label: "Meeting Room" },
+  "/rooms/music": { kind: "ROOM", label: "Studio" },
+  "/rooms/marketing": { kind: "ROOM", label: "Photo Studio" },
+  "/rooms/publishing-distribution": { kind: "ROOM", label: "Catalog Room" },
+  "/rooms/ar-sales": { kind: "ROOM", label: "Board Room" },
   "/rooms/dirty-elephant-studio": { kind: "ROOM", label: "Dirty Elephant Studios" },
   "/rooms/ten-ten-entertainment": { kind: "ROOM", label: "Ten Ten Entertainment" },
   "/rooms/steeped-dreams-studio": { kind: "ROOM", label: "Steeped Dreams Studio" },
@@ -217,7 +217,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
             {currentRoomHeader ? (
               <>
-                <div className="pointer-events-none absolute left-1/2 top-[calc(100%+0.45rem)] -translate-x-1/2 sm:hidden">
+                <div className="pointer-events-none absolute left-1/2 top-[calc(100%+0.45rem)] -translate-x-1/2 xl:hidden">
                   <div className="rounded-full border border-white/14 bg-[linear-gradient(180deg,rgba(18,18,18,0.5),rgba(18,18,18,0.26))] px-3 py-1.5 shadow-[0_10px_26px_rgba(0,0,0,0.26)] backdrop-blur-xl">
                     <div className="text-center text-[8px] font-semibold uppercase tracking-[0.2em] text-white/48">
                       You Are Here
@@ -229,7 +229,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                 </div>
 
                 {isLobby ? (
-                  <div className="absolute left-1/2 top-[calc(100%+3.5rem)] -translate-x-1/2 sm:hidden">
+                  <div className="absolute left-1/2 top-[calc(100%+3.5rem)] -translate-x-1/2 xl:hidden">
                     <button
                       type="button"
                       onClick={() => {
@@ -245,7 +245,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                   </div>
                 ) : null}
 
-                <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 sm:flex sm:flex-col sm:items-center sm:justify-center">
+                <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 xl:flex xl:flex-col xl:items-center xl:justify-center">
                   <div className="text-[7px] font-semibold uppercase tracking-[0.2em] text-white/40">
                     You Are Here
                   </div>
@@ -362,10 +362,8 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               <Link href="/news" className={[navLinkClass("/news"), "hidden sm:inline"].join(" ")}>News</Link>
 
               <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
-              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className={[navLinkClass("/consultation"), "sm:hidden"].join(" ")}>Consult</Link>
               <Link href="/resources" className={[navLinkClass("/resources"), "sm:hidden"].join(" ")}>Resources</Link>
               <Link href="/artist-affiliations" className={[navLinkClass("/artist-affiliations"), "sm:hidden"].join(" ")}>Artist &amp; Partners</Link>
-              <Link href="/case-studies" className={[navLinkClass("/case-studies"), "sm:hidden"].join(" ")}>Case Studies</Link>
               <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>
             </nav>
           </div>

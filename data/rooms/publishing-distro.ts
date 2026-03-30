@@ -2,7 +2,7 @@ import type { Room } from "./types";
 
 export const publishingDistroRoom: Room = {
     slug: "publishing-distribution",
-    title: "Distribution / Publishing",
+    title: "Catalog Room",
     backgroundImage: "/rooms/cdshop-opt.jpg",
     hotspots: [
       { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/dirty-elephant-studio", x: 90, y: 17, direction: "right" },

@@ -134,6 +134,7 @@ export default function RoomModalLayer({
   const uniformModalButtonSizing = "px-3 py-1.5 text-[11px] font-medium";
   const compactFooterButtonClass =
     `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
+  const quietFooterWrapClass = isQuietModal ? "flex flex-wrap items-center gap-3 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end";
 
   const livePackageOptions = useMemo(() => {
     if (!isLivePackagesModal || !currentModal.links?.length) return [];
@@ -893,7 +894,7 @@ export default function RoomModalLayer({
             <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
               {isStructuredFooterModal ? (
                 <div className={["flex w-full items-end", isResourceOnlyModal ? "max-w-[430px] mx-auto" : ""].join(" ")}>
-                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : "-ml-6 inline-flex flex-nowrap items-center gap-3 self-end"].join(" ")}>
+                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
                     {footerActions}
                   </div>
 

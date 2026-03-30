@@ -125,7 +125,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
-  "/rooms/10-refresh-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/musicwithelephant-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };
@@ -1909,6 +1909,7 @@ export default function RoomScene({
   function DotHotspotContent(spot: Hotspot) {
     const isClickedLabelVisible = clickedHotspotId === spot.id;
     const isOrangeSessionDot = spot.id === "dirty-elephant-studio-room-sessions";
+    const isMusicDirtyElephantDot = spot.id === "music-dirty-elephant-studios";
     const isMediaRoom = room.slug === "marketing";
     const isBrandDealsDot = room.slug === "marketing" && spot.id === "marketing-brand-deals";
     const isLobbyDot = room.slug === "lobby";
@@ -1921,7 +1922,17 @@ export default function RoomScene({
         : spot.id === "mike-cannz-spotify"
           ? "Spotify"
           : null;
-    const dotSize = isMobileViewport ? 8 : compactHotspotUi ? 9 : 10;
+    const dotSize = isMusicDirtyElephantDot
+      ? isMobileViewport
+        ? 5
+        : compactHotspotUi
+          ? 6
+          : 7
+      : isMobileViewport
+        ? 8
+        : compactHotspotUi
+          ? 9
+          : 10;
     const dotLabelMaxWidth = isMobileViewport
       ? Math.min(Math.max(viewportW * 0.62, 170), 240)
       : Math.min(Math.max(viewportW * 0.34, 180), 360);

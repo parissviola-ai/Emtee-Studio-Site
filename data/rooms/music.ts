@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const musicRoom: Room = {
     slug: "music",
     title: "Music",
-    backgroundImage: "/rooms/10-refresh-opt.jpg",
+    backgroundImage: "/rooms/musicwithelephant-opt.jpg",
   hotspots: [
     { id: "next-room", label: "Media Room", href: "/rooms/marketing", x: 90, y: 17, direction: "right" },
     {
@@ -56,6 +56,15 @@ export const musicRoom: Room = {
         secondaryLabel: "Resources",
         secondaryHref: "/resources",
       },
+    },
+    {
+      id: "music-dirty-elephant-studios",
+      label: "Dirty Elephant Studios",
+      x: 59.9,
+      y: 47.87,
+      direction: "up",
+      variant: "dot",
+      href: "/rooms/dirty-elephant-studio",
     },
     
   ],

@@ -10,6 +10,7 @@ const roomWarmTimestamps = new Map<string, number>();
 
 const ROOM_NAVIGATION_WAIT_TIMEOUT_MS = 2200;
 const ROOM_WARM_DEDUP_MS = 4000;
+const AGGRESSIVE_VIDEO_WARM_SLUGS = new Set(["steeped-dreams-studio"]);
 
 export const ROOM_FLOW_SLUGS = [
   "lobby",
@@ -73,9 +74,10 @@ function waitForImageReady(src: string) {
   return promise;
 }
 
-function waitForVideoReady(src: string) {
+function waitForVideoReady(src: string, options?: { aggressive?: boolean }) {
   if (typeof document === "undefined") return Promise.resolve();
-  const existingPromise = videoReadyPromises.get(src);
+  const cacheKey = `${src}:${options?.aggressive ? "aggressive" : "default"}`;
+  const existingPromise = videoReadyPromises.get(cacheKey);
   if (existingPromise) return existingPromise;
 
   const promise = new Promise<void>((resolve) => {
@@ -87,17 +89,20 @@ function waitForVideoReady(src: string) {
       resolve();
     };
 
-    video.preload = "auto";
+    video.preload = options?.aggressive ? "auto" : "metadata";
     video.muted = true;
     video.playsInline = true;
     video.src = src;
     video.addEventListener("loadeddata", finish, { once: true });
     video.addEventListener("canplay", finish, { once: true });
+    if (options?.aggressive) {
+      video.addEventListener("canplaythrough", finish, { once: true });
+    }
     video.addEventListener("error", finish, { once: true });
     void video.load();
   });
 
-  videoReadyPromises.set(src, promise);
+  videoReadyPromises.set(cacheKey, promise);
   return promise;
 }
 
@@ -110,13 +115,14 @@ export function warmImageAsset(src?: string | null) {
   img.src = src;
 }
 
-export function warmVideoAsset(src?: string | null) {
+export function warmVideoAsset(src?: string | null, options?: { aggressive?: boolean }) {
   if (!src || warmedVideos.has(src) || typeof document === "undefined") return;
   warmedVideos.add(src);
-  logRoomNav("warmVideoAsset:start", { src });
+  logRoomNav("warmVideoAsset:start", { src, aggressive: !!options?.aggressive });
   const video = document.createElement("video");
-  video.preload = "metadata";
+  video.preload = options?.aggressive ? "auto" : "metadata";
   video.muted = true;
+  video.playsInline = true;
   video.src = src;
   void video.load();
 }
@@ -169,15 +175,17 @@ export function warmRoomAssetsBySlug(slug?: string | null, options?: { force?: b
   const room = getRoomBySlug(slug);
   if (!room) return;
   if (!options?.force && shouldSkipRoomWarm(slug)) return;
+  const useAggressiveVideoWarm = AGGRESSIVE_VIDEO_WARM_SLUGS.has(slug);
   logRoomNav("warmRoomAssets:start", {
     slug,
     backgroundImage: room.backgroundImage ?? null,
     backgroundVideo: room.backgroundVideo ?? null,
     backgroundVideoMobile: room.backgroundVideoMobile ?? null,
+    aggressiveVideoWarm: useAggressiveVideoWarm,
   });
   warmImageAsset(room.backgroundImage);
-  warmVideoAsset(room.backgroundVideo);
-  warmVideoAsset(room.backgroundVideoMobile);
+  warmVideoAsset(room.backgroundVideo, { aggressive: useAggressiveVideoWarm });
+  warmVideoAsset(room.backgroundVideoMobile, { aggressive: useAggressiveVideoWarm });
 }
 
 export function warmRoomAssetsByHref(href?: string | null) {
@@ -196,6 +204,8 @@ export async function awaitRoomAssetsBySlug(slug?: string | null) {
   const room = getRoomBySlug(slug);
   if (!room) return;
 
+  const useAggressiveVideoWarm = AGGRESSIVE_VIDEO_WARM_SLUGS.has(slug);
+  const timeoutMs = useAggressiveVideoWarm ? 3200 : ROOM_NAVIGATION_WAIT_TIMEOUT_MS;
   logRoomNav("awaitRoomAssets:start", { slug });
   warmRoomAssetsBySlug(slug, { force: true });
 
@@ -204,13 +214,13 @@ export async function awaitRoomAssetsBySlug(slug?: string | null) {
     isMobileViewport && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
 
   if (activeVideo) {
-    await waitWithTimeout(waitForVideoReady(activeVideo), ROOM_NAVIGATION_WAIT_TIMEOUT_MS);
+    await waitWithTimeout(waitForVideoReady(activeVideo, { aggressive: useAggressiveVideoWarm }), timeoutMs);
     logRoomNav("awaitRoomAssets:ready", { slug, assetType: "video", src: activeVideo });
     return;
   }
 
   if (room.backgroundImage) {
-    await waitWithTimeout(waitForImageReady(room.backgroundImage), ROOM_NAVIGATION_WAIT_TIMEOUT_MS);
+    await waitWithTimeout(waitForImageReady(room.backgroundImage), timeoutMs);
     logRoomNav("awaitRoomAssets:ready", { slug, assetType: "image", src: room.backgroundImage });
   }
 }

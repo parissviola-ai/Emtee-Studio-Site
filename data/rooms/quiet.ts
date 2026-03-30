@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const quietRoom: Room = {
     slug: "steeped-dreams-studio",
     title: "Steeped Dreams\nStudio",
-    backgroundImage: "/rooms/sdspagefinal-opt.jpg",
+    backgroundImage: "/rooms/quietroomvid-firstframe-opt.jpg",
     backgroundVideo: "/rooms/quietroomvid-opt.mp4",
     backgroundVideoMobile: "/rooms/quietroomvid-opt.mp4",
     hotspots: [

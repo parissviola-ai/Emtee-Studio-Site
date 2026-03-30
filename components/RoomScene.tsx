@@ -125,6 +125,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finalsds.png": { w: 3840, h: 2160 },
   "/rooms/sdspagefinal.png": { w: 1920, h: 1080 },
   "/rooms/sdspagefinal-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/quietroomvid-firstframe-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
@@ -945,7 +946,9 @@ export default function RoomScene({
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const useContainedBackground = false;
   const shouldRenderBackgroundImage =
-    !activeBackgroundVideo || room.slug === "ten-ten-entertainment";
+    !activeBackgroundVideo ||
+    room.slug === "ten-ten-entertainment" ||
+    room.slug === "steeped-dreams-studio";
   const shouldRenderImmediateBackgroundFallback =
     shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug);
   const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;

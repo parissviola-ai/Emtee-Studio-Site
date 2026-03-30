@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-labelledby="title desc">
+  <title id="title">DesiFest logo</title>
+  <desc id="desc">DESI FEST wordmark with a red maple leaf above the i.</desc>
+  <style>
+    .word {
+      fill: #000;
+      font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+      font-size: 170px;
+      font-weight: 900;
+      letter-spacing: -6px;
+    }
+
+    .bars {
+      fill: #000;
+      rx: 4px;
+    }
+
+    .leaf {
+      fill: #ff1212;
+    }
+  </style>
+
+  <rect width="500" height="500" fill="#fff" />
+
+  <text class="word" x="38" y="175">D</text>
+  <rect class="bars" x="163" y="96" width="82" height="17" />
+  <rect class="bars" x="163" y="131" width="82" height="17" />
+  <rect class="bars" x="163" y="166" width="82" height="17" />
+  <text class="word" x="260" y="175">S</text>
+  <text class="word" x="357" y="175">i</text>
+
+  <text class="word" x="58" y="348">F</text>
+  <rect class="bars" x="163" y="269" width="82" height="17" />
+  <rect class="bars" x="163" y="304" width="82" height="17" />
+  <rect class="bars" x="163" y="339" width="82" height="17" />
+  <text class="word" x="260" y="348">S</text>
+  <text class="word" x="354" y="348">T</text>
+
+  <path
+    class="leaf"
+    d="M392 44
+       l10 18
+       18 -11
+       -5 22
+       22 2
+       -15 16
+       18 11
+       -23 5
+       5 22
+       -18 -10
+       -12 29
+       -11 -29
+       -19 10
+       6 -22
+       -23 -5
+       18 -11
+       -15 -16
+       22 -2
+       -5 -22
+       18 11
+       z"
+  />
+</svg>

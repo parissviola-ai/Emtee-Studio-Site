@@ -12,12 +12,15 @@ type SupportedArtist = {
   imageSrc?: string;
   imageAlt?: string;
   imagePosition?: string;
+  imageFit?: "cover" | "contain";
+  imageScale?: number;
 };
 
 type Partner = {
   name: string;
   src?: string;
   href?: string;
+  invert?: boolean;
 };
 
 const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
@@ -28,6 +31,7 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     caseStudyHref: "/artist-affiliations/case-studies-2?example=yanchan-business",
     imageSrc: "/case-studies/yanchan-opt.jpg",
     imageAlt: "Yanchan Produced artwork",
+    imagePosition: "center 22%",
   },
   {
     artist: "Mike Cannz",
@@ -36,11 +40,15 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     caseStudyHref: "/artist-affiliations/case-studies-2?example=mike-ar-sales",
     imageSrc: "/case-studies/mikecannz-opt.jpg",
     imageAlt: "Mike Cannz artwork",
+    imagePosition: "center 20%",
   },
   {
     artist: "Kym Tea",
     supportLane: "Partner",
     note: "Currently developing Steeped Dreams Studio together.",
+    imageSrc: "/rooms/kymtea4.jpg",
+    imageAlt: "Kym Tea portrait",
+    imagePosition: "center 38%",
   },
   {
     artist: "Soji",
@@ -161,9 +169,6 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Karl Wolf",
     supportLane: "Marketing",
     note: "Opening act support for \"The DIY Tour.\"",
-    imageSrc: "https://i.ytimg.com/vi/k6ARKKvNaRg/sddefault.jpg?v=6339cf8c",
-    imageAlt: "Karl Wolf artwork",
-    imagePosition: "center center",
   },
   {
     artist: "Kristina Maria",
@@ -250,7 +255,7 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     note: "Executive production on single \"Fun\" from the children's album \"Ajay's Dreams.\"",
     imageSrc: "https://www.shedoesthecity.com/wp-content/uploads/files/2021/09/Tome-copy.jpg",
     imageAlt: "Tome portrait",
-    imagePosition: "center 10%",
+    imagePosition: "center 40%",
   },
   {
     artist: "Aquila",
@@ -437,35 +442,35 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
 
 const PARTNERS: Partner[] = [
   { name: "Dirty Elephant Studios" },
-  { name: "Ten Ten Entertainment" },
-  { name: "Steeped Tea Studio" },
-  { name: "Universal Canada", src: "/partners/umusic.png", href: "https://www.universalmusic.com" },
-  { name: "Republic", src: "/partners/republic.png", href: "https://www.republicrecords.com" },
-  { name: "Sony France", src: "/partners/sony.png", href: "https://www.sonymusic.fr" },
+  { name: "Ten Ten Entertainment", src: "/rooms/TenTenlogo.png", href: "https://www.mikecannzentertainment.com/" },
+  { name: "Steeped Dreams Studio" },
+  { name: "Universal Canada", src: "/partners/umusic.png", href: "https://www.universalmusic.com", invert: true },
+  { name: "Republic", src: "/partners/republic.png", href: "https://www.republicrecords.com", invert: true },
+  { name: "Sony France", src: "/partners/sony.png", href: "https://www.sonymusic.fr", invert: true },
   { name: "Cadence Music Group", src: "/partners/cadence.png", href: "https://cadencemusicgroup.com/" },
-  { name: "Dharma Records", src: "/partners/dharmastudio.png", href: "https://www.dharmaworldwide.com/" },
-  { name: "Bon Fire Records", src: "/partners/bonfire.png", href: "https://www.bonfiremusicgroup.com/about/" },
-  { name: "Spinnin' Records", src: "/partners/spinnin2.svg", href: "https://www.spinninrecords.com" },
-  { name: "Warner Canada" },
-  { name: "Sony Canada", src: "/partners/sony.png", href: "https://www.sonymusic.ca" },
-  { name: "Art Haus" },
-  { name: "Rockstar" },
-  { name: "Prime Video" },
-  { name: "Desifest" },
-  { name: "Cash Money Records" },
-  { name: "Coke Studios Tamil" },
-  { name: "The Junos" },
-  { name: "MLSE" },
-  { name: "Toronto Raptors" },
-  { name: "Expo Latino Festival" },
-  { name: "NBA2K" },
-  { name: "Red Lotus Films" },
-  { name: "Netflix" },
-  { name: "Love Island UK" },
-  { name: "arrambam" },
-  { name: "Power Staffing" },
-  { name: "Arrow Group of Companies" },
-  { name: "Velour Beauty" },
+  { name: "Dharma Records", src: "/partners/dharmastudio.png", href: "https://www.dharmaworldwide.com/", invert: true },
+  { name: "Bon Fire Records", src: "/partners/bonfire.png", href: "https://www.bonfiremusicgroup.com/about/", invert: true },
+  { name: "Spinnin' Records", src: "/partners/spinnin2.svg", href: "https://www.spinninrecords.com", invert: true },
+  { name: "Warner Canada", src: "/partners/warner-canada.png", href: "https://www.warnermusic.ca/" },
+  { name: "Sony Canada", src: "/partners/sony.png", href: "https://www.sonymusic.ca", invert: true },
+  { name: "Art Haus", href: "https://www.arthausmusic.com/" },
+  { name: "Rockstar", href: "https://www.rockstarenergy.com/" },
+  { name: "Prime Video", src: "/partners/prime-video.png", href: "https://www.primevideo.com/", invert: true },
+  { name: "Desifest", src: "/partners/desifest-logo.svg", href: "https://www.desifest.ca/" },
+  { name: "Cash Money Records", src: "/partners/cash-money-records-20260329.png", href: "https://www.cashmoney-records.com/" },
+  { name: "Coke Studios Tamil", src: "/partners/coke-studio.png", href: "https://www.coca-cola.com/ca/en/offerings/coke-studio" },
+  { name: "The Junos", src: "/partners/the-junos.png", href: "https://junoawards.ca/" },
+  { name: "MLSE", src: "/partners/mlse.png", href: "https://www.mlse.com/" },
+  { name: "Toronto Raptors", src: "/partners/toronto-raptors.png", href: "https://www.nba.com/raptors/" },
+  { name: "Expo Latino Festival", src: "/partners/expo-latino-festival.png", href: "https://expolatino.com/" },
+  { name: "NBA2K", src: "/partners/nba2k.png", href: "https://nba.2k.com/" },
+  { name: "Red Lotus Films", src: "/partners/red-lotus-films.png" },
+  { name: "Netflix", src: "/partners/netflix.png", href: "https://www.netflix.com/" },
+  { name: "Love Island UK", src: "/partners/love-island-uk.png" },
+  { name: "arrambam", src: "/partners/arrambam.png" },
+  { name: "Power Staffing", href: "https://www.powerstaffing.com/" },
+  { name: "Arrow Group of Companies", href: "https://www.arrowgroup.com/" },
+  { name: "Velour Beauty", src: "/partners/velour-beauty.png", href: "https://www.velourbeauty.com/", invert: true },
 ];
 
 export default function ArtistRosterReleasesPage() {
@@ -563,7 +568,10 @@ export default function ArtistRosterReleasesPage() {
                         fill
                         draggable={false}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 24vw"
-                        className="object-contain opacity-90 transition group-hover:opacity-100 group-hover:drop-shadow-[0_0_18px_rgba(0,0,0,0.08)] group-hover:drop-shadow-[0_0_24px_rgba(214,174,102,0.16)]"
+                        className={[
+                          "object-contain opacity-90 transition group-hover:opacity-100 group-hover:drop-shadow-[0_0_18px_rgba(0,0,0,0.08)] group-hover:drop-shadow-[0_0_24px_rgba(214,174,102,0.16)]",
+                          partner.invert ? "invert" : "",
+                        ].join(" ")}
                       />
                     </div>
                   ) : (
@@ -668,24 +676,35 @@ export default function ArtistRosterReleasesPage() {
                   key={`${item.artist}-${item.supportLane}-${index}`}
                   className="flex h-full flex-col rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_34px_rgba(0,0,0,0.08)]"
                 >
-                  {item.imageSrc ? (
-                    <div className="overflow-hidden rounded-lg border border-black/8 bg-black/[0.02]">
+                  <div className="overflow-hidden rounded-lg border border-black/8 bg-black/[0.02]">
+                    {item.imageSrc ? (
                       <Image
                         src={item.imageSrc}
                         alt={item.imageAlt ?? `${item.artist} image`}
                         width={1200}
                         height={720}
                         className={[
-                          item.artist === "Karl Wolf" ? "aspect-[4/5]" : "aspect-[16/9]",
+                          "aspect-[16/9]",
                           "w-full",
-                          item.artist === "Karl Wolf" ? "object-contain bg-black/[0.03]" : "object-cover",
+                          item.imageFit === "contain" ? "object-contain bg-black/[0.03]" : "object-cover",
                         ].join(" ")}
                         sizes="(max-width: 768px) 100vw, (max-width: 1279px) 50vw, 33vw"
-                        style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
+                        style={{
+                          ...(item.imagePosition ? { objectPosition: item.imagePosition } : {}),
+                          ...(item.imageScale
+                            ? { transform: `scale(${item.imageScale})`, transformOrigin: "top center" }
+                            : {}),
+                        }}
                         draggable={false}
                       />
-                    </div>
-                  ) : null}
+                    ) : (
+                      <div className="flex aspect-[16/9] w-full items-end bg-[linear-gradient(135deg,rgba(214,174,102,0.12),rgba(0,0,0,0.03))] p-4">
+                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-black/35">
+                          {item.artist}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <div className="mt-3 inline-flex w-fit self-start rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7c5b20]">
                     {item.supportLane}
                   </div>

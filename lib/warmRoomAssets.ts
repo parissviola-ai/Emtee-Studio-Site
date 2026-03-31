@@ -25,6 +25,12 @@ export const ROOM_FLOW_SLUGS = [
   "steeped-dreams-studio",
 ] as const;
 
+type WarmRoomAssetOptions = {
+  force?: boolean;
+  includeImage?: boolean;
+  includeVideo?: boolean;
+};
+
 function shouldDebugRoomNav() {
   if (typeof window === "undefined") return false;
   try {
@@ -171,13 +177,15 @@ export function getRoomWarmNeighborhoodHrefsBySlug(slug?: string | null) {
   return getRoomWarmNeighborhoodBySlug(slug).map(getRoomHref);
 }
 
-export function warmRoomAssetsBySlug(slug?: string | null, options?: { force?: boolean }) {
+export function warmRoomAssetsBySlug(slug?: string | null, options?: WarmRoomAssetOptions) {
   if (!slug) return;
   const room = getRoomBySlug(slug);
   if (!room) return;
   if (!options?.force && shouldSkipRoomWarm(slug)) return;
   const useAggressiveVideoWarm = AGGRESSIVE_VIDEO_WARM_SLUGS.has(slug);
   const useAggressiveImageWarm = AGGRESSIVE_IMAGE_WARM_SLUGS.has(slug);
+  const shouldWarmImages = options?.includeImage !== false;
+  const shouldWarmVideos = options?.includeVideo !== false;
   logRoomNav("warmRoomAssets:start", {
     slug,
     backgroundImage: room.backgroundImage ?? null,
@@ -185,24 +193,30 @@ export function warmRoomAssetsBySlug(slug?: string | null, options?: { force?: b
     backgroundVideoMobile: room.backgroundVideoMobile ?? null,
     aggressiveImageWarm: useAggressiveImageWarm,
     aggressiveVideoWarm: useAggressiveVideoWarm,
+    includeImage: shouldWarmImages,
+    includeVideo: shouldWarmVideos,
   });
-  warmImageAsset(room.backgroundImage);
-  if (useAggressiveImageWarm && room.backgroundImage) {
+  if (shouldWarmImages) {
+    warmImageAsset(room.backgroundImage);
+  }
+  if (shouldWarmImages && useAggressiveImageWarm && room.backgroundImage) {
     void waitForImageReady(room.backgroundImage);
   }
-  warmVideoAsset(room.backgroundVideo, { aggressive: useAggressiveVideoWarm });
-  warmVideoAsset(room.backgroundVideoMobile, { aggressive: useAggressiveVideoWarm });
+  if (shouldWarmVideos) {
+    warmVideoAsset(room.backgroundVideo, { aggressive: useAggressiveVideoWarm });
+    warmVideoAsset(room.backgroundVideoMobile, { aggressive: useAggressiveVideoWarm });
+  }
 }
 
-export function warmRoomAssetsByHref(href?: string | null) {
+export function warmRoomAssetsByHref(href?: string | null, options?: WarmRoomAssetOptions) {
   if (!href?.startsWith("/rooms/")) return;
   const slug = href.replace("/rooms/", "").split("?")[0];
-  warmRoomAssetsBySlug(slug);
+  warmRoomAssetsBySlug(slug, options);
 }
 
-export function warmRoomNeighborhoodBySlug(slug?: string | null) {
+export function warmRoomNeighborhoodBySlug(slug?: string | null, options?: WarmRoomAssetOptions) {
   const neighborhood = getRoomWarmNeighborhoodBySlug(slug);
-  neighborhood.forEach((neighborSlug) => warmRoomAssetsBySlug(neighborSlug));
+  neighborhood.forEach((neighborSlug) => warmRoomAssetsBySlug(neighborSlug, options));
 }
 
 export async function awaitRoomAssetsBySlug(slug?: string | null) {

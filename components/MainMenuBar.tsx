@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { rooms } from "@/data/rooms";
-import { awaitRoomAssetsByHref, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -71,13 +71,19 @@ export default function MainMenuBar() {
       "/news",
       ...rooms.map((room) => `/rooms/${room.slug}`),
     ]);
+    const ambientRoomHrefs = new Set<string>([
+      "/rooms/lobby",
+      ...RESOURCE_LINKS.map((item) => item.href),
+      ...CASE_STUDY_LINKS.map((item) => item.href).filter((href) => href.startsWith("/rooms/")),
+    ]);
 
     const warmRoutes = () => {
       routeSet.forEach((href) => {
         router.prefetch(href);
-        warmRoomAssetsByHref(href);
       });
-      rooms.forEach((room) => warmRoomAssetsBySlug(room.slug));
+      ambientRoomHrefs.forEach((href) => {
+        warmRoomAssetsByHref(href, { includeVideo: false });
+      });
     };
 
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {

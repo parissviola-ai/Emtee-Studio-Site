@@ -79,7 +79,7 @@ export default function Home() {
   useEffect(() => {
     router.prefetch("/rooms/lobby");
     warmImageAsset("/rooms/lobbynewstv-opt.jpg");
-    warmRoomNeighborhoodBySlug("lobby");
+    warmRoomNeighborhoodBySlug("lobby", { includeVideo: false });
   }, [router]);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function Home() {
       getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
         router.prefetch(`/rooms/${slug}`);
       });
-      warmRoomNeighborhoodBySlug("lobby");
+      warmRoomNeighborhoodBySlug("lobby", { includeVideo: false });
     };
 
     const timer = window.setTimeout(warmLandingNetwork, 2200);

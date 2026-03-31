@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import NextImage from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
@@ -143,15 +142,6 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };
-const NATIVE_BACKGROUND_IMAGE_ROOMS = new Set([
-  "lobby",
-  "business",
-  "music",
-  "marketing",
-  "publishing-distribution",
-  "ar-sales",
-  "steeped-dreams-studio",
-]);
 const SENSITIVE_TRANSITION_ROOMS = new Set([
   "lobby",
   "business",
@@ -982,9 +972,7 @@ export default function RoomScene({
     room.slug === "steeped-dreams-studio";
   const shouldRenderImmediateBackgroundFallback =
     shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug);
-  const shouldRenderStaticBackgroundImage = !activeBackgroundVideo;
-  const shouldUseNativeBackgroundImage =
-    shouldRenderBackgroundImage && NATIVE_BACKGROUND_IMAGE_ROOMS.has(room.slug);
+  const shouldUseNativeBackgroundImage = shouldRenderBackgroundImage;
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
   const parsedModalBody = useMemo(
@@ -1196,14 +1184,14 @@ export default function RoomScene({
         prefetchedExploreRoutesRef.current.add(href);
         logRoomNav("nav:warmRoute", { from: `/rooms/${room.slug}`, to: href, source: "room-scene-effect" });
         router.prefetch(href);
-        warmRoomAssetsByHref(href);
+        warmRoomAssetsByHref(href, { includeVideo: false });
       }
     });
   }, [exploreArrowHref, explorePrevHref, nextRoomHotspotHref, room.slug, router]);
 
   useEffect(() => {
     return scheduleIdleWork(() => {
-      warmRoomNeighborhoodBySlug(room.slug);
+      warmRoomNeighborhoodBySlug(room.slug, { includeVideo: false });
     });
   }, [room.slug]);
 
@@ -1487,7 +1475,7 @@ export default function RoomScene({
     // Warm route + key lobby asset so "Back to Lobby" feels snappier.
     return scheduleIdleWork(() => {
       router.prefetch("/rooms/lobby");
-      warmRoomNeighborhoodBySlug("lobby");
+      warmRoomNeighborhoodBySlug("lobby", { includeVideo: false });
     });
   }, [room.slug, router]);
 
@@ -1519,7 +1507,7 @@ export default function RoomScene({
     return scheduleIdleWork(() => {
       getRoomWarmNeighborhoodHrefsBySlug("lobby").forEach((href) => {
         router.prefetch(href);
-        warmRoomAssetsByHref(href);
+        warmRoomAssetsByHref(href, { includeVideo: false });
       });
     });
   }, [room.slug, router]);
@@ -2234,23 +2222,6 @@ export default function RoomScene({
             : undefined),
         }}
       >
-        {useContainedBackground && shouldRenderStaticBackgroundImage ? (
-          <NextImage
-            src={backgroundImageSrc}
-            alt=""
-            aria-hidden
-            fill
-            sizes="100vw"
-            priority={eagerBackgroundLoad}
-            quality={60}
-            className={[
-              "absolute inset-0 h-full w-full object-cover scale-[1.12] blur-[18px]",
-              isLobbyRoom ? "opacity-62" : "opacity-58",
-            ].join(" ")}
-            style={{ objectPosition: `50% ${backgroundObjectPositionY}%` }}
-            draggable={false}
-          />
-        ) : null}
         {shouldRenderBackgroundImage && shouldUseNativeBackgroundImage ? (
           <img
             src={backgroundImageSrc}
@@ -2258,37 +2229,6 @@ export default function RoomScene({
             loading={eagerBackgroundLoad ? "eager" : "lazy"}
             fetchPriority={eagerBackgroundLoad ? "high" : "auto"}
             decoding={eagerBackgroundLoad ? "sync" : "async"}
-            className={[
-              "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
-              isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
-              useContainedBackground ? "object-contain" : "object-cover",
-            ].join(" ")}
-            style={{
-              objectPosition: backgroundUsesMobileLayout
-                ? room.slug === "lobby"
-                  ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
-                  : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
-                : canDesktopCursorPan
-                  ? `calc(50% + ${desktopCursorPan.x}px) ${baseBackgroundObjectPositionY}%`
-                  : `50% ${baseBackgroundObjectPositionY}%`,
-              WebkitTouchCallout: "none",
-              WebkitUserSelect: "none",
-              userSelect: "none",
-            }}
-            onLoad={() => {
-              logRoomNav("room:imageLoaded", { slug: room.slug, src: backgroundImageSrc });
-            }}
-            draggable={false}
-          />
-        ) : null}
-        {shouldRenderBackgroundImage && !shouldUseNativeBackgroundImage ? (
-          <NextImage
-            src={backgroundImageSrc}
-            alt={room.title || room.slug}
-            fill
-            sizes="100vw"
-            priority={eagerBackgroundLoad}
-            quality={70}
             className={[
               "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
               isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",

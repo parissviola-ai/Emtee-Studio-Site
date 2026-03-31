@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/Footer";
 import { rooms } from "@/data/rooms";
-import { awaitRoomAssetsByHref, warmImageAsset, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, getRoomWarmNeighborhoodHrefsBySlug, warmImageAsset, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -68,6 +68,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const router = useRouter();
   const isLobby = pathname === "/rooms/lobby";
+  const activeRoomSlug = pathname.startsWith("/rooms/") ? pathname.slice("/rooms/".length).split("/")[0] ?? "" : "";
   const [mobileLobbyShowRoomsOpen, setMobileLobbyShowRoomsOpen] = useState(false);
   const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
 
@@ -84,10 +85,12 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (pathname !== "/rooms/lobby") return;
     warmImageAsset("/rooms/lobbynewstv-opt.jpg");
-    warmRoomAssetsByHref("/rooms/lobby");
+    warmRoomAssetsByHref("/rooms/lobby", { includeVideo: false });
   }, [pathname]);
 
   useEffect(() => {
+    if (!activeRoomSlug) return;
+
     const routeSet = new Set<string>([
       "/about",
       "/resources",
@@ -96,13 +99,15 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
       "/news",
       ...rooms.map((room) => `/rooms/${room.slug}`),
     ]);
+    const neighborhoodHrefs = getRoomWarmNeighborhoodHrefsBySlug(activeRoomSlug);
 
     const warmRoutes = () => {
       routeSet.forEach((href) => {
         router.prefetch(href);
-        warmRoomAssetsByHref(href);
       });
-      rooms.forEach((room) => warmRoomAssetsBySlug(room.slug));
+      neighborhoodHrefs.forEach((href) => {
+        warmRoomAssetsByHref(href, { includeVideo: false });
+      });
     };
 
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {
@@ -112,7 +117,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
     const timer = globalThis.setTimeout(warmRoutes, 400);
     return () => globalThis.clearTimeout(timer);
-  }, [router]);
+  }, [activeRoomSlug, router]);
 
   function navLinkClass(href: string) {
     const isActive = pathname === href;

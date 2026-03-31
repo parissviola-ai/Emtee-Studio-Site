@@ -24,21 +24,21 @@ export default function GlobalWarmup() {
       "/rooms/business",
       "/rooms/steeped-dreams-studio",
     ]);
-    const shouldWarmRooms = pathname === "/" || pathname?.startsWith("/rooms/");
+    const isLandingPage = pathname === "/";
 
     const warmAll = () => {
       routeSet.forEach((href) => {
         router.prefetch(href);
-        if (shouldWarmRooms && href.startsWith("/rooms/")) {
-          warmRoomAssetsByHref(href);
+        if (isLandingPage && href.startsWith("/rooms/")) {
+          warmRoomAssetsByHref(href, { includeVideo: false });
         }
       });
 
-      if (shouldWarmRooms) {
+      if (isLandingPage) {
         getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
           router.prefetch(`/rooms/${slug}`);
         });
-        warmRoomNeighborhoodBySlug("lobby");
+        warmRoomNeighborhoodBySlug("lobby", { includeVideo: false });
         warmImageAsset("/rooms/lobbynewstv-opt.jpg");
         warmImageAsset("/rooms/fullimagecity-opt.jpg");
         warmImageAsset("/rooms/stillbuildingfinal-opt.jpg");

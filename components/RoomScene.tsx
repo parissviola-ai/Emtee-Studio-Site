@@ -503,8 +503,10 @@ function parseIncludesFromModalBody(text: string) {
 
 export default function RoomScene({
   room,
+  transparentShell = false,
 }: {
   room: Room;
+  transparentShell?: boolean;
 }) {
   const router = useRouter();
   const isLiveRoom = room.slug === "ten-ten-entertainment";
@@ -2147,7 +2149,7 @@ export default function RoomScene({
     <main
       className={[
         "relative min-h-[100dvh] w-full overflow-hidden text-white",
-        isLobbyRoom ? "bg-transparent" : "bg-black",
+        transparentShell || isLobbyRoom ? "bg-transparent" : "bg-black",
         canPanRoom ? "touch-none" : "",
       ].join(" ")}
       onClickCapture={(e) => {

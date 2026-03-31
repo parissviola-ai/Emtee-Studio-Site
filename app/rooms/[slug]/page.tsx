@@ -1,5 +1,6 @@
 import Link from "next/link";
 import RoomScene from "@/components/RoomScene";
+import { getKnownRoomImageSize } from "@/components/roomSceneBackgroundConfig";
 import { rooms } from "@/data/rooms";
 
 type RoomPageParams = { slug: string };
@@ -8,6 +9,14 @@ export const dynamicParams = false;
 
 export function generateStaticParams(): RoomPageParams[] {
   return rooms.map((room) => ({ slug: room.slug }));
+}
+
+function getInitialRoomPosterPosition(slug: string) {
+  if (slug === "lobby") return "50% 58%";
+  if (slug === "business") return "50% 110%";
+  if (slug === "marketing") return "50% 42%";
+  if (slug === "ar-sales") return "50% -6%";
+  return "50% 50%";
 }
 
 export default async function RoomPage({
@@ -36,24 +45,22 @@ export default async function RoomPage({
     );
   }
 
-  if (room.slug === "lobby") {
-    return (
-      <div className="relative min-h-[100dvh] overflow-hidden bg-black">
-        <img
-          src="/rooms/lobbynewstv-opt.jpg"
-          alt=""
-          width={3840}
-          height={1920}
-          fetchPriority="high"
-          decoding="async"
-          data-lobby-hero="true"
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: "50% 58%" }}
-        />
-        <RoomScene room={room} />
-      </div>
-    );
-  }
+  const posterSize = getKnownRoomImageSize(room.backgroundImage);
 
-  return <RoomScene room={room} />;
+  return (
+    <div className="relative min-h-[100dvh] overflow-hidden bg-black">
+      <img
+        src={room.backgroundImage}
+        alt=""
+        width={posterSize?.w}
+        height={posterSize?.h}
+        fetchPriority="high"
+        decoding="async"
+        data-lobby-hero={room.slug === "lobby" ? "true" : undefined}
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        style={{ objectPosition: getInitialRoomPosterPosition(room.slug) }}
+      />
+      <RoomScene room={room} transparentShell />
+    </div>
+  );
 }

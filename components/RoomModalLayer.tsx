@@ -84,6 +84,8 @@ export default function RoomModalLayer({
   const isSteepedDreamsChillOutModal = currentModal.title === "Overstimulated? Chill Out";
   const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
   const isCustomProductionModal = currentModal.title === "Apply For Custom Production";
+  const isOrangeSessionModal =
+    roomSlug === "dirty-elephant-studio" && currentModal.title === "Orange Room Session";
   const isYanchanLiveModal = currentModal.title === "Yanchan Produced Live";
   const isLivePackagesModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Packages";
   const isWebsiteDesignMainModal =
@@ -428,6 +430,8 @@ export default function RoomModalLayer({
           isStartHereModal
             ? "relative z-10 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isCustomProductionModal
+            ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isOrangeSessionModal
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isYanchanLiveModal
             ? "relative z-10 flex w-full max-w-[640px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"

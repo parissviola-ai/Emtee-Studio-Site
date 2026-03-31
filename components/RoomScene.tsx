@@ -110,7 +110,7 @@ const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/room
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/lobbywithconcert-opt.jpg": { w: 2560, h: 1280 },
-  "/rooms/lobbynewstv-opt.jpg": { w: 6912, h: 3456 },
+  "/rooms/lobbynewstv-opt.jpg": { w: 3840, h: 1920 },
   "/rooms/prelobbyphotocn.png": { w: 1344, h: 768 },
   "/rooms/updatedttbg1-poster-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
@@ -971,7 +971,7 @@ export default function RoomScene({
     room.slug === "ten-ten-entertainment" ||
     room.slug === "steeped-dreams-studio";
   const shouldRenderImmediateBackgroundFallback =
-    shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug);
+    shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug) && room.slug !== "lobby";
   const shouldUseNativeBackgroundImage = shouldRenderBackgroundImage;
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
@@ -2199,7 +2199,7 @@ export default function RoomScene({
         className={[
           "absolute inset-0 transition-[filter] duration-300 ease-out",
           !isMobileViewport ? "will-change-transform" : "",
-          exploreOpen ? "blur-xl" : "blur-0",
+          exploreOpen ? "blur-xl" : "",
         ].join(" ")}
         style={{
           ...(isMobileViewport

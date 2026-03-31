@@ -188,10 +188,6 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
         isLobby
           ? {
               backgroundColor: "#16110d",
-              backgroundImage:
-                'linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)), url("/rooms/lobbynewstv-opt.jpg")',
-              backgroundSize: "cover",
-              backgroundPosition: "center 58%",
             }
           : undefined
       }

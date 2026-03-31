@@ -107,6 +107,8 @@ export default function RoomModalLayer({
     );
   const isLiveRoomModal = roomSlug === "ten-ten-entertainment" && !isPackageGridModal;
   const isTenTenCommunityModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Community";
+  const isTenTenShowcaseModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Showcase";
+  const isMikeCannzModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Mike Cannz";
   const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
   const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
   const isPilotFoldablePackageModal =
@@ -134,6 +136,10 @@ export default function RoomModalLayer({
   const compactFooterButtonClass =
     `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
   const quietFooterWrapClass = isQuietModal ? "flex flex-wrap items-center gap-3 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end";
+  const normalizeSocialIconLabel = (label: string) => {
+    if (/(^|\s)IG($|\s)/i.test(label) || /instagram/i.test(label)) return "Instagram";
+    return label;
+  };
 
   const livePackageOptions = useMemo(() => {
     if (!isLivePackagesModal || !currentModal.links?.length) return [];
@@ -240,9 +246,15 @@ export default function RoomModalLayer({
   if (!isLivePackagesModal && activeModal.links?.length) {
     activeModal.links.forEach((link: any) => {
       const modalLinkId = link.href.startsWith("modal:") ? link.href.slice(6) : null;
+      const normalizedSocialIconLabel = normalizeSocialIconLabel(link.label);
       const shouldUseIconOnlySocialLink =
-        (isYanchanMusicModal || isTenTenCommunityModal) &&
-        ["Instagram", "TikTok", "YouTube", "Spotify", "Facebook", "Wikipedia"].includes(link.label);
+        (
+          isYanchanMusicModal ||
+          isTenTenCommunityModal ||
+          roomSlug === "ten-ten-entertainment"
+        ) &&
+        ["Instagram", "TikTok", "YouTube", "Spotify", "Facebook", "Wikipedia"].includes(normalizedSocialIconLabel) &&
+        !/^DM on IG/i.test(link.label);
       if (modalLinkId) {
         const targetSpot = roomHotspots.find((spot) => spot.id === modalLinkId);
         if (!targetSpot?.modal) return;
@@ -276,7 +288,7 @@ export default function RoomModalLayer({
                 : `inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`
             }
           >
-            {shouldUseIconOnlySocialLink ? <SocialIcon label={link.label} /> : `${link.label} →`}
+            {shouldUseIconOnlySocialLink ? <SocialIcon label={normalizedSocialIconLabel} /> : `${link.label} →`}
           </button>
         );
         return;
@@ -330,7 +342,7 @@ export default function RoomModalLayer({
               : `inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 ${uniformModalButtonSizing} text-white/90 transition hover:bg-white/18 hover:text-white`
           }
         >
-          {shouldUseIconOnlySocialLink ? <SocialIcon label={link.label} /> : `${link.label} →`}
+          {shouldUseIconOnlySocialLink ? <SocialIcon label={normalizedSocialIconLabel} /> : `${link.label} →`}
         </a>
       );
     });
@@ -448,11 +460,19 @@ export default function RoomModalLayer({
             ? "relative z-10 flex w-full max-w-[572px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isYanchanLiveModal
             ? "relative z-10 flex w-full max-w-[640px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isTenTenShowcaseModal
+            ? "relative z-10 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isMikeCannzModal
+            ? "relative z-10 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isLivePackagesModal
+            ? "relative z-10 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isResourceOnlyModal
             ? "relative z-10 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : "relative z-10 flex w-full max-w-[900px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]",
           isOrangeModal
             ? "border border-dirty-elephant-studio-300/28 bg-[linear-gradient(160deg,rgba(15,10,6,0.9),rgba(10,8,6,0.86))] shadow-[0_0_0_1px_rgba(251,191,118,0.12),0_30px_80px_rgba(0,0,0,0.62)]"
+            : isLivePackagesModal
+            ? "border border-[#d6ae66]/28 bg-[linear-gradient(160deg,rgba(24,17,10,0.92),rgba(11,8,6,0.9))] shadow-[0_0_0_1px_rgba(214,174,102,0.14),0_30px_80px_rgba(0,0,0,0.62)]"
             : isResourceOnlyModal
             ? "border border-white/15 bg-black/55"
             : "border border-white/15 bg-black/55",
@@ -490,6 +510,7 @@ export default function RoomModalLayer({
                     isStartHereModal
                       ? "text-[1.35rem] font-semibold tracking-wide whitespace-pre-line transition-all duration-700 ease-out"
                       : "text-2xl font-semibold tracking-wide whitespace-pre-line transition-all duration-700 ease-out",
+                    isLivePackagesModal ? "text-[#f7deb0] [text-shadow:0_0_18px_rgba(214,174,102,0.22)]" : "",
                     isOrangeModal ? "text-[#ffd9ab] [text-shadow:0_0_20px_rgba(251,191,118,0.28)]" : "",
                     revealStep >= 1
                       ? "opacity-100 translate-y-0 drop-shadow-[0_0_18px_rgba(255,255,255,0.18)]"
@@ -706,15 +727,19 @@ export default function RoomModalLayer({
                           key={option.id}
                           type="button"
                           onClick={() => setSelectedLivePackageId(option.id)}
-                          className={option.id === selectedLivePackage.id ? primaryButtonClass : compactFooterButtonClass}
+                          className={
+                            option.id === selectedLivePackage.id
+                              ? "inline-flex items-center justify-center rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-3 py-1.5 text-[11px] font-medium text-[#f7deb0] shadow-[0_0_0_1px_rgba(214,174,102,0.12),0_10px_24px_rgba(0,0,0,0.28)] transition hover:border-[#d6ae66]/60 hover:bg-[#d6ae66]/20 hover:text-white"
+                              : "inline-flex items-center justify-center rounded-full border border-[#d6ae66]/24 bg-white/[0.04] px-3 py-1.5 text-[11px] font-medium text-white/82 transition hover:border-[#d6ae66]/42 hover:bg-[#d6ae66]/10 hover:text-white"
+                          }
                         >
                           {option.label}
                         </button>
                       ))}
                     </div>
 
-                    <div className="mt-5 space-y-4 rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-4">
-                      <div className="text-[12px] font-semibold uppercase tracking-[0.2em] text-dirty-elephant-studio-300/90">
+                    <div className="mt-5 space-y-4 rounded-2xl border border-[#d6ae66]/24 bg-[linear-gradient(180deg,rgba(214,174,102,0.1),rgba(255,255,255,0.02))] p-4 shadow-[0_18px_50px_rgba(0,0,0,0.34)]">
+                      <div className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#d6ae66] [text-shadow:0_0_10px_rgba(214,174,102,0.25)]">
                         {selectedLivePackage.modal.title}
                       </div>
                       <p className="leading-relaxed whitespace-pre-line text-white/84">
@@ -723,13 +748,13 @@ export default function RoomModalLayer({
 
                       {selectedLivePackage.modal.highlights?.length ? (
                         <div className="space-y-3">
-                          <div className="text-[12px] font-semibold uppercase tracking-[0.2em] text-dirty-elephant-studio-300/90">
+                          <div className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#d6ae66] [text-shadow:0_0_10px_rgba(214,174,102,0.25)]">
                             {selectedLivePackage.modal.highlightsTitle ?? "Package Includes"}
                           </div>
                           <ul className="space-y-1.5 text-sm text-white/84">
                             {selectedLivePackage.modal.highlights.map((item: string) => (
                               <li key={item} className="flex gap-2 leading-relaxed">
-                                <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-dirty-elephant-studio-300 shadow-[0_0_10px_rgba(253,186,116,0.75)]" />
+                                <span className="mt-[8px] h-1.5 w-1.5 rounded-full bg-[#d6ae66] shadow-[0_0_10px_rgba(214,174,102,0.75)]" />
                                 <span>{item}</span>
                               </li>
                             ))}

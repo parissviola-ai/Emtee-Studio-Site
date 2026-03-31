@@ -26,11 +26,10 @@ export const liveRoom: Room = {
           cornerLogo: "/rooms/TenTenlogo.png",
           cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
-            "Ten Ten supports motivation + self-development while helping creatives and entrepreneurs achieve their dreams.",
+            "Ten Ten Entertainment is a leading Canadian artist showcase company based out of The Greater Toronto Area. Ten Ten is known to be the best in offering artists the opportunity to perform in a professional environment for the betterment of such artists. Ten Ten Showcases offer artists a venue booking, event page development, DJ and consultation calls allowing artists to focus on their live performance craft. In 2023, Ten Ten Entertainment won the Mississauga Music Award for Best Promoter of the Year. Past venue offerings have included The Rec Room and Leng Keng. Click below to direct message @tenten_ent on Instagram to book your next show!",
           primaryLabel: "DM on IG Apply",
           primaryHref: "https://ig.me/m/tenten_ent",
           links: [
-            { label: "Ten Ten Website", href: "https://www.mikecannzentertainment.com/" },
             { label: "Ten Ten IG", href: "https://www.instagram.com/tenten_ent/" },
           ],
         },

@@ -9,8 +9,8 @@ const LANDING_DESKTOP_IMAGE = "/rooms/prelobbyphotocn.png";
 const LANDING_MOBILE_IMAGE = "/rooms/prelobbyphotocn.png";
 const LANDING_DESKTOP_NATURAL_SIZE = { w: 1344, h: 768 };
 const LANDING_BUTTON_COORDS = {
-  mobile: { x: 59, y: 84 },
-  desktop: { x: 45.38, y: 86.04 },
+  mobile: { x: 45.38, y: 92.04 },
+  desktop: { x: 45.38, y: 87.04 },
 };
 const LANDING_CARD_COORDS = {
   mobile: { x: 50, y: 50 },
@@ -256,7 +256,7 @@ export default function Home() {
           disabled={isEnteringLobby}
         >
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/75 bg-black/18 text-xs leading-none">
-            <span>{isMobileViewport ? "→" : "←"}</span>
+            <span>←</span>
           </span>
           ENTER
         </button>

@@ -1,5 +1,31 @@
 import Link from "next/link";
 
+function SocialIcon({ label, className = "" }: { label: string; className?: string }) {
+  const common = `h-4 w-4 ${className}`.trim();
+  switch (label) {
+    case "Instagram":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden className={common} fill="currentColor">
+          <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.98 1.38a1.13 1.13 0 1 1 0 2.26 1.13 1.13 0 0 1 0-2.26ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" />
+        </svg>
+      );
+    case "Facebook":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden className={common} fill="currentColor">
+          <path d="M13.5 21v-7.65h2.57l.38-2.97H13.5V8.48c0-.86.24-1.45 1.47-1.45h1.57V4.37c-.76-.08-1.52-.12-2.28-.12-2.25 0-3.8 1.38-3.8 3.92v2.21H8v2.97h2.46V21h3.04Z" />
+        </svg>
+      );
+    case "LinkedIn":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden className={common} fill="currentColor">
+          <path d="M5.5 8.4H2.8V21h2.7V8.4Zm-1.35-4.5A1.57 1.57 0 1 0 4.2 7a1.57 1.57 0 0 0-.05-3.1ZM21 13.1c0-3.24-1.73-4.75-4.04-4.75a3.48 3.48 0 0 0-3.13 1.72V8.4h-2.7V21h2.7v-6.62c0-1.74.33-3.42 2.49-3.42 2.12 0 2.15 1.98 2.15 3.53V21H21v-7.9Z" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 export default function Footer() {
   const careersHref = "mailto:contact@emteemusicgroup.com?subject=Career%20Inquiry";
 
@@ -60,27 +86,27 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="inline-flex items-center rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80 transition hover:bg-white/10 hover:text-white"
               >
-                Instagram
+                <SocialIcon label="Instagram" />
               </a>
               <a
                 href="https://www.facebook.com/emteemusicgroup/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="inline-flex items-center rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80 transition hover:bg-white/10 hover:text-white"
               >
-                Facebook
+                <SocialIcon label="Facebook" />
               </a>
               <a
                 href="https://www.linkedin.com/company/emteemusicgroup/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="inline-flex items-center rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/80 transition hover:bg-white/10 hover:text-white"
               >
-                LinkedIn
+                <SocialIcon label="LinkedIn" />
               </a>
             </div>
           </div>

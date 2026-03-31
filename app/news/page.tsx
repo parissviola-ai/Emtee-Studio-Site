@@ -27,7 +27,7 @@ function NewsTile({ item }: { item: (typeof NEWS_ITEMS)[number] }) {
             alt={item.title}
             fill
             loading="lazy"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             className="relative z-[1] h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           />
         </div>
@@ -98,7 +98,7 @@ export default function NewsPage() {
 
       {/* Uniform grid */}
       <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-6">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
           {NEWS_ITEMS.map((item) => (
             <NewsTile key={item.id} item={item} />
           ))}

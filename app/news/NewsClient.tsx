@@ -80,7 +80,7 @@ export default function NewsClient() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 pb-20">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {visible.map((post) => (
             <NewsTile key={post.id} post={post} />
           ))}

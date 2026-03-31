@@ -2650,8 +2650,8 @@ export default function RoomScene({
                 lobbyStartHereOpenedRef.current = true;
               }
               const startSpot =
-                room.hotspots.find((spot) => spot.id === "start-here") ??
                 room.hotspots.find((spot) => spot.id === "About") ??
+                room.hotspots.find((spot) => spot.id === "start-here") ??
                 room.hotspots.find((spot) => spot.id === "how-you-start") ??
                 room.hotspots.find((spot) => spot.id === "departments");
               if (!startSpot?.modal) return;

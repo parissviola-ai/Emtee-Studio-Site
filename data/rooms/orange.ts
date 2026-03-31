@@ -7,6 +7,24 @@ export const orangeRoom: Room = {
     hotspots: [
       { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment", x: 90, y:  20, direction: "right" },
       {
+        id: "dirty-elephant-studios-about",
+        label: "Dirty Elephant Studios",
+        x: 14,
+        y: 49,
+        positions: {
+          laptop: { x: 13, y: 50 },
+          tablet: { x: 14, y: 49 },
+          mobile: { x: 18, y: 52 },
+        },
+        direction: "right",
+        variant: "dot",
+        modal: {
+          title: "Dirty Elephant Studios",
+          body:
+            "Dirty Elephant Studios is the brainchild of Yanchan Rajmohan. In collaboration with Emtee Music Group Yanchan has built a successful business revolving around his vision to bridge the gap between South Indian traditional culture/music with contemporary western top 40 in North America. Dirty Elephant Studios is the space for artists and fans to get a chance to collaborate on custom production, guest in an Orange Room Session and keep up-to-date with Yanchan Produced Live, Yanchan’s live performance experience.\n\nStep by step, note by note, one soul at a time - Yanchan Produced and Dirty Elephant Studios strives to bring the heart and soul of South Indian Traditions to the world stage.",
+        },
+      },
+      {
         id: "apply-custom-production",
         label: "Custom Production",
         x: 25,

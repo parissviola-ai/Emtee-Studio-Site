@@ -567,11 +567,13 @@ export default function RoomScene({
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const imageNaturalSizeCacheRef = useRef<Record<string, { w: number; h: number }>>({});
   const imageMetricsCacheRef = useRef<Record<string, ReturnType<typeof getCoverImageMetrics>>>({});
+  const backgroundImageRef = useRef<HTMLImageElement | null>(null);
   const orangeExtrasRef = useRef<OrangeRoomExtrasHandle | null>(null);
   const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
   const backgroundVideoCompletedPlaysRef = useRef(0);
   const backgroundVideoLastTimeRef = useRef(0);
   const backgroundVideoShouldStayPausedRef = useRef(false);
+  const lobbyHeroReadyRef = useRef(false);
   const lobbyExploreHoverCloseTimerRef = useRef<number | undefined>(undefined);
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
@@ -956,6 +958,7 @@ export default function RoomScene({
   const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "ten-ten-entertainment" ? 50 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
+  const knownBackgroundImageSize = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
   const baseActiveBackgroundVideo =
     backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
@@ -973,6 +976,8 @@ export default function RoomScene({
   const shouldRenderImmediateBackgroundFallback =
     shouldRenderBackgroundImage && SENSITIVE_TRANSITION_ROOMS.has(room.slug) && room.slug !== "lobby";
   const shouldUseNativeBackgroundImage = shouldRenderBackgroundImage;
+  const shouldApplyBackgroundTransform =
+    !isMobileViewport && (backgroundOffsetY !== 0 || sceneScale !== 1);
   const showWebsiteDesignEmbed =
     isWebsiteDesignRoom && !isMobileViewport && !isModalOpen && !exploreOpen;
   const parsedModalBody = useMemo(
@@ -1842,6 +1847,28 @@ export default function RoomScene({
     }, 1200);
   }, [backgroundImageSrc]);
 
+  const announceLobbyHeroReady = useCallback(() => {
+    if (room.slug !== "lobby") return;
+    if (typeof window === "undefined") return;
+    if (lobbyHeroReadyRef.current) return;
+    lobbyHeroReadyRef.current = true;
+    window.dispatchEvent(
+      new CustomEvent("emtee:lobby-hero-ready", { detail: { src: backgroundImageSrc } })
+    );
+  }, [backgroundImageSrc, room.slug]);
+
+  useEffect(() => {
+    lobbyHeroReadyRef.current = false;
+    if (room.slug !== "lobby") return;
+    if (typeof window === "undefined") return;
+    const heroNode = backgroundImageRef.current;
+    if (!heroNode?.complete) return;
+    const frameId = window.requestAnimationFrame(() => {
+      announceLobbyHeroReady();
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [announceLobbyHeroReady, backgroundImageSrc, room.slug]);
+
   useEffect(() => {
     if (room.slug !== "EMTEEWebDesign" && room.slug !== "publishing-distribution") return;
     return scheduleIdleWork(() => {
@@ -2119,7 +2146,8 @@ export default function RoomScene({
   return (
     <main
       className={[
-        "relative min-h-[100dvh] w-full overflow-hidden bg-black text-white",
+        "relative min-h-[100dvh] w-full overflow-hidden text-white",
+        isLobbyRoom ? "bg-transparent" : "bg-black",
         canPanRoom ? "touch-none" : "",
       ].join(" ")}
       onClickCapture={(e) => {
@@ -2202,9 +2230,9 @@ export default function RoomScene({
           exploreOpen ? "blur-xl" : "",
         ].join(" ")}
         style={{
-          ...(isMobileViewport
-            ? undefined
-            : { transform: `translate3d(0, ${backgroundOffsetY}px, 0) scale(${sceneScale})` }),
+          ...(shouldApplyBackgroundTransform
+            ? { transform: `translate3d(0, ${backgroundOffsetY}px, 0) scale(${sceneScale})` }
+            : undefined),
           ...(shouldRenderImmediateBackgroundFallback
             ? {
                 backgroundImage: `url("${backgroundImageSrc}")`,
@@ -2224,11 +2252,15 @@ export default function RoomScene({
       >
         {shouldRenderBackgroundImage && shouldUseNativeBackgroundImage ? (
           <img
+            ref={backgroundImageRef}
             src={backgroundImageSrc}
             alt={room.title || room.slug}
+            width={knownBackgroundImageSize?.w}
+            height={knownBackgroundImageSize?.h}
             loading={eagerBackgroundLoad ? "eager" : "lazy"}
             fetchPriority={eagerBackgroundLoad ? "high" : "auto"}
             decoding={eagerBackgroundLoad ? "sync" : "async"}
+            data-lobby-hero={room.slug === "lobby" ? "true" : undefined}
             className={[
               "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
               isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
@@ -2247,6 +2279,7 @@ export default function RoomScene({
               userSelect: "none",
             }}
             onLoad={() => {
+              announceLobbyHeroReady();
               logRoomNav("room:imageLoaded", { slug: room.slug, src: backgroundImageSrc });
             }}
             draggable={false}

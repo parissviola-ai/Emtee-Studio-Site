@@ -36,5 +36,24 @@ export default async function RoomPage({
     );
   }
 
+  if (room.slug === "lobby") {
+    return (
+      <div className="relative min-h-[100dvh] overflow-hidden bg-black">
+        <img
+          src="/rooms/lobbynewstv-opt.jpg"
+          alt=""
+          width={3840}
+          height={1920}
+          fetchPriority="high"
+          decoding="async"
+          data-lobby-hero="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: "50% 58%" }}
+        />
+        <RoomScene room={room} />
+      </div>
+    );
+  }
+
   return <RoomScene room={room} />;
 }

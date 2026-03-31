@@ -70,6 +70,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const isLobby = pathname === "/rooms/lobby";
   const activeRoomSlug = pathname.startsWith("/rooms/") ? pathname.slice("/rooms/".length).split("/")[0] ?? "" : "";
   const [mobileLobbyShowRoomsOpen, setMobileLobbyShowRoomsOpen] = useState(false);
+  const [lobbyHeaderReady, setLobbyHeaderReady] = useState(!isLobby);
   const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
 
   // ✅ Hooks MUST be inside the component
@@ -173,6 +174,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     pathname.startsWith("/artist-affiliations") ||
     CASE_STUDY_LINKS.some((item) => pathname === item.href);
   const currentRoomHeader = ROOM_HEADER_LABELS[pathname];
+  const showCurrentRoomHeader = !!currentRoomHeader && (!isLobby || lobbyHeaderReady);
 
   useEffect(() => {
     if (!isLobby || typeof window === "undefined") return;
@@ -180,6 +182,45 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
       setMobileLobbyShowRoomsOpen(window.sessionStorage.getItem("showMore:lobby") === "1");
     } catch {}
   }, [isLobby, pathname]);
+
+  useEffect(() => {
+    if (!currentRoomHeader) {
+      setLobbyHeaderReady(false);
+      return;
+    }
+    if (!isLobby || typeof window === "undefined") {
+      setLobbyHeaderReady(true);
+      return;
+    }
+
+    setLobbyHeaderReady(false);
+
+    let frameId: number | undefined;
+    const markReady = () => {
+      frameId = window.requestAnimationFrame(() => setLobbyHeaderReady(true));
+    };
+
+    const existingHero = window.document.querySelector<HTMLImageElement>('img[data-lobby-hero="true"]');
+    if (existingHero?.complete) {
+      markReady();
+      return () => {
+        if (frameId !== undefined) window.cancelAnimationFrame(frameId);
+      };
+    }
+
+    const fallbackId = window.setTimeout(markReady, 1400);
+    const handleHeroReady = () => {
+      window.clearTimeout(fallbackId);
+      markReady();
+    };
+
+    window.addEventListener("emtee:lobby-hero-ready", handleHeroReady);
+    return () => {
+      window.removeEventListener("emtee:lobby-hero-ready", handleHeroReady);
+      window.clearTimeout(fallbackId);
+      if (frameId !== undefined) window.cancelAnimationFrame(frameId);
+    };
+  }, [currentRoomHeader, isLobby]);
 
   return (
     <div
@@ -235,7 +276,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               </Link>
             </div>
 
-            {currentRoomHeader ? (
+            {showCurrentRoomHeader ? (
               <>
                 <div className="pointer-events-none absolute left-1/2 top-[calc(100%+0.45rem)] -translate-x-1/2 xl:hidden">
                   <div className="rounded-full border border-white/14 bg-[linear-gradient(180deg,rgba(18,18,18,0.5),rgba(18,18,18,0.26))] px-3 py-1.5 shadow-[0_10px_26px_rgba(0,0,0,0.26)] backdrop-blur-xl">

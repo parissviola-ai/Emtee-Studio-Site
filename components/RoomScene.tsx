@@ -132,7 +132,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/meetingroom4.png": { w: 1920, h: 1080 },
-  "/rooms/finalmeetingroom.png": { w: 1920, h: 1080 },
+  "/rooms/finalmeetingroom-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/finalmarketingdj-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/finalarsales-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/finalmarketingdj.png": { w: 1920, h: 1080 },

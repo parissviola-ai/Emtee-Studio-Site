@@ -15,6 +15,14 @@ const PRIMARY_LINKS: NavLink[] = [
   { label: "Home", href: "/rooms/lobby" },
 ];
 
+const MOBILE_MENU_LINKS: NavLink[] = [
+  { label: "About", href: "/about" },
+  { label: "Resources", href: "/resources" },
+  { label: "Artists & Partners", href: "/artist-affiliations" },
+  { label: "Case Studies", href: "/case-studies" },
+  { label: "News", href: "/news" },
+];
+
 const ABOUT_LINKS: NavLink[] = [
   { label: "Who We Are", href: "/rooms/lobby?modal=About" },
   { label: "What We Offer", href: "/rooms/lobby?modal=departments-sheet" },
@@ -70,6 +78,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const isLobby = pathname === "/rooms/lobby";
   const activeRoomSlug = pathname.startsWith("/rooms/") ? pathname.slice("/rooms/".length).split("/")[0] ?? "" : "";
   const [mobileLobbyShowRoomsOpen, setMobileLobbyShowRoomsOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lobbyHeaderReady, setLobbyHeaderReady] = useState(!isLobby);
   const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
 
@@ -82,6 +91,10 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname !== "/rooms/lobby") return;
@@ -317,7 +330,37 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               </>
             ) : null}
 
-            <nav className="flex min-w-0 items-center justify-end gap-1 overflow-x-auto text-sm font-semibold text-white/85 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:overflow-visible sm:gap-4 md:gap-7 sm:group/menu">
+            <div className="relative shrink-0 sm:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="rooms-mobile-menu"
+                className="inline-flex min-w-[5.5rem] items-center justify-center rounded-full border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/88 backdrop-blur-xl transition hover:bg-white/12"
+              >
+                Menu
+              </button>
+
+              {mobileMenuOpen ? (
+                <div
+                  id="rooms-mobile-menu"
+                  className="absolute right-0 top-[calc(100%+0.55rem)] z-50 w-[min(16rem,calc(100vw-2rem))] rounded-2xl border border-white/14 bg-[linear-gradient(180deg,rgba(18,18,18,0.94),rgba(18,18,18,0.88))] p-2 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-2xl"
+                >
+                  {MOBILE_MENU_LINKS.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block rounded-xl px-3 py-2.5 text-sm font-semibold text-white/88 transition hover:bg-white/10 hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            <nav className="hidden min-w-0 items-center justify-end gap-4 text-sm font-semibold text-white/85 md:gap-7 sm:flex sm:group/menu">
               {PRIMARY_LINKS.map((item) => (
                 <Link
                   key={item.label}
@@ -421,11 +464,6 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               </div>
 
               <Link href="/news" className={[navLinkClass("/news"), "hidden sm:inline"].join(" ")}>News</Link>
-
-              <Link href="/about" className={[navLinkClass("/about"), "sm:hidden"].join(" ")}>About</Link>
-              <Link href="/resources" className={[navLinkClass("/resources"), "sm:hidden"].join(" ")}>Resources</Link>
-              <Link href="/artist-affiliations" className={[navLinkClass("/artist-affiliations"), "sm:hidden"].join(" ")}>Artist &amp; Partners</Link>
-              <Link href="/news" className={[navLinkClass("/news"), "sm:hidden"].join(" ")}>News</Link>
             </nav>
           </div>
         </div>

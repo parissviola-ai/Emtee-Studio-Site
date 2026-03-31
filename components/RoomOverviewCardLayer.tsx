@@ -70,6 +70,7 @@ export default function RoomOverviewCardLayer({
         ? "bottom-32 left-4 md:bottom-28"
         : "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       : "bottom-52 left-4 md:bottom-28";
+  const shouldUseMobileLogoToggle = mobileStaticUi && isCardMinimized;
 
   return (
     <div
@@ -131,7 +132,20 @@ export default function RoomOverviewCardLayer({
               ].join(" ")}
             />
           ) : null}
-          {isCardMinimized ? ">" : "<"}
+          {shouldUseMobileLogoToggle ? (
+            <NextImage
+              src="/logotransparent.png"
+              alt="EMTEE logo"
+              width={22}
+              height={22}
+              className="h-4.5 w-auto object-contain invert opacity-90"
+              draggable={false}
+            />
+          ) : isCardMinimized ? (
+            ">"
+          ) : (
+            "<"
+          )}
         </button>
 
         {!isCardMinimized && isCardContentVisible ? (

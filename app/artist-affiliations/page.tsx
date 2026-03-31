@@ -737,14 +737,14 @@ export default function ArtistRosterReleasesPage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-10">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 md:gap-10">
               {PARTNERS.map((partner) => (
                 <div
                   key={partner.name}
-                  className="group relative flex items-center justify-center rounded-3xl border border-black/10 bg-white px-8 py-10 shadow-[0_0_0_1px_rgba(214,174,102,0.05),0_25px_80px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[#d6ae66]/45 hover:bg-[#fffdf8] hover:shadow-[0_0_0_1px_rgba(214,174,102,0.14),0_30px_90px_rgba(0,0,0,0.14)] hover:after:absolute hover:after:bottom-6 hover:after:h-px hover:after:w-12 hover:after:bg-gradient-to-r hover:after:from-[#d6ae66]/85 hover:after:via-black/20 hover:after:to-transparent hover:after:content-[''] sm:px-12 sm:py-16"
+                  className="group relative flex items-center justify-center rounded-3xl border border-black/10 bg-white px-4 py-6 shadow-[0_0_0_1px_rgba(214,174,102,0.05),0_25px_80px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[#d6ae66]/45 hover:bg-[#fffdf8] hover:shadow-[0_0_0_1px_rgba(214,174,102,0.14),0_30px_90px_rgba(0,0,0,0.14)] hover:after:absolute hover:after:bottom-6 hover:after:h-px hover:after:w-12 hover:after:bg-gradient-to-r hover:after:from-[#d6ae66]/85 hover:after:via-black/20 hover:after:to-transparent hover:after:content-[''] sm:px-12 sm:py-16"
                 >
                   {partner.src ? (
-                    <div className="relative h-16 w-full overflow-hidden sm:h-24">
+                    <div className="relative h-14 w-full overflow-hidden sm:h-24">
                       <Image
                         src={partner.src}
                         alt={partner.name}
@@ -762,12 +762,12 @@ export default function ArtistRosterReleasesPage() {
                       />
                     </div>
                   ) : (
-                    <div className="text-center text-xl font-semibold tracking-tight text-zinc-900 sm:text-2xl">
+                    <div className="text-center text-base font-semibold tracking-tight text-zinc-900 sm:text-2xl">
                       {partner.name}
                     </div>
                   )}
                   {partner.regionLabel ? (
-                    <div className="pointer-events-none absolute right-4 top-4 rounded-full border border-black/10 bg-white/92 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500 shadow-[0_6px_18px_rgba(0,0,0,0.08)]">
+                    <div className="pointer-events-none absolute right-2 top-2 rounded-full border border-black/10 bg-white/92 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-zinc-500 shadow-[0_6px_18px_rgba(0,0,0,0.08)] sm:right-4 sm:top-4 sm:px-2.5 sm:text-[10px] sm:tracking-[0.22em]">
                       {partner.regionLabel}
                     </div>
                   ) : null}
@@ -862,11 +862,11 @@ export default function ArtistRosterReleasesPage() {
 
         <section className="mt-8">
           <div className="animate-[fadeIn_220ms_ease-out]">
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-2 xl:grid-cols-3">
               {ORDERED_RESOURCE_SUPPORTED_ARTISTS.map((item, index) => (
                 <article
                   key={`${item.artist}-${item.supportLane}-${index}`}
-                  className="flex h-full flex-col rounded-xl border border-black/10 bg-white p-4 shadow-[0_14px_34px_rgba(0,0,0,0.08)]"
+                  className="flex h-full flex-col rounded-xl border border-black/10 bg-white p-3 shadow-[0_14px_34px_rgba(0,0,0,0.08)] sm:p-4"
                 >
                   <div className="overflow-hidden rounded-lg border border-black/8 bg-black/[0.02]">
                     {item.imageSrc ? (
@@ -880,7 +880,7 @@ export default function ArtistRosterReleasesPage() {
                           "w-full",
                           item.imageFit === "contain" ? "object-contain bg-black/[0.03]" : "object-cover",
                         ].join(" ")}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1279px) 50vw, 33vw"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1279px) 50vw, 33vw"
                         style={{
                           ...(item.imagePosition ? { objectPosition: item.imagePosition } : {}),
                           ...(item.imageScale
@@ -897,15 +897,15 @@ export default function ArtistRosterReleasesPage() {
                       </div>
                     )}
                   </div>
-                  <div className="mt-3 inline-flex w-fit self-start rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7c5b20]">
+                  <div className="mt-3 inline-flex w-fit self-start rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#7c5b20] sm:px-2.5 sm:text-[10px] sm:tracking-[0.14em]">
                     {item.supportLane}
                   </div>
-                  <h2 className="mt-2 text-lg font-semibold text-zinc-900">{item.artist}</h2>
-                  <p className="mt-1 text-sm text-zinc-700">{item.note}</p>
+                  <h2 className="mt-2 text-base font-semibold text-zinc-900 sm:text-lg">{item.artist}</h2>
+                  <p className="mt-1 text-xs text-zinc-700 sm:text-sm">{item.note}</p>
                   {item.caseStudyHref ? (
                     <Link
                       href={item.caseStudyHref}
-                      className="mt-auto pt-4 inline-flex items-center text-sm font-semibold text-[#7c5b20] transition hover:text-[#5b4217]"
+                      className="mt-auto inline-flex items-center pt-3 text-xs font-semibold text-[#7c5b20] transition hover:text-[#5b4217] sm:pt-4 sm:text-sm"
                     >
                       View Case Study →
                     </Link>

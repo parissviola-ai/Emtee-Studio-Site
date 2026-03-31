@@ -937,6 +937,7 @@ export default function RoomScene({
   const eagerBackgroundLoad = room.slug === "lobby" || SENSITIVE_TRANSITION_ROOMS.has(room.slug);
   const isMusicRoom = room.slug === "music";
   const isMarketingRoomZoomedOut = room.slug === "marketing";
+  const isTenTenRoom = room.slug === "ten-ten-entertainment";
   const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
   const desktopSceneScale =
     room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom
@@ -954,10 +955,14 @@ export default function RoomScene({
         ? 110
       : room.slug === "ar-sales"
         ? -6
+        : isTenTenRoom
+          ? backgroundUsesMobileLayout
+            ? 62
+            : 33
         : room.slug === "lobby"
           ? 58
           : 50;
-  const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : room.slug === "ten-ten-entertainment" ? 50 : 0;
+  const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : isTenTenRoom ? 50 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
   const knownBackgroundImageSize = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
@@ -965,7 +970,12 @@ export default function RoomScene({
     backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const useContainedBackground = false;
-  const baseBackgroundObjectPositionY = isMarketingRoom && !backgroundUsesMobileLayout ? 42 : backgroundObjectPositionY;
+  const baseBackgroundObjectPositionY =
+    isTenTenRoom
+      ? backgroundObjectPositionY
+      : isMarketingRoom && !backgroundUsesMobileLayout
+        ? 42
+        : backgroundObjectPositionY;
   const coverMetricsObjectPositionY = backgroundUsesMobileLayout
     ? room.slug === "lobby"
       ? 58
@@ -2343,19 +2353,19 @@ export default function RoomScene({
             style={
               isMobileViewport
                 ? {
-                    backgroundColor: room.slug === "ten-ten-entertainment" ? "#000000" : undefined,
+                    backgroundColor: isTenTenRoom ? "#000000" : undefined,
                     objectPosition:
-                      room.slug === "ten-ten-entertainment"
-                        ? `calc(50% + ${displayedPan.x}px) calc(62% + ${displayedPan.y}px)`
+                      isTenTenRoom
+                        ? `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                         : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`,
                     WebkitTouchCallout: "none",
                     WebkitUserSelect: "none",
                     userSelect: "none",
                   }
-                : room.slug === "ten-ten-entertainment"
+                : isTenTenRoom
                   ? {
                       backgroundColor: "#000000",
-                      objectPosition: compactHotspotUi ? "50% 68%" : "50% 33%",
+                      objectPosition: `50% ${baseBackgroundObjectPositionY}%`,
                       WebkitTouchCallout: "none",
                       WebkitUserSelect: "none",
                       userSelect: "none",

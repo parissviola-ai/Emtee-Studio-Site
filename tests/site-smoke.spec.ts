@@ -53,3 +53,14 @@ test("room navigation flow stays reachable", async ({ page }) => {
     await expect(page).toHaveURL(new RegExp(`${route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
   }
 });
+
+test("lobby modal opened from query can still navigate to another modal", async ({ page }) => {
+  await page.goto("/rooms/lobby?modal=About", { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
+
+  await expect(page.getByRole("heading", { name: "Who We Are" })).toBeVisible();
+
+  await page.getByRole("button", { name: "What We Offer →" }).click();
+
+  await expect(page.getByRole("heading", { name: "What We Offer" })).toBeVisible();
+});

@@ -651,21 +651,35 @@ export default function RoomScene({
     setVideoMuted(true);
   }
 
-  useEffect(() => {
+  const syncLobbyModalFromUrl = useCallback(() => {
     if (room.slug !== "lobby") return;
     if (typeof window === "undefined") return;
     if (isClosingLobbyModalRef.current) {
       isClosingLobbyModalRef.current = false;
       return;
     }
+
     const modalId = new URLSearchParams(window.location.search).get("modal");
     if (!modalId) return;
+
     const targetSpot = room.hotspots.find((spot) => spot.id === modalId);
     if (!targetSpot?.modal) return;
-    if (activeModal?.title === targetSpot.modal.title) return;
+
     setModalBackModal(null);
     openModal(targetSpot.modal);
-  }, [activeModal?.title, openModal, room.hotspots, room.slug]);
+  }, [openModal, room.hotspots, room.slug]);
+
+  useEffect(() => {
+    if (room.slug !== "lobby") return;
+    if (typeof window === "undefined") return;
+
+    syncLobbyModalFromUrl();
+    window.addEventListener("popstate", syncLobbyModalFromUrl);
+
+    return () => {
+      window.removeEventListener("popstate", syncLobbyModalFromUrl);
+    };
+  }, [room.slug, syncLobbyModalFromUrl]);
 
   useEffect(() => {
     if (room.slug !== "lobby") return;

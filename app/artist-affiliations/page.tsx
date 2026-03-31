@@ -122,9 +122,9 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     artist: "Kamal Haasan",
     supportLane: "Music",
     note: "Production, writing and vocal collaboration for Shruti Haasan's single \"Inimel.\"",
-    imageSrc: "/artist-affiliations/kamal-haasan-opt.jpg",
+    imageSrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtyLrata8xIUaOvEWaOx7fQwtJKLjfBxcDGGmsZ2ZPZWBWPTpH05_j-PvFm79k7zUvQPflhc_WtqqzvEh6-sTjSpbdP5hjHPzEjn4pmg&s=10",
     imageAlt: "Kamal Haasan portrait",
-    imagePosition: "center 20%",
+    imagePosition: "center 1%",
   },
   {
     artist: "Hanumankind",
@@ -515,7 +515,7 @@ const RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
     note: "Studio collaborations.",
     imageSrc: "/rooms/bolu-opt.jpg",
     imageAlt: "Bolu portrait",
-    imagePosition: "center 20%",
+    imagePosition: "center 4%",
   },
   {
     artist: "Yung Raja",

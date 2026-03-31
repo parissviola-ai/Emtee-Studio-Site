@@ -120,7 +120,7 @@ export default function CaseStudies2Client() {
             className="absolute inset-0 bg-black/45 backdrop-blur-[1px]"
             aria-label="Close modal"
           />
-          <div className="relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-[900px] flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
+          <div className="relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-[900px] flex-col overflow-y-auto rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
             <div className="shrink-0 border-b border-black/8 p-4 sm:p-5">
               <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_18px_48px_rgba(0,0,0,0.16)]">
                 <Image
@@ -141,7 +141,7 @@ export default function CaseStudies2Client() {
                 ×
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-5 sm:p-6">
+            <div className="p-5 sm:p-6">
               <div className="mb-5 flex flex-wrap items-center justify-end gap-2">
                 <button
                   type="button"

@@ -587,9 +587,9 @@ export default function RoomScene({
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
   const backgroundVideoPlaybackRate = room.slug === "steeped-dreams-studio" ? 0.9 : 1;
-  // Keep Ten Ten on the standard room startup path so the poster-to-video
-  // handoff happens immediately without the visible delayed swap.
-  const shouldDeferBackgroundVideoMount = false;
+  // Ten Ten ships distinct desktop/mobile videos; defer mounting so mobile
+  // doesn't briefly choose the desktop source before hydration completes.
+  const shouldDeferBackgroundVideoMount = room.slug === "ten-ten-entertainment";
   const [backgroundVideoEnabled, setBackgroundVideoEnabled] = useState(!shouldDeferBackgroundVideoMount);
 
   // video audio state

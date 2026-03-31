@@ -4,15 +4,15 @@ import { CASE_STUDY_DECK } from "@/data/case-study-deck";
 export const lobbyRoom: Room = {
     slug: "lobby",
     title: "Lobby",
-    backgroundImage: "/rooms/finallobby2-opt.jpg",
+    backgroundImage: "/rooms/lobbynewstv.png",
     hotspots: [
       {
         id: "News",
         label: "News",
         tier: "secondary",
         href: "/news",
-        x: 72,
-        y: 44,
+        x: 72.01,
+        y: 40.97,
       },
       {
         id: "Board Rooms",

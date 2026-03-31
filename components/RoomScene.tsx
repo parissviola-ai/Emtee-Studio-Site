@@ -174,6 +174,16 @@ const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
     objectPosition: "center 24%",
   },
   {
+    src: "/news/thinkyouglowed-opt.jpg",
+    label: "Lil Durk - Think You Glowed",
+    objectPosition: "center 18%",
+  },
+  {
+    src: "/news/thewind-opt.jpg",
+    label: "Russ - The Wind",
+    objectPosition: "center 20%",
+  },
+  {
     src: "https://i.ytimg.com/vi/IIat8oxEIbE/maxresdefault.jpg",
     label: "Shruti Haasan & Kamal Haasan - Inimel",
     objectPosition: "center 24%",

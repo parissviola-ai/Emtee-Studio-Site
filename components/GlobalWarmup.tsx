@@ -34,7 +34,7 @@ export default function GlobalWarmup() {
         router.prefetch(`/rooms/${slug}`);
       });
       warmRoomNeighborhoodBySlug("lobby");
-      warmImageAsset("/rooms/lobbynewstv.png");
+      warmImageAsset("/rooms/lobbynewstv-opt.jpg");
       warmImageAsset("/rooms/fullimagecity-opt.jpg");
       warmImageAsset("/rooms/stillbuildingfinal-opt.jpg");
       warmImageAsset("/rooms/departmentdeck.png");

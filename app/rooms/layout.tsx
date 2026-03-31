@@ -83,7 +83,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (pathname !== "/rooms/lobby") return;
-    warmImageAsset("/rooms/lobbynewstv.png");
+    warmImageAsset("/rooms/lobbynewstv-opt.jpg");
     warmRoomAssetsByHref("/rooms/lobby");
   }, [pathname]);
 
@@ -184,7 +184,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
           ? {
               backgroundColor: "#16110d",
               backgroundImage:
-                'linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)), url("/rooms/lobbynewstv.png")',
+                'linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)), url("/rooms/lobbynewstv-opt.jpg")',
               backgroundSize: "cover",
               backgroundPosition: "center 58%",
             }

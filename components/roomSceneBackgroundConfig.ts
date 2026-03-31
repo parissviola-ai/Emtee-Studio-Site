@@ -20,6 +20,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/quietroomvid-firstframe-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/finaldeswlogos-opt.jpg": { w: 3840, h: 2160 },
+  "/rooms/finaldescomplete.png": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/meetingroom4.png": { w: 1920, h: 1080 },

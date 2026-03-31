@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const orangeRoom: Room = {
     slug: "dirty-elephant-studio",
     title: "Dirty Elephant Studios",
-    backgroundImage: "/rooms/finaldeswlogos-opt.jpg",
+    backgroundImage: "/rooms/finaldescomplete.png",
     hotspots: [
       { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment", x: 90, y:  20, direction: "right" },
       {
@@ -149,10 +149,10 @@ export const orangeRoom: Room = {
             "https://www.youtube.com/embed/SePmCgtpw6s?autoplay=1&mute=0&playsinline=1&controls=1&rel=0&enablejsapi=1",
           highlightsTitle: "Tour Dates",
           highlights: [
-            "TBD 2026 Toronto",
-            "TBD 2026 New York",
-            "TBD 2026 San Fransisco",
-            "TBD 2026 Vancouver",
+            "TBD 2026 · Toronto",
+            "TBD 2026 · New York",
+            "TBD 2026 · San Francisco",
+            "TBD 2026 · Vancouver",
           ],
           primaryLabel: "Get Tickets",
           primaryHref: "https://www.stubhub.com/yanchan-produced-tickets/performer/150247431",

@@ -30,6 +30,9 @@ const RoomHotspotLayer = dynamic(() => import("@/components/RoomHotspotLayer"), 
   ssr: false,
 });
 const PIN_HELPER_ENABLED = process.env.NEXT_PUBLIC_ENABLE_PIN_HELPER === "1";
+// Temporary note: mobile tilt is intentionally disabled for now.
+// Flip this back to true when we're ready to restore it.
+const MOBILE_TILT_ENABLED = false;
 
 export type Hotspot = {
   id: string;
@@ -129,6 +132,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/quietroomvid-firstframe-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/finaldeswlogos-opt.jpg": { w: 3840, h: 2160 },
+  "/rooms/finaldescomplete.png": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/meetingroom4.png": { w: 1920, h: 1080 },
@@ -1149,6 +1153,7 @@ export default function RoomScene({
   }
 
   async function enableTiltPan() {
+    if (!MOBILE_TILT_ENABLED) return;
     if (typeof window === "undefined") return;
     if (!("DeviceOrientationEvent" in window)) {
       setTiltStatus("blocked");
@@ -1612,6 +1617,13 @@ export default function RoomScene({
   }, [closeLobbyExploreHover, isLobbyExploreHoverOpen, isLobbyRoom]);
 
   useEffect(() => {
+    if (!MOBILE_TILT_ENABLED) {
+      setTiltEnabled(false);
+      setTiltAvailable(false);
+      setTiltPermissionNeeded(false);
+      setTiltStatus("idle");
+      return;
+    }
     if (typeof window === "undefined") return;
     const hasDeviceOrientation = "DeviceOrientationEvent" in window;
     setIsSecureContextState(window.isSecureContext);
@@ -2508,7 +2520,7 @@ export default function RoomScene({
         />
       ) : null}
 
-      {isMobileViewport && tiltAvailable && !exploreOpen && !isModalOpen ? (
+      {MOBILE_TILT_ENABLED && isMobileViewport && tiltAvailable && !exploreOpen && !isModalOpen ? (
         <div className="absolute bottom-20 right-2 z-50 flex flex-col items-end gap-1.5 md:hidden" data-no-pan>
           {tiltEnabled ? (
             <button

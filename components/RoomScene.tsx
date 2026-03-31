@@ -127,6 +127,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/sdspagefinal-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/quietroomvid-firstframe-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
+  "/rooms/des2.png": { w: 3840, h: 2160 },
   "/rooms/colorizedmarketing-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/marketingfinal3-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/meetingroom4.png": { w: 1920, h: 1080 },
@@ -173,27 +174,34 @@ const PREVIOUS_ROOM_LINKS: Record<string, string> = {
   "ten-ten-entertainment": "/rooms/dirty-elephant-studio",
   "steeped-dreams-studio": "/rooms/ten-ten-entertainment",
 };
-const ORANGE_SESSION_PREVIEW_DOT_ID = "apply-dirty-elephant-studio-room-session";
 const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
-  { src: "/news/aruljuno-opt.jpg", label: "ARUL", isJunoNominated: true, objectPosition: "center 20%" },
-  { src: "/news/thinkyouglowed-opt.jpg", label: "Lil Durk - Think You Glowed", objectPosition: "center 18%" },
   {
-    src: "https://yt3.googleusercontent.com/f16R_n3YKPthxphDOdHNX9qE1c8-1gN67Ax4uARDL_n0K0nCqMTdNroE-fBhbuA_ouU48wE9yBY=s900-c-k-c0x00ffffff-no-rj",
-    label: "Russ - The Wind",
-    objectPosition: "center 20%",
+    src: "https://th-i.thgim.com/public/entertainment/movies/e45uic/article69343866.ece/alternates/LANDSCAPE_1200/SN%20%20Yanchan2.jpg",
+    label: "Yanchan Produced & Sandeep Narayan - Arul",
+    isJunoNominated: true,
+    objectPosition: "center 24%",
   },
   {
     src: "https://i.ytimg.com/vi/IIat8oxEIbE/maxresdefault.jpg",
-    label: "Shruti Hassan - Inimel",
+    label: "Shruti Haasan & Kamal Haasan - Inimel",
     objectPosition: "center 24%",
   },
-  { src: "/news/jonitabeparwai-opt.jpg", label: "Jonita - Beparwai" },
-  { src: "/news/chaisunshinechart-opt.jpg", label: "Chai & Sunshine", objectPosition: "center 18%" },
   {
-    src: "https://g5afoundation.org/culture/wp-content/uploads/2023/08/SVDP-by-Gajan-Balan-1-1-474x324.jpg",
-    label: "SVDP - mrdgm raps",
+    src: "https://i.ytimg.com/vi/lH3SdlkeudA/mqdefault.jpg",
+    label: "Yanchan Produced & Anjulie - Chai & Sunshine",
     objectPosition: "center 18%",
   },
+  {
+    src: "https://i.ytimg.com/vi/ceDFShaaYOA/maxresdefault.jpg",
+    label: "SVDP & Yanchan Produced - Mrithangam Raps",
+    objectPosition: "center 18%",
+  },
+  {
+    src: "https://i.ytimg.com/vi/XdJRxrdB66o/maxresdefault.jpg",
+    label: "Charle$ Wolfie - Personal",
+    objectPosition: "center 22%",
+  },
+  { src: "/news/pillabiseenit-opt.jpg", label: "Pilla B - I Seen It", objectPosition: "center 18%" },
 ];
 
 function shouldDebugRoomNav() {
@@ -593,8 +601,12 @@ export default function RoomScene({
   const [videoMuted, setVideoMuted] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const shouldStartVideoMuted = useCallback(
-    (modal: Hotspot["modal"]) => modal?.title !== "Who We Are" || isMobileViewportRaw,
-    [isMobileViewportRaw]
+    (modal: Hotspot["modal"]) => {
+      const shouldAllowSoundOnOpen =
+        modal?.title === "Who We Are" || modal?.title === "Yanchan Produced Live";
+      return !shouldAllowSoundOnOpen;
+    },
+    []
   );
   const openModal = useCallback((modal: Hotspot["modal"]) => {
     if (room.slug === "lobby" && modal?.title === "Start Here") {
@@ -715,22 +727,6 @@ export default function RoomScene({
     node.setAttribute("preload", "auto");
   }, [backgroundVideoPlaybackRate, shouldNativeLoopBackgroundVideo]);
 
-  const toggleOrangePreviewMute = useCallback(() => {
-    orangeExtrasRef.current?.togglePreviewMute();
-  }, []);
-
-  const startOrangeMobileSessionAudio = useCallback(() => {
-    orangeExtrasRef.current?.startMobileSessionAudio();
-  }, []);
-
-  const showOrangeSessionPreview = useCallback(() => {
-    orangeExtrasRef.current?.openSessionPreview();
-  }, []);
-
-  const hideOrangeSessionPreview = useCallback(() => {
-    orangeExtrasRef.current?.closeSessionPreview();
-  }, []);
-
   const closeLobbyExploreHover = useCallback(() => {
     if (lobbyExploreHoverCloseTimerRef.current !== undefined) {
       window.clearTimeout(lobbyExploreHoverCloseTimerRef.current);
@@ -847,7 +843,7 @@ export default function RoomScene({
       activeModal?.title === "Tier 3: Artist World"
     );
   const isOrangeModal = isOrangeRoom && !!activeModal;
-  const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Apply For An Orange Room Session";
+  const isOrangeSessionModalOpen = isOrangeRoom && activeModal?.title === "Orange Room Session";
   const isStartHereModal = activeModal?.title === "Start Here";
   const isCarouselModal = !!activeModal?.carouselSlides?.length;
   const isLiveRoomModal = room.slug === "ten-ten-entertainment" && !!activeModal && !isPackageGridModal;
@@ -2716,8 +2712,6 @@ export default function RoomScene({
         hasHydrated={hasHydrated}
         roomSlug={room.slug}
         lobbyResponsiveIsMobile={lobbyResponsiveIsMobile}
-        isOrangeRoom={isOrangeRoom}
-        orangeSessionPreviewDotId={ORANGE_SESSION_PREVIEW_DOT_ID}
         getMobileHotspotStyle={getMobileHotspotStyle}
         getHotspotAnchorTransform={getHotspotAnchorTransform}
         renderHotspotContent={(spot) =>
@@ -2730,9 +2724,6 @@ export default function RoomScene({
         onOpenModal={(spot) => {
           triggerHotspotLabelGlow(spot);
           setModalBackModal(null);
-          if (isOrangeRoom && isMobileViewport && spot.id === ORANGE_SESSION_PREVIEW_DOT_ID) {
-            startOrangeMobileSessionAudio();
-          }
           openModal(spot.modal!);
         }}
         onExternalLinkClick={(spot) => {
@@ -2743,8 +2734,6 @@ export default function RoomScene({
           triggerHotspotLabelGlow(spot);
           void navigateToRoomHref(spot.href!, "room-scene-hotspot");
         }}
-        onOrangePreviewEnter={showOrangeSessionPreview}
-        onOrangePreviewLeave={hideOrangeSessionPreview}
         prefetchExploreRoute={prefetchExploreRoute}
       />
 
@@ -2776,9 +2765,6 @@ export default function RoomScene({
         isStartHereModal={isStartHereModal}
         isOrangeModal={isOrangeModal}
         isQuietModal={isQuietModal}
-        isOrangeSessionModalOpen={isOrangeSessionModalOpen}
-        isOrangePreviewMuted={isOrangePreviewMuted}
-        toggleOrangePreviewMute={toggleOrangePreviewMute}
         resolvedCornerLogo={resolvedCornerLogo}
         resolvedCornerLogoAlt={resolvedCornerLogoAlt}
         revealStep={revealStep}

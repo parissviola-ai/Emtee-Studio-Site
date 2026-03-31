@@ -30,8 +30,6 @@ type RoomHotspotLayerProps = {
   hasHydrated: boolean;
   roomSlug: string;
   lobbyResponsiveIsMobile: boolean;
-  isOrangeRoom: boolean;
-  orangeSessionPreviewDotId: string;
   getMobileHotspotStyle: (spot: any) => CSSProperties;
   getHotspotAnchorTransform: (spot: any) => string | undefined;
   renderHotspotContent: (spot: any) => ReactNode;
@@ -39,8 +37,6 @@ type RoomHotspotLayerProps = {
   onOpenModal: (spot: any) => void;
   onExternalLinkClick: (spot: any) => void;
   onInternalLinkClick: (event: MouseEvent, spot: any) => void;
-  onOrangePreviewEnter: () => void;
-  onOrangePreviewLeave: () => void;
   prefetchExploreRoute: (href: string) => void;
 };
 
@@ -57,8 +53,6 @@ export default function RoomHotspotLayer({
   hasHydrated,
   roomSlug,
   lobbyResponsiveIsMobile,
-  isOrangeRoom,
-  orangeSessionPreviewDotId,
   getMobileHotspotStyle,
   getHotspotAnchorTransform,
   renderHotspotContent,
@@ -66,8 +60,6 @@ export default function RoomHotspotLayer({
   onOpenModal,
   onExternalLinkClick,
   onInternalLinkClick,
-  onOrangePreviewEnter,
-  onOrangePreviewLeave,
   prefetchExploreRoute,
 }: RoomHotspotLayerProps) {
   const hotspots = visibleHotspots ?? [];
@@ -134,12 +126,6 @@ export default function RoomHotspotLayer({
                   type="button"
                   className={sharedClassName}
                   style={sharedStyle}
-                  onMouseEnter={
-                    isOrangeRoom && spot.id === orangeSessionPreviewDotId ? onOrangePreviewEnter : undefined
-                  }
-                  onMouseLeave={
-                    isOrangeRoom && spot.id === orangeSessionPreviewDotId ? onOrangePreviewLeave : undefined
-                  }
                   onClick={() => onOpenModal(spot)}
                 >
                   {content}

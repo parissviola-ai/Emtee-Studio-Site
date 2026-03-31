@@ -15,9 +15,6 @@ type RoomModalLayerProps = {
   isStartHereModal: boolean;
   isOrangeModal: boolean;
   isQuietModal: boolean;
-  isOrangeSessionModalOpen: boolean;
-  isOrangePreviewMuted: boolean;
-  toggleOrangePreviewMute: () => void;
   resolvedCornerLogo?: string;
   resolvedCornerLogoAlt?: string;
   revealStep: number;
@@ -52,9 +49,6 @@ export default function RoomModalLayer({
   isStartHereModal,
   isOrangeModal,
   isQuietModal,
-  isOrangeSessionModalOpen,
-  isOrangePreviewMuted,
-  toggleOrangePreviewMute,
   resolvedCornerLogo,
   resolvedCornerLogoAlt,
   revealStep,
@@ -90,6 +84,7 @@ export default function RoomModalLayer({
   const isSteepedDreamsChillOutModal = currentModal.title === "Overstimulated? Chill Out";
   const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
   const isCustomProductionModal = currentModal.title === "Apply For Custom Production";
+  const isYanchanLiveModal = currentModal.title === "Yanchan Produced Live";
   const isLivePackagesModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Packages";
   const isWebsiteDesignMainModal =
     roomSlug === "marketing" && currentModal.title === "Website Development";
@@ -132,6 +127,8 @@ export default function RoomModalLayer({
   const isResourceOnlyModal = !!activeResourceContext;
   const shouldUseCompactFooterButtons = isResourceOnlyModal || isPackageGridModal;
   const uniformModalButtonSizing = "px-3 py-1.5 text-[11px] font-medium";
+  const isExternalActionHref = (href: string) =>
+    href.startsWith("http") || href.startsWith("mailto:") || href.startsWith("tel:");
   const compactFooterButtonClass =
     `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
   const quietFooterWrapClass = isQuietModal ? "flex flex-wrap items-center gap-3 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end";
@@ -346,8 +343,15 @@ export default function RoomModalLayer({
         <button key="modal-primary-modal" type="button" onClick={() => handleModalTarget(activeModal.primaryHref)} className={primaryButtonClass}>
           {activeModal.primaryLabel ?? "View Details"} →
         </button>
-      ) : activeModal.primaryHref.startsWith("http") ? (
-        <a key="modal-primary-http" href={activeModal.primaryHref} target="_blank" rel="noopener noreferrer" onClick={closeModal} className={primaryButtonClass}>
+      ) : isExternalActionHref(activeModal.primaryHref) ? (
+        <a
+          key="modal-primary-http"
+          href={activeModal.primaryHref}
+          target={activeModal.primaryHref.startsWith("http") ? "_blank" : undefined}
+          rel={activeModal.primaryHref.startsWith("http") ? "noopener noreferrer" : undefined}
+          onClick={closeModal}
+          className={primaryButtonClass}
+        >
           {activeModal.primaryLabel ?? "View Details"} →
         </a>
       ) : (
@@ -360,8 +364,15 @@ export default function RoomModalLayer({
 
   if (activeModal.secondaryHref && activeModal.secondaryLabel) {
     footerActions.push(
-      activeModal.secondaryHref.startsWith("http") ? (
-        <a key="modal-secondary-http" href={activeModal.secondaryHref} target="_blank" rel="noopener noreferrer" onClick={closeModal} className={secondaryButtonClass}>
+      isExternalActionHref(activeModal.secondaryHref) ? (
+        <a
+          key="modal-secondary-http"
+          href={activeModal.secondaryHref}
+          target={activeModal.secondaryHref.startsWith("http") ? "_blank" : undefined}
+          rel={activeModal.secondaryHref.startsWith("http") ? "noopener noreferrer" : undefined}
+          onClick={closeModal}
+          className={secondaryButtonClass}
+        >
           {activeModal.secondaryLabel} →
         </a>
       ) : activeModal.secondaryHref.startsWith("modal:") ? (
@@ -416,6 +427,10 @@ export default function RoomModalLayer({
         className={[
           isStartHereModal
             ? "relative z-10 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isCustomProductionModal
+            ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isYanchanLiveModal
+            ? "relative z-10 flex w-full max-w-[640px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isResourceOnlyModal
             ? "relative z-10 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : "relative z-10 flex w-full max-w-[900px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]",
@@ -507,15 +522,6 @@ export default function RoomModalLayer({
                         : "",
                     ].join(" ")}
                   />
-                  {isOrangeSessionModalOpen ? (
-                    <button
-                      type="button"
-                      onClick={toggleOrangePreviewMute}
-                      className={`inline-flex shrink-0 items-center justify-center rounded-full border border-dirty-elephant-studio-200/30 bg-black/45 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 transition hover:border-dirty-elephant-studio-200/50 hover:bg-black/60`}
-                    >
-                      {isOrangePreviewMuted ? "Unmute Music" : "Mute Music"}
-                    </button>
-                  ) : null}
                 </div>
               </div>
             ) : null}
@@ -529,7 +535,7 @@ export default function RoomModalLayer({
                   revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                 ].join(" ")}
               >
-                <div className="relative w-full max-w-[640px] overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                <div className={["relative w-full overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_20px_60px_rgba(0,0,0,0.6)]", isYanchanLiveModal ? "max-w-[520px]" : "max-w-[640px]"].join(" ")}>
                   <div className="relative aspect-video">
                     <iframe
                       ref={iframeRef}

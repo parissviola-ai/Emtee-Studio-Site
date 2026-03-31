@@ -3,7 +3,7 @@ import type { Room } from "./types";
 export const orangeRoom: Room = {
     slug: "dirty-elephant-studio",
     title: "Dirty Elephant Studios",
-    backgroundImage: "/rooms/dirtyelephant2-opt.jpg",
+    backgroundImage: "/rooms/des2.png",
     hotspots: [
       { id: "next-room", label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment", x: 90, y:  20, direction: "right" },
       {
@@ -23,14 +23,11 @@ export const orangeRoom: Room = {
           cornerLogo: "/rooms/yanchanblack6-removebg.png",
           cornerLogoAlt: "Yanchan Produced logo",
           body:
-            "Use the short form to submit your name and a link to your music so we can review fit for custom production.",
+            "Click the button below to apply to work with Yanchan Produced on custom production for your next project, advertisement or personal endeavours.",
           primaryLabel: "Apply",
           primaryHref: "/custom-production-short-form",
-          secondaryLabel: "Yanchan Produced Playlist",
+          secondaryLabel: "YP Playlist",
           secondaryHref: "https://open.spotify.com/playlist/37i9dQZF1E4Abx1jG3AvIj?si=1kv1EGuXSfWyOJ44r1g4Zw",
-          links: [
-            { label: "Preview BTS of ORS (IG)", href: "https://www.instagram.com/p/DUn5iIUEZxh/" },
-          ],
         },
       },
       {
@@ -51,7 +48,7 @@ export const orangeRoom: Room = {
           headerLogoAlt: "Yanchan Produced logo",
           hideTitle: true,
           body:
-            "Yanchan is one of EMTEE Music Group's flagship artists, known for strong output, creative identity, and consistent momentum. Orange Room Sessions highlights his producer-led process and artist development approach.\n\nYanchan Produced is a Canadian-Tamil producer, mixing engineer, songwriter, and Mridangist. His solo and collaborative releases have earned 12M+ Spotify streams, with affiliations across reputable labels and collaborators including Russ, SVDP, Shruthi Hassan, Pressa, Kristina Maria, Yung Tory, and Charle$.",
+            "Yanchan Rajmohan, best known as Yanchan Produced, is one of Emtee Music Group's flagship artists and founder of Dirty Elephant Studios. He’s best known for his production and mridangham playing where he bridges the gap between south asian tamil sounds and mainstream pop and hip hop.\n\nYanchan’s abilities as a mixing engineer, songwriter and vocalist allows him to produce music in a way that brings the best of all artists that work with him no matter the genre. Yanchan Produced is a Canadian-Tamil producer, mixing engineer, songwriter, and Mridangist. His solo and collaborative releases have earned 12M+ Spotify streams, with affiliations across reputable labels and collaborators including Russ, SVDP, Shruthi Hassan, Pressa, Kristina Maria, Yung Tory and Lil Durk.",
           image: "/rooms/yanchanbiopic-opt.jpg",
           links: [
             { label: "Website", href: "https://yanchanproduced.com/" },
@@ -79,16 +76,17 @@ export const orangeRoom: Room = {
           cornerLogoAlt: "Yanchan Produced logo",
           body:
             "Selected credits from Yanchan Produced's catalog, including award-recognized work and key collaborations.",
-          highlightsTitle: "Credits & Milestones",
+          highlightsTitle: "Selected Releases",
           highlights: [
-            "FEATURE::ARUL - JUNO Award Nominated",
-            "Lil Durk - Think You Glowed",
-            "Russ - The Wind",
-            "Shruti Hassan - Inimel",
-            "Jonita - Beparwai",
-            "Chai & Sunshine",
-            "SVDP - mrdgm raps",
+            "FEATURE::Yanchan Produced & Sandeep Narayan - Arul",
+            "Shruti Haasan & Kamal Haasan - Inimel",
+            "Yanchan Produced & Anjulie - Chai & Sunshine",
+            "SVDP & Yanchan Produced - Mrithangam Raps",
+            "Charle$ Wolfie - Personal",
+            "Pilla B - I Seen It",
           ],
+          secondaryLabel: "Yanchan Produced Playlist",
+          secondaryHref: "https://open.spotify.com/playlist/6fvzdF9eOj3Czb8bYAJeVb",
         },
       },
       {
@@ -104,15 +102,15 @@ export const orangeRoom: Room = {
         direction: "left",
         variant: "dot",
         modal: {
-          title: "Apply For An Orange Room Session",
+          title: "Orange Room Session",
           cornerLogo: "/rooms/yanchanblack6-removebg.png",
           cornerLogoAlt: "Yanchan Produced logo",
           body:
-            "Submit a short application to request an Orange Room Session slot.\n\nUse the preview link below to see the format and performance style.",
+            "The Orange Room Session is a fresh new take on freestyle music. Yanchan Produced will bring an artist into the Orange Room for about 2 hours to catch the inspiration of the combination of energies and sounds. In the 2 hours, Yanchan produces a beat, the artist creates a verse and away they go.\n\nFor your chance to be a part of the Orange Room click the button below and send us your name, email and links to your music.",
           primaryLabel: "Apply",
-          primaryHref: "/dirty-elephant-studio-room-session",
-          secondaryLabel: "Preview Orange Room Session",
-          secondaryHref: "https://www.instagram.com/p/DUqfIvGER2F/",
+          primaryHref: "mailto:contact@emteemusicgroup.com?subject=Orange%20Room%20Sessions%3A%20Inquiry",
+          secondaryLabel: "Orange Room Session Playlist",
+          secondaryHref: "https://open.spotify.com/playlist/6fvzdF9eOj3Czb8bYAJeVb",
         },
       },
       {
@@ -146,9 +144,9 @@ export const orangeRoom: Room = {
           cornerLogo: "/rooms/yanchanblack6-removebg.png",
           cornerLogoAlt: "Yanchan Produced logo",
           body:
-            "Live performance hub for show previews, upcoming dates, and ticket access.",
+            "Live performance hub for show previews, upcoming dates and ticket access.",
           videoEmbed:
-            "https://www.youtube.com/embed/SePmCgtpw6s?autoplay=1&mute=1&playsinline=1&controls=1&rel=0&enablejsapi=1",
+            "https://www.youtube.com/embed/SePmCgtpw6s?autoplay=1&mute=0&playsinline=1&controls=1&rel=0&enablejsapi=1",
           highlightsTitle: "Mock Tour Dates",
           highlights: [
             "Apr 18, 2026 · Toronto, ON · Rivoli",
@@ -160,6 +158,8 @@ export const orangeRoom: Room = {
           ],
           primaryLabel: "Get Tickets",
           primaryHref: "https://www.stubhub.com/yanchan-produced-tickets/performer/150247431",
+          secondaryLabel: "Booking Inquiry",
+          secondaryHref: "mailto:contact@emteemusicgroup.com?subject=Yanchan%20Produced%20Live%3A%20Booking%20Inquiry",
         },
       },
       {

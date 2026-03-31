@@ -43,11 +43,11 @@ const OrangeRoomExtras = forwardRef<OrangeRoomExtrasHandle, OrangeRoomExtrasProp
     const previewHideTimerRef = useRef<number | undefined>(undefined);
 
     const shouldShowSessionPreview =
-      isOrangeRoom && !isMobileViewport && (isSessionPreviewVisible || isSessionModalOpen);
+      isOrangeRoom && !isMobileViewport && isSessionPreviewVisible;
     const shouldRenderMobileAudioWidget =
       isOrangeRoom &&
       isMobileViewport &&
-      (isSessionModalOpen || isMobileSessionAudioActive);
+      isMobileSessionAudioActive;
 
     const clearPreviewHideTimer = useCallback(() => {
       if (previewHideTimerRef.current === undefined) return;
@@ -149,8 +149,9 @@ const OrangeRoomExtras = forwardRef<OrangeRoomExtrasHandle, OrangeRoomExtrasProp
     }, [isOrangeRoom]);
 
     useEffect(() => {
-      if (isSessionModalOpen) return;
-      setIsSessionPreviewVisible(false);
+      if (isSessionModalOpen) {
+        setIsSessionPreviewVisible(false);
+      }
     }, [isSessionModalOpen]);
 
     useEffect(() => {
@@ -185,7 +186,6 @@ const OrangeRoomExtras = forwardRef<OrangeRoomExtrasHandle, OrangeRoomExtrasProp
 
     useEffect(() => {
       if (!isMobileViewport) return;
-      if (isSessionModalOpen) return;
       const video = orangeMobileAudioRef.current;
       if (!video) return;
       video.pause();

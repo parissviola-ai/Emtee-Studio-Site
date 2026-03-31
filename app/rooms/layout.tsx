@@ -336,7 +336,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                 onClick={() => setMobileMenuOpen((prev) => !prev)}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="rooms-mobile-menu"
-                className="inline-flex min-w-[5.5rem] items-center justify-center rounded-full border border-white/18 bg-white/8 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/88 backdrop-blur-xl transition hover:bg-white/12"
+                className="inline-flex min-w-[4rem] items-center justify-center px-1 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/88 transition hover:text-white"
               >
                 Menu
               </button>

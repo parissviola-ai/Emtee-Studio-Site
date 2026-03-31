@@ -198,6 +198,7 @@ export default function RoomModalLayer({
 
   const isStructuredFooterModal = !isStartHereModal;
   const shouldUseCompactCardBody = isStructuredFooterModal && !isCarouselModal;
+  const shouldUseCompactYanchanMusicLayout = isYanchanMusicModal;
   const footerActions: ReactNode[] = [];
 
   if (isCustomProductionModal && activeModal.primaryHref) {
@@ -433,6 +434,8 @@ export default function RoomModalLayer({
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isOrangeSessionModal
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : shouldUseCompactYanchanMusicLayout
+            ? "relative z-10 flex w-full max-w-[572px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isYanchanLiveModal
             ? "relative z-10 flex w-full max-w-[640px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isResourceOnlyModal
@@ -445,8 +448,8 @@ export default function RoomModalLayer({
             : "border border-white/15 bg-black/55",
         ].join(" ")}
       >
-        <div className={[shouldUseCompactCardBody ? "overflow-y-auto" : "flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : isResourceOnlyModal ? "p-4 md:p-5" : shouldUseCompactCardBody ? "p-6 pb-4 md:pb-4" : "p-6 pb-8 md:pb-10"].join(" ")}>
-          <div className={["flex items-start justify-between gap-4", shouldOverlayCornerLogo ? "relative pr-24 sm:pr-28" : ""].join(" ")}>
+        <div className={[shouldUseCompactCardBody ? "overflow-y-auto" : "flex-1 overflow-y-auto", isStartHereModal ? "p-2 md:p-2.5" : isResourceOnlyModal ? "p-4 md:p-5" : shouldUseCompactYanchanMusicLayout ? "p-4 pb-3 md:p-4 md:pb-3" : shouldUseCompactCardBody ? "p-6 pb-4 md:pb-4" : "p-6 pb-8 md:pb-10"].join(" ")}>
+          <div className={["flex items-start justify-between gap-4", shouldOverlayCornerLogo ? "relative min-h-[92px] pr-24 sm:min-h-[104px] sm:pr-28" : ""].join(" ")}>
             <div className="min-w-0 w-full">
               {activeModal.headerLogo ? (
                 <div
@@ -531,7 +534,7 @@ export default function RoomModalLayer({
             ) : null}
           </div>
 
-          <div className={["min-w-0 w-full", isResourceOnlyModal ? "mx-auto max-w-[430px]" : ""].join(" ")}>
+            <div className={["min-w-0 w-full", isResourceOnlyModal ? "mx-auto max-w-[430px]" : shouldUseCompactYanchanMusicLayout ? "mx-auto max-w-[494px]" : ""].join(" ")}>
             {activeModal.videoEmbed ? (
               <div
                 className={[
@@ -570,9 +573,19 @@ export default function RoomModalLayer({
             ) : null}
 
             {activeModal.image && isYanchanMusicModal ? (
-              <div className={["mt-6 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
-                <div className="relative h-[420px] w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
-                  <NextImage src={activeModal.image} alt={activeModal.title} fill sizes="(max-width: 900px) 100vw, 900px" className="object-contain" style={{ objectPosition: "center -60px" }} />
+              <div className={["mt-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
+                <div className="w-full overflow-hidden rounded-2xl bg-black/25 p-3 shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
+                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl">
+                    <NextImage
+                      src={activeModal.image}
+                      alt={activeModal.title}
+                      fill
+                      sizes="(max-width: 572px) calc(100vw - 3rem), 494px"
+                      className="object-cover"
+                      style={{ objectPosition: "center 44%" }}
+                      priority
+                    />
+                  </div>
                 </div>
               </div>
             ) : null}
@@ -585,7 +598,7 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={[isSteepedDreamsChillOutModal ? "mt-1 grid gap-4" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
+            <div className={[isSteepedDreamsChillOutModal ? "mt-1 grid gap-4" : shouldUseCompactYanchanMusicLayout ? "mt-3 grid gap-2.5" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
               {!activeResourceContext ? <div className="min-w-0">
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
@@ -901,10 +914,10 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
+            <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : shouldUseCompactYanchanMusicLayout ? "mt-4 shrink-0 border-t border-white/10 px-4 pb-3 pt-3 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
               {isStructuredFooterModal ? (
-                <div className={["flex w-full items-end", isResourceOnlyModal ? "max-w-[430px] mx-auto" : ""].join(" ")}>
-                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
+                <div className={["flex w-full items-end", isResourceOnlyModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
+                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
                     {footerActions}
                   </div>
 

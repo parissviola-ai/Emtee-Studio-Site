@@ -94,7 +94,7 @@ export const quietRoom: Room = {
         modal: {
           title: "Overstimulated? Chill Out",
           body:
-            "A peaceful community space is on the way. Stay tuned for gentle updates, future gatherings, and new ways to connect with Steeped Dreams Studio.",
+            "A peaceful community space is on the way. Stay tuned for updates, future gatherings, and new ways to connect with Steeped Dreams Studio.",
         },
       },
     ],

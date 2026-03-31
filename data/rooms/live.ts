@@ -41,7 +41,7 @@ export const liveRoom: Room = {
         x: 23.17,
         y: 27.99,
         positions: {
-          laptop: { x: 15, y: 27 },
+          laptop: { x: 23.17, y: 27.99 },
           tablet: { x: 23.17, y: 27.99 },
           mobile: { x: 23.17, y: 21.4 },
         },
@@ -55,7 +55,7 @@ export const liveRoom: Room = {
         x: 77.96,
         y: 26.94,
         positions: {
-          laptop: { x: 84, y: 27 },
+          laptop: { x: 77.96, y: 26.94 },
           tablet: { x: 77.96, y: 26.94 },
           mobile: { x: 77.96, y: 20.4 },
         },
@@ -69,7 +69,7 @@ export const liveRoom: Room = {
         x: 21.85,
         y: 63.32,
         positions: {
-          laptop: { x: 18, y: 33 },
+          laptop: { x: 21.85, y: 63.32 },
           tablet: { x: 21.85, y: 63.32 },
         },
         allowLargeResponsiveShift: true,

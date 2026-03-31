@@ -414,6 +414,16 @@ export default function RoomModalLayer({
         <a key="carousel-primary-http" href={activeCarouselSlide.primaryHref} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
           {activeCarouselSlide.primaryLabel} →
         </a>
+      ) : activeCarouselSlide.primaryTargetBlank ? (
+        <a
+          key="carousel-primary-link-new-tab"
+          href={activeCarouselSlide.primaryHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}
+        >
+          {activeCarouselSlide.primaryLabel} →
+        </a>
       ) : (
         <Link key="carousel-primary-link" href={activeCarouselSlide.primaryHref} onClick={closeModal} className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
           {activeCarouselSlide.primaryLabel} →

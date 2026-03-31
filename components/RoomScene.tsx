@@ -59,6 +59,7 @@ export type Hotspot = {
       body?: string;
       primaryLabel?: string;
       primaryHref?: string;
+      primaryTargetBlank?: boolean;
       secondaryLabel?: string;
       secondaryHref?: string;
     }>;

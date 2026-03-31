@@ -155,6 +155,7 @@ export const lobbyRoom: Room = {
             body: card.snapshot,
             primaryLabel: "View Full Case Study",
             primaryHref: card.caseStudyHref ?? "/case-studies",
+            primaryTargetBlank: true,
             secondaryLabel: "How You Start",
             secondaryHref: "modal:how-you-start",
           })),

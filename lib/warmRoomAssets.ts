@@ -11,6 +11,7 @@ const roomWarmTimestamps = new Map<string, number>();
 const ROOM_NAVIGATION_WAIT_TIMEOUT_MS = 2200;
 const ROOM_WARM_DEDUP_MS = 4000;
 const AGGRESSIVE_VIDEO_WARM_SLUGS = new Set(["steeped-dreams-studio"]);
+const AGGRESSIVE_IMAGE_WARM_SLUGS = new Set(["business"]);
 
 export const ROOM_FLOW_SLUGS = [
   "lobby",
@@ -176,14 +177,19 @@ export function warmRoomAssetsBySlug(slug?: string | null, options?: { force?: b
   if (!room) return;
   if (!options?.force && shouldSkipRoomWarm(slug)) return;
   const useAggressiveVideoWarm = AGGRESSIVE_VIDEO_WARM_SLUGS.has(slug);
+  const useAggressiveImageWarm = AGGRESSIVE_IMAGE_WARM_SLUGS.has(slug);
   logRoomNav("warmRoomAssets:start", {
     slug,
     backgroundImage: room.backgroundImage ?? null,
     backgroundVideo: room.backgroundVideo ?? null,
     backgroundVideoMobile: room.backgroundVideoMobile ?? null,
+    aggressiveImageWarm: useAggressiveImageWarm,
     aggressiveVideoWarm: useAggressiveVideoWarm,
   });
   warmImageAsset(room.backgroundImage);
+  if (useAggressiveImageWarm && room.backgroundImage) {
+    void waitForImageReady(room.backgroundImage);
+  }
   warmVideoAsset(room.backgroundVideo, { aggressive: useAggressiveVideoWarm });
   warmVideoAsset(room.backgroundVideoMobile, { aggressive: useAggressiveVideoWarm });
 }
@@ -205,7 +211,8 @@ export async function awaitRoomAssetsBySlug(slug?: string | null) {
   if (!room) return;
 
   const useAggressiveVideoWarm = AGGRESSIVE_VIDEO_WARM_SLUGS.has(slug);
-  const timeoutMs = useAggressiveVideoWarm ? 3200 : ROOM_NAVIGATION_WAIT_TIMEOUT_MS;
+  const useAggressiveImageWarm = AGGRESSIVE_IMAGE_WARM_SLUGS.has(slug);
+  const timeoutMs = useAggressiveVideoWarm || useAggressiveImageWarm ? 3200 : ROOM_NAVIGATION_WAIT_TIMEOUT_MS;
   logRoomNav("awaitRoomAssets:start", { slug });
   warmRoomAssetsBySlug(slug, { force: true });
 

@@ -11,8 +11,8 @@ export const lobbyRoom: Room = {
         label: "News",
         tier: "secondary",
         href: "/news",
-        x: 72.01,
-        y: 40.97,
+        x: 69.06,
+        y: 41.06,
       },
       {
         id: "Board Rooms",

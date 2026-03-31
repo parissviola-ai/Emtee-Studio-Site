@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Footer from "@/components/Footer";
 import { rooms } from "@/data/rooms";
-import { awaitRoomAssetsByHref, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
+import { awaitRoomAssetsByHref, warmImageAsset, warmRoomAssetsByHref, warmRoomAssetsBySlug } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -80,6 +80,12 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (pathname !== "/rooms/lobby") return;
+    warmImageAsset("/rooms/lobbynewstv.png");
+    warmRoomAssetsByHref("/rooms/lobby");
+  }, [pathname]);
 
   useEffect(() => {
     const routeSet = new Set<string>([
@@ -171,7 +177,20 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   }, [isLobby, pathname]);
 
   return (
-    <div className="relative min-h-[100svh] w-full bg-black text-white">
+    <div
+      className="relative min-h-[100svh] w-full bg-black text-white"
+      style={
+        isLobby
+          ? {
+              backgroundColor: "#16110d",
+              backgroundImage:
+                'linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)), url("/rooms/lobbynewstv.png")',
+              backgroundSize: "cover",
+              backgroundPosition: "center 58%",
+            }
+          : undefined
+      }
+    >
       {/* Top menu bar (kept translucent to blend with room backgrounds) */}
       <header className="fixed left-0 right-0 top-0 z-50">
         <div

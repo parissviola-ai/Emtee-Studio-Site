@@ -2561,7 +2561,7 @@ export default function RoomScene({
             {room.title || "Lobby"}
           </div>
         </div>
-        {isHotspotTierPilotRoom && !isLobbyRoom ? (
+        {isHotspotTierPilotRoom ? (
           <div className="mt-2 flex items-center gap-2">
             <button
               type="button"
@@ -2589,7 +2589,7 @@ export default function RoomScene({
           ].join(" ")}
           data-no-pan
         >
-          {isHotspotTierPilotRoom && !isLobbyRoom ? (
+          {isHotspotTierPilotRoom ? (
             <button
               type="button"
               onClick={toggleShowMoreHotspots}

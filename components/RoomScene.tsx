@@ -2017,7 +2017,6 @@ export default function RoomScene({
     const isOrangeSessionDot = spot.id === "dirty-elephant-studio-room-sessions";
     const isMusicDirtyElephantDot = spot.id === "music-dirty-elephant-studios";
     const isMediaRoom = room.slug === "marketing";
-    const isBrandDealsDot = room.slug === "marketing" && spot.id === "marketing-brand-deals";
     const isLobbyDot = room.slug === "lobby";
     const isLiveRoomSocialDot =
       room.slug === "ten-ten-entertainment" &&
@@ -2058,22 +2057,16 @@ export default function RoomScene({
       room.slug === "EMTEEWebDesign" && spot.id === "website-design-enter-website";
     const dotBase = isOrangeRoom
       ? "rounded-full bg-[#ff9f3f] shadow-[0_0_0_2px_rgba(255,159,63,0.35),0_0_22px_rgba(255,159,63,0.7)]"
-      : isBrandDealsDot
-        ? "rounded-full bg-black shadow-[0_0_0_2px_rgba(0,0,0,0.34),0_0_18px_rgba(0,0,0,0.45)]"
       : isWebsiteDesignEnterDot
         ? "rounded-full bg-[#d6ae66] shadow-[0_0_0_2px_rgba(214,174,102,0.45),0_0_24px_rgba(214,174,102,0.8)]"
         : "rounded-full bg-white shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_18px_rgba(255,255,255,0.55)]";
     const haloBase = isOrangeRoom
       ? "bg-[#ff9f3f]/35"
-      : isBrandDealsDot
-        ? "bg-black/28"
       : isWebsiteDesignEnterDot
         ? "bg-[#d6ae66]/40"
       : "bg-white/20";
     const ringBase = isOrangeRoom
       ? "border-[#ff9f3f]/70"
-      : isBrandDealsDot
-          ? "border-black/70"
       : isWebsiteDesignEnterDot
           ? "border-[#d6ae66]/85"
       : "border-white/45";

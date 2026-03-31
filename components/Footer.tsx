@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 export default function Footer() {
+  const careersHref = "mailto:contact@emteemusicgroup.com?subject=Career%20Inquiry";
+
   return (
     <footer className="relative w-full overflow-hidden border-t border-black/10 bg-[#0d0d0d] text-white">
       <div className="pointer-events-none absolute inset-0">
@@ -46,6 +48,7 @@ export default function Footer() {
               <Link href="/resources" className="text-white/75 transition hover:text-white">Resources</Link>
               <Link href="/artist-affiliations" className="text-white/75 transition hover:text-white">Artists</Link>
               <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className="text-white/75 transition hover:text-white">Consultation</Link>
+              <a href={careersHref} className="text-white/75 transition hover:text-white">Careers</a>
             </div>
           </div>
 

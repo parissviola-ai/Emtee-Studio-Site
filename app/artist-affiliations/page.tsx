@@ -622,7 +622,7 @@ const ORDERED_RESOURCE_SUPPORTED_ARTISTS: SupportedArtist[] = [
 const PARTNERS: Partner[] = [
   { name: "Dirty Elephant Studios", src: "/rooms/dirtyelephantlogo.png" },
   { name: "Ten Ten Entertainment", src: "/rooms/TenTenlogo.png", href: "https://www.mikecannzentertainment.com/" },
-  { name: "Steeped Dreams Studio", src: "/rooms/steepeddreamslogo.png", imageScale: 1.18 },
+  { name: "Steeped Dreams Studio", src: "/rooms/steepeddreamslogo-transparent.png", imageScale: 1.18 },
   { name: "Universal Canada", src: "/partners/umusic.png", href: "https://www.universalmusic.com", invert: true },
   { name: "Republic", src: "/partners/republic.png", href: "https://www.republicrecords.com", invert: true },
   { name: "Sony France", src: "/partners/sony-music-20260330.svg", href: "https://www.sonymusic.fr", regionLabel: "France" },
@@ -652,7 +652,7 @@ const PARTNERS: Partner[] = [
   { name: "arrambam", src: "/partners/arrambam-20260330.jpg" },
   { name: "Power Staffing", src: "/partners/power-staffing-20260330.png", href: "https://survivornet.ca/wp-content/uploads/2025/07/Power-Staffing-Solutions-Logo.png" },
   { name: "Arrow Group of Companies", src: "/partners/arrow-group-of-companies-20260330.jpg", href: "https://summit.canamedtechalliance.com/wp-content/uploads/2024/10/images.jpg" },
-  { name: "Velour Beauty", src: "/partners/velour-beauty-20260330.png", href: "https://www.velourbeauty.com/", invert: true },
+  { name: "Velour Beauty", src: "/partners/velour-beauty-transparent.png", href: "https://www.velourbeauty.com/" },
 ];
 
 export default function ArtistRosterReleasesPage() {

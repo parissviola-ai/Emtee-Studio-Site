@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomAssetsByHref, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
 
@@ -16,6 +16,7 @@ const GLOBAL_ROUTES = [
 
 export default function GlobalWarmup() {
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const routeSet = new Set<string>([
@@ -23,21 +24,26 @@ export default function GlobalWarmup() {
       "/rooms/business",
       "/rooms/steeped-dreams-studio",
     ]);
+    const shouldWarmRooms = pathname === "/" || pathname?.startsWith("/rooms/");
 
     const warmAll = () => {
       routeSet.forEach((href) => {
         router.prefetch(href);
-        warmRoomAssetsByHref(href);
+        if (shouldWarmRooms && href.startsWith("/rooms/")) {
+          warmRoomAssetsByHref(href);
+        }
       });
 
-      getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
-        router.prefetch(`/rooms/${slug}`);
-      });
-      warmRoomNeighborhoodBySlug("lobby");
-      warmImageAsset("/rooms/lobbynewstv-opt.jpg");
-      warmImageAsset("/rooms/fullimagecity-opt.jpg");
-      warmImageAsset("/rooms/stillbuildingfinal-opt.jpg");
-      warmImageAsset("/rooms/departmentdeck.png");
+      if (shouldWarmRooms) {
+        getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
+          router.prefetch(`/rooms/${slug}`);
+        });
+        warmRoomNeighborhoodBySlug("lobby");
+        warmImageAsset("/rooms/lobbynewstv-opt.jpg");
+        warmImageAsset("/rooms/fullimagecity-opt.jpg");
+        warmImageAsset("/rooms/stillbuildingfinal-opt.jpg");
+        warmImageAsset("/rooms/departmentdeck.png");
+      }
     };
 
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {
@@ -47,7 +53,7 @@ export default function GlobalWarmup() {
 
     const timer = globalThis.setTimeout(warmAll, 500);
     return () => globalThis.clearTimeout(timer);
-  }, [router]);
+  }, [pathname, router]);
 
   return null;
 }

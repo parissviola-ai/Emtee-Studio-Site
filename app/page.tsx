@@ -141,6 +141,7 @@ export default function Home() {
   const activeNaturalSize = isMobileViewport ? mobileNaturalSize : LANDING_DESKTOP_NATURAL_SIZE;
   const activeObjectPositionX = getObjectPositionX(viewport.w, isMobileViewport);
   const activeObjectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
+  const activeAnchorObjectPositionX = isMobileViewport ? 0.5 : activeObjectPositionX;
   const landingDesktopObjectPositionX = getObjectPositionX(viewport.w, false);
   const landingDesktopObjectPositionY = getObjectPositionY(viewport.w, false);
   const imageMetrics = useMemo(
@@ -153,7 +154,7 @@ export default function Home() {
 
   const buttonAnchorPoint = useMemo(() => {
     if (!imageMetrics) return null;
-    const objectPositionX = activeObjectPositionX;
+    const objectPositionX = activeAnchorObjectPositionX;
     const objectPositionY = activeObjectPositionY;
     const offsetX = (viewport.w - imageMetrics.renderedW) * objectPositionX;
     const offsetY = (viewport.h - imageMetrics.renderedH) * objectPositionY;
@@ -161,7 +162,7 @@ export default function Home() {
       x: offsetX + (activeCoords.x / 100) * imageMetrics.renderedW,
       y: offsetY + (activeCoords.y / 100) * imageMetrics.renderedH,
     };
-  }, [activeCoords.x, activeCoords.y, activeObjectPositionX, activeObjectPositionY, imageMetrics, viewport.h, viewport.w]);
+  }, [activeAnchorObjectPositionX, activeCoords.x, activeCoords.y, activeObjectPositionY, imageMetrics, viewport.h, viewport.w]);
 
   const buttonStyle = useMemo(() => {
     if (!buttonAnchorPoint) return undefined;
@@ -175,7 +176,7 @@ export default function Home() {
 
   const cardStyle = useMemo(() => {
     if (!imageMetrics) return undefined;
-    const objectPositionX = activeObjectPositionX;
+    const objectPositionX = activeAnchorObjectPositionX;
     const objectPositionY = activeObjectPositionY;
     const offsetX = (viewport.w - imageMetrics.renderedW) * objectPositionX;
     const offsetY = (viewport.h - imageMetrics.renderedH) * objectPositionY;
@@ -184,7 +185,7 @@ export default function Home() {
       left: `${offsetX + (activeCardCoords.x / 100) * imageMetrics.renderedW}px`,
       top: `${offsetY + (activeCardCoords.y / 100) * imageMetrics.renderedH}px`,
     };
-  }, [activeObjectPositionX, activeObjectPositionY, imageMetrics, isMobileViewport, viewport.h, viewport.w]);
+  }, [activeAnchorObjectPositionX, activeObjectPositionY, imageMetrics, isMobileViewport, viewport.h, viewport.w]);
 
   async function handleEnterLobby() {
     if (isEnteringLobby) return;

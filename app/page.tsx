@@ -142,8 +142,6 @@ export default function Home() {
   const activeObjectPositionX = getObjectPositionX(viewport.w, isMobileViewport);
   const activeObjectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
   const activeAnchorObjectPositionX = isMobileViewport ? 0.5 : activeObjectPositionX;
-  const landingDesktopObjectPositionX = getObjectPositionX(viewport.w, false);
-  const landingDesktopObjectPositionY = getObjectPositionY(viewport.w, false);
   const imageMetrics = useMemo(
     () =>
       activeNaturalSize
@@ -207,8 +205,7 @@ export default function Home() {
       <img
         src={LANDING_DESKTOP_IMAGE}
         alt=""
-        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover transition-transform duration-[1800ms] ease-out sm:block group-hover:scale-[1.02]"
-        style={{ objectPosition: `${landingDesktopObjectPositionX * 100}% ${landingDesktopObjectPositionY * 100}%` }}
+        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[50%_18%] transition-transform duration-[1800ms] ease-out sm:block lg:object-[44%_50%] xl:object-[47%_50%] 2xl:object-[50%_58%] group-hover:scale-[1.02]"
         draggable={false}
       />
 

@@ -26,11 +26,6 @@ export const orangeRoom: Room = {
         label: "Custom Production",
         x: 25,
         y: 54,
-        positions: {
-          laptop: { x: 24, y: 55 },
-          tablet: { x: 25, y: 54 },
-          mobile: { x: 22, y: 58 },
-        },
         direction: "up",
         variant: "dot",
         modal: {
@@ -73,11 +68,6 @@ export const orangeRoom: Room = {
         label: "Discography",
         x: 50,
         y: 70,
-        positions: {
-          laptop: { x: 49, y: 70 },
-          tablet: { x: 50, y: 70 },
-          mobile: { x: 47, y: 72 },
-        },
         direction: "up",
         variant: "dot",
         modal: {
@@ -104,11 +94,6 @@ export const orangeRoom: Room = {
         label: "Orange Room Session",
         x: 91.62,
         y: 46.24,
-        positions: {
-          laptop: { x: 94, y: 48 },
-          tablet: { x: 91.62, y: 46.24 },
-          mobile: { x: 89, y: 50 },
-        },
         direction: "left",
         variant: "dot",
         modal: {
@@ -128,11 +113,6 @@ export const orangeRoom: Room = {
         label: "Beatstore",
         x: 43,
         y: 54,
-        positions: {
-          laptop: { x: 42, y: 55 },
-          tablet: { x: 43, y: 54 },
-          mobile: { x: 40, y: 57 },
-        },
         direction: "right",
         variant: "dot",
         href: "https://yanchanproduced.beatstars.com/",
@@ -142,11 +122,6 @@ export const orangeRoom: Room = {
         label: "Yanchan Produced Live",
         x: 70,
         y: 54,
-        positions: {
-          laptop: { x: 69, y: 55 },
-          tablet: { x: 70, y: 54 },
-          mobile: { x: 66, y: 58 },
-        },
         direction: "down",
         variant: "dot",
         modal: {
@@ -164,8 +139,6 @@ export const orangeRoom: Room = {
             "TBD 2026 · San Francisco",
             "TBD 2026 · Vancouver",
           ],
-          primaryLabel: "Get Tickets",
-          primaryHref: "https://www.stubhub.com/yanchan-produced-tickets/performer/150247431",
           secondaryLabel: "Booking Inquiry",
           secondaryHref: "mailto:contact@emteemusicgroup.com?subject=Yanchan%20Produced%20Live%3A%20Booking%20Inquiry",
         },
@@ -175,11 +148,6 @@ export const orangeRoom: Room = {
         label: "Join Community",
         x: 89.21,
         y: 78.91,
-        positions: {
-          laptop: { x: 86, y: 85 },
-          tablet: { x: 89.21, y: 78.91 },
-          mobile: { x: 82, y: 82 },
-        },
         direction: "up",
         variant: "dot",
         modal: {

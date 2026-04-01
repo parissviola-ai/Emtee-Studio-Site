@@ -237,7 +237,8 @@ export default function RoomModalLayer({
     currentModal.title === "What We’ve Done" && activeCarouselSlide?.primaryLabel === "View Full Case Study";
   const shouldHideHowYouStartArrowsOnMobile = currentModal.title === "How You Start";
   const shouldShowSequenceBeforeFooterActions = currentModal.title === "What We’ve Done";
-  const shouldKeepPrimaryExternalActionModalOpen = currentModal.title === "How You Start";
+  const shouldKeepPrimaryExternalActionModalOpen =
+    currentModal.title === "How You Start" || isCustomProductionModal;
   const sequenceButtonClass = secondaryButtonClass;
   const footerActions: ReactNode[] = [];
   const handleFooterDismiss = () => {
@@ -331,12 +332,10 @@ export default function RoomModalLayer({
   if (isCustomProductionModal && activeModal.primaryHref) {
     footerActions.push(
       activeModal.primaryHref.startsWith("http") ? (
-        <a
+        <button
           key={`custom-primary-${activeModal.primaryHref}`}
-          href={activeModal.primaryHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={closeModal}
+          type="button"
+          onClick={(event) => openHrefInNewTab(event, activeModal.primaryHref)}
           className={[
             `inline-flex items-center justify-center rounded-full ${uniformModalButtonSizing} transition`,
             isOrangeModal
@@ -345,7 +344,7 @@ export default function RoomModalLayer({
           ].join(" ")}
         >
           {activeModal.primaryLabel ?? "View Details"} →
-        </a>
+        </button>
       ) : (
         <Link
           key={`custom-primary-${activeModal.primaryHref}`}

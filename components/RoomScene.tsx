@@ -957,6 +957,7 @@ export default function RoomScene({
     room.slug === "lobby" ||
     room.slug === "ten-ten-entertainment" ||
     room.slug === "business" ||
+    room.slug === "dirty-elephant-studio" ||
     room.slug === "ar-sales" ||
     room.slug === "steeped-dreams-studio";
   const resolvedHotspots = useMemo(
@@ -1031,7 +1032,7 @@ export default function RoomScene({
           ? 58
           : 50;
   const shouldUseFixedBaseBackgroundPosition =
-    isArSalesRoom || room.slug === "steeped-dreams-studio";
+    isArSalesRoom || room.slug === "dirty-elephant-studio" || room.slug === "steeped-dreams-studio";
   const backgroundObjectPositionY = shouldUseFixedBaseBackgroundPosition
     ? baseRoomBackgroundObjectPositionY
     : getResponsiveRoomBackgroundObjectPositionY({

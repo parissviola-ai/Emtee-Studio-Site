@@ -140,6 +140,26 @@ test("how you start consultation opens a new tab without closing the modal", asy
   await expect(page.getByRole("heading", { name: "How You Start" })).toBeVisible();
 });
 
+test("custom production apply opens a new tab without closing the modal", async ({ page }) => {
+  await page.goto("/rooms/dirty-elephant-studio", { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
+
+  await page
+    .locator("button")
+    .filter({ hasText: "Custom Production" })
+    .first()
+    .evaluate((element: HTMLButtonElement) => element.click());
+  await expect(page.getByRole("heading", { name: "Apply For Custom Production" })).toBeVisible();
+
+  const popupPromise = page.waitForEvent("popup");
+  await page.getByRole("button", { name: /^Apply →$/ }).click();
+  const popup = await popupPromise;
+
+  await expect.poll(() => popup.url() !== "about:blank").toBeTruthy();
+  await expect(page).toHaveURL(/\/rooms\/dirty-elephant-studio$/);
+  await expect(page.getByRole("heading", { name: "Apply For Custom Production" })).toBeVisible();
+});
+
 test("mobile start here flow can open what we offer without closing the modal", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.includes("mobile"), "mobile-only repro");
 

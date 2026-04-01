@@ -159,10 +159,9 @@ export const orangeRoom: Room = {
           body:
             "Choose your preferred community lane to connect directly with Yanchan and other producers.",
           image: "/rooms/yanchancrowd-opt.jpg",
+          primaryLabel: "MORE TO COME",
           links: [
-            { label: "IG Broadcast Channel", href: "https://www.instagram.com/yanchanproduced/" },
-            { label: "Patreon", href: "https://www.patreon.com/" },
-            { label: "Discord", href: "https://discord.com/" },
+            { label: "Become a Dirty Elephant", href: "https://www.instagram.com/channel/AbZNsFtHUK234JSD/?igsh=MTRkNjZkdnJ0aWZmdQ==" },
           ],
         },
       },

@@ -106,3 +106,21 @@ test("lobby modal sequence buttons stay stable in both directions", async ({ pag
   await expect(page.getByRole("heading", { name: "Who We Are" })).toBeVisible();
   await expect(page.getByRole("button", { name: /^What We Offer →$/ })).toBeVisible();
 });
+
+test("view full case study opens a new tab without closing the lobby modal", async ({ page }) => {
+  await page.goto("/rooms/lobby?modal=case-study-tour", { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
+
+  await expect(page.getByRole("heading", { name: /What We.ve Done/ })).toBeVisible();
+
+  const popupPromise = page.waitForEvent("popup");
+  await page.getByRole("button", { name: /View Full Case Study/ }).click();
+  const popup = await popupPromise;
+
+  await popup.waitForLoadState("domcontentloaded");
+  await expect(popup).toHaveURL(/\/case-studies\//);
+
+  await expect(page).toHaveURL(/\/rooms\/lobby\?modal=case-study-tour$/);
+  await expect(page.getByRole("heading", { name: /What We.ve Done/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^How You Start →$/ })).toBeVisible();
+});

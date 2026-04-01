@@ -3,7 +3,7 @@
 import { getResourceContext } from "@/data/resource-context";
 import NextImage from "next/image";
 import Link from "next/link";
-import { Fragment, useEffect, useMemo, useState, type ComponentType, type MutableRefObject, type ReactNode } from "react";
+import { Fragment, useEffect, useMemo, useState, type ComponentType, type MouseEvent as ReactMouseEvent, type MutableRefObject, type ReactNode } from "react";
 
 type RoomModalLayerProps = {
   roomSlug: string;
@@ -141,6 +141,14 @@ export default function RoomModalLayer({
     openModal(targetSpot.modal);
   };
 
+  const openHrefInNewTab = (event: ReactMouseEvent<HTMLButtonElement>, href: string) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof window === "undefined") return;
+    const popup = window.open(href, "_blank", "noopener,noreferrer");
+    popup?.focus();
+  };
+
   const isResourceOnlyModal = !!activeResourceContext;
   const hasCanonicalSequenceNav = !!(currentModal.previousHref || currentModal.nextHref);
   const effectiveBackModal = hasCanonicalSequenceNav ? null : modalBackModal;
@@ -223,6 +231,7 @@ export default function RoomModalLayer({
   const shouldHideCaseStudyArrowOnMobile =
     currentModal.title === "What We’ve Done" && activeCarouselSlide?.primaryLabel === "View Full Case Study";
   const shouldHideHowYouStartArrowsOnMobile = currentModal.title === "How You Start";
+  const shouldShowSequenceBeforeFooterActions = currentModal.title === "What We’ve Done";
   const sequenceButtonClass = secondaryButtonClass;
   const footerActions: ReactNode[] = [];
   const handleFooterDismiss = () => {
@@ -545,21 +554,25 @@ export default function RoomModalLayer({
   if (isCarouselModal && activeCarouselSlide?.primaryHref && activeCarouselSlide.primaryLabel) {
     footerActions.push(
       activeCarouselSlide.primaryHref.startsWith("http") ? (
-        <a key="carousel-primary-http" href={activeCarouselSlide.primaryHref} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
-          {activeCarouselSlide.primaryLabel}
-          {shouldHideCaseStudyArrowOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
-        </a>
-      ) : activeCarouselSlide.primaryTargetBlank ? (
-        <a
-          key="carousel-primary-link-new-tab"
-          href={activeCarouselSlide.primaryHref}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          key="carousel-primary-http"
+          type="button"
+          onClick={(event) => openHrefInNewTab(event, activeCarouselSlide.primaryHref)}
           className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}
         >
           {activeCarouselSlide.primaryLabel}
           {shouldHideCaseStudyArrowOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
-        </a>
+        </button>
+      ) : activeCarouselSlide.primaryTargetBlank ? (
+        <button
+          key="carousel-primary-link-new-tab"
+          type="button"
+          onClick={(event) => openHrefInNewTab(event, activeCarouselSlide.primaryHref)}
+          className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}
+        >
+          {activeCarouselSlide.primaryLabel}
+          {shouldHideCaseStudyArrowOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+        </button>
       ) : (
         <Link key="carousel-primary-link" href={activeCarouselSlide.primaryHref} onClick={closeModal} className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
           {activeCarouselSlide.primaryLabel}
@@ -1090,8 +1103,9 @@ export default function RoomModalLayer({
               {isStructuredFooterModal ? (
                 <div className={["flex w-full items-end", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
                   <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? "inline-flex flex-nowrap items-center gap-3 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
+                    {shouldShowSequenceBeforeFooterActions ? nextSequenceAction : null}
                     {footerActions}
-                    {nextSequenceAction}
+                    {shouldShowSequenceBeforeFooterActions ? null : nextSequenceAction}
                     {isTenTenShowcaseModal ? (
                       <button
                         type="button"
@@ -1119,8 +1133,9 @@ export default function RoomModalLayer({
                 </div>
               ) : (
                 <>
+                  {shouldShowSequenceBeforeFooterActions ? nextSequenceAction : null}
                   {footerActions}
-                  {nextSequenceAction}
+                  {shouldShowSequenceBeforeFooterActions ? null : nextSequenceAction}
                   {previousSequenceDismissAction ?? (
                     <button
                       type="button"

@@ -867,11 +867,12 @@ export default function RoomScene({
     try {
       const url = new URL(activeModal.videoEmbed);
       url.searchParams.set("autoplay", "1");
-      url.searchParams.set("mute", "1");
+      url.searchParams.set("mute", "0");
       url.searchParams.set("playsinline", "1");
+      url.searchParams.set("enablejsapi", "1");
       return url.toString();
     } catch {
-      return activeModal.videoEmbed.replace("mute=0", "mute=1");
+      return activeModal.videoEmbed.replace("mute=1", "mute=0");
     }
   }, [activeModal?.title, activeModal?.videoEmbed, isMobileViewport]);
   const isYanchanMusicModal = activeModal?.title === "Yanchan Produced Music";
@@ -2816,6 +2817,7 @@ export default function RoomScene({
       {/* MODAL OVERLAY */}
       <RoomModalLayer
         roomSlug={room.slug}
+        isMobileViewport={isMobileViewport}
         activeModal={activeModal}
         closeModal={closeModal}
         openModal={openModal}

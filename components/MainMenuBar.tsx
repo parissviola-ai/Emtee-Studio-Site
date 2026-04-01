@@ -62,6 +62,7 @@ export default function MainMenuBar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -73,6 +74,20 @@ export default function MainMenuBar() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (mobileMenuRef.current?.contains(target)) return;
+      setMobileMenuOpen(false);
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    return () => window.removeEventListener("pointerdown", handlePointerDown);
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     const routeSet = new Set<string>([
@@ -199,7 +214,7 @@ export default function MainMenuBar() {
             </Link>
           </div>
 
-          <div className="relative shrink-0 sm:hidden">
+          <div ref={mobileMenuRef} className="relative shrink-0 sm:hidden">
             <button
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}

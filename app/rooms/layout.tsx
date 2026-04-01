@@ -81,6 +81,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lobbyHeaderReady, setLobbyHeaderReady] = useState(!isLobby);
   const prefetchedRoomRoutesRef = useRef<Set<string>>(new Set());
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 
   // ✅ Hooks MUST be inside the component
   const [scrolled, setScrolled] = useState(false);
@@ -95,6 +96,20 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (mobileMenuRef.current?.contains(target)) return;
+      setMobileMenuOpen(false);
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    return () => window.removeEventListener("pointerdown", handlePointerDown);
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     if (pathname !== "/rooms/lobby") return;
@@ -330,7 +345,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
               </>
             ) : null}
 
-            <div className="relative shrink-0 sm:hidden">
+            <div ref={mobileMenuRef} className="relative shrink-0 sm:hidden">
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen((prev) => !prev)}

@@ -7,6 +7,7 @@ import { Fragment, useEffect, useMemo, useState, type ComponentType, type Mutabl
 
 type RoomModalLayerProps = {
   roomSlug: string;
+  isMobileViewport: boolean;
   activeModal: any;
   closeModal: () => void;
   openModal: (modal: any) => void;
@@ -41,6 +42,7 @@ type RoomModalLayerProps = {
 
 export default function RoomModalLayer({
   roomSlug,
+  isMobileViewport,
   activeModal,
   closeModal,
   openModal,
@@ -111,6 +113,7 @@ export default function RoomModalLayer({
   const isTenTenCommunityModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Community";
   const isTenTenShowcaseModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Showcase";
   const isMikeCannzModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Mike Cannz";
+  const isMobileWhoWeAreVideo = isMobileViewport && currentModal.title === "Who We Are" && !!currentModal.videoEmbed;
   const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
   const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
   const isPilotFoldablePackageModal =
@@ -207,6 +210,9 @@ export default function RoomModalLayer({
   const isStructuredFooterModal = !isStartHereModal;
   const shouldUseCompactCardBody = isStructuredFooterModal && !isCarouselModal;
   const shouldUseCompactYanchanMusicLayout = isYanchanMusicModal;
+  const shouldHideCaseStudyArrowOnMobile =
+    currentModal.title === "What We’ve Done" && activeCarouselSlide?.primaryLabel === "View Full Case Study";
+  const shouldHideHowYouStartArrowsOnMobile = currentModal.title === "How You Start";
   const footerActions: ReactNode[] = [];
   const handleFooterDismiss = () => {
     if (modalBackModal) {
@@ -363,11 +369,13 @@ export default function RoomModalLayer({
     footerActions.push(
       activeModal.primaryAction === "openExplore" ? (
         <button key="modal-primary-open-explore" type="button" onClick={() => { closeModal(); openExploreMenu(); }} className={primaryButtonClass}>
-          {activeModal.primaryLabel ?? "Open Explore"} →
+          {activeModal.primaryLabel ?? "Open Explore"}
+          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </button>
       ) : activeModal.primaryHref.startsWith("modal:") ? (
         <button key="modal-primary-modal" type="button" onClick={() => handleModalTarget(activeModal.primaryHref)} className={primaryButtonClass}>
-          {activeModal.primaryLabel ?? "View Details"} →
+          {activeModal.primaryLabel ?? "View Details"}
+          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </button>
       ) : isExternalActionHref(activeModal.primaryHref) ? (
         <a
@@ -378,11 +386,13 @@ export default function RoomModalLayer({
           onClick={closeModal}
           className={primaryButtonClass}
         >
-          {activeModal.primaryLabel ?? "View Details"} →
+          {activeModal.primaryLabel ?? "View Details"}
+          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </a>
       ) : (
         <Link key="modal-primary-link" href={activeModal.primaryHref} onClick={closeModal} className={primaryButtonClass}>
-          {activeModal.primaryLabel ?? "View Details"} →
+          {activeModal.primaryLabel ?? "View Details"}
+          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </Link>
       )
     );
@@ -410,15 +420,18 @@ export default function RoomModalLayer({
           onClick={closeModal}
           className={secondaryButtonClass}
         >
-          {activeModal.secondaryLabel} →
+          {activeModal.secondaryLabel}
+          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </a>
       ) : activeModal.secondaryHref.startsWith("modal:") ? (
         <button key="modal-secondary-modal" type="button" onClick={() => handleModalTarget(activeModal.secondaryHref)} className={secondaryButtonClass}>
-          {activeModal.secondaryLabel} →
+          {activeModal.secondaryLabel}
+          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </button>
       ) : (
         <Link key="modal-secondary-link" href={activeModal.secondaryHref} onClick={closeModal} className={secondaryButtonClass}>
-          {activeModal.secondaryLabel} →
+          {activeModal.secondaryLabel}
+          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </Link>
       )
     );
@@ -446,7 +459,8 @@ export default function RoomModalLayer({
     footerActions.push(
       activeCarouselSlide.primaryHref.startsWith("http") ? (
         <a key="carousel-primary-http" href={activeCarouselSlide.primaryHref} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
-          {activeCarouselSlide.primaryLabel} →
+          {activeCarouselSlide.primaryLabel}
+          {shouldHideCaseStudyArrowOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </a>
       ) : activeCarouselSlide.primaryTargetBlank ? (
         <a
@@ -456,11 +470,13 @@ export default function RoomModalLayer({
           rel="noopener noreferrer"
           className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}
         >
-          {activeCarouselSlide.primaryLabel} →
+          {activeCarouselSlide.primaryLabel}
+          {shouldHideCaseStudyArrowOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </a>
       ) : (
         <Link key="carousel-primary-link" href={activeCarouselSlide.primaryHref} onClick={closeModal} className={`inline-flex items-center justify-center rounded-full bg-white ${uniformModalButtonSizing} text-black transition hover:bg-white/90`}>
-          {activeCarouselSlide.primaryLabel} →
+          {activeCarouselSlide.primaryLabel}
+          {shouldHideCaseStudyArrowOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </Link>
       )
     );
@@ -610,6 +626,12 @@ export default function RoomModalLayer({
                       allow="autoplay; encrypted-media; picture-in-picture"
                       allowFullScreen
                       className="absolute inset-0 h-full w-full"
+                      onLoad={() => {
+                        if (!isYoutubeEmbed || !isMobileWhoWeAreVideo || videoMuted) return;
+                        window.setTimeout(() => {
+                          unmuteYoutube();
+                        }, 250);
+                      }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
                     {isYoutubeEmbed ? (

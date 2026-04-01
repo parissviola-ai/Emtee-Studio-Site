@@ -9,7 +9,7 @@ const LANDING_DESKTOP_IMAGE = "/rooms/prelobbyphotocn.png";
 const LANDING_MOBILE_IMAGE = "/rooms/prelobbyphotocn.png";
 const LANDING_DESKTOP_NATURAL_SIZE = { w: 1344, h: 768 };
 const LANDING_BUTTON_COORDS = {
-  mobile: { x: 45.38, y: 92.04 },
+  mobile: { x: 52.38, y: 92.04 },
   desktop: { x: 45.38, y: 87.04 },
 };
 const LANDING_CARD_COORDS = {
@@ -188,7 +188,7 @@ export default function Home() {
       <img
         src={LANDING_MOBILE_IMAGE}
         alt=""
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-top sm:hidden"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[38%_top] sm:hidden"
         draggable={false}
       />
       <img

@@ -65,10 +65,10 @@ function clamp(value: number, min: number, max: number) {
 
 function getObjectPositionY(viewportW: number, isMobile: boolean) {
   if (isMobile) return 0;
-  if (viewportW >= 1536) return 0.58;
-  if (viewportW >= 1280) return 0.5;
-  if (viewportW >= 1024) return 0.54;
-  return 0.44;
+  if (viewportW >= 1536) return 0.78;
+  if (viewportW >= 1280) return 0.7;
+  if (viewportW >= 1024) return 0.74;
+  return 0.64;
 }
 
 function getObjectPositionX(viewportW: number, isMobile: boolean) {
@@ -300,7 +300,7 @@ export default function Home() {
       <img
         src={LANDING_DESKTOP_IMAGE}
         alt=""
-        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[50%_44%] transition-transform duration-[1800ms] ease-out sm:block lg:object-[44%_54%] xl:object-[47%_50%] 2xl:object-[50%_58%] group-hover:scale-[1.02]"
+        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[50%_64%] transition-transform duration-[1800ms] ease-out sm:block lg:object-[44%_74%] xl:object-[47%_70%] 2xl:object-[50%_78%] group-hover:scale-[1.02]"
         draggable={false}
       />
 

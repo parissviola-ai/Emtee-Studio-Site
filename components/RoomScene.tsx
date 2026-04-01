@@ -863,22 +863,26 @@ export default function RoomScene({
     : (contentVisibleByRoom[room.slug] ?? true);
   const isCardCompact = isCardMinimized || !isCardContentVisible;
   const isYoutubeEmbed = !!activeModal?.videoEmbed?.includes("youtube.com/embed");
+  const shouldAutoplayMutedYoutubeEmbed = activeModal?.title === "Overstimulated? Chill Out";
+  const shouldAutoplayWithSoundYoutubeEmbed = isMobileViewport && activeModal?.title === "Who We Are";
   const resolvedVideoEmbedSrc = useMemo(() => {
     if (!activeModal?.videoEmbed) return null;
-    if (!(isMobileViewport && activeModal.title === "Who We Are")) {
+    if (!shouldAutoplayMutedYoutubeEmbed && !shouldAutoplayWithSoundYoutubeEmbed) {
       return activeModal.videoEmbed;
     }
     try {
       const url = new URL(activeModal.videoEmbed);
       url.searchParams.set("autoplay", "1");
-      url.searchParams.set("mute", "0");
+      url.searchParams.set("mute", shouldAutoplayMutedYoutubeEmbed ? "1" : "0");
       url.searchParams.set("playsinline", "1");
       url.searchParams.set("enablejsapi", "1");
       return url.toString();
     } catch {
-      return activeModal.videoEmbed.replace("mute=1", "mute=0");
+      return shouldAutoplayMutedYoutubeEmbed
+        ? activeModal.videoEmbed.replace("mute=0", "mute=1")
+        : activeModal.videoEmbed.replace("mute=1", "mute=0");
     }
-  }, [activeModal?.title, activeModal?.videoEmbed, isMobileViewport]);
+  }, [activeModal?.videoEmbed, shouldAutoplayMutedYoutubeEmbed, shouldAutoplayWithSoundYoutubeEmbed]);
   const isYanchanMusicModal = activeModal?.title === "Yanchan Produced Music";
   const isYanchanDiscographyModal = activeModal?.title === "Discography";
   const isJoinCommunityModal = activeModal?.title === "Join Community";
@@ -1650,14 +1654,6 @@ export default function RoomScene({
   useEffect(() => {
     if (!hasHydrated || typeof window === "undefined") return;
     if (!isHotspotTierPilotRoom) return;
-
-    if (room.slug === "lobby") {
-      setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: false }));
-      try {
-        window.sessionStorage.removeItem(getShowMoreStorageKey(room.slug));
-      } catch {}
-      return;
-    }
 
     try {
       const raw = window.sessionStorage.getItem(getShowMoreStorageKey(room.slug));

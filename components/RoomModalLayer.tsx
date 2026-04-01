@@ -115,6 +115,7 @@ export default function RoomModalLayer({
   const isMikeCannzModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Mike Cannz";
   const shouldUseLandscapeTopImage = isMikeCannzModal;
   const isMobileWhoWeAreVideo = isMobileViewport && currentModal.title === "Who We Are" && !!currentModal.videoEmbed;
+  const hasModalBody = !!currentModal.body?.trim();
   const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
   const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
   const isPilotFoldablePackageModal =
@@ -236,6 +237,12 @@ export default function RoomModalLayer({
   const shouldHideCaseStudyArrowOnMobile =
     currentModal.title === "What We’ve Done" && activeCarouselSlide?.primaryLabel === "View Full Case Study";
   const shouldHideHowYouStartArrowsOnMobile = currentModal.title === "How You Start";
+  const shouldHideTenTenShowcaseActionArrows = isTenTenShowcaseModal;
+  const primaryAndSecondaryActionArrow = shouldHideTenTenShowcaseActionArrows
+    ? null
+    : shouldHideHowYouStartArrowsOnMobile
+    ? <span className="hidden sm:inline"> {"→"}</span>
+    : " →";
   const shouldShowSequenceBeforeFooterActions = currentModal.title === "What We’ve Done";
   const shouldKeepPrimaryExternalActionModalOpen =
     currentModal.title === "How You Start" || isCustomProductionModal;
@@ -473,12 +480,12 @@ export default function RoomModalLayer({
       activeModal.primaryAction === "openExplore" ? (
         <button key="modal-primary-open-explore" type="button" onClick={() => { closeModal(); openExploreMenu(); }} className={primaryButtonClass}>
           {activeModal.primaryLabel ?? "Open Explore"}
-          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          {primaryAndSecondaryActionArrow}
         </button>
       ) : activeModal.primaryHref.startsWith("modal:") ? (
         <button key="modal-primary-modal" type="button" onClick={() => handleModalTarget(activeModal.primaryHref)} className={primaryButtonClass}>
           {activeModal.primaryLabel ?? "View Details"}
-          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          {primaryAndSecondaryActionArrow}
         </button>
       ) : isExternalActionHref(activeModal.primaryHref) ? (
         shouldKeepPrimaryExternalActionModalOpen ? (
@@ -489,7 +496,7 @@ export default function RoomModalLayer({
             className={primaryButtonClass}
           >
             {activeModal.primaryLabel ?? "View Details"}
-            {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+            {primaryAndSecondaryActionArrow}
           </button>
         ) : (
           <a
@@ -501,13 +508,13 @@ export default function RoomModalLayer({
             className={primaryButtonClass}
           >
             {activeModal.primaryLabel ?? "View Details"}
-            {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+            {primaryAndSecondaryActionArrow}
           </a>
         )
       ) : (
         <Link key="modal-primary-link" href={activeModal.primaryHref} onClick={closeModal} className={primaryButtonClass}>
           {activeModal.primaryLabel ?? "View Details"}
-          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          {primaryAndSecondaryActionArrow}
         </Link>
       )
     );
@@ -536,17 +543,17 @@ export default function RoomModalLayer({
           className={secondaryButtonClass}
         >
           {activeModal.secondaryLabel}
-          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          {primaryAndSecondaryActionArrow}
         </a>
       ) : activeModal.secondaryHref.startsWith("modal:") ? (
         <button key="modal-secondary-modal" type="button" onClick={() => handleModalTarget(activeModal.secondaryHref)} className={secondaryButtonClass}>
           {activeModal.secondaryLabel}
-          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          {primaryAndSecondaryActionArrow}
         </button>
       ) : (
         <Link key="modal-secondary-link" href={activeModal.secondaryHref} onClick={closeModal} className={secondaryButtonClass}>
           {activeModal.secondaryLabel}
-          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          {primaryAndSecondaryActionArrow}
         </Link>
       )
     );
@@ -615,6 +622,8 @@ export default function RoomModalLayer({
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isOrangeSessionModal
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isSteepedDreamsChillOutModal
+            ? "relative z-10 flex w-full max-w-[560px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : shouldUseCompactYanchanMusicLayout
             ? "relative z-10 flex w-full max-w-[572px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isYanchanLiveModal
@@ -728,7 +737,7 @@ export default function RoomModalLayer({
             ) : null}
           </div>
 
-            <div className={["min-w-0 w-full", isResourceOnlyModal || isDirtyElephantAboutModal ? "mx-auto max-w-[430px]" : shouldUseCompactYanchanMusicLayout ? "mx-auto max-w-[494px]" : ""].join(" ")}>
+            <div className={["min-w-0 w-full", isSteepedDreamsChillOutModal ? "mx-auto max-w-[496px]" : isResourceOnlyModal || isDirtyElephantAboutModal ? "mx-auto max-w-[430px]" : shouldUseCompactYanchanMusicLayout ? "mx-auto max-w-[494px]" : ""].join(" ")}>
             {activeModal.videoEmbed ? (
               <div
                 className={[
@@ -798,7 +807,7 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={[isSteepedDreamsChillOutModal ? "mt-4 grid gap-4" : shouldUseCompactYanchanMusicLayout ? "mt-3 grid gap-2.5" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
+            <div className={[isSteepedDreamsChillOutModal && !hasModalBody ? "mt-0 grid gap-0" : isSteepedDreamsChillOutModal ? "mt-4 grid gap-4" : shouldUseCompactYanchanMusicLayout ? "mt-3 grid gap-2.5" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
               {!activeResourceContext ? <div className="min-w-0">
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
@@ -1004,11 +1013,11 @@ export default function RoomModalLayer({
                       {renderStartHereStepsWithBoldTitles(activeModal.body.split("\n\n").slice(1).join("\n\n"))}
                     </p>
                   </div>
-                ) : (
+                ) : hasModalBody ? (
                   <p className={["leading-relaxed whitespace-pre-line transition-all duration-600 ease-out", isOrangeModal ? "text-white/88" : "text-white/80", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
                     {renderModalBodyWithBoldIncludes(activeModal.body)}
                   </p>
-                )}
+                ) : null}
 
                 {activeModal.highlights?.length ? (
                   <div

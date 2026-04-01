@@ -11,8 +11,8 @@ export const quietRoom: Room = {
       {
         id: "kym-tea-music",
         label: "Kym Tea Music",
-        x: 80,
-        y: 57,
+        x: 35.62,
+        y: 34.15,
         direction: "left",
         variant: "dot",
         modal: {
@@ -23,11 +23,11 @@ export const quietRoom: Room = {
             { src: "/rooms/kymtea3.jpg", alt: "Kym Tea portrait 3" },
           ],
           body:
-            "Kym Tea is the founder of Steeped Dreams Studio. Through her artist project and community work, she is building sensory-friendly music experiences that support people who need calmer, more flexible environments.",
+            "Kym Tea is an entrepreneur, singer, dancer and the founder of Steeped Dreams Studio. As an artist she's constantly pushing the boundaries for neurodiversity. Kym has spent years working closely with autism-focused organizations in Canada and as a result has built a strong passion for neurodiversity. She's best known for dancing with DANCE STUDIO NAME, dancing styles such as salsa and bachata.\n\nIn 2024, Kym began working with Emtee Music Group producing music geared for neurodiverse friendly experiences. In 2026, Kym launched Steeped Dreams Studio with her first ever Klay Night, a night of sensory-friendly artistic experiences including clay making and painting.",
           links: [
-            { label: "YouTube", href: "https://www.youtube.com/@notthatkym/featured" },
             { label: "Linktree", href: "https://linktr.ee/notthatkym" },
             { label: "Instagram", href: "https://www.instagram.com/notthatkym/" },
+            { label: "YouTube", href: "https://www.youtube.com/@notthatkym/featured" },
           ],
         },
       },
@@ -41,23 +41,23 @@ export const quietRoom: Room = {
         modal: {
           title: "8D Mixes",
           body:
-            "8D Mixes make music feel like it is moving around your head instead of staying fixed left and right.\n\nProducers create this effect by automating panning, volume shifts, and spatial reverb so sounds seem to travel, rotate, and change distance. Your brain keeps re-locating the source as it moves, which is why 8D can feel immersive, trippy, and cinematic.\n\nIt is a creative mixing style (not a new audio file format), and headphones are essential. Without headphones, the left/right separation blends together and the movement effect is reduced.",
+            "8D audio (eight-dimensional audio) is a type of spatial audio editing that makes a standard stereo song feel as if it is moving in a 360-degree circle around the listener's head. Producers create an effect by automating panning, volume shifts, and spatial reverb, making sounds travel, rotate, and change distance to the ear.\n\nThe listener's brain continues re-locating the source as it moves, making 8D immersive, trippy, and cinematic. This auditory illusion is designed specifically for headphone users, and it allows listeners to have a calming auditory experience.",
           links: [
-            { label: "8D Mixes on Spotify", href: "#" },
+            { label: "8D Mixes on Spotify", href: "https://open.spotify.com/artist/5l3q6xxRsELcm2cIJNey8R" },
           ],
         },
       },
       {
         id: "steeped-dreams-studio",
         label: "Steeped Dreams Studio",
-        x: 63,
-        y: 65,
+        x: 45.97,
+        y: 19.7,
         direction: "up",
         variant: "dot",
         modal: {
           title: "Steeped Dreams Studio",
           body:
-            "Steeped Dreams Studio is a creative space and community built around sensory-friendly music, events, and shared experiences.\n\nFounder Kym Tea created the studio after being diagnosed with anxiety and PTSD and finding traditional crowded music settings difficult to navigate. The vision expanded further when a close family member was diagnosed with autism and had significant sensory needs.\n\nNeed a break to reset? The studio includes a dedicated chill-out area where guests can recharge for as little or as long as they need.\n\nThe mission is to create open, welcoming environments where people can enjoy music and community without feeling pressure to mask who they are.",
+            "Steeped Dreams Studio is a creative studio and community built around sensory-friendly music, events and shared experiences. Steeped Dreams' pillars include music, dance and event specialties held by the founder of the company, Kym Tea.\n\nAfter being diagnosed with anxiety and PTSD, founder Kym Tea found traditional crowded and loud music settings very difficult to navigate. The vision expanded further when a close family member was diagnosed with autism, and Kym witnessed firsthand the shortage of resources available for them and their loved ones.\n\nIn 2024, Kym partnered up with Emtee Music Group to begin the ideations of Steeped Dreams Studio. The mission is simple: to create open, welcoming environments where anyone can enjoy music, the arts and community without pressure to mask who they are.",
           links: [
             { label: "Watch Video", href: "https://www.instagram.com/p/DUrMEmwEZGf/" },
             { label: "Instagram", href: "https://www.instagram.com/notthatkym/" },
@@ -74,8 +74,7 @@ export const quietRoom: Room = {
         modal: {
           title: "Overstimulated? Chill Out",
           videoEmbed: "https://www.youtube.com/embed/fPd1YHokn-4?si=34wO5SzrnnaPcdGa",
-          body:
-            "A peaceful community space is on the way. Stay tuned for updates, future gatherings, and new ways to connect with Steeped Dreams Studio.",
+          body: "",
         },
       },
     ],

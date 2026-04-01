@@ -812,7 +812,7 @@ export default function RoomModalLayer({
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
                     <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
-                      <NextImage src={activeCarouselSlide.src} alt={activeCarouselSlide.alt} width={1400} height={1600} sizes="(max-width: 900px) 100vw, 900px" className="w-full max-h-[460px] object-contain" />
+                      <NextImage src={activeCarouselSlide.src} alt={activeCarouselSlide.alt} width={1600} height={900} sizes="(max-width: 900px) 100vw, 900px" className="w-full max-h-[460px] object-contain" />
                     </div>
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                       <div className="inline-flex rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/16 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-[0_0_18px_rgba(214,174,102,0.18)]">

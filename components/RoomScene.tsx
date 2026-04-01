@@ -10,6 +10,7 @@ import type { OrangeRoomExtrasHandle } from "@/components/OrangeRoomExtras";
 import {
   awaitRoomAssetsByHref,
   getRoomWarmNeighborhoodHrefsBySlug,
+  warmImageAsset,
   warmRoomAssetsByHref,
   warmRoomNeighborhoodBySlug,
 } from "@/lib/warmRoomAssets";
@@ -661,9 +662,22 @@ export default function RoomScene({
     if (modal) {
       setExpandedPackageIncludesByModal((prev) => ({ ...prev, [`${room.slug}:${modal.title}`]: false }));
     }
-    setRevealStep(0);
     setVideoMuted(shouldStartVideoMuted(modal));
 
+    const shouldSkipLobbyStepReveal =
+      room.slug === "lobby" &&
+      (
+        modal?.title === "Start Here" ||
+        !!modal?.previousHref ||
+        !!modal?.nextHref
+      );
+
+    if (shouldSkipLobbyStepReveal) {
+      setRevealStep(3);
+      return;
+    }
+
+    setRevealStep(0);
     requestAnimationFrame(() => setRevealStep(1));
     setTimeout(() => setRevealStep(2), 140);
     setTimeout(() => setRevealStep(3), 280);
@@ -1629,6 +1643,7 @@ export default function RoomScene({
         router.prefetch(href);
         warmRoomAssetsByHref(href, { includeVideo: false });
       });
+      warmImageAsset("/rooms/bizcardupdate.png");
     });
   }, [room.slug, router]);
 

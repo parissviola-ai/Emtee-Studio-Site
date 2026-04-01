@@ -86,7 +86,7 @@ export const orangeRoom: Room = {
             "Pilla B - I Seen It",
           ],
           secondaryLabel: "Yanchan Produced Playlist",
-          secondaryHref: "https://youtube.com/playlist?list=PLhZ50Q6R8nwgK2ywXLZ4WAXjUZHkETUtE&si=CpGyxio_XWlxyGpd",
+          secondaryHref: "https://open.spotify.com/playlist/6fvzdF9eOj3Czb8bYAJeVb",
         },
       },
       {
@@ -102,10 +102,12 @@ export const orangeRoom: Room = {
           cornerLogoAlt: "Yanchan Produced logo",
           body:
             "The Orange Room Session is a fresh new take on freestyle music. Yanchan Produced will bring an artist into the Orange Room for about 2 hours to catch the inspiration of the combination of energies and sounds. In the 2 hours, Yanchan produces a beat, the artist creates a verse and away they go.\n\nFor your chance to be a part of the Orange Room click the button below and send us your name, email and links to your music.",
+          videoEmbed:
+            "https://www.youtube.com/embed/videoseries?list=PLhZ50Q6R8nwgK2ywXLZ4WAXjUZHkETUtE&autoplay=1&mute=1&playsinline=1&rel=0&enablejsapi=1",
           primaryLabel: "Apply",
           primaryHref: "mailto:contact@emteemusicgroup.com?subject=Orange%20Room%20Sessions%3A%20Inquiry",
           secondaryLabel: "Orange Room Session Playlist",
-          secondaryHref: "https://open.spotify.com/playlist/6fvzdF9eOj3Czb8bYAJeVb",
+          secondaryHref: "https://youtube.com/playlist?list=PLhZ50Q6R8nwgK2ywXLZ4WAXjUZHkETUtE&si=CpGyxio_XWlxyGpd",
         },
       },
       {

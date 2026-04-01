@@ -20,8 +20,8 @@ export const lobbyRoom: Room = {
         hoverLabel: "Business",
         tier: "secondary",
         href: "/rooms/business",
-        x: 6.04,
-        y: 40.95,
+        x: 8.49,
+        y: 43.25,
         positions: {
           laptop: { x: 2, y: 46 },
           tablet: { x: 14, y: 48 },
@@ -91,8 +91,8 @@ export const lobbyRoom: Room = {
         hoverLabel: "Yanchan Produced",
         tier: "secondary",
         href: "/rooms/dirty-elephant-studio",
-        x: 91.61,
-        y: 39.08,
+        x: 93.28,
+        y: 47.52,
         positions: {
           laptop: { x: 89, y: 47 },
           tablet: { x: 76, y: 54 },
@@ -121,8 +121,8 @@ export const lobbyRoom: Room = {
         hoverLabel: "Kym Tea",
         tier: "secondary",
         href: "/rooms/steeped-dreams-studio",
-        x: 96.56,
-        y: 51.16,
+        x: 96.35,
+        y: 54.18,
         positions: {
           laptop: { x: 97, y: 60 },
           tablet: { x: 82, y: 60 },
@@ -136,8 +136,8 @@ export const lobbyRoom: Room = {
         hoverLabel: "A&R / Sales",
         tier: "core",
         href: "/rooms/ar-sales",
-        x: 8.49,
-        y: 43.25,
+        x: 7.86,
+        y: 38.98,
         positions: {
           laptop: { x: 0, y: 40 },
           tablet: { x: 20, y: 57 },

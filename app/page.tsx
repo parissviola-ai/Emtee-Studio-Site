@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { awaitRoomAssetsByHref, getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
 
 const LANDING_DESKTOP_IMAGE = "/rooms/prelobbyphotocn.png";
@@ -54,7 +54,13 @@ function getCoverImageMetrics(
   return {
     renderedW,
     renderedH,
+    maxPanX: Math.max((renderedW - viewportW) / 2, 0),
+    maxPanY: Math.max((renderedH - viewportH) / 2, 0),
   };
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
 }
 
 function getObjectPositionY(viewportW: number, isMobile: boolean) {
@@ -78,6 +84,8 @@ export default function Home() {
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const [mobileNaturalSize, setMobileNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const [isEnteringLobby, setIsEnteringLobby] = useState(false);
+  const [mobilePan, setMobilePan] = useState({ x: 0, y: 0 });
+  const touchPanStartRef = useRef<{ x: number; y: number; panX: number; panY: number; dragging: boolean } | null>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setIsVisible(true), 760);
@@ -149,6 +157,27 @@ export default function Home() {
         : null,
     [activeNaturalSize, viewport.h, viewport.w]
   );
+  const mobilePanBounds = useMemo(() => {
+    if (!isMobileViewport || !imageMetrics) {
+      return { minX: 0, maxX: 0, minY: 0, maxY: 0 };
+    }
+
+    const baseOffsetX = (viewport.w - imageMetrics.renderedW) * activeObjectPositionX;
+    const baseOffsetY = (viewport.h - imageMetrics.renderedH) * activeObjectPositionY;
+
+    return {
+      minX: viewport.w - imageMetrics.renderedW - baseOffsetX,
+      maxX: -baseOffsetX,
+      minY: viewport.h - imageMetrics.renderedH - baseOffsetY,
+      maxY: -baseOffsetY,
+    };
+  }, [activeObjectPositionX, activeObjectPositionY, imageMetrics, isMobileViewport, viewport.h, viewport.w]);
+  const displayedPan = isMobileViewport
+    ? {
+        x: clamp(mobilePan.x, mobilePanBounds.minX, mobilePanBounds.maxX),
+        y: clamp(mobilePan.y, mobilePanBounds.minY, mobilePanBounds.maxY),
+      }
+    : { x: 0, y: 0 };
 
   const buttonAnchorPoint = useMemo(() => {
     if (!imageMetrics) return null;
@@ -157,10 +186,20 @@ export default function Home() {
     const offsetX = (viewport.w - imageMetrics.renderedW) * objectPositionX;
     const offsetY = (viewport.h - imageMetrics.renderedH) * objectPositionY;
     return {
-      x: offsetX + (activeCoords.x / 100) * imageMetrics.renderedW,
-      y: offsetY + (activeCoords.y / 100) * imageMetrics.renderedH,
+      x: offsetX + (activeCoords.x / 100) * imageMetrics.renderedW + displayedPan.x,
+      y: offsetY + (activeCoords.y / 100) * imageMetrics.renderedH + displayedPan.y,
     };
-  }, [activeAnchorObjectPositionX, activeCoords.x, activeCoords.y, activeObjectPositionY, imageMetrics, viewport.h, viewport.w]);
+  }, [
+    activeAnchorObjectPositionX,
+    activeCoords.x,
+    activeCoords.y,
+    activeObjectPositionY,
+    displayedPan.x,
+    displayedPan.y,
+    imageMetrics,
+    viewport.h,
+    viewport.w,
+  ]);
 
   const buttonStyle = useMemo(() => {
     if (!buttonAnchorPoint) return undefined;
@@ -185,6 +224,17 @@ export default function Home() {
     };
   }, [activeAnchorObjectPositionX, activeObjectPositionY, imageMetrics, isMobileViewport, viewport.h, viewport.w]);
 
+  useEffect(() => {
+    if (!isMobileViewport) {
+      setMobilePan({ x: 0, y: 0 });
+      return;
+    }
+    setMobilePan((prev) => ({
+      x: clamp(prev.x, mobilePanBounds.minX, mobilePanBounds.maxX),
+      y: clamp(prev.y, mobilePanBounds.minY, mobilePanBounds.maxY),
+    }));
+  }, [isMobileViewport, mobilePanBounds.maxX, mobilePanBounds.maxY, mobilePanBounds.minX, mobilePanBounds.minY]);
+
   async function handleEnterLobby() {
     if (isEnteringLobby) return;
     logRoomNav("nav:click", { from: "/", to: "/rooms/lobby", source: "landing-enter" });
@@ -195,12 +245,56 @@ export default function Home() {
   }
 
   return (
-    <main className="group relative h-screen overflow-hidden bg-black text-white">
+    <main
+      className={[
+        "group relative h-screen overflow-hidden bg-black text-white",
+        isMobileViewport ? "touch-none" : "",
+      ].join(" ")}
+      onTouchStart={(e) => {
+        if (!isMobileViewport || e.touches.length !== 1) return;
+        const target = e.target;
+        if (target instanceof Element && target.closest("button,a")) return;
+        const touch = e.touches[0];
+        touchPanStartRef.current = {
+          x: touch.clientX,
+          y: touch.clientY,
+          panX: displayedPan.x,
+          panY: displayedPan.y,
+          dragging: false,
+        };
+      }}
+      onTouchMove={(e) => {
+        const start = touchPanStartRef.current;
+        if (!isMobileViewport || !start || e.touches.length !== 1) return;
+        const touch = e.touches[0];
+        const dx = touch.clientX - start.x;
+        const dy = touch.clientY - start.y;
+        if (!start.dragging && Math.hypot(dx, dy) < 6) return;
+        if (!start.dragging) {
+          start.dragging = true;
+          touchPanStartRef.current = start;
+        }
+        e.preventDefault();
+        setMobilePan({
+          x: clamp(start.panX + dx * 0.7, mobilePanBounds.minX, mobilePanBounds.maxX),
+          y: clamp(start.panY + dy * 0.58, mobilePanBounds.minY, mobilePanBounds.maxY),
+        });
+      }}
+      onTouchEnd={() => {
+        touchPanStartRef.current = null;
+      }}
+      onTouchCancel={() => {
+        touchPanStartRef.current = null;
+      }}
+    >
       <img
         src={LANDING_MOBILE_IMAGE}
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[38%_top] sm:hidden"
         draggable={false}
+        style={{
+          objectPosition: `calc(38% + ${displayedPan.x}px) calc(0% + ${displayedPan.y}px)`,
+        }}
       />
       <img
         src={LANDING_DESKTOP_IMAGE}
@@ -260,7 +354,7 @@ export default function Home() {
           type="button"
           onClick={handleEnterLobby}
           className={[
-            "absolute z-10 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/28 px-3 py-2 text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition-all duration-[2900ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-black/40",
+            "absolute z-10 inline-flex items-center gap-2 rounded-full border border-white/18 bg-black/28 px-3 py-2 text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition-[opacity,transform,background-color,border-color,box-shadow] duration-[2900ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-black/40",
             isVisible && !isEnteringLobby ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none",
           ].join(" ")}
           style={buttonStyle}

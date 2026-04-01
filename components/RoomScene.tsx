@@ -950,7 +950,11 @@ export default function RoomScene({
   const viewportKnown = viewportW > 0 && viewportH > 0;
   const hotspotBreakpoint = getHotspotBreakpoint(viewportW);
   const useBaseHotspotCoordinates =
-    room.slug === "lobby" || room.slug === "ten-ten-entertainment" || room.slug === "business" || room.slug === "ar-sales";
+    room.slug === "lobby" ||
+    room.slug === "ten-ten-entertainment" ||
+    room.slug === "business" ||
+    room.slug === "ar-sales" ||
+    room.slug === "steeped-dreams-studio";
   const resolvedHotspots = useMemo(
     () =>
       room.hotspots.map((spot) => {
@@ -1008,7 +1012,9 @@ export default function RoomScene({
         : room.slug === "lobby"
           ? 58
           : 50;
-  const backgroundObjectPositionY = isArSalesRoom
+  const shouldUseFixedBaseBackgroundPosition =
+    isArSalesRoom || room.slug === "steeped-dreams-studio";
+  const backgroundObjectPositionY = shouldUseFixedBaseBackgroundPosition
     ? baseRoomBackgroundObjectPositionY
     : getResponsiveRoomBackgroundObjectPositionY({
         basePositionY: baseRoomBackgroundObjectPositionY,
@@ -1024,7 +1030,7 @@ export default function RoomScene({
     backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const useContainedBackground = false;
-  const baseBackgroundObjectPositionY = isArSalesRoom
+  const baseBackgroundObjectPositionY = shouldUseFixedBaseBackgroundPosition
     ? baseRoomBackgroundObjectPositionY
     : getResponsiveRoomBackgroundObjectPositionY({
         basePositionY:

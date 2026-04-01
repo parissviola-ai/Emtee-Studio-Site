@@ -13,11 +13,6 @@ export const quietRoom: Room = {
         label: "Kym Tea Music",
         x: 80,
         y: 57,
-        positions: {
-          laptop: { x: 80, y: 57 },
-          tablet: { x: 80, y: 57 },
-          mobile: { x: 64, y: 54 },
-        },
         direction: "left",
         variant: "dot",
         modal: {
@@ -41,11 +36,6 @@ export const quietRoom: Room = {
         label: "8D Mixes",
         x: 10.5,
         y: 41.96,
-        positions: {
-          laptop: { x: 10.5, y: 41.96 },
-          tablet: { x: 10.5, y: 41.96 },
-          mobile: { x: 40, y: 38 },
-        },
         direction: "right",
         variant: "dot",
         modal: {
@@ -62,11 +52,6 @@ export const quietRoom: Room = {
         label: "Steeped Dreams Studio",
         x: 63,
         y: 65,
-        positions: {
-          laptop: { x: 63, y: 65 },
-          tablet: { x: 63, y: 65 },
-          mobile: { x: 51, y: 69 },
-        },
         direction: "up",
         variant: "dot",
         modal: {
@@ -84,11 +69,6 @@ export const quietRoom: Room = {
         label: "Overstimulated? Chill Out",
         x: 50,
         y: 50,
-        positions: {
-          laptop: { x: 50, y: 50 },
-          tablet: { x: 50, y: 50 },
-          mobile: { x: 22, y: 63 },
-        },
         direction: "left",
         variant: "dot",
         modal: {

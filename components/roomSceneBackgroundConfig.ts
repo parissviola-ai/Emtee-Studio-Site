@@ -102,6 +102,7 @@ export function getRoomSceneBackgroundConfig({
 }) {
   const isLobbyRoom = roomSlug === "lobby";
   const isArSalesRoom = roomSlug === "ar-sales";
+  const isSteepedDreamsRoom = roomSlug === "steeped-dreams-studio";
   const isWebsiteDesignRoom = roomSlug === "EMTEEWebDesign";
   const useContainedBackground = false;
   const eagerBackgroundLoad = isLobbyRoom || SENSITIVE_TRANSITION_ROOMS.has(roomSlug);
@@ -113,6 +114,10 @@ export function getRoomSceneBackgroundConfig({
   if (roomSlug === "lobby") backgroundObjectPositionY = 58;
   else if (roomSlug === "ar-sales") backgroundObjectPositionY = -6;
   else if (roomSlug === "EMTEEWebDesign") backgroundObjectPositionY = 60;
+
+  if (isSteepedDreamsRoom) {
+    backgroundObjectPositionY = 50;
+  }
 
   let backgroundOffsetY = 0;
   if (roomSlug === "ten-ten-entertainment") {

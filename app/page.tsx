@@ -64,6 +64,14 @@ function getObjectPositionY(viewportW: number, isMobile: boolean) {
   return 0.18;
 }
 
+function getObjectPositionX(viewportW: number, isMobile: boolean) {
+  if (isMobile) return 0.38;
+  if (viewportW >= 1536) return 0.5;
+  if (viewportW >= 1280) return 0.47;
+  if (viewportW >= 1024) return 0.44;
+  return 0.5;
+}
+
 export default function Home() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
@@ -131,6 +139,10 @@ export default function Home() {
   const viewportReady = viewport.w > 0 && viewport.h > 0;
   const activeCoords = isMobileViewport ? LANDING_BUTTON_COORDS.mobile : LANDING_BUTTON_COORDS.desktop;
   const activeNaturalSize = isMobileViewport ? mobileNaturalSize : LANDING_DESKTOP_NATURAL_SIZE;
+  const activeObjectPositionX = getObjectPositionX(viewport.w, isMobileViewport);
+  const activeObjectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
+  const landingDesktopObjectPositionX = getObjectPositionX(viewport.w, false);
+  const landingDesktopObjectPositionY = getObjectPositionY(viewport.w, false);
   const imageMetrics = useMemo(
     () =>
       activeNaturalSize
@@ -141,15 +153,15 @@ export default function Home() {
 
   const buttonAnchorPoint = useMemo(() => {
     if (!imageMetrics) return null;
-    const objectPositionX = 0.5;
-    const objectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
+    const objectPositionX = activeObjectPositionX;
+    const objectPositionY = activeObjectPositionY;
     const offsetX = (viewport.w - imageMetrics.renderedW) * objectPositionX;
     const offsetY = (viewport.h - imageMetrics.renderedH) * objectPositionY;
     return {
       x: offsetX + (activeCoords.x / 100) * imageMetrics.renderedW,
       y: offsetY + (activeCoords.y / 100) * imageMetrics.renderedH,
     };
-  }, [activeCoords.x, activeCoords.y, imageMetrics, isMobileViewport, viewport.h, viewport.w]);
+  }, [activeCoords.x, activeCoords.y, activeObjectPositionX, activeObjectPositionY, imageMetrics, viewport.h, viewport.w]);
 
   const buttonStyle = useMemo(() => {
     if (!buttonAnchorPoint) return undefined;
@@ -163,8 +175,8 @@ export default function Home() {
 
   const cardStyle = useMemo(() => {
     if (!imageMetrics) return undefined;
-    const objectPositionX = 0.5;
-    const objectPositionY = getObjectPositionY(viewport.w, isMobileViewport);
+    const objectPositionX = activeObjectPositionX;
+    const objectPositionY = activeObjectPositionY;
     const offsetX = (viewport.w - imageMetrics.renderedW) * objectPositionX;
     const offsetY = (viewport.h - imageMetrics.renderedH) * objectPositionY;
     const activeCardCoords = isMobileViewport ? LANDING_CARD_COORDS.mobile : LANDING_CARD_COORDS.desktop;
@@ -172,7 +184,7 @@ export default function Home() {
       left: `${offsetX + (activeCardCoords.x / 100) * imageMetrics.renderedW}px`,
       top: `${offsetY + (activeCardCoords.y / 100) * imageMetrics.renderedH}px`,
     };
-  }, [imageMetrics, isMobileViewport, viewport.h, viewport.w]);
+  }, [activeObjectPositionX, activeObjectPositionY, imageMetrics, isMobileViewport, viewport.h, viewport.w]);
 
   async function handleEnterLobby() {
     if (isEnteringLobby) return;
@@ -194,7 +206,8 @@ export default function Home() {
       <img
         src={LANDING_DESKTOP_IMAGE}
         alt=""
-        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[center_18%] transition-transform duration-[1800ms] ease-out sm:block lg:object-[center_50%] 2xl:object-[center_58%] group-hover:scale-[1.02]"
+        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover transition-transform duration-[1800ms] ease-out sm:block group-hover:scale-[1.02]"
+        style={{ objectPosition: `${landingDesktopObjectPositionX * 100}% ${landingDesktopObjectPositionY * 100}%` }}
         draggable={false}
       />
 

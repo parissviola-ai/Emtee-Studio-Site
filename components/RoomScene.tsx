@@ -988,6 +988,10 @@ export default function RoomScene({
   const isMusicRoom = room.slug === "music";
   const isMarketingRoomZoomedOut = room.slug === "marketing";
   const isTenTenRoom = room.slug === "ten-ten-entertainment";
+  const arSalesLaptopViewport = isArSalesRoom && !backgroundUsesMobileLayout && viewportW > 0 && viewportW < 1440;
+  const arSalesCompactLaptopViewport = arSalesLaptopViewport && viewportW < 1280;
+  const marketingLaptopViewport = isMarketingRoom && !backgroundUsesMobileLayout && viewportW > 0 && viewportW < 1440;
+  const marketingCompactLaptopViewport = marketingLaptopViewport && viewportW < 1280;
   const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
   const desktopSceneScale =
     room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom
@@ -998,13 +1002,23 @@ export default function RoomScene({
           ? 1
         : 1.06;
   const sceneScale = backgroundUsesMobileLayout ? mobileSceneScale : desktopSceneScale;
+  const baseRoomBackgroundObjectPositionX =
+    arSalesCompactLaptopViewport
+      ? 60
+      : arSalesLaptopViewport
+        ? 55
+        : 50;
   const baseRoomBackgroundObjectPositionY =
     room.slug === "EMTEEWebDesign"
       ? 60
       : room.slug === "business"
         ? 110
         : room.slug === "ar-sales"
-        ? -6
+        ? arSalesCompactLaptopViewport
+          ? 8
+          : arSalesLaptopViewport
+            ? 2
+            : -6
         : isTenTenRoom
           ? backgroundUsesMobileLayout
             ? 62
@@ -1037,7 +1051,11 @@ export default function RoomScene({
           isTenTenRoom
             ? baseRoomBackgroundObjectPositionY
             : isMarketingRoom && !backgroundUsesMobileLayout
-              ? 42
+              ? marketingCompactLaptopViewport
+                ? 34
+                : marketingLaptopViewport
+                  ? 38
+                  : 42
               : baseRoomBackgroundObjectPositionY,
         viewportW,
         viewportH,
@@ -1048,6 +1066,7 @@ export default function RoomScene({
       ? 58
       : backgroundObjectPositionY
     : baseBackgroundObjectPositionY;
+  const coverMetricsObjectPositionX = backgroundUsesMobileLayout ? 50 : baseRoomBackgroundObjectPositionX;
   const shouldRenderBackgroundImage =
     !activeBackgroundVideo ||
     room.slug === "ten-ten-entertainment" ||
@@ -1086,7 +1105,7 @@ export default function RoomScene({
         imageNaturalSize.h,
         sceneScale,
         fitMode,
-        50,
+        coverMetricsObjectPositionX,
         coverMetricsObjectPositionY
       );
       if (computed) {
@@ -1094,7 +1113,7 @@ export default function RoomScene({
       }
       return computed;
     },
-    [backgroundImageSrc, backgroundUsesMobileLayout, coverMetricsObjectPositionY, imageNaturalSize, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
+    [backgroundImageSrc, backgroundUsesMobileLayout, coverMetricsObjectPositionX, coverMetricsObjectPositionY, imageNaturalSize, room.slug, sceneScale, useContainedBackground, viewportH, viewportW]
   );
   const requiresMetricBasedHotspots = true;
   const desktopCoverMetrics = useMemo(
@@ -1107,11 +1126,11 @@ export default function RoomScene({
             imageNaturalSize.h,
             sceneScale,
             "cover",
-            50,
+            coverMetricsObjectPositionX,
             coverMetricsObjectPositionY
           )
         : null,
-    [backgroundUsesMobileLayout, coverMetricsObjectPositionY, imageNaturalSize, sceneScale, viewportH, viewportW]
+    [backgroundUsesMobileLayout, coverMetricsObjectPositionX, coverMetricsObjectPositionY, imageNaturalSize, sceneScale, viewportH, viewportW]
   );
   const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
   const canShowPinHelper = PIN_HELPER_ENABLED && !!hotspotImageMetrics && !isModalOpen && !exploreOpen;
@@ -2355,7 +2374,7 @@ export default function RoomScene({
                   : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
                 : canDesktopCursorPan
                   ? `calc(50% + ${desktopCursorPan.x}px) ${baseBackgroundObjectPositionY}%`
-                  : `50% ${baseBackgroundObjectPositionY}%`,
+                  : `${baseRoomBackgroundObjectPositionX}% ${baseBackgroundObjectPositionY}%`,
               WebkitTouchCallout: "none",
               WebkitUserSelect: "none",
               userSelect: "none",
@@ -2448,7 +2467,7 @@ export default function RoomScene({
                         userSelect: "none",
                       }
                     : {
-                        objectPosition: `50% ${backgroundObjectPositionY}%`,
+                        objectPosition: `${baseRoomBackgroundObjectPositionX}% ${backgroundObjectPositionY}%`,
                         WebkitTouchCallout: "none",
                         WebkitUserSelect: "none",
                         userSelect: "none",

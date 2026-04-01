@@ -117,6 +117,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/lobbynewstv-opt.jpg": { w: 3840, h: 1920 },
   "/rooms/prelobbyphotocn.png": { w: 1344, h: 768 },
   "/rooms/updatedttbg1-poster-opt.jpg": { w: 2560, h: 1440 },
+  "/rooms/finaltentendone-poster-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/8-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/boardroom-opt.jpg": { w: 2560, h: 1440 },
   "/rooms/cdshop-opt.jpg": { w: 2560, h: 1440 },
@@ -947,26 +948,23 @@ export default function RoomScene({
   const [viewportW, viewportH] = viewportKey.split("x").map((n) => Number(n) || 0);
   const viewportKnown = viewportW > 0 && viewportH > 0;
   const hotspotBreakpoint = getHotspotBreakpoint(viewportW);
-  const useLobbyBaseHotspotCoordinates = room.slug === "lobby";
+  const useBaseHotspotCoordinates =
+    room.slug === "lobby" || room.slug === "ten-ten-entertainment" || room.slug === "business";
   const resolvedHotspots = useMemo(
     () =>
       room.hotspots.map((spot) => {
         const breakpointPosition =
-          useLobbyBaseHotspotCoordinates
+          useBaseHotspotCoordinates
             ? undefined
-            : hotspotBreakpoint === "mobile"
-              ? room.slug === "ten-ten-entertainment"
-                ? spot.positions?.mobile
-                : undefined
-              : spot.positions?.[hotspotBreakpoint] ??
-                (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
+            : spot.positions?.[hotspotBreakpoint] ??
+              (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
           ...spot,
           x: breakpointPosition?.x ?? spot.x,
           y: breakpointPosition?.y ?? spot.y,
         };
       }),
-    [hotspotBreakpoint, room.hotspots, room.slug, useLobbyBaseHotspotCoordinates]
+    [hotspotBreakpoint, room.hotspots, useBaseHotspotCoordinates]
   );
   const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
   const lobbyStartHereSpot =

@@ -26,7 +26,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     ],
     departmentHref: "/rooms/business",
     departmentLabel: "Open Business Department",
-    caseStudyHref: "/case-studies/yanchan",
+    caseStudyHref: "/case-studies/yanchan?example=yanchan-business",
   },
   {
     id: "fame-music",
@@ -42,7 +42,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     ],
     departmentHref: "/rooms/music",
     departmentLabel: "Open Music Department",
-    caseStudyHref: "/case-studies/fame-holiday",
+    caseStudyHref: "/case-studies/fame-holiday?example=fame-music",
   },
   {
     id: "kisaki-marketing",
@@ -59,7 +59,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     ],
     departmentHref: "/rooms/marketing",
     departmentLabel: "Open Marketing Department",
-    caseStudyHref: "/case-studies/kisaki",
+    caseStudyHref: "/case-studies/kisaki?example=kisaki-marketing",
   },
   {
     id: "mike-ar-sales",
@@ -76,7 +76,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     ],
     departmentHref: "/rooms/ar-sales",
     departmentLabel: "Open A&R / Sales Department",
-    caseStudyHref: "/case-studies/mike-cannz",
+    caseStudyHref: "/case-studies/mike-cannz?example=mike-ar-sales",
   },
   {
     id: "yanchan-publishing-distro",
@@ -92,6 +92,6 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     ],
     departmentHref: "/rooms/publishing-distribution",
     departmentLabel: "Open Publishing / Distribution Department",
-    caseStudyHref: "/case-studies/yanchan",
+    caseStudyHref: "/case-studies/yanchan?example=yanchan-publishing-distro",
   },
 ];

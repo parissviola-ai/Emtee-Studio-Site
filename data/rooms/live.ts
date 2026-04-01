@@ -3,16 +3,16 @@ import type { Room } from "./types";
 export const liveRoom: Room = {
     slug: "ten-ten-entertainment",
     title: "Ten Ten\nEntertainment",
-    backgroundImage: "/rooms/updatedttbg1-poster-opt.jpg",
-    backgroundVideo: "/rooms/updatedttbg1.mp4",
+    backgroundImage: "/rooms/finaltentendone-poster-opt.jpg",
+    backgroundVideo: "/rooms/finaltentendone.mp4",
     backgroundVideoMobile: "/rooms/mobilevideotenten.mp4",
     hotspots: [
       { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio", x: 90, y:  17, direction: "right" },
       {
         id: "ten-ten-showcase",
         label: "Ten Ten Showcase",
-        x: 50,
-        y: 50,
+        x: 20.37,
+        y: 28.9,
         positions: {
           laptop: { x: 50, y: 50 },
           tablet: { x: 50, y: 50 },
@@ -37,38 +37,10 @@ export const liveRoom: Room = {
         },
       },
       {
-        id: "mike-cannz-youtube",
-        label: "YouTube",
-        x: 23.17,
-        y: 27.99,
-        positions: {
-          laptop: { x: 23.17, y: 27.99 },
-          tablet: { x: 23.17, y: 27.99 },
-          mobile: { x: 23.17, y: 21.4 },
-        },
-        direction: "right",
-        variant: "dot",
-        href: "https://www.youtube.com/@mikecannz",
-      },
-      {
-        id: "mike-cannz-spotify",
-        label: "Spotify",
-        x: 77.96,
-        y: 26.94,
-        positions: {
-          laptop: { x: 77.96, y: 26.94 },
-          tablet: { x: 77.96, y: 26.94 },
-          mobile: { x: 77.96, y: 20.4 },
-        },
-        direction: "left",
-        variant: "dot",
-        href: "https://open.spotify.com/playlist/5Usj5DLi7RstSUHG6kw0ul",
-      },
-      {
         id: "ten-ten-entertainment-packages",
         label: "Packages",
-        x: 21.85,
-        y: 63.32,
+        x: 19.59,
+        y: 55.11,
         positions: {
           laptop: { x: 21.85, y: 63.32 },
           tablet: { x: 21.85, y: 63.32 },
@@ -183,8 +155,8 @@ export const liveRoom: Room = {
       {
         id: "ten-ten-entertainment-set-performance-development",
         label: "Live Set Performance Development",
-        x: 50.05,
-        y: 78,
+        x: 49.9,
+        y: 59.04,
         positions: {
           laptop: { x: 50.05, y: 78 },
           tablet: { x: 50.05, y: 78 },
@@ -205,8 +177,8 @@ export const liveRoom: Room = {
       {
         id: "ten-ten-community",
         label: "Ten Ten Community",
-        x: 74,
-        y: 63.45,
+        x: 72.75,
+        y: 54.06,
         positions: {
           laptop: { x: 74, y: 63.45 },
           tablet: { x: 74, y: 63.45 },
@@ -240,8 +212,8 @@ export const liveRoom: Room = {
       {
         id: "mike-cannz",
         label: "Mike Cannz",
-        x: 50,
-        y: 35,
+        x: 78.01,
+        y: 26.37,
         positions: {
           laptop: { x: 50, y: 35 },
           tablet: { x: 50, y: 35 },

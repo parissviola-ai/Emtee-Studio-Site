@@ -2,7 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { CASE_STUDIES } from "../caseStudiesData";
+import { CASE_STUDY_DECK } from "@/data/case-study-deck";
 
 function normalizeIgUrl(url: string) {
   try {
@@ -86,6 +89,16 @@ function SocialIcon({ label }: { label: string }) {
 
 export default function CaseStudyClient({ slug }: { slug: string }) {
   const cs = CASE_STUDIES.find((x) => x.slug === slug);
+  const searchParams = useSearchParams();
+  const exampleId = searchParams.get("example");
+  const matchingDeckCard = useMemo(() => {
+    if (!exampleId) return null;
+    const targetPath = `/case-studies/${slug}`;
+    const deckCard = CASE_STUDY_DECK.find((item) => item.id === exampleId);
+    if (!deckCard?.caseStudyHref) return null;
+    const [deckPath] = deckCard.caseStudyHref.split("?");
+    return deckPath === targetPath ? deckCard : null;
+  }, [exampleId, slug]);
   const embedSrc = cs?.featuredLink ? getIgEmbedIframeSrc(cs.featuredLink) : null;
 
   if (!cs) {
@@ -100,6 +113,9 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
       </main>
     );
   }
+
+  const displayImageSrc = matchingDeckCard?.imageSrc ?? cs.imageSrc;
+  const displayImageAlt = matchingDeckCard?.imageAlt ?? cs.imageAlt ?? cs.name;
 
   return (
     <main className="relative min-h-[100svh] w-full flex-1 bg-white text-black">
@@ -160,8 +176,8 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
 
               <div className="relative mt-6 flex min-h-[280px] items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-3 sm:min-h-[440px] sm:p-4">
                 <Image
-                  src={cs.imageSrc}
-                  alt={cs.imageAlt ?? cs.name}
+                  src={displayImageSrc}
+                  alt={displayImageAlt}
                   fill
                   draggable={false}
                   sizes="(max-width: 640px) 100vw, (max-width: 1280px) 66vw, 50vw"

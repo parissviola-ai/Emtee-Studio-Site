@@ -124,3 +124,16 @@ test("view full case study opens a new tab without closing the lobby modal", asy
   await expect(page.getByRole("heading", { name: /What We.ve Done/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /^How You Start →$/ })).toBeVisible();
 });
+
+test("mobile start here flow can open what we offer without closing the modal", async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.name.includes("mobile"), "mobile-only repro");
+
+  await page.goto("/rooms/lobby", { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
+
+  await page.getByRole("button", { name: "Start Here", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Who We Are" })).toBeVisible();
+
+  await page.getByRole("button", { name: /^What We Offer →$/ }).click();
+  await expect(page.getByRole("heading", { name: "What We Offer" })).toBeVisible();
+});

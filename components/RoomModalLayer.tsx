@@ -158,7 +158,11 @@ export default function RoomModalLayer({
     href.startsWith("http") || href.startsWith("mailto:") || href.startsWith("tel:");
   const compactFooterButtonClass =
     `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
-  const quietFooterWrapClass = isQuietModal ? "flex flex-wrap items-center gap-3 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end";
+  const quietFooterWrapClass = isQuietModal
+    ? "flex flex-wrap items-center gap-3 self-end"
+    : isMobileViewport
+    ? "flex flex-wrap items-center gap-2 self-end"
+    : "inline-flex flex-nowrap items-center gap-3 self-end";
   const normalizeSocialIconLabel = (label: string) => {
     if (/(^|\s)IG($|\s)/i.test(label) || /instagram/i.test(label)) return "Instagram";
     return label;
@@ -275,6 +279,8 @@ export default function RoomModalLayer({
 
   const dismissButtonClass = [
     shouldUseCompactFooterButtons
+      ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition"
+      : isMobileViewport
       ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition"
       : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
     isOrangeModal
@@ -1101,8 +1107,8 @@ export default function RoomModalLayer({
 
             <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : shouldUseCompactYanchanMusicLayout ? "mt-4 shrink-0 border-t border-white/10 px-4 pb-3 pt-3 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
               {isStructuredFooterModal ? (
-                <div className={["flex w-full items-end", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
-                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? "inline-flex flex-nowrap items-center gap-3 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
+                <div className={["flex w-full items-end", isMobileViewport ? "flex-wrap gap-3" : "", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
+                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? "inline-flex flex-nowrap items-center gap-3 self-end" : `${isMobileViewport ? "" : "-ml-6"} ${quietFooterWrapClass}`].join(" ")}>
                     {shouldShowSequenceBeforeFooterActions ? nextSequenceAction : null}
                     {footerActions}
                     {shouldShowSequenceBeforeFooterActions ? null : nextSequenceAction}
@@ -1117,7 +1123,7 @@ export default function RoomModalLayer({
                     ) : null}
                   </div>
 
-                  {isTenTenShowcaseModal ? null : <div className="flex-1" />}
+                  {isTenTenShowcaseModal ? null : <div className={isMobileViewport ? "hidden" : "flex-1"} />}
 
                   {isTenTenShowcaseModal ? null : (
                     previousSequenceDismissAction ?? (

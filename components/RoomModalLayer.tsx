@@ -84,6 +84,8 @@ export default function RoomModalLayer({
   const isSteepedDreamsChillOutModal = currentModal.title === "Overstimulated? Chill Out";
   const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
   const isCustomProductionModal = currentModal.title === "Apply For Custom Production";
+  const isDirtyElephantAboutModal =
+    roomSlug === "dirty-elephant-studio" && currentModal.title === "Dirty Elephant Studios";
   const isOrangeSessionModal =
     roomSlug === "dirty-elephant-studio" && currentModal.title === "Orange Room Session";
   const isYanchanLiveModal = currentModal.title === "Yanchan Produced Live";
@@ -206,6 +208,15 @@ export default function RoomModalLayer({
   const shouldUseCompactCardBody = isStructuredFooterModal && !isCarouselModal;
   const shouldUseCompactYanchanMusicLayout = isYanchanMusicModal;
   const footerActions: ReactNode[] = [];
+  const handleFooterDismiss = () => {
+    if (modalBackModal) {
+      const backModal = modalBackModal;
+      setModalBackModal(null);
+      openModal(backModal);
+      return;
+    }
+    closeModal();
+  };
 
   if (isCustomProductionModal && activeModal.primaryHref) {
     footerActions.push(
@@ -377,6 +388,17 @@ export default function RoomModalLayer({
     );
   }
 
+  if (!isCustomProductionModal && !activeModal.primaryAction && !activeModal.primaryHref && activeModal.primaryLabel) {
+    footerActions.push(
+      <span
+        key={`modal-primary-label-${activeModal.primaryLabel}`}
+        className={`${secondaryButtonClass} cursor-default pointer-events-none opacity-80`}
+      >
+        {activeModal.primaryLabel}
+      </span>
+    );
+  }
+
   if (activeModal.secondaryHref && activeModal.secondaryLabel) {
     footerActions.push(
       isExternalActionHref(activeModal.secondaryHref) ? (
@@ -453,6 +475,8 @@ export default function RoomModalLayer({
           isStartHereModal
             ? "relative z-10 flex w-full max-w-[320px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isCustomProductionModal
+            ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : isDirtyElephantAboutModal
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isOrangeSessionModal
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
@@ -539,9 +563,9 @@ export default function RoomModalLayer({
                   <NextImage
                     src={resolvedCornerLogo}
                     alt={resolvedCornerLogoAlt ?? activeModal.title}
-                    width={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 144 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 120 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 120 : 66}
-                    height={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 72 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 48 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 48 : 26}
-                    sizes={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? "144px" : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? "120px" : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "120px" : "66px"}
+                    width={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 144 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 120 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 120 : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? 96 : 66}
+                    height={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 72 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 48 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 48 : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? 96 : 26}
+                    sizes={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? "144px" : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? "120px" : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "120px" : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? "96px" : "66px"}
                     className={[
                       resolvedCornerLogo === "/rooms/TenTenlogo.png"
                         ? "h-auto w-auto max-w-[132px] object-contain"
@@ -551,11 +575,14 @@ export default function RoomModalLayer({
                         ? shouldOverlayCornerLogo
                           ? "h-auto w-auto max-w-[88px] object-contain"
                           : "h-auto w-auto max-w-[110px] object-contain"
+                        : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png"
+                          ? "h-auto w-auto max-w-[84px] object-contain"
                         : "h-auto w-auto max-w-[60px] object-contain",
                       resolvedCornerLogo === "/logotransparent.png" ? "invert" : "",
                       resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ||
                       resolvedCornerLogo === "/rooms/TenTenlogo.png" ||
-                      resolvedCornerLogo === "/rooms/sdslogoforcard.png"
+                      resolvedCornerLogo === "/rooms/sdslogoforcard.png" ||
+                      resolvedCornerLogo === "/rooms/dirtyelephantlogo.png"
                         ? "invert"
                         : "",
                     ].join(" ")}
@@ -565,7 +592,7 @@ export default function RoomModalLayer({
             ) : null}
           </div>
 
-            <div className={["min-w-0 w-full", isResourceOnlyModal ? "mx-auto max-w-[430px]" : shouldUseCompactYanchanMusicLayout ? "mx-auto max-w-[494px]" : ""].join(" ")}>
+            <div className={["min-w-0 w-full", isResourceOnlyModal || isDirtyElephantAboutModal ? "mx-auto max-w-[430px]" : shouldUseCompactYanchanMusicLayout ? "mx-auto max-w-[494px]" : ""].join(" ")}>
             {activeModal.videoEmbed ? (
               <div
                 className={[
@@ -951,37 +978,42 @@ export default function RoomModalLayer({
 
             <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : shouldUseCompactYanchanMusicLayout ? "mt-4 shrink-0 border-t border-white/10 px-4 pb-3 pt-3 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
               {isStructuredFooterModal ? (
-                <div className={["flex w-full items-end", isResourceOnlyModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
-                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
+                <div className={["flex w-full items-end", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
+                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? "inline-flex flex-nowrap items-center gap-3 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
                     {footerActions}
+                    {isTenTenShowcaseModal ? (
+                      <button
+                        type="button"
+                        onClick={handleFooterDismiss}
+                        className={secondaryButtonClass}
+                      >
+                        {modalBackModal ? "Back" : "Close"}
+                      </button>
+                    ) : null}
                   </div>
 
-                  <div className="flex-1" />
+                  {isTenTenShowcaseModal ? null : <div className="flex-1" />}
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (modalBackModal) {
-                        const backModal = modalBackModal;
-                        setModalBackModal(null);
-                        openModal(backModal);
-                        return;
-                      }
-                      closeModal();
-                    }}
-                    className={[
-                      shouldUseCompactFooterButtons ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition" : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
-                      isOrangeModal
-                        ? `border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55`
-                        : shouldUseCompactFooterButtons
-                        ? `border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white`
-                        : isQuietModal
-                        ? `border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
-                        : `border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 hover:bg-white/15 hover:text-white`,
-                    ].join(" ")}
-                  >
-                    {modalBackModal ? "Back" : "Close"}
-                  </button>
+                  {isTenTenShowcaseModal ? null : (
+                    <button
+                      type="button"
+                      onClick={handleFooterDismiss}
+                      className={[
+                        shouldUseCompactFooterButtons
+                          ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition"
+                          : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
+                        isOrangeModal
+                          ? `border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55`
+                          : shouldUseCompactFooterButtons
+                          ? `border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white`
+                          : isQuietModal
+                          ? `border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
+                          : `border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 hover:bg-white/15 hover:text-white`,
+                      ].join(" ")}
+                    >
+                      {modalBackModal ? "Back" : "Close"}
+                    </button>
+                  )}
                 </div>
               ) : (
                 <>

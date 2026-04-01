@@ -26,9 +26,11 @@ export const liveRoom: Room = {
           cornerLogo: "/rooms/TenTenlogo.png",
           cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
-            "Ten Ten Entertainment is a leading Canadian artist showcase company based out of The Greater Toronto Area. Ten Ten is known to be the best in offering artists the opportunity to perform in a professional environment for the betterment of such artists. Ten Ten Showcases offer artists a venue booking, event page development, DJ and consultation calls allowing artists to focus on their live performance craft. In 2023, Ten Ten Entertainment won the Mississauga Music Award for Best Promoter of the Year. Past venue offerings have included The Rec Room and Leng Keng. Click below to direct message @tenten_ent on Instagram to book your next show!",
+            "Ten Ten was developed by musician/entrepreneur Mississauga native, Michael \"Mike Cannz\" Cannataro and Emtee Music Group. Ten Ten prides itself in being an elite entertainment company focused on assisting artists in the development and promotion of their confidence through live performance. Ten Ten's premier services include their showcases, where artists are given a platform to grow as live entertainers. Artists also have the opportunity to build their live sets with Ten Ten, tour and throw their own Ten Ten-managed private events, release parties and performances. In 2026, Ten Ten announced a new showcase event that will also involve a networking component giving up and coming artists the ability to connect with industry professionals. Apply below for your chance to perform at our next event.",
           primaryLabel: "DM on IG Apply",
           primaryHref: "https://ig.me/m/tenten_ent",
+          secondaryLabel: "Learn More",
+          secondaryHref: "modal:ten-ten-entertainment-packages",
           links: [
             { label: "Ten Ten IG", href: "https://www.instagram.com/tenten_ent/" },
           ],
@@ -83,6 +85,7 @@ export const liveRoom: Room = {
           links: [
             { label: "Up & Coming Artist Package", href: "modal:up-and-coming-artist-package" },
             { label: "Rising Star Showcase Package", href: "modal:rising-star-showcase-package" },
+            { label: "Private Show & Concert", href: "modal:private-show-and-concert-package" },
           ],
         },
       },
@@ -114,7 +117,7 @@ export const liveRoom: Room = {
             "Access to networking event",
             "1 song placement on Ten Ten Playlist for 7 days",
           ],
-          primaryLabel: "DM on IG Apply",
+          primaryLabel: 'DM "Up & Coming"',
           primaryHref: "https://ig.me/m/tenten_ent",
         },
       },
@@ -150,7 +153,30 @@ export const liveRoom: Room = {
             "Free one month trial for Ten Ten Membership (valued at $35 +tax per month)",
             "Cities: Toronto, London, Barrie, Montreal, Vancouver, DC",
           ],
-          primaryLabel: "DM on IG Apply",
+          primaryLabel: 'DM "Rising Star"',
+          primaryHref: "https://ig.me/m/tenten_ent",
+        },
+      },
+      {
+        id: "private-show-and-concert-package",
+        label: "Private Show & Concert",
+        x: 50,
+        y: 22,
+        hidden: true,
+        positions: {
+          laptop: { x: 50, y: 22 },
+          tablet: { x: 50, y: 22 },
+          mobile: { x: 50, y: 22 },
+        },
+        direction: "right",
+        variant: "dot",
+        modal: {
+          title: "Private Show & Concert",
+          cornerLogo: "/rooms/TenTenlogo.png",
+          cornerLogoAlt: "Ten Ten Entertainment logo",
+          body:
+            "For those interested in working with Ten Ten to develop their own solo show, Ten Ten offers the opportunity to produce an event fully customized to their needs and wants. Simply DM us \"PRIVATE CONCERT\" and a member of our team will respond shortly.",
+          primaryLabel: 'DM "PRIVATE CONCERT"',
           primaryHref: "https://ig.me/m/tenten_ent",
         },
       },
@@ -172,8 +198,8 @@ export const liveRoom: Room = {
           cornerLogoAlt: "Ten Ten Entertainment logo",
           body:
             "Make your performance stand out.\n\nGet development support to tighten your ten-ten-entertainment set, pacing, transitions, stage presence, and audience engagement before showcase day.",
-          primaryLabel: "DM on IG Apply",
-          primaryHref: "https://ig.me/m/tenten_ent",
+          primaryLabel: "Apply here",
+          primaryHref: "mailto:contact@emteemusicgroup.com?subject=Ten%20Ten%3A%20Live%20Set%20Development%20Inquiry",
         },
       },
       {
@@ -205,8 +231,7 @@ export const liveRoom: Room = {
             "Access to monthly networking event",
             "VIP access to yearly Ten Ten private parties",
           ],
-          primaryLabel: "DM on IG to Apply",
-          primaryHref: "https://ig.me/m/tenten_ent",
+          primaryLabel: "COMING SOON",
           links: [
             { label: "Instagram", href: "https://www.instagram.com/tenten_ent/" },
           ],
@@ -232,8 +257,9 @@ export const liveRoom: Room = {
           topImage: "/case-studies/mikecannz.png",
           topImageAlt: "Mike Cannz portrait",
           body:
-            "Mike Cannz Entertainment is a Canadian, multi-faceted, multi-disciplinary entertainment parent company based in Mississauga, Ontario, and one of the leading spearheads of the independent music industry in the Greater Toronto Area. The group is home to multiple companies across the music, event, and culinary industries, including Xperience Projects (X-Projects), Ten Ten Entertainment, and Peppered By PERI. Mike Cannz Entertainment was founded and developed by music and entertainment entrepreneur and musician Michael \"Mike Cannz\" Cannataro. As founder of Mike Cannz Entertainment and builder of Ten Ten Entertainment, his work supports artist performance opportunities, motivation, and long-term creative growth.",
+            "Michael \"Mike Cannz\" Cannataro is a Canadian music entrepreneur, artist, performer, motivational speaker and actor. Hailing from Mississauga, Canada, Michael has become one of the leading spearheads of independent live music in the Greater Toronto Area. Mike is best known for being a founding member of Ten Ten Entertainment, a live entertainment business developed to cultivate confidence in the next generation of young live performers. In 2023, Ten Ten Entertainment won the Mississauga Music Award for Best Promoter of the Year.",
           links: [
+            { label: "Spotify", href: "https://open.spotify.com/playlist/5Usj5DLi7RstSUHG6kw0ul" },
             { label: "IG", href: "https://www.instagram.com/mikecannz/" },
             { label: "Bio", href: "https://www.mikecannzentertainment.com/" },
           ],

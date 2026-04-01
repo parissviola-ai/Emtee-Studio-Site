@@ -16,7 +16,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     id: "yanchan-business",
     artist: "Yanchan Produced",
     lane: "Business Department",
-    imageSrc: "/rooms/yanchancasestudybus.png",
+    imageSrc: "/rooms/bizcardupdate.png",
     imageAlt: "Yanchan business department case card",
     snapshot:
       "Business support focused on operations setup and decision structure so creative momentum could convert into repeatable execution.",

@@ -145,6 +145,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/musicwithelephant-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/mrlargeelephant.png": { w: 1920, h: 1080 },
   "/rooms/mrlargeelephant-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/musicroomupdate-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };
@@ -2057,6 +2058,7 @@ export default function RoomScene({
     const isClickedLabelVisible = clickedHotspotId === spot.id;
     const isOrangeSessionDot = spot.id === "dirty-elephant-studio-room-sessions";
     const isMusicDirtyElephantDot = spot.id === "music-dirty-elephant-studios";
+    const useDirtyElephantDotAccent = isOrangeRoom || isMusicDirtyElephantDot;
     const isMediaRoom = room.slug === "marketing";
     const isLobbyDot = room.slug === "lobby";
     const isLiveRoomSocialDot =
@@ -2096,17 +2098,17 @@ export default function RoomScene({
         spot.id === "chill-out-community");
     const isWebsiteDesignEnterDot =
       room.slug === "EMTEEWebDesign" && spot.id === "website-design-enter-website";
-    const dotBase = isOrangeRoom
+    const dotBase = useDirtyElephantDotAccent
       ? "rounded-full bg-[#ff9f3f] shadow-[0_0_0_2px_rgba(255,159,63,0.35),0_0_22px_rgba(255,159,63,0.7)]"
       : isWebsiteDesignEnterDot
         ? "rounded-full bg-[#d6ae66] shadow-[0_0_0_2px_rgba(214,174,102,0.45),0_0_24px_rgba(214,174,102,0.8)]"
         : "rounded-full bg-white shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_18px_rgba(255,255,255,0.55)]";
-    const haloBase = isOrangeRoom
+    const haloBase = useDirtyElephantDotAccent
       ? "bg-[#ff9f3f]/35"
       : isWebsiteDesignEnterDot
         ? "bg-[#d6ae66]/40"
       : "bg-white/20";
-    const ringBase = isOrangeRoom
+    const ringBase = useDirtyElephantDotAccent
       ? "border-[#ff9f3f]/70"
       : isWebsiteDesignEnterDot
           ? "border-[#d6ae66]/85"

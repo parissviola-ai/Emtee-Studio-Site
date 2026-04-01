@@ -33,6 +33,7 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/musicwithelephant-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/mrlargeelephant.png": { w: 1920, h: 1080 },
   "/rooms/mrlargeelephant-opt.jpg": { w: 1920, h: 1080 },
+  "/rooms/musicroomupdate-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/orangeroomm-v2-opt.jpg": { w: 1536, h: 1024 },
   "/rooms/websitess-mobile-v2-opt.jpg": { w: 3840, h: 2160 },
 };

@@ -44,7 +44,7 @@ export default function Footer() {
               Building artist foundations that scale.
             </h3>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-white/65">
-              Identity, strategy, and execution for artists ready to move from momentum to legacy.
+              Identity, strategy and execution for artists ready to move from momentum to legacy.
             </p>
             <div className="mt-4 flex flex-wrap gap-2.5">
               <Link
@@ -68,12 +68,10 @@ export default function Footer() {
             <p className="text-[10px] uppercase tracking-[0.22em] text-white/45">Navigate</p>
             <div className="mt-3 grid grid-cols-2 gap-1.5 text-sm">
               <Link href="/rooms/lobby" className="text-white/75 transition hover:text-white">Lobby</Link>
+              <Link href="/artist-affiliations" className="text-white/75 transition hover:text-white">Artists</Link>
               <Link href="/about" className="text-white/75 transition hover:text-white">About Us</Link>
-              <Link href="/news" className="text-white/75 transition hover:text-white">News</Link>
               <Link href="/artist-affiliations#partners" className="text-white/75 transition hover:text-white">Partners</Link>
               <Link href="/resources" className="text-white/75 transition hover:text-white">Resources</Link>
-              <Link href="/artist-affiliations" className="text-white/75 transition hover:text-white">Artists</Link>
-              <Link href="https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" target="_blank" rel="noopener noreferrer" className="text-white/75 transition hover:text-white">Consultation</Link>
               <a href={careersHref} className="text-white/75 transition hover:text-white">Careers</a>
             </div>
           </div>

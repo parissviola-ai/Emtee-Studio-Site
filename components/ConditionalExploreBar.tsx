@@ -7,7 +7,7 @@ import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "re
 import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
 
 const EXPLORE_LINKS = [
-  { label: "Start Here", href: "/rooms/lobby?modal=start-here" },
+  { label: "Start Here", href: "/rooms/lobby?modal=About" },
   { label: "Artists & Partners", href: "/artist-affiliations" },
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
   { label: "Lobby", href: "/rooms/lobby" },

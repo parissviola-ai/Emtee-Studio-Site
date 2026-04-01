@@ -101,7 +101,7 @@ type Room = {
 };
 
 const EXPLORE_ROOMS = [
-  { label: "Start Here", href: "/rooms/lobby?modal=start-here" },
+  { label: "Start Here", href: "/rooms/lobby?modal=About" },
   { label: "Artists & Partners", href: "/artist-affiliations" },
   { label: "Apply For A Consultation", href: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy" },
   { label: "Lobby", href: "/rooms/lobby" },
@@ -1275,6 +1275,13 @@ export default function RoomScene({
   }, [router]);
 
   const navigateToRoomHref = useCallback(async (href: string, source = "room-scene") => {
+    if (room.slug === "lobby" && href.startsWith("/rooms/lobby?modal=") && typeof window !== "undefined") {
+      const modalId = new URL(href, window.location.origin).searchParams.get("modal");
+      logRoomNav("nav:click", { from: `/rooms/${room.slug}`, to: href, source });
+      window.history.replaceState({}, "", href);
+      window.dispatchEvent(new CustomEvent("emtee:open-lobby-modal", { detail: { modalId } }));
+      return;
+    }
     logRoomNav("nav:click", { from: `/rooms/${room.slug}`, to: href, source });
     await awaitRoomAssetsByHref(href);
     logRoomNav("nav:push", { from: `/rooms/${room.slug}`, to: href, source });

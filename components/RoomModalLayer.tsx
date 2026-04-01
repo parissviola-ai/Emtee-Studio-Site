@@ -133,7 +133,17 @@ export default function RoomModalLayer({
     openModal(targetSpot.modal);
   };
 
+  const handleSequenceModalTarget = (href: string) => {
+    const modalLinkId = href.slice(6);
+    const targetSpot = roomHotspots.find((spot) => spot.id === modalLinkId);
+    if (!targetSpot?.modal) return;
+    setModalBackModal(null);
+    openModal(targetSpot.modal);
+  };
+
   const isResourceOnlyModal = !!activeResourceContext;
+  const hasCanonicalSequenceNav = !!(currentModal.previousHref || currentModal.nextHref);
+  const effectiveBackModal = hasCanonicalSequenceNav ? null : modalBackModal;
   const shouldUseCompactFooterButtons = isResourceOnlyModal || isPackageGridModal;
   const uniformModalButtonSizing = "px-3 py-1.5 text-[11px] font-medium";
   const isExternalActionHref = (href: string) =>
@@ -213,16 +223,93 @@ export default function RoomModalLayer({
   const shouldHideCaseStudyArrowOnMobile =
     currentModal.title === "What We’ve Done" && activeCarouselSlide?.primaryLabel === "View Full Case Study";
   const shouldHideHowYouStartArrowsOnMobile = currentModal.title === "How You Start";
+  const sequenceButtonClass = secondaryButtonClass;
   const footerActions: ReactNode[] = [];
   const handleFooterDismiss = () => {
-    if (modalBackModal) {
-      const backModal = modalBackModal;
+    if (effectiveBackModal) {
+      const backModal = effectiveBackModal;
       setModalBackModal(null);
       openModal(backModal);
       return;
     }
     closeModal();
   };
+
+  const nextSequenceAction =
+    currentModal.nextHref && currentModal.nextLabel ? (
+      currentModal.nextHref.startsWith("modal:") ? (
+        <button
+          key="sequence-next-modal"
+          type="button"
+          onClick={() => handleSequenceModalTarget(currentModal.nextHref)}
+          className={sequenceButtonClass}
+        >
+          {currentModal.nextLabel} →
+        </button>
+      ) : isExternalActionHref(currentModal.nextHref) ? (
+        <a
+          key="sequence-next-http"
+          href={currentModal.nextHref}
+          target={currentModal.nextHref.startsWith("http") ? "_blank" : undefined}
+          rel={currentModal.nextHref.startsWith("http") ? "noopener noreferrer" : undefined}
+          onClick={closeModal}
+          className={sequenceButtonClass}
+        >
+          {currentModal.nextLabel} →
+        </a>
+      ) : (
+        <Link key="sequence-next-link" href={currentModal.nextHref} onClick={closeModal} className={sequenceButtonClass}>
+          {currentModal.nextLabel} →
+        </Link>
+      )
+    ) : null;
+
+  const dismissButtonClass = [
+    shouldUseCompactFooterButtons
+      ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition"
+      : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
+    isOrangeModal
+      ? `border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55`
+      : shouldUseCompactFooterButtons
+      ? `border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white`
+      : isQuietModal
+      ? `border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
+      : `border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 hover:bg-white/15 hover:text-white`,
+  ].join(" ");
+
+  const previousSequenceDismissAction =
+    currentModal.previousHref ? (
+      currentModal.previousHref.startsWith("modal:") ? (
+        <button
+          key="sequence-previous-dismiss-modal"
+          type="button"
+          onClick={() => handleSequenceModalTarget(currentModal.previousHref)}
+          className={dismissButtonClass}
+        >
+          Back
+        </button>
+      ) : isExternalActionHref(currentModal.previousHref) ? (
+        <a
+          key="sequence-previous-dismiss-http"
+          href={currentModal.previousHref}
+          target={currentModal.previousHref.startsWith("http") ? "_blank" : undefined}
+          rel={currentModal.previousHref.startsWith("http") ? "noopener noreferrer" : undefined}
+          onClick={closeModal}
+          className={dismissButtonClass}
+        >
+          Back
+        </a>
+      ) : (
+        <Link
+          key="sequence-previous-dismiss-link"
+          href={currentModal.previousHref}
+          onClick={closeModal}
+          className={dismissButtonClass}
+        >
+          Back
+        </Link>
+      )
+    ) : null;
 
   if (isCustomProductionModal && activeModal.primaryHref) {
     footerActions.push(
@@ -1004,13 +1091,14 @@ export default function RoomModalLayer({
                 <div className={["flex w-full items-end", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
                   <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? "inline-flex flex-nowrap items-center gap-3 self-end" : `-ml-6 ${quietFooterWrapClass}`].join(" ")}>
                     {footerActions}
+                    {nextSequenceAction}
                     {isTenTenShowcaseModal ? (
                       <button
                         type="button"
                         onClick={handleFooterDismiss}
                         className={secondaryButtonClass}
                       >
-                        {modalBackModal ? "Back" : "Close"}
+                        {effectiveBackModal ? "Back" : "Close"}
                       </button>
                     ) : null}
                   </div>
@@ -1018,44 +1106,38 @@ export default function RoomModalLayer({
                   {isTenTenShowcaseModal ? null : <div className="flex-1" />}
 
                   {isTenTenShowcaseModal ? null : (
-                    <button
-                      type="button"
-                      onClick={handleFooterDismiss}
-                      className={[
-                        shouldUseCompactFooterButtons
-                          ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition"
-                          : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
-                        isOrangeModal
-                          ? `border border-dirty-elephant-studio-200/28 bg-black/35 ${uniformModalButtonSizing} text-dirty-elephant-studio-100/90 hover:border-dirty-elephant-studio-200/45 hover:bg-black/55`
-                          : shouldUseCompactFooterButtons
-                          ? `border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 hover:border-white/28 hover:bg-white/12 hover:text-white`
-                          : isQuietModal
-                          ? `border border-emerald-200/38 bg-emerald-300/12 ${uniformModalButtonSizing} text-emerald-50 hover:border-emerald-200/58 hover:bg-emerald-300/20 hover:text-white hover:[text-shadow:0_0_10px_rgba(110,231,183,0.5)]`
-                          : `border border-white/20 bg-white/10 ${uniformModalButtonSizing} text-white/85 hover:bg-white/15 hover:text-white`,
-                      ].join(" ")}
-                    >
-                      {modalBackModal ? "Back" : "Close"}
-                    </button>
+                    previousSequenceDismissAction ?? (
+                      <button
+                        type="button"
+                        onClick={handleFooterDismiss}
+                        className={dismissButtonClass}
+                      >
+                        {effectiveBackModal ? "Back" : "Close"}
+                      </button>
+                    )
                   )}
                 </div>
               ) : (
                 <>
                   {footerActions}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (modalBackModal) {
-                        const backModal = modalBackModal;
-                        setModalBackModal(null);
-                        openModal(backModal);
-                        return;
-                      }
-                      closeModal();
-                    }}
-                    className={`inline-flex items-center justify-center rounded-full border border-white/18 bg-white/5 ${uniformModalButtonSizing} text-white/76 transition hover:border-white/26 hover:bg-white/9 hover:text-white/88`}
-                  >
-                    {modalBackModal ? "Back" : "Back to Lobby"}
-                  </button>
+                  {nextSequenceAction}
+                  {previousSequenceDismissAction ?? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (effectiveBackModal) {
+                          const backModal = effectiveBackModal;
+                          setModalBackModal(null);
+                          openModal(backModal);
+                          return;
+                        }
+                        closeModal();
+                      }}
+                      className={`inline-flex items-center justify-center rounded-full border border-white/18 bg-white/5 ${uniformModalButtonSizing} text-white/76 transition hover:border-white/26 hover:bg-white/9 hover:text-white/88`}
+                    >
+                      {effectiveBackModal ? "Back" : "Back to Lobby"}
+                    </button>
+                  )}
                 </>
               )}
             </div>

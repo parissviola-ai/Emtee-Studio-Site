@@ -178,8 +178,10 @@ export const lobbyRoom: Room = {
           body:
             "Everything we do falls under 5 core departments that support creative careers and businesses. With resources and specialists in each department, EMTEE helps build the structure needed for long-term movement across your music, brand, and business. To explore the departments further, please tour the rooms from the Lobby.",
           image: "/rooms/departmentdeck.png",
-          primaryLabel: "What We’ve Done",
-          primaryHref: "modal:case-study-tour",
+          previousLabel: "Who We Are",
+          previousHref: "modal:About",
+          nextLabel: "What We’ve Done",
+          nextHref: "modal:case-study-tour",
         },
       },
       {
@@ -192,6 +194,10 @@ export const lobbyRoom: Room = {
         modal: {
           title: "What We’ve Done",
           body: "",
+          previousLabel: "What We Offer",
+          previousHref: "modal:departments-sheet",
+          nextLabel: "How You Start",
+          nextHref: "modal:how-you-start",
           carouselSlides: CASE_STUDY_DECK.map((card) => ({
             src: card.imageSrc,
             alt: card.imageAlt,
@@ -201,8 +207,6 @@ export const lobbyRoom: Room = {
             primaryLabel: "View Full Case Study",
             primaryHref: card.caseStudyHref ?? "/case-studies",
             primaryTargetBlank: true,
-            secondaryLabel: "How You Start",
-            secondaryHref: "modal:how-you-start",
           })),
         },
       },
@@ -218,6 +222,8 @@ export const lobbyRoom: Room = {
           topImage: "/rooms/howyoustart1.png",
           topImageAlt: "How you start diagram",
           body: "",
+          previousLabel: "What We’ve Done",
+          previousHref: "modal:case-study-tour",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Learn More",

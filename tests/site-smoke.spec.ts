@@ -64,3 +64,45 @@ test("lobby modal opened from query can still navigate to another modal", async 
 
   await expect(page.getByRole("heading", { name: "What We Offer" })).toBeVisible();
 });
+
+test("lobby modal sequence buttons stay stable in both directions", async ({ page }) => {
+  await page.goto("/rooms/lobby?modal=About", { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
+
+  await expect(page.getByRole("heading", { name: "Who We Are" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^What We Offer →$/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /^What We Offer →$/ }).click();
+
+  await expect(page.getByRole("heading", { name: "What We Offer" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Back$/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^What We.ve Done →$/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /^What We.ve Done →$/ }).click();
+
+  await expect(page.getByRole("heading", { name: /What We.ve Done/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Back$/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^How You Start →$/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /^How You Start →$/ }).click();
+
+  await expect(page.getByRole("heading", { name: "How You Start" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Back$/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /^Back$/ }).click({ force: true });
+
+  await expect(page.getByRole("heading", { name: /What We.ve Done/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Back$/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^How You Start →$/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /^Back$/ }).click({ force: true });
+
+  await expect(page.getByRole("heading", { name: "What We Offer" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Back$/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^What We.ve Done →$/ })).toBeVisible();
+
+  await page.getByRole("button", { name: /^Back$/ }).click({ force: true });
+
+  await expect(page.getByRole("heading", { name: "Who We Are" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^What We Offer →$/ })).toBeVisible();
+});

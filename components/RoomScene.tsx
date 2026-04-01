@@ -54,6 +54,10 @@ export type Hotspot = {
   modal?: {
     title: string;
     body: string;
+    previousLabel?: string;
+    previousHref?: string;
+    nextLabel?: string;
+    nextHref?: string;
     carouselSlides?: Array<{
       src: string;
       alt: string;

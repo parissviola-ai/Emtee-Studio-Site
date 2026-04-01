@@ -1011,14 +1011,21 @@ export default function RoomScene({
   const isMusicRoom = room.slug === "music";
   const isMarketingRoomZoomedOut = room.slug === "marketing";
   const isTenTenRoom = room.slug === "ten-ten-entertainment";
+  const viewportAspectRatio = viewportW > 0 && viewportH > 0 ? viewportW / viewportH : 0;
   const arSalesLaptopViewport = isArSalesRoom && !backgroundUsesMobileLayout && viewportW > 0 && viewportW < 1440;
   const arSalesCompactLaptopViewport = arSalesLaptopViewport && viewportW < 1280;
   const marketingLaptopViewport = isMarketingRoom && !backgroundUsesMobileLayout && viewportW > 0 && viewportW < 1440;
   const marketingCompactLaptopViewport = marketingLaptopViewport && viewportW < 1280;
   const mobileSceneScale = tiltEnabled && isMobileViewport ? 1.08 : 1;
+  const lobbyDesktopSceneScale =
+    !backgroundUsesMobileLayout && isLobbyRoom
+      ? clamp(1.02 + Math.max(viewportAspectRatio - 1.7, 0) * 0.14, 1.02, 1.05)
+      : 1;
   const desktopSceneScale =
-    room.slug === "EMTEEWebDesign" || isLobbyRoom || isArSalesRoom
+    room.slug === "EMTEEWebDesign" || isArSalesRoom
       ? 1
+      : isLobbyRoom
+        ? lobbyDesktopSceneScale
         : isMusicRoom
           ? 1
         : isMarketingRoomZoomedOut
@@ -1446,6 +1453,19 @@ export default function RoomScene({
     !exploreOpen &&
     !!desktopCoverMetrics &&
     desktopCoverMetrics.maxPanX > 0;
+  const useCanonicalLobbyDesktopPanEndpoints = isLobbyRoom && !lobbyResponsiveIsMobile;
+  const lobbyDesktopPanLimits = useMemo(() => {
+    if (!useCanonicalLobbyDesktopPanEndpoints || !desktopCoverMetrics) return null;
+
+    // Match the visual left/right endpoints of the reference desktop layout,
+    // then translate them into the current viewport's rendered image space.
+    // The left edge gets a little more room because the lobby composition
+    // needs a slightly farther hallway reveal than the right side does.
+    return {
+      left: Math.min(desktopCoverMetrics.maxPanX, desktopCoverMetrics.renderedW * 0.084),
+      right: Math.min(desktopCoverMetrics.maxPanX, desktopCoverMetrics.renderedW * 0.069),
+    };
+  }, [desktopCoverMetrics, useCanonicalLobbyDesktopPanEndpoints]);
   const rawMaxPanX = mobileImageMetrics?.maxPanX ?? 0;
   const rawMaxPanY = mobileImageMetrics?.maxPanY ?? 0;
   const maxPanX = rawMaxPanX;
@@ -2325,16 +2345,24 @@ export default function RoomScene({
         const rect = e.currentTarget.getBoundingClientRect();
         if (!rect.width) return;
         const rawNormalizedX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-        const deadZone = 0.08;
+        const deadZone = useCanonicalLobbyDesktopPanEndpoints ? 0.02 : 0.08;
         const normalizedX =
           Math.abs(rawNormalizedX) < deadZone
             ? 0
             : ((Math.abs(rawNormalizedX) - deadZone) / (1 - deadZone)) * Math.sign(rawNormalizedX);
-        const edgeWeightedX = Math.sign(normalizedX) * Math.pow(Math.abs(normalizedX), 2);
-        // Keep desktop pan slightly inside the true cover-image bounds so the black page background never peeks through.
-        const rightPanLimit = desktopCoverMetrics.maxPanX * 0.97;
-        const leftPanLimit = rightPanLimit * 1.15;
-        const rawTargetX = -edgeWeightedX * desktopCoverMetrics.maxPanX;
+        const edgeExponent = useCanonicalLobbyDesktopPanEndpoints ? 1 : 2;
+        const edgeWeightedX = Math.sign(normalizedX) * Math.pow(Math.abs(normalizedX), edgeExponent);
+        const targetPanRange = useCanonicalLobbyDesktopPanEndpoints
+          ? Math.max(lobbyDesktopPanLimits?.left ?? 0, lobbyDesktopPanLimits?.right ?? 0)
+          : desktopCoverMetrics.maxPanX;
+        // Keep non-lobby desktop pan slightly inside the true cover-image bounds so the black page background never peeks through.
+        const rightPanLimit = useCanonicalLobbyDesktopPanEndpoints
+          ? (lobbyDesktopPanLimits?.right ?? desktopCoverMetrics.maxPanX)
+          : targetPanRange * 0.97;
+        const leftPanLimit = useCanonicalLobbyDesktopPanEndpoints
+          ? (lobbyDesktopPanLimits?.left ?? desktopCoverMetrics.maxPanX)
+          : rightPanLimit * 1.15;
+        const rawTargetX = -edgeWeightedX * targetPanRange;
         const targetX = clamp(rawTargetX, -rightPanLimit, leftPanLimit);
         scheduleDesktopPan({ x: targetX, y: 0 });
       }}

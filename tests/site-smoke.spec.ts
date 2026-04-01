@@ -125,6 +125,21 @@ test("view full case study opens a new tab without closing the lobby modal", asy
   await expect(page.getByRole("button", { name: /^How You Start →$/ })).toBeVisible();
 });
 
+test("how you start consultation opens a new tab without closing the modal", async ({ page }) => {
+  await page.goto("/rooms/lobby?modal=how-you-start", { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
+
+  await expect(page.getByRole("heading", { name: "How You Start" })).toBeVisible();
+
+  const popupPromise = page.waitForEvent("popup");
+  await page.getByRole("button", { name: /Apply For A Consultation/ }).click();
+  const popup = await popupPromise;
+
+  await expect.poll(() => popup.url()).toContain("api.leadconnectorhq.com/widget/form/");
+  await expect(page).toHaveURL(/\/rooms\/lobby\?modal=how-you-start$/);
+  await expect(page.getByRole("heading", { name: "How You Start" })).toBeVisible();
+});
+
 test("mobile start here flow can open what we offer without closing the modal", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.includes("mobile"), "mobile-only repro");
 

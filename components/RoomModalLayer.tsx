@@ -113,6 +113,7 @@ export default function RoomModalLayer({
   const isTenTenCommunityModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Community";
   const isTenTenShowcaseModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Showcase";
   const isMikeCannzModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Mike Cannz";
+  const shouldUseLandscapeTopImage = isMikeCannzModal;
   const isMobileWhoWeAreVideo = isMobileViewport && currentModal.title === "Who We Are" && !!currentModal.videoEmbed;
   const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
   const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
@@ -236,6 +237,7 @@ export default function RoomModalLayer({
     currentModal.title === "What We’ve Done" && activeCarouselSlide?.primaryLabel === "View Full Case Study";
   const shouldHideHowYouStartArrowsOnMobile = currentModal.title === "How You Start";
   const shouldShowSequenceBeforeFooterActions = currentModal.title === "What We’ve Done";
+  const shouldKeepPrimaryExternalActionModalOpen = currentModal.title === "How You Start";
   const sequenceButtonClass = secondaryButtonClass;
   const footerActions: ReactNode[] = [];
   const handleFooterDismiss = () => {
@@ -480,17 +482,29 @@ export default function RoomModalLayer({
           {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
         </button>
       ) : isExternalActionHref(activeModal.primaryHref) ? (
-        <a
-          key="modal-primary-http"
-          href={activeModal.primaryHref}
-          target={activeModal.primaryHref.startsWith("http") ? "_blank" : undefined}
-          rel={activeModal.primaryHref.startsWith("http") ? "noopener noreferrer" : undefined}
-          onClick={closeModal}
-          className={primaryButtonClass}
-        >
-          {activeModal.primaryLabel ?? "View Details"}
-          {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
-        </a>
+        shouldKeepPrimaryExternalActionModalOpen ? (
+          <button
+            key="modal-primary-http-keep-open"
+            type="button"
+            onClick={(event) => openHrefInNewTab(event, activeModal.primaryHref)}
+            className={primaryButtonClass}
+          >
+            {activeModal.primaryLabel ?? "View Details"}
+            {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          </button>
+        ) : (
+          <a
+            key="modal-primary-http"
+            href={activeModal.primaryHref}
+            target={activeModal.primaryHref.startsWith("http") ? "_blank" : undefined}
+            rel={activeModal.primaryHref.startsWith("http") ? "noopener noreferrer" : undefined}
+            onClick={closeModal}
+            className={primaryButtonClass}
+          >
+            {activeModal.primaryLabel ?? "View Details"}
+            {shouldHideHowYouStartArrowsOnMobile ? <span className="hidden sm:inline"> {"→"}</span> : " →"}
+          </a>
+        )
       ) : (
         <Link key="modal-primary-link" href={activeModal.primaryHref} onClick={closeModal} className={primaryButtonClass}>
           {activeModal.primaryLabel ?? "View Details"}
@@ -785,7 +799,7 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={[isSteepedDreamsChillOutModal ? "mt-1 grid gap-4" : shouldUseCompactYanchanMusicLayout ? "mt-3 grid gap-2.5" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
+            <div className={[isSteepedDreamsChillOutModal ? "mt-4 grid gap-4" : shouldUseCompactYanchanMusicLayout ? "mt-3 grid gap-2.5" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
               {!activeResourceContext ? <div className="min-w-0">
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
@@ -858,16 +872,31 @@ export default function RoomModalLayer({
                   </div>
                 ) : activeModal.topImage ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
-                    <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
-                      <NextImage
-                        src={activeModal.topImage}
-                        alt={activeModal.topImageAlt ?? `${activeModal.title} overview chart`}
-                        width={1200}
-                        height={840}
-                        sizes="(max-width: 900px) 100vw, 900px"
-                        className={["w-full max-h-[420px] object-contain transition-opacity duration-300", activeModal.title === "How You Start" ? "opacity-94 brightness-[0.97]" : ""].join(" ")}
-                      />
-                    </div>
+                    {shouldUseLandscapeTopImage ? (
+                      <div className="w-full overflow-hidden rounded-2xl bg-black/25 p-3 shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
+                        <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl">
+                          <NextImage
+                            src={activeModal.topImage}
+                            alt={activeModal.topImageAlt ?? `${activeModal.title} overview chart`}
+                            fill
+                            sizes="(max-width: 518px) calc(100vw - 3rem), 422px"
+                            className="object-cover"
+                            style={{ objectPosition: "center 26%" }}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
+                        <NextImage
+                          src={activeModal.topImage}
+                          alt={activeModal.topImageAlt ?? `${activeModal.title} overview chart`}
+                          width={1200}
+                          height={840}
+                          sizes="(max-width: 900px) 100vw, 900px"
+                          className={["w-full max-h-[420px] object-contain transition-opacity duration-300", activeModal.title === "How You Start" ? "opacity-94 brightness-[0.97]" : ""].join(" ")}
+                        />
+                      </div>
+                    )}
                   </div>
                 ) : null}
 

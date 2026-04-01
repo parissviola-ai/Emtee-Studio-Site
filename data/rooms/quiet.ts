@@ -73,6 +73,7 @@ export const quietRoom: Room = {
         variant: "dot",
         modal: {
           title: "Overstimulated? Chill Out",
+          videoEmbed: "https://www.youtube.com/embed/fPd1YHokn-4?si=34wO5SzrnnaPcdGa",
           body:
             "A peaceful community space is on the way. Stay tuned for updates, future gatherings, and new ways to connect with Steeped Dreams Studio.",
         },

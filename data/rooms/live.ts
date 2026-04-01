@@ -234,6 +234,7 @@ export const liveRoom: Room = {
           links: [
             { label: "Spotify", href: "https://open.spotify.com/playlist/5Usj5DLi7RstSUHG6kw0ul" },
             { label: "IG", href: "https://www.instagram.com/mikecannz/" },
+            { label: "YouTube", href: "https://www.youtube.com/@mikecannz" },
             { label: "Bio", href: "https://www.mikecannzentertainment.com/" },
           ],
         },

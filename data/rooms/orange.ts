@@ -86,7 +86,7 @@ export const orangeRoom: Room = {
             "Pilla B - I Seen It",
           ],
           secondaryLabel: "Yanchan Produced Playlist",
-          secondaryHref: "https://open.spotify.com/playlist/6fvzdF9eOj3Czb8bYAJeVb",
+          secondaryHref: "https://youtube.com/playlist?list=PLhZ50Q6R8nwgK2ywXLZ4WAXjUZHkETUtE&si=CpGyxio_XWlxyGpd",
         },
       },
       {

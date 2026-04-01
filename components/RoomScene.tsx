@@ -919,23 +919,26 @@ export default function RoomScene({
   const [viewportW, viewportH] = viewportKey.split("x").map((n) => Number(n) || 0);
   const viewportKnown = viewportW > 0 && viewportH > 0;
   const hotspotBreakpoint = getHotspotBreakpoint(viewportW);
+  const useLobbyBaseHotspotCoordinates = room.slug === "lobby";
   const resolvedHotspots = useMemo(
     () =>
       room.hotspots.map((spot) => {
         const breakpointPosition =
-          hotspotBreakpoint === "mobile"
-            ? room.slug === "ten-ten-entertainment"
-              ? spot.positions?.mobile
-              : undefined
-            : spot.positions?.[hotspotBreakpoint] ??
-              (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
+          useLobbyBaseHotspotCoordinates
+            ? undefined
+            : hotspotBreakpoint === "mobile"
+              ? room.slug === "ten-ten-entertainment"
+                ? spot.positions?.mobile
+                : undefined
+              : spot.positions?.[hotspotBreakpoint] ??
+                (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
           ...spot,
           x: breakpointPosition?.x ?? spot.x,
           y: breakpointPosition?.y ?? spot.y,
         };
       }),
-    [hotspotBreakpoint, room.hotspots, room.slug]
+    [hotspotBreakpoint, room.hotspots, room.slug, useLobbyBaseHotspotCoordinates]
   );
   const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
   const lobbyStartHereSpot =

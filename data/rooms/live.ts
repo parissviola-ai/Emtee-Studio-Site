@@ -37,7 +37,7 @@ export const liveRoom: Room = {
       },
       {
         id: "ten-ten-entertainment-packages",
-        label: "Packages",
+        label: "Book Slot",
         x: 19.59,
         y: 55.11,
         positions: {

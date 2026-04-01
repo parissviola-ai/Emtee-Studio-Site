@@ -239,14 +239,14 @@ export default function ResourcesPage() {
           Click the department card or the <span className="font-semibold text-[#8b6a2f]">+</span> to view available resources for you.
         </div>
 
-        <div className="relative z-10 mt-8 grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="relative z-10 mt-8 grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3">
           {RESOURCE_CARDS.map((item) => (
             <article
               key={item.department}
               onMouseEnter={() => setHoveredDepartment(item.department)}
               onMouseLeave={() => setHoveredDepartment((prev) => (prev === item.department ? null : prev))}
               className={[
-                "accent-card-soft flex h-full flex-col rounded-2xl border bg-[linear-gradient(155deg,rgba(255,255,255,0.98),rgba(255,255,255,0.9))] p-5 transition duration-300",
+                "accent-card-soft flex flex-col self-start rounded-2xl border bg-[linear-gradient(155deg,rgba(255,255,255,0.98),rgba(255,255,255,0.9))] p-5 transition duration-300",
                 hoveredDepartment === item.department && !openDepartments.includes(item.department)
                   ? "border-[#d6ae66]/45 shadow-[0_0_0_1px_rgba(214,174,102,0.28),0_0_36px_rgba(214,174,102,0.38),0_24px_64px_rgba(0,0,0,0.26)]"
                   : "border-zinc-200 shadow-[0_14px_46px_rgba(0,0,0,0.12)]",

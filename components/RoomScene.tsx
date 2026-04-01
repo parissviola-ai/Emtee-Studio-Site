@@ -2331,6 +2331,7 @@ export default function RoomScene({
             fetchPriority={eagerBackgroundLoad ? "high" : "auto"}
             decoding={eagerBackgroundLoad ? "sync" : "async"}
             data-lobby-hero={room.slug === "lobby" ? "true" : undefined}
+            data-room-foreground-hero={room.slug === "lobby" ? "true" : undefined}
             className={[
               "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
               isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",

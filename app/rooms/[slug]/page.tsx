@@ -1,5 +1,5 @@
 import Link from "next/link";
-import RoomScene from "@/components/RoomScene";
+import RoomPageShell from "@/components/RoomPageShell";
 import { getKnownRoomImageSize } from "@/components/roomSceneBackgroundConfig";
 import { rooms } from "@/data/rooms";
 
@@ -48,19 +48,10 @@ export default async function RoomPage({
   const posterSize = getKnownRoomImageSize(room.backgroundImage);
 
   return (
-    <div className="relative min-h-[100dvh] overflow-hidden bg-black">
-      <img
-        src={room.backgroundImage}
-        alt=""
-        width={posterSize?.w}
-        height={posterSize?.h}
-        fetchPriority="high"
-        decoding="async"
-        data-lobby-hero={room.slug === "lobby" ? "true" : undefined}
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-        style={{ objectPosition: getInitialRoomPosterPosition(room.slug) }}
-      />
-      <RoomScene room={room} transparentShell />
-    </div>
+    <RoomPageShell
+      room={room}
+      posterSize={posterSize}
+      initialPosterPosition={getInitialRoomPosterPosition(room.slug)}
+    />
   );
 }

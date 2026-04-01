@@ -508,7 +508,8 @@ export default function RoomModalLayer({
               {activeModal.headerLogo ? (
                 <div
                   className={[
-                    "mb-2 transition-all duration-700 ease-out",
+                    isYanchanMusicModal ? "mb-3 flex justify-center" : "mb-2",
+                    "transition-all duration-700 ease-out",
                     revealStep >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                   ].join(" ")}
                 >

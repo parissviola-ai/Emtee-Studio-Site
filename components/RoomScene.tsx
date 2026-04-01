@@ -344,6 +344,33 @@ function getHotspotBreakpoint(viewportW: number) {
   return "desktop" as const;
 }
 
+function getResponsiveRoomBackgroundObjectPositionY({
+  basePositionY,
+  viewportW,
+  viewportH,
+  isMobileViewport,
+}: {
+  basePositionY: number;
+  viewportW: number;
+  viewportH: number;
+  isMobileViewport: boolean;
+}) {
+  if (isMobileViewport) return basePositionY;
+  if (!viewportW || !viewportH) return basePositionY;
+
+  const aspectRatio = viewportW / viewportH;
+  let delta = 0;
+
+  if (aspectRatio >= 2.2) delta = 8;
+  else if (aspectRatio >= 2.0) delta = 6;
+  else if (aspectRatio >= 1.85) delta = 4;
+  else if (aspectRatio >= 1.7) delta = 2;
+  else if (aspectRatio < 1.45) delta = -4;
+  else if (aspectRatio < 1.55) delta = -2;
+
+  return Math.max(-12, Math.min(118, basePositionY + delta));
+}
+
 function getCoverImageMetrics(
   viewportW: number,
   viewportH: number,
@@ -967,12 +994,12 @@ export default function RoomScene({
           ? 1
         : 1.06;
   const sceneScale = backgroundUsesMobileLayout ? mobileSceneScale : desktopSceneScale;
-  const backgroundObjectPositionY =
+  const baseRoomBackgroundObjectPositionY =
     room.slug === "EMTEEWebDesign"
       ? 60
       : room.slug === "business"
         ? 110
-      : room.slug === "ar-sales"
+        : room.slug === "ar-sales"
         ? -6
         : isTenTenRoom
           ? backgroundUsesMobileLayout
@@ -981,6 +1008,12 @@ export default function RoomScene({
         : room.slug === "lobby"
           ? 58
           : 50;
+  const backgroundObjectPositionY = getResponsiveRoomBackgroundObjectPositionY({
+    basePositionY: baseRoomBackgroundObjectPositionY,
+    viewportW,
+    viewportH,
+    isMobileViewport: backgroundUsesMobileLayout,
+  });
   const backgroundOffsetY = isArSalesRoom && !isMobileViewport ? 0 : isArSalesRoom ? 43 : isTenTenRoom ? 50 : 0;
   const backgroundImageSrc =
     isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
@@ -989,12 +1022,17 @@ export default function RoomScene({
     backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const useContainedBackground = false;
-  const baseBackgroundObjectPositionY =
-    isTenTenRoom
-      ? backgroundObjectPositionY
-      : isMarketingRoom && !backgroundUsesMobileLayout
-        ? 42
-        : backgroundObjectPositionY;
+  const baseBackgroundObjectPositionY = getResponsiveRoomBackgroundObjectPositionY({
+    basePositionY:
+      isTenTenRoom
+        ? baseRoomBackgroundObjectPositionY
+        : isMarketingRoom && !backgroundUsesMobileLayout
+          ? 42
+          : baseRoomBackgroundObjectPositionY,
+    viewportW,
+    viewportH,
+    isMobileViewport: backgroundUsesMobileLayout,
+  });
   const coverMetricsObjectPositionY = backgroundUsesMobileLayout
     ? room.slug === "lobby"
       ? 58

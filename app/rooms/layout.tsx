@@ -16,6 +16,7 @@ const PRIMARY_LINKS: NavLink[] = [
 ];
 
 const MOBILE_MENU_LINKS: NavLink[] = [
+  { label: "Home", href: "/rooms/lobby" },
   { label: "About", href: "/about" },
   { label: "Resources", href: "/resources" },
   { label: "Artists & Partners", href: "/artist-affiliations" },

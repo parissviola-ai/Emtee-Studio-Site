@@ -12,6 +12,7 @@ type NavLink = { label: string; mobileLabel?: string; href: string };
 const PRIMARY_LINKS: NavLink[] = [{ label: "Home", href: "/rooms/lobby" }];
 
 const MOBILE_MENU_LINKS: NavLink[] = [
+  { label: "Home", href: "/rooms/lobby" },
   { label: "About", href: "/about" },
   { label: "Resources", href: "/resources" },
   { label: "Artists & Partners", href: "/artist-affiliations" },

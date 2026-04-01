@@ -29,8 +29,8 @@ export const arSalesRoom: Room = {
         id: "ar-sales-community-building",
         label: "Community Building",
         tier: "core",
-        x: 43.54,
-        y: 70.53,
+        x: 43.76,
+        y: 68.09,
         direction: "down",
         variant: "dot",
       modal: {

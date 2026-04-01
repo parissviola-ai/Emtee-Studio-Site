@@ -3,9 +3,8 @@ import type { Room } from "./types";
 export const liveRoom: Room = {
     slug: "ten-ten-entertainment",
     title: "Ten Ten\nEntertainment",
-    backgroundImage: "/rooms/finaltentendone-poster-opt.jpg",
+    backgroundImage: "/rooms/finaltentendone-poster-opt.png",
     backgroundVideo: "/rooms/finaltentendone.mp4",
-    backgroundVideoMobile: "/rooms/mobilevideotenten.mp4",
     hotspots: [
       { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio", x: 90, y:  17, direction: "right" },
       {

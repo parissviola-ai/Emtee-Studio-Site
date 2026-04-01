@@ -29,6 +29,7 @@ function NewsTile({ item }: { item: (typeof NEWS_ITEMS)[number] }) {
             loading="lazy"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             className="relative z-[1] h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+            style={item.objectPosition ? { objectPosition: item.objectPosition } : undefined}
           />
         </div>
 

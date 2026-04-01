@@ -24,6 +24,8 @@ export const liveRoom: Room = {
           title: "Ten Ten Showcase",
           cornerLogo: "/rooms/TenTenlogo.png",
           cornerLogoAlt: "Ten Ten Entertainment logo",
+          topImage: "/rooms/tentenmodalupdate.png",
+          topImageAlt: "Ten Ten Showcase event image",
           body:
             "Ten Ten was developed by musician/entrepreneur Mississauga native, Michael \"Mike Cannz\" Cannataro and Emtee Music Group. Ten Ten prides itself in being an elite entertainment company focused on assisting artists in the development and promotion of their confidence through live performance. Ten Ten's premier services include their showcases, where artists are given a platform to grow as live entertainers. Artists also have the opportunity to build their live sets with Ten Ten, tour and throw their own Ten Ten-managed private events, release parties and performances. In 2026, Ten Ten announced a new showcase event that will also involve a networking component giving up and coming artists the ability to connect with industry professionals. Apply below for your chance to perform at our next event.",
           primaryLabel: "DM on IG Apply",
@@ -225,7 +227,7 @@ export const liveRoom: Room = {
           headerLogo: "/rooms/mike cannz_white.png",
           headerLogoAlt: "Mike Cannz logo",
           hideTitle: true,
-          topImage: "/case-studies/mikecannz.png",
+          topImage: "/rooms/mcupdated.png",
           topImageAlt: "Mike Cannz portrait",
           body:
             "Michael \"Mike Cannz\" Cannataro is a Canadian music entrepreneur, artist, performer, motivational speaker and actor. Hailing from Mississauga, Canada, Michael has become one of the leading spearheads of independent live music in the Greater Toronto Area. Mike is best known for being a founding member of Ten Ten Entertainment, a live entertainment business developed to cultivate confidence in the next generation of young live performers. In 2023, Ten Ten Entertainment won the Mississauga Music Award for Best Promoter of the Year.",

@@ -3,9 +3,17 @@ export type NewsItem = {
   title: string;
   imageSrc: string;
   igUrl: string;
+  objectPosition?: string;
 };
 
 export const NEWS_ITEMS: NewsItem[] = [
+  {
+    id: "40",
+    title: "Making the acoustic version of \"Stay Familiar\"",
+    imageSrc: "/rooms/acousticstayfamiliar.png",
+    igUrl: "https://www.instagram.com/yanchanproduced/reel/DWWTC6ZDhDH/",
+    objectPosition: "center 6%",
+  },
   {
     id: "1",
     title: "\"Stay Familiar\" Music Videoshoot",

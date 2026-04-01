@@ -95,7 +95,7 @@ export default function CaseStudies2Client() {
                 </div>
               </div>
               <div className="flex flex-1 flex-col p-5 sm:p-6">
-                <div className="mt-4 inline-flex rounded-full border border-[#c69a45]/34 bg-[linear-gradient(135deg,rgba(255,248,232,0.98),rgba(233,212,166,0.74))] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6c4b14] shadow-[0_10px_24px_rgba(180,137,59,0.14)]">
+                <div className="mt-4 inline-flex w-fit self-start rounded-full border border-[#d6ae66]/45 bg-[#d6ae66]/14 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.13em] text-[#7a5a24]">
                   {card.lane}
                 </div>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight text-black">{card.artist}</h2>

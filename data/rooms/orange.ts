@@ -9,17 +9,14 @@ export const orangeRoom: Room = {
       {
         id: "dirty-elephant-studios-about",
         label: "Dirty Elephant Studios",
-        x: 14,
-        y: 49,
-        positions: {
-          laptop: { x: 13, y: 50 },
-          tablet: { x: 14, y: 49 },
-          mobile: { x: 18, y: 52 },
-        },
-        direction: "right",
+        x: 10.15,
+        y: 54.21,
+        direction: "up",
         variant: "dot",
         modal: {
           title: "Dirty Elephant Studios",
+          cornerLogo: "/rooms/dirtyelephantlogo.png",
+          cornerLogoAlt: "Dirty Elephant Studios logo",
           body:
             "Dirty Elephant Studios is the brainchild of Yanchan Rajmohan. In collaboration with Emtee Music Group Yanchan has built a successful business revolving around his vision to bridge the gap between South Indian traditional culture/music with contemporary western top 40 in North America. Dirty Elephant Studios is the space for artists and fans to get a chance to collaborate on custom production, guest in an Orange Room Session and keep up-to-date with Yanchan Produced Live, Yanchan’s live performance experience.\n\nStep by step, note by note, one soul at a time - Yanchan Produced and Dirty Elephant Studios strives to bring the heart and soul of South Indian Traditions to the world stage.",
         },
@@ -43,7 +40,7 @@ export const orangeRoom: Room = {
           body:
             "Click the button below to apply to work with Yanchan Produced on custom production for your next project, advertisement or personal endeavours.",
           primaryLabel: "Apply",
-          primaryHref: "/custom-production-short-form",
+          primaryHref: "https://tinyurl.com/ypcustomproduction",
           secondaryLabel: "YP Playlist",
           secondaryHref: "https://open.spotify.com/playlist/37i9dQZF1E4Abx1jG3AvIj?si=1kv1EGuXSfWyOJ44r1g4Zw",
         },
@@ -51,14 +48,9 @@ export const orangeRoom: Room = {
       {
         id: "yanchan-produced-music",
         label: "Yanchan Produced",
-        x: 37,
-        y: 59,
-        positions: {
-          laptop: { x: 36, y: 60 },
-          tablet: { x: 37, y: 59 },
-          mobile: { x: 34, y: 63 },
-        },
-        direction: "left",
+        x: 56.39,
+        y: 51.24,
+        direction: "up",
         variant: "dot",
         modal: {
           title: "Yanchan Produced Music",

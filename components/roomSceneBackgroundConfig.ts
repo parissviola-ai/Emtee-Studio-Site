@@ -111,13 +111,11 @@ export function getRoomSceneBackgroundConfig({
 
   let backgroundObjectPositionY = 50;
   if (roomSlug === "lobby") backgroundObjectPositionY = 58;
-  else if (roomSlug === "ar-sales") backgroundObjectPositionY = 64;
+  else if (roomSlug === "ar-sales") backgroundObjectPositionY = -6;
   else if (roomSlug === "EMTEEWebDesign") backgroundObjectPositionY = 60;
 
   let backgroundOffsetY = 0;
-  if (roomSlug === "ar-sales") {
-    backgroundOffsetY = isMobileViewport ? 43 : 0;
-  } else if (roomSlug === "ten-ten-entertainment") {
+  if (roomSlug === "ten-ten-entertainment") {
     backgroundOffsetY = 50;
   }
 

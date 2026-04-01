@@ -13,10 +13,6 @@ export const arSalesRoom: Room = {
         tier: "core",
         x: 68.33,
         y: 58.67,
-        positions: {
-          mobile: { x: 68, y: 16 },
-        },
-        allowLargeResponsiveShift: true,
         direction: "right",
         variant: "dot",
       modal: {
@@ -35,10 +31,6 @@ export const arSalesRoom: Room = {
         tier: "core",
         x: 43.54,
         y: 70.53,
-        positions: {
-          mobile: { x: 48, y: 42 },
-        },
-        allowLargeResponsiveShift: true,
         direction: "down",
         variant: "dot",
       modal: {
@@ -55,10 +47,6 @@ export const arSalesRoom: Room = {
         tier: "secondary",
         x: 45.31,
         y: 48.49,
-        positions: {
-          mobile: { x: 27, y: 46 },
-        },
-        allowLargeResponsiveShift: true,
         direction: "up",
         variant: "dot",
         modal: {
@@ -77,10 +65,6 @@ export const arSalesRoom: Room = {
         tier: "secondary",
         x: 81.25,
         y: 50.62,
-        positions: {
-          mobile: { x: 86, y: 60 },
-        },
-        allowLargeResponsiveShift: true,
         direction: "up",
         variant: "dot",
         modal: {

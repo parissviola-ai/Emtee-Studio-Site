@@ -17,6 +17,8 @@
     "audit:browsertime": "node scripts/browsertime-audit.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "cheerio": "^1.2.0",
     "next": "16.1.1",
     "react": "19.2.3",

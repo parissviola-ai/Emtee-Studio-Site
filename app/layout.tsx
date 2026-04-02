@@ -6,6 +6,8 @@ import GlobalWarmup from "@/components/GlobalWarmup";
 import type { Metadata } from "next";
 import "./globals.css";
 import { RoomNavDebugCapture } from "@/components/RoomNavDebugCapture";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.emteemusicgroup.com"),
@@ -61,6 +63,8 @@ export default function RootLayout({
         {children}
         <ConditionalExploreBar />
         <ConditionalFooter />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

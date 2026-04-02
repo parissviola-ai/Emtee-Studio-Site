@@ -23,7 +23,7 @@ export const quietRoom: Room = {
             { src: "/rooms/kymtea3.jpg", alt: "Kym Tea portrait 3" },
           ],
           body:
-            "Kym Tea is an entrepreneur, singer, dancer and the founder of Steeped Dreams Studio. As an artist she's constantly pushing the boundaries for neurodiversity. Kym has spent years working closely with autism-focused organizations in Canada and as a result has built a strong passion for neurodiversity. She's best known for dancing with DANCE STUDIO NAME, dancing styles such as salsa and bachata.\n\nIn 2024, Kym began working with Emtee Music Group producing music geared for neurodiverse friendly experiences. In 2026, Kym launched Steeped Dreams Studio with her first ever Klay Night, a night of sensory-friendly artistic experiences including clay making and painting.",
+            "Kym Tea is an entrepreneur, singer, dancer and the founder of Steeped Dreams Studio. As an artist she's constantly pushing the boundaries for neurodiversity. Kym has spent years working closely with autism-focused organizations in Canada and as a result has built a strong passion for neurodiversity. She's best known for dancing with Abanico Dance and Entertainment, dancing styles such as salsa and bachata.\n\nIn 2024, Kym began working with Emtee Music Group producing music geared for neurodiverse friendly experiences. In 2026, Kym launched Steeped Dreams Studio with her first ever Klay Night, a night of sensory-friendly artistic experiences including clay making and painting.",
           links: [
             { label: "Linktree", href: "https://linktr.ee/notthatkym" },
             { label: "Instagram", href: "https://www.instagram.com/notthatkym/" },

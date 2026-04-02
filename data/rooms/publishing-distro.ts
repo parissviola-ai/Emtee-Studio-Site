@@ -19,8 +19,8 @@ export const publishingDistroRoom: Room = {
         "An hour long workshop to teach artists pub/distro 101.",
       primaryLabel: "Apply For A Consultation",
       primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-      secondaryLabel: "Resources",
-      secondaryHref: "/resources",
+      secondaryLabel: "Case Study: Yanchan Produced",
+      secondaryHref: "/case-studies/yanchan?example=yanchan-publishing-distro",
     },
   },
 
@@ -37,8 +37,8 @@ export const publishingDistroRoom: Room = {
         "A publishing/distribution readiness review to confirm platform configuration and release setup.",
       primaryLabel: "Apply For A Consultation",
       primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-      secondaryLabel: "Resources",
-      secondaryHref: "/resources",
+      secondaryLabel: "Case Study: Yanchan Produced",
+      secondaryHref: "/case-studies/yanchan?example=yanchan-publishing-distro",
     },
   },
 

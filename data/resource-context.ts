@@ -45,7 +45,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Artists can test sound direction and build momentum with more than a one-off release.",
   },
   "Content Production": {
-    what: "Brainstorming, shooting and editing while developing set content series'.",
+    what: "Brainstorming, shooting and editing while developing set content series.",
     why: "Consistent content keeps audiences engaged between releases and campaigns.",
   },
   EPK: {
@@ -86,7 +86,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
   },
   "Tour Management": {
     what: "On-road assistance, bookings and tour strategy.",
-    why: "Artists can deten-ten-entertainmentr stronger ten-ten-entertainment campaigns with fewer operational issues on the road.",
+    why: "Organization and staying focused can be difficult to do on your own. A tour manager can help assist in communications with venues, promoters and media but also can keep you accountable to the plans and strategies you set out before the tour began.",
   },
   "Publishing/Distribution Workshop": {
     what: "An hour long workshop to teach artists pub/distro 101.",
@@ -133,8 +133,12 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "More operational support reduces risk and improves ten-ten-entertainment event consistency.",
   },
   "Accounting Set Up": {
-    what: "Financial systemization of bookeeping and payroll.",
+    what: "Financial systemization of bookkeeping and payroll.",
     why: "Clear accounting systems reduce confusion and help artists make smarter financial decisions as they grow.",
+  },
+  Grantwriting: {
+    what: "Strategic support for grant research, application development and submission readiness.",
+    why: "A stronger grant process can unlock non-traditional funding and help artists pursue bigger projects more sustainably.",
   },
   "Website Development": {
     what: "High-level website design and development.",

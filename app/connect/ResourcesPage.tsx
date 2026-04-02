@@ -42,7 +42,11 @@ const RESOURCE_CARDS: ResourceCard[] = [
       },
       {
         name: "Accounting Set Up",
-        notes: ["Financial systemization of bookeeping and payroll."],
+        notes: ["Financial systemization of bookkeeping and payroll."],
+      },
+      {
+        name: "Grantwriting",
+        notes: ["Strategic support for grant research, application development and submission readiness."],
       },
       {
         name: "6 Month Project Roll Out",
@@ -102,7 +106,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
       },
       {
         name: "Content Production",
-        notes: ["Brainstorming, shooting and editing while developing set content series'."],
+        notes: ["Brainstorming, shooting and editing while developing set content series."],
       },
       {
         name: "BTS Content Production",
@@ -261,7 +265,7 @@ export default function ResourcesPage() {
                 className="flex w-full cursor-pointer items-start justify-between gap-3 px-1 py-1 text-left"
                 onClick={() => toggleDepartment(item.department)}
               >
-                <div>
+                <div className="min-w-0 flex-1">
                   <button
                     type="button"
                     onClick={(event) => {
@@ -280,7 +284,7 @@ export default function ResourcesPage() {
                     event.stopPropagation();
                     toggleDepartment(item.department);
                   }}
-                  className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#d6ae66]/45 bg-white text-[#8b6a2f] transition hover:bg-[#fff7eb]"
+                  className="mt-1 inline-flex h-7 w-7 shrink-0 flex-none items-center justify-center rounded-full border border-[#d6ae66]/45 bg-white text-[#8b6a2f] leading-none transition hover:bg-[#fff7eb]"
                   aria-label={openDepartments.includes(item.department) ? `Collapse ${item.department}` : `Expand ${item.department}`}
                   aria-expanded={openDepartments.includes(item.department)}
                 >

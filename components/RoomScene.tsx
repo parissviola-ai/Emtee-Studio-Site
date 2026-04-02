@@ -973,6 +973,7 @@ export default function RoomScene({
     room.slug === "lobby" ||
     room.slug === "ten-ten-entertainment" ||
     room.slug === "business" ||
+    room.slug === "marketing" ||
     room.slug === "dirty-elephant-studio" ||
     room.slug === "ar-sales" ||
     room.slug === "steeped-dreams-studio";
@@ -2423,7 +2424,6 @@ export default function RoomScene({
             data-room-foreground-hero="true"
             className={[
               "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
-              isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
               useContainedBackground ? "object-contain" : "object-cover",
             ].join(" ")}
             style={{

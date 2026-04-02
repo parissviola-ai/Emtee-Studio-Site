@@ -19,8 +19,8 @@ export const musicRoom: Room = {
           "Direction, production, writing and engineering for a single.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-        secondaryLabel: "Resources",
-        secondaryHref: "/resources",
+        secondaryLabel: "Case Study: Fame Holiday",
+        secondaryHref: "/case-studies/fame-holiday",
       },
     },
     {
@@ -36,8 +36,8 @@ export const musicRoom: Room = {
           "Direction, production, writing and engineering for a 3-song EP.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-        secondaryLabel: "Resources",
-        secondaryHref: "/resources",
+        secondaryLabel: "Case Study: Fame Holiday",
+        secondaryHref: "/case-studies/fame-holiday",
       },
     },
     {
@@ -53,8 +53,8 @@ export const musicRoom: Room = {
           "Direction, production, writing and engineering for a 5-song project.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-        secondaryLabel: "Resources",
-        secondaryHref: "/resources",
+        secondaryLabel: "Case Study: Fame Holiday",
+        secondaryHref: "/case-studies/fame-holiday",
       },
     },
     {

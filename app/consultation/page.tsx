@@ -10,6 +10,7 @@ const PACKAGE_OPTIONS_BY_DEPARTMENT: Record<string, string[]> = {
     "Brand Evaluation",
     "Business Operation Set Up",
     "Accounting Set Up",
+    "Grantwriting",
     "12 Month Career Roll Out",
     "6 Month Project Roll Out",
   ],

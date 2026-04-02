@@ -35,7 +35,7 @@ export const businessRoom: Room = {
       positions: {
         laptop: { x: 75.89, y: 54.9 },
         tablet: { x: 75.89, y: 54.9 },
-        mobile: { x: 75, y: 52 },
+        mobile: { x: 75.89, y: 54.9 },
       },
       direction: "right",
       variant: "dot",
@@ -45,8 +45,8 @@ export const businessRoom: Room = {
           "Extensive brand development session to clarify vision and niche.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-        secondaryLabel: "Resources",
-        secondaryHref: "/resources",
+        secondaryLabel: "Case Study: Yanchan Produced",
+        secondaryHref: "/case-studies/yanchan?example=yanchan-business",
       },
     },
     {
@@ -57,7 +57,7 @@ export const businessRoom: Room = {
       positions: {
         laptop: { x: 43.32, y: 76.04 },
         tablet: { x: 43.32, y: 76.04 },
-        mobile: { x: 60, y: 74 },
+        mobile: { x: 43.32, y: 76.04 },
       },
       direction: "right",
       variant: "dot",
@@ -79,7 +79,7 @@ export const businessRoom: Room = {
       positions: {
         laptop: { x: 69.85, y: 85.56 },
         tablet: { x: 69.85, y: 85.56 },
-        mobile: { x: 30, y: 66 },
+        mobile: { x: 69.85, y: 85.56 },
       },
       direction: "left",
       variant: "dot",
@@ -94,6 +94,28 @@ export const businessRoom: Room = {
       },
     },
     {
+      id: "business-grantwriting",
+      label: "Grantwriting",
+      x: 60.96,
+      y: 69.24,
+      positions: {
+        laptop: { x: 60.96, y: 69.24 },
+        tablet: { x: 60.96, y: 69.24 },
+        mobile: { x: 60.96, y: 69.24 },
+      },
+      direction: "left",
+      variant: "dot",
+      modal: {
+        title: "Grantwriting",
+        body:
+          "Strategic support for grant research, application development and submission readiness.",
+        primaryLabel: "Apply For A Consultation",
+        primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+        secondaryLabel: "Case Study: Yanchan Produced",
+        secondaryHref: "/case-studies/yanchan?example=yanchan-business",
+      },
+    },
+    {
       id: "business-six-month-project-roll-out",
       label: "6 Month Project Roll Out",
       x: 25.04,
@@ -101,7 +123,7 @@ export const businessRoom: Room = {
       positions: {
         laptop: { x: 25.04, y: 65.12 },
         tablet: { x: 25.04, y: 65.12 },
-        mobile: { x: 20, y: 54 },
+        mobile: { x: 25.04, y: 65.12 },
       },
       direction: "right",
       variant: "dot",
@@ -123,7 +145,7 @@ export const businessRoom: Room = {
       positions: {
         laptop: { x: 24.74, y: 67.48 },
         tablet: { x: 24.74, y: 67.48 },
-        mobile: { x: 47, y: 76 },
+        mobile: { x: 24.74, y: 67.48 },
       },
       direction: "down",
       variant: "dot",
@@ -133,8 +155,8 @@ export const businessRoom: Room = {
           "Year long artist roll out taking into consideration all departments.",
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-        secondaryLabel: "Resources",
-        secondaryHref: "/resources",
+        secondaryLabel: "Case Study: Yanchan Produced",
+        secondaryHref: "/case-studies/yanchan?example=yanchan-business",
       },
     },
 
@@ -147,7 +169,7 @@ export const businessRoom: Room = {
       positions: {
         laptop: { x: 90, y: 17 },
         tablet: { x: 90, y: 17 },
-        mobile: { x: 85, y: 21 },
+        mobile: { x: 90, y: 17 },
       },
       direction: "right",
     },

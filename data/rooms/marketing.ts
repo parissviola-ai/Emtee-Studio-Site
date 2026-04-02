@@ -53,8 +53,8 @@ export const marketingRoom: Room = {
           "On-road assistance, bookings and tour strategy.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-          secondaryLabel: "Resources",
-          secondaryHref: "/resources",
+          secondaryLabel: "Case Study: KISAKI",
+          secondaryHref: "/case-studies/kisaki",
         },
       },
       {
@@ -91,8 +91,8 @@ export const marketingRoom: Room = {
           ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-          secondaryLabel: "Resources",
-          secondaryHref: "/resources",
+          secondaryLabel: "Case Study: KISAKI",
+          secondaryHref: "/case-studies/kisaki",
         },
       },
       {

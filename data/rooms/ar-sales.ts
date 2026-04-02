@@ -21,8 +21,8 @@ export const arSalesRoom: Room = {
             "High level CRM set up to develop company valuation and lead generation pipelines.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
-          secondaryLabel: "Resources",
-          secondaryHref: "/resources",
+          secondaryLabel: "Case Study: Mike Cannz",
+          secondaryHref: "/case-studies/mike-cannz",
         },
       },
       {
@@ -35,10 +35,12 @@ export const arSalesRoom: Room = {
         variant: "dot",
       modal: {
         title: "Community Building",
-        body:
+          body:
             "Assistance in the monitization of fan clubs and support groups.",
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+          secondaryLabel: "Case Study: Mike Cannz",
+          secondaryHref: "/case-studies/mike-cannz",
         },
       },
       {

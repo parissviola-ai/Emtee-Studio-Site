@@ -172,18 +172,24 @@ export default function RoomExploreLayer({
             <div className="mt-6 flex-1 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-2 pb-[calc(env(safe-area-inset-bottom)+6rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {exploreRooms.map((item, index) => {
                 const isApply = false;
+                const isConsultationLink = item.label === "Apply For A Consultation";
                 const isUtilityLink =
                   item.label === "Start Here" ||
                   item.label === "Artists & Partners" ||
-                  item.label === "Apply For A Consultation";
-                const isLastUtilityLink = item.label === "Apply For A Consultation";
+                  isConsultationLink;
+                const isLastUtilityLink = isConsultationLink;
                 const isStartHereLink = item.label === "Start Here";
 
                 return (
                   <Link
                     key={item.label}
                     href={item.href}
+                    target={isConsultationLink ? "_blank" : undefined}
+                    rel={isConsultationLink ? "noopener noreferrer" : undefined}
                     onClick={(event) => {
+                      if (isConsultationLink) {
+                        return;
+                      }
                       if (!item.href.startsWith("/rooms/")) {
                         setExploreOpen(false);
                         return;

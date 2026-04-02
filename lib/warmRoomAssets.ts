@@ -11,7 +11,7 @@ const roomWarmTimestamps = new Map<string, number>();
 const ROOM_NAVIGATION_WAIT_TIMEOUT_MS = 2200;
 const ROOM_WARM_DEDUP_MS = 4000;
 const AGGRESSIVE_VIDEO_WARM_SLUGS = new Set(["steeped-dreams-studio"]);
-const AGGRESSIVE_IMAGE_WARM_SLUGS = new Set(["lobby", "business"]);
+const AGGRESSIVE_IMAGE_WARM_SLUGS = new Set(["lobby", "business", "dirty-elephant-studio"]);
 
 export const ROOM_FLOW_SLUGS = [
   "lobby",

@@ -207,17 +207,24 @@ export default function ConditionalExploreBar() {
             <div className="mt-10 flex-1 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-2 pb-[calc(env(safe-area-inset-bottom)+7.5rem)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {EXPLORE_LINKS.map((item, index) => {
                 const isApply = false;
+                const isConsultationLink = item.label === "Apply For A Consultation";
                 const isUtilityLink =
                   item.label === "Start Here" ||
                   item.label === "Artists & Partners" ||
-                  item.label === "Apply For A Consultation";
-                const isLastUtilityLink = item.label === "Apply For A Consultation";
+                  isConsultationLink;
+                const isLastUtilityLink = isConsultationLink;
                 const isStartHereLink = item.label === "Start Here";
                 return (
                   <Link
                     key={item.label}
                     href={item.href}
+                    target={isConsultationLink ? "_blank" : undefined}
+                    rel={isConsultationLink ? "noopener noreferrer" : undefined}
                     onClick={(event) => {
+                      if (isConsultationLink) {
+                        logRoomNav("nav:new-tab", { from: pathname, to: item.href, source: "conditional-explore-bar-list" });
+                        return;
+                      }
                       if (!item.href.startsWith("/rooms/")) {
                         logRoomNav("nav:push", { from: pathname, to: item.href, source: "conditional-explore-bar-list" });
                         setOpen(false);

@@ -8,6 +8,7 @@ export type InfoCard = {
   strategyLabel?: string;
   exampleArtist?: string;
   exampleHref?: string;
+  exampleArtists?: Array<{ artist: string; href: string }>;
   eyebrow?: string;
   imageSrc?: string;
   imageAlt?: string;
@@ -45,8 +46,10 @@ const MEDIA_OVERVIEW_CARD: InfoCard = {
   primaryCta: "Apply For A Consultation",
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   strategyLabel: "Case Study",
-  exampleArtist: "KISAKI",
-  exampleHref: "/case-studies/kisaki",
+  exampleArtists: [
+    { artist: "KISAKI", href: "/case-studies/kisaki" },
+    { artist: "Yanchan Produced", href: "/case-studies/yanchan?example=yanchan-marketing" },
+  ],
   eyebrow: "Photo Studio",
 };
 
@@ -58,7 +61,7 @@ const BOARDROOM_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   strategyLabel: "Case Study",
   exampleArtist: "Yanchan Produced",
-  exampleHref: "/case-studies/yanchan",
+  exampleHref: "/case-studies/yanchan?example=yanchan-business",
   eyebrow: "Meeting Room",
 };
 
@@ -70,7 +73,7 @@ const ARTISTS_OVERVIEW_CARD: InfoCard = {
   primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
   strategyLabel: "Case Study",
   exampleArtist: "Yanchan Produced",
-  exampleHref: "/case-studies/yanchan",
+  exampleHref: "/case-studies/yanchan?example=yanchan-publishing-distro",
   eyebrow: "Catalog Room",
 };
 

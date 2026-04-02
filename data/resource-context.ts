@@ -65,7 +65,7 @@ const RESOURCE_CONTEXT_BY_NAME: Record<string, ResourceContext> = {
     why: "Artists improve stage confidence, transitions, and audience retention during shows.",
   },
   "Live Performance Development": {
-    what: "Assistance in the development of an artists' live set.",
+    what: "Assistance in the development of an artist's live set.",
     why: "Artists improve stage confidence, transitions, and audience retention during shows.",
   },
   "60min Live Performance Set Development": {

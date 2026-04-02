@@ -84,9 +84,10 @@ export const marketingRoom: Room = {
       modal: {
         title: "Live Performance Development",
         body:
-          "Assistance in the development of an artists' live set.",
+          "Assistance in the development of an artist's live set.",
         links: [
           { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
+          { label: "View Yanchan Case Study", href: "/case-studies/yanchan?example=yanchan-marketing" },
           ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
@@ -105,9 +106,10 @@ export const marketingRoom: Room = {
         title: "BTS Content Production",
         body:
           "Shooting, editing and scripting BTS-style reels.",
-          links: [
-            { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
-          ],
+        links: [
+          { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
+          { label: "View Yanchan Case Study", href: "/case-studies/yanchan?example=yanchan-marketing" },
+        ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         },

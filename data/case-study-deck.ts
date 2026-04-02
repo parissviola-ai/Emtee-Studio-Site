@@ -62,6 +62,23 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     caseStudyHref: "/case-studies/kisaki?example=kisaki-marketing",
   },
   {
+    id: "yanchan-marketing",
+    artist: "Yanchan Produced",
+    lane: "Marketing Department",
+    imageSrc: "/rooms/yanchancasestudymar.png",
+    imageAlt: "Yanchan marketing department case card",
+    snapshot:
+      "Marketing support focused on brand presentation, content structure, and audience-facing rollout execution.",
+    points: [
+      "Content Production (Marketing Department)",
+      "Brand Deck (Marketing Department)",
+      "EPK (Marketing Department)",
+    ],
+    departmentHref: "/rooms/marketing",
+    departmentLabel: "Open Marketing Department",
+    caseStudyHref: "/case-studies/yanchan?example=yanchan-marketing",
+  },
+  {
     id: "mike-ar-sales",
     artist: "Mike Cannz",
     lane: "A&R / Sales Department",

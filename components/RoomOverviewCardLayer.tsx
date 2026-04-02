@@ -63,6 +63,13 @@ export default function RoomOverviewCardLayer({
   prefersReducedMotion,
   onToggleCard,
 }: RoomOverviewCardLayerProps) {
+  const exampleLinks =
+    activeOverviewCard.exampleArtists?.length
+      ? activeOverviewCard.exampleArtists
+      : activeOverviewCard.exampleHref && activeOverviewCard.exampleArtist
+        ? [{ artist: activeOverviewCard.exampleArtist, href: activeOverviewCard.exampleHref }]
+        : [];
+
   const cardPositionClass = showOrangeCard
     ? "bottom-32 left-4 md:bottom-24"
     : mobileStaticUi
@@ -227,29 +234,35 @@ export default function RoomOverviewCardLayer({
                       </Link>
                     )
                   ) : null}
-                  {activeOverviewCard.exampleHref && activeOverviewCard.strategyLabel && activeOverviewCard.exampleArtist ? (
+                  {activeOverviewCard.strategyLabel && exampleLinks.length ? (
                     <div className="rounded-2xl border border-[#d6ae66]/30 bg-[#d6ae66]/10 px-4 py-3">
                       <div className="flex flex-wrap items-baseline gap-x-1 gap-y-1 text-sm">
                         <span className="font-semibold text-[#f6deb2]">
                           {activeOverviewCard.strategyLabel}:
                         </span>
-                      {activeOverviewCard.exampleHref.startsWith("http") ? (
-                        <a
-                          href={activeOverviewCard.exampleHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex font-semibold text-white underline decoration-[#d6ae66]/70 decoration-2 underline-offset-4 transition hover:text-[#f6deb2]"
-                        >
-                          {activeOverviewCard.exampleArtist}
-                        </a>
-                      ) : (
-                        <Link
-                          href={activeOverviewCard.exampleHref}
-                          className="inline-flex font-semibold text-white underline decoration-[#d6ae66]/70 decoration-2 underline-offset-4 transition hover:text-[#f6deb2]"
-                        >
-                          {activeOverviewCard.exampleArtist}
-                        </Link>
-                      )}
+                        {exampleLinks.map((example, index) =>
+                          example.href.startsWith("http") ? (
+                            <a
+                              key={`${example.artist}-${example.href}`}
+                              href={example.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex font-semibold text-white underline decoration-[#d6ae66]/70 decoration-2 underline-offset-4 transition hover:text-[#f6deb2]"
+                            >
+                              {example.artist}
+                              {index < exampleLinks.length - 1 ? "," : ""}
+                            </a>
+                          ) : (
+                            <Link
+                              key={`${example.artist}-${example.href}`}
+                              href={example.href}
+                              className="inline-flex font-semibold text-white underline decoration-[#d6ae66]/70 decoration-2 underline-offset-4 transition hover:text-[#f6deb2]"
+                            >
+                              {example.artist}
+                              {index < exampleLinks.length - 1 ? "," : ""}
+                            </Link>
+                          ),
+                        )}
                       </div>
                     </div>
                   ) : null}

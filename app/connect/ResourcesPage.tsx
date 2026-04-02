@@ -11,6 +11,7 @@ type ResourceCard = {
   strategyLabel: string;
   exampleArtist: string;
   exampleArtistHref?: string;
+  exampleArtists?: Array<{ name: string; href?: string }>;
   items: {
     name: string;
     notes: string[];
@@ -86,6 +87,10 @@ const RESOURCE_CARDS: ResourceCard[] = [
     strategyLabel: "Marketing Strategy",
     exampleArtist: "KISAKI",
     exampleArtistHref: "/case-studies/kisaki",
+    exampleArtists: [
+      { name: "KISAKI", href: "/case-studies/kisaki" },
+      { name: "Yanchan Produced", href: "/case-studies/yanchan?example=yanchan-marketing" },
+    ],
     items: [
       {
         name: "Brand Deck",
@@ -113,7 +118,7 @@ const RESOURCE_CARDS: ResourceCard[] = [
       },
       {
         name: "Live Performance Development",
-        notes: ["Assistance in the development of an artists' live set."],
+        notes: ["Assistance in the development of an artist's live set."],
       },
       {
         name: "Event Planning",
@@ -308,11 +313,31 @@ export default function ResourcesPage() {
                       )}
                     </div>
                   ))}
-                  <div className="border-t border-zinc-200 pt-3">
+          <div className="border-t border-zinc-200 pt-3">
                     <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8b6a2f]">
                       {item.strategyLabel}
                     </div>
-                    {item.exampleArtistHref ? (
+                    {item.exampleArtists?.length ? (
+                      <div className="mt-1 flex flex-wrap items-baseline gap-x-1 gap-y-1 text-sm font-medium text-zinc-800">
+                        {item.exampleArtists.map((example, index) =>
+                          example.href ? (
+                            <Link
+                              key={`${item.department}-${example.name}`}
+                              href={example.href}
+                              className="inline-flex text-zinc-900 underline decoration-[#d6ae66]/60 decoration-2 underline-offset-4 transition hover:text-[#7a5a24] hover:[text-shadow:0_0_14px_rgba(214,174,102,0.75)]"
+                            >
+                              {example.name}
+                              {index < item.exampleArtists!.length - 1 ? "," : ""}
+                            </Link>
+                          ) : (
+                            <span key={`${item.department}-${example.name}`}>
+                              {example.name}
+                              {index < item.exampleArtists!.length - 1 ? "," : ""}
+                            </span>
+                          ),
+                        )}
+                      </div>
+                    ) : item.exampleArtistHref ? (
                       <Link
                         href={item.exampleArtistHref}
                         className="mt-1 inline-flex text-sm font-medium text-zinc-900 underline decoration-[#d6ae66]/60 decoration-2 underline-offset-4 transition hover:text-[#7a5a24] hover:[text-shadow:0_0_14px_rgba(214,174,102,0.75)]"

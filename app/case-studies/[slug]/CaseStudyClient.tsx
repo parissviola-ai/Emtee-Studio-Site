@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { CASE_STUDIES } from "../caseStudiesData";
 import { CASE_STUDY_DECK } from "@/data/case-study-deck";
@@ -100,6 +100,13 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
     return deckPath === targetPath ? deckCard : null;
   }, [exampleId, slug]);
   const embedSrc = cs?.featuredLink ? getIgEmbedIframeSrc(cs.featuredLink) : null;
+  const caseCards = cs?.caseCards ?? [];
+  const initialCaseCardIndex = useMemo(() => {
+    if (!caseCards.length || !exampleId) return 0;
+    const matchIndex = caseCards.findIndex((card) => card.id === exampleId);
+    return matchIndex >= 0 ? matchIndex : 0;
+  }, [caseCards, exampleId]);
+  const [activeCaseCardIndex, setActiveCaseCardIndex] = useState(initialCaseCardIndex);
 
   if (!cs) {
     return (
@@ -114,8 +121,16 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
     );
   }
 
+  useEffect(() => {
+    setActiveCaseCardIndex(initialCaseCardIndex);
+  }, [initialCaseCardIndex, slug]);
+
   const displayImageSrc = matchingDeckCard?.imageSrc ?? cs.imageSrc;
   const displayImageAlt = matchingDeckCard?.imageAlt ?? cs.imageAlt ?? cs.name;
+  const activeCaseCard = caseCards[activeCaseCardIndex] ?? null;
+  const hasCaseCardViewer = caseCards.length > 0;
+  const canGoToPreviousCaseCard = activeCaseCardIndex > 0;
+  const canGoToNextCaseCard = activeCaseCardIndex < caseCards.length - 1;
 
   return (
     <main className="relative min-h-[100svh] w-full flex-1 bg-white text-black">
@@ -174,16 +189,59 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
                 </div>
               ) : null}
 
-              <div className="relative mt-6 flex min-h-[280px] items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-3 sm:min-h-[440px] sm:p-4">
-                <Image
-                  src={displayImageSrc}
-                  alt={displayImageAlt}
-                  fill
-                  draggable={false}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 66vw, 50vw"
-                  className="object-contain"
-                />
-              </div>
+              {hasCaseCardViewer && activeCaseCard ? (
+                <div className="mt-6 overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-3 sm:p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 px-1 pb-3">
+                    <div className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#8b6a2f]/80">
+                      {activeCaseCard.label ?? "Case Study Card"}
+                    </div>
+                    {caseCards.length > 1 ? (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setActiveCaseCardIndex((prev) => Math.max(0, prev - 1))}
+                          disabled={!canGoToPreviousCaseCard}
+                          className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-3 py-1.5 text-sm font-semibold text-black/70 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-45"
+                        >
+                          ← Prev
+                        </button>
+                        <div className="min-w-[64px] text-center text-xs font-medium text-black/55">
+                          {activeCaseCardIndex + 1} / {caseCards.length}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setActiveCaseCardIndex((prev) => Math.min(caseCards.length - 1, prev + 1))}
+                          disabled={!canGoToNextCaseCard}
+                          className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-3 py-1.5 text-sm font-semibold text-black/70 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-45"
+                        >
+                          Next →
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden rounded-xl border border-black/10 bg-white sm:min-h-[440px]">
+                    <Image
+                      src={activeCaseCard.src}
+                      alt={activeCaseCard.alt}
+                      fill
+                      draggable={false}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 66vw, 50vw"
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="relative mt-6 flex min-h-[280px] items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-white/70 p-3 sm:min-h-[440px] sm:p-4">
+                  <Image
+                    src={displayImageSrc}
+                    alt={displayImageAlt}
+                    fill
+                    draggable={false}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 66vw, 50vw"
+                    className="object-contain"
+                  />
+                </div>
+              )}
 
               {cs.socialLinks?.length ? (
                 <div className="mt-4 flex flex-wrap items-center gap-2">

@@ -4,6 +4,12 @@ export type CaseStudy = {
   roleTag?: string;
   imageSrc: string;
   imageAlt?: string;
+  caseCards?: Array<{
+    id: string;
+    src: string;
+    alt: string;
+    label?: string;
+  }>;
   bio?: string;
 
   bullets: string[];
@@ -31,6 +37,26 @@ export const CASE_STUDIES: CaseStudy[] = [
     roleTag: "Artist Development / Production",
     imageSrc: "/rooms/yanchancasestudymar.png",
     imageAlt: "Yanchan Produced marketing case card",
+    caseCards: [
+      {
+        id: "yanchan-business",
+        src: "/rooms/bizcardupdate.png",
+        alt: "Yanchan Produced business case card",
+        label: "Business Case Study Card",
+      },
+      {
+        id: "yanchan-marketing",
+        src: "/rooms/yanchancasestudymar.png",
+        alt: "Yanchan Produced marketing case card",
+        label: "Marketing Case Study Card",
+      },
+      {
+        id: "yanchan-publishing-distro",
+        src: "/rooms/yanchancasestudypub.png",
+        alt: "Yanchan Produced publishing and distribution case card",
+        label: "Publishing / Distribution Case Study Card",
+      },
+    ],
     bio:
       "Yanchan Produced is a Canadian-Tamil producer, mixing engineer, songwriter and Mridangist. Known for making beats with a South Asian twist, his release of solo and collaborative projects has garnered over 12 million streams on Spotify.\n\nYanchan’s production has been affiliated with reputable labels and high-level artists over the years including collaborators Russ, SVDP, Shruthi Hassan, Pressa, Kristina Maria, Yung Tory, and Charle$.",
     bullets: [
@@ -82,10 +108,6 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Consultation (Business Department)",
       "12 Month Career Roll Out (Business Department)",
       "Business Operation Set Up (Business Department)",
-      "Brand Deck (Marketing Department)",
-      "EPK (Marketing Department)",
-      "Tour Management (Marketing Department)",
-      "Live Performance Development (Marketing Department)",
       "CRM Set Up (A&R / Sales Department)",
       "Community Building (A&R / Sales Department)",
       "Live Stream Strategy (A&R / Sales Department)",
@@ -98,7 +120,6 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
     highlights: [
       "Business Department",
-      "Marketing Department",
       "A&R / Sales Department",
     ],
     instagramHandle: "@mikecannz",
@@ -123,10 +144,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     bio:
       "KISAKI is a Korean-Canadian electronic music producer, DJ, and vocalist based in Toronto, known for her electrifying fusion of dynamic vocals with hard-hitting beats and cinematic experience. Blending elements of rock, K-Pop, J-Pop and anime, her ten-ten-entertainment performances feel like stepping into the soundtrack of a cyber dream.\nA former Touhou Vocal artist with Japan's doujin circles including EastNewSound, she channels the soul of a lost android searching for freedom and love into a dark yet melodic soundscape influenced by cyberpunk and neo noir.\nSince 2024, she has taken her sound on the road, lighting up stages in over fifteen cities across North America, and earning a growing following in the Canadian underground scene.",
     bullets: [
-      "Brand Development (Business Department)",
       "Brand Deck (Marketing Department)",
       "Live Performance Development (Marketing Department)",
-      "Publishing/Distribution Workshop (Publishing / Distribution Department)",
     ],
     accomplishments: [
       "Built reliable release quality-control checkpoints",
@@ -135,10 +154,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Elevated overall presentation consistency across releases",
     ],
     highlights: [
-      "Business Department",
-      "Music Department",
       "Marketing Department",
-      "Publishing / Distribution Department",
     ],
     instagramHandle: "@kisakimusic",
     instagramUrl: "https://www.instagram.com/kisakimusic/",
@@ -175,7 +191,6 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
     highlights: [
       "Music Department",
-      "A&R / Sales Department",
     ],
     instagramHandle: "@officialfameholiday",
     instagramUrl: "https://www.instagram.com/officialfameholiday/?hl=en",

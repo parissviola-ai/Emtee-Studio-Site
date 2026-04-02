@@ -584,6 +584,27 @@ export default function RoomScene({
   const [tiltPermissionNeeded, setTiltPermissionNeeded] = useState(false);
   const [tiltStatus, setTiltStatus] = useState<"idle" | "listening" | "active" | "blocked">("idle");
   const [isSecureContextState, setIsSecureContextState] = useState(false);
+  const [tiltDebugInfo, setTiltDebugInfo] = useState<{
+    orientationApi: boolean;
+    motionApi: boolean;
+    lastSource: "none" | "orientation" | "motion";
+    orientationEvents: number;
+    motionEvents: number;
+    lastBeta: number | null;
+    lastGamma: number | null;
+    permissionState: "unknown" | "granted" | "denied";
+    blockReason: string | null;
+  }>({
+    orientationApi: false,
+    motionApi: false,
+    lastSource: "none",
+    orientationEvents: 0,
+    motionEvents: 0,
+    lastBeta: null,
+    lastGamma: null,
+    permissionState: "unknown",
+    blockReason: null,
+  });
   const [mobileTiltPan, setMobileTiltPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const prefetchedExploreRoutesRef = useRef<Set<string>>(new Set());
   const isMobileViewportRaw = useSyncExternalStore(
@@ -1275,6 +1296,13 @@ export default function RoomScene({
     if (typeof window === "undefined") return;
     const hasDeviceOrientation = "DeviceOrientationEvent" in window;
     const hasDeviceMotion = "DeviceMotionEvent" in window;
+    setTiltDebugInfo((prev) => ({
+      ...prev,
+      orientationApi: hasDeviceOrientation,
+      motionApi: hasDeviceMotion,
+      permissionState: "unknown",
+      blockReason: !hasDeviceOrientation && !hasDeviceMotion ? "No motion/orientation API detected" : null,
+    }));
     if (!hasDeviceOrientation && !hasDeviceMotion) {
       setTiltStatus("blocked");
       return;
@@ -1291,18 +1319,23 @@ export default function RoomScene({
       if (typeof DeviceOrientationEventWithPermission.requestPermission === "function") {
         const permission = await DeviceOrientationEventWithPermission.requestPermission();
         if (permission !== "granted") {
+          setTiltDebugInfo((prev) => ({ ...prev, permissionState: "denied", blockReason: "Orientation permission denied" }));
           setTiltStatus("blocked");
           return;
         }
+        setTiltDebugInfo((prev) => ({ ...prev, permissionState: "granted" }));
       }
       if (typeof DeviceMotionEventWithPermission.requestPermission === "function") {
         const permission = await DeviceMotionEventWithPermission.requestPermission();
         if (permission !== "granted") {
+          setTiltDebugInfo((prev) => ({ ...prev, permissionState: "denied", blockReason: "Motion permission denied" }));
           setTiltStatus("blocked");
           return;
         }
+        setTiltDebugInfo((prev) => ({ ...prev, permissionState: "granted" }));
       }
     } catch {
+      setTiltDebugInfo((prev) => ({ ...prev, permissionState: "denied", blockReason: "Permission request threw an error" }));
       setTiltStatus("blocked");
       return;
     }
@@ -1311,6 +1344,15 @@ export default function RoomScene({
     tiltFilteredReadingRef.current = null;
     tiltSignalSeenRef.current = false;
     setTiltPermissionNeeded(false);
+    setTiltDebugInfo((prev) => ({
+      ...prev,
+      orientationEvents: 0,
+      motionEvents: 0,
+      lastSource: "none",
+      lastBeta: null,
+      lastGamma: null,
+      blockReason: null,
+    }));
     setTiltStatus("listening");
     setTiltEnabled(true);
   }
@@ -1781,6 +1823,11 @@ export default function RoomScene({
     const hasDeviceMotion = "DeviceMotionEvent" in window;
     setIsSecureContextState(window.isSecureContext);
     setTiltAvailable(hasDeviceOrientation || hasDeviceMotion);
+    setTiltDebugInfo((prev) => ({
+      ...prev,
+      orientationApi: hasDeviceOrientation,
+      motionApi: hasDeviceMotion,
+    }));
     if (!hasDeviceOrientation && !hasDeviceMotion) return;
 
     const DeviceOrientationEventWithPermission = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
@@ -1815,6 +1862,7 @@ export default function RoomScene({
     if (!hasDeviceOrientation && !hasDeviceMotion) return;
 
     tiltSignalSeenRef.current = false;
+    setTiltDebugInfo((prev) => ({ ...prev, blockReason: null }));
     setTiltStatus("listening");
 
     function applyTiltReading(rawReading: { beta: number; gamma: number }) {
@@ -1869,7 +1917,16 @@ export default function RoomScene({
 
     function handleDeviceOrientation(event: DeviceOrientationEvent) {
       if (event.beta == null || event.gamma == null) return;
-      applyTiltReading({ beta: event.beta, gamma: event.gamma });
+      const beta = event.beta;
+      const gamma = event.gamma;
+      setTiltDebugInfo((prev) => ({
+        ...prev,
+        lastSource: "orientation",
+        orientationEvents: prev.orientationEvents + 1,
+        lastBeta: Number(beta.toFixed(2)),
+        lastGamma: Number(gamma.toFixed(2)),
+      }));
+      applyTiltReading({ beta, gamma });
     }
 
     function handleDeviceMotion(event: DeviceMotionEvent) {
@@ -1878,14 +1935,24 @@ export default function RoomScene({
       const gravityX = gravity.x;
       const gravityY = gravity.y;
       if (gravityX == null || gravityY == null) return;
+      const derivedBeta = gravityY * 6;
+      const derivedGamma = gravityX * 6;
+      setTiltDebugInfo((prev) => ({
+        ...prev,
+        lastSource: "motion",
+        motionEvents: prev.motionEvents + 1,
+        lastBeta: Number(derivedBeta.toFixed(2)),
+        lastGamma: Number(derivedGamma.toFixed(2)),
+      }));
       applyTiltReading({
-        beta: gravityY * 6,
-        gamma: gravityX * 6,
+        beta: derivedBeta,
+        gamma: derivedGamma,
       });
     }
 
     const blockTimer = window.setTimeout(() => {
       if (!tiltSignalSeenRef.current) {
+        setTiltDebugInfo((prev) => ({ ...prev, blockReason: "No motion events received after enabling tilt" }));
         setTiltStatus("blocked");
       }
     }, 1500);
@@ -2743,7 +2810,23 @@ export default function RoomScene({
                   : "Tilt Off"}
             </button>
           )}
-
+          <div className="max-w-[13rem] rounded-2xl border border-white/14 bg-black/60 px-3 py-2 text-[10px] leading-relaxed text-white/82 shadow-[0_14px_36px_rgba(0,0,0,0.35)] backdrop-blur-md">
+            <div className="font-semibold uppercase tracking-[0.12em] text-white/62">Tilt Debug</div>
+            <div className="mt-1">Secure: {isSecureContextState ? "yes" : "no"}</div>
+            <div>Touch: {touchCapableViewportRaw ? "yes" : "no"}</div>
+            <div>Orientation API: {tiltDebugInfo.orientationApi ? "yes" : "no"}</div>
+            <div>Motion API: {tiltDebugInfo.motionApi ? "yes" : "no"}</div>
+            <div>Permission: {tiltDebugInfo.permissionState}</div>
+            <div>Status: {tiltStatus}</div>
+            <div>Source: {tiltDebugInfo.lastSource}</div>
+            <div>Orientation events: {tiltDebugInfo.orientationEvents}</div>
+            <div>Motion events: {tiltDebugInfo.motionEvents}</div>
+            <div>Beta: {tiltDebugInfo.lastBeta ?? "n/a"}</div>
+            <div>Gamma: {tiltDebugInfo.lastGamma ?? "n/a"}</div>
+            {tiltDebugInfo.blockReason ? (
+              <div className="mt-1 text-[9px] text-amber-200/85">{tiltDebugInfo.blockReason}</div>
+            ) : null}
+          </div>
         </div>
       ) : null}
 

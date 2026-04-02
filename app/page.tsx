@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { startLandingTransitionHold } from "@/lib/roomTransitionHold";
 import { awaitRoomAssetsByHref, getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
 
 const LANDING_DESKTOP_IMAGE = "/rooms/prelobbyphotocn.png";
@@ -240,6 +241,7 @@ export default function Home() {
     if (isEnteringLobby) return;
     logRoomNav("nav:click", { from: "/", to: "/rooms/lobby", source: "landing-enter" });
     setIsEnteringLobby(true);
+    startLandingTransitionHold("/rooms/lobby");
     await awaitRoomAssetsByHref("/rooms/lobby");
     logRoomNav("nav:push", { from: "/", to: "/rooms/lobby", source: "landing-enter" });
     router.push("/rooms/lobby");
@@ -300,6 +302,7 @@ export default function Home() {
       <img
         src={LANDING_DESKTOP_IMAGE}
         alt=""
+        data-landing-hero="true"
         className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[50%_64%] transition-transform duration-[1800ms] ease-out sm:block lg:object-[44%_74%] xl:object-[47%_70%] 2xl:object-[50%_78%] group-hover:scale-[1.02]"
         draggable={false}
       />

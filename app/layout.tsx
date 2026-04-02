@@ -1,5 +1,6 @@
 import ConditionalFooter from "@/components/ConditionalFooter";
 import ConditionalExploreBar from "@/components/ConditionalExploreBar";
+import GlobalTransitionHoldLayer from "@/components/GlobalTransitionHoldLayer";
 import ConditionalMenuBar from "@/components/ConditionalMenuBar";
 import GlobalWarmup from "@/components/GlobalWarmup";
 import type { Metadata } from "next";
@@ -58,6 +59,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <RoomNavDebugCapture />
         <GlobalWarmup />
+        <GlobalTransitionHoldLayer />
         <ConditionalMenuBar />
         {children}
         <ConditionalExploreBar />

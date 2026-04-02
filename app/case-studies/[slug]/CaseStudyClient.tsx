@@ -183,11 +183,6 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
               />
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{cs.name}</h1>
-                {cs.roleTag ? (
-                  <span className="rounded-full border border-[#d6ae66]/35 bg-[#d6ae66]/10 px-3 py-1 text-sm font-semibold text-[#7a5a24]">
-                    {cs.roleTag}
-                  </span>
-                ) : null}
               </div>
 
               {cs.bio ? (

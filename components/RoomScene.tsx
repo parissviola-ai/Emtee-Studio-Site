@@ -695,12 +695,7 @@ export default function RoomScene({
     }
     if (room.slug === "lobby" && lobbyStartHereOpenedRef.current) {
       lobbyStartHereOpenedRef.current = false;
-      setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: true }));
-      if (hasHydrated && typeof window !== "undefined") {
-        try {
-          window.sessionStorage.setItem(getShowMoreStorageKey(room.slug), "1");
-        } catch {}
-      }
+      setShowMoreHotspots(room.slug, true);
     }
     setActiveModal(null);
     setActiveCarouselIndex(0);
@@ -1369,15 +1364,22 @@ export default function RoomScene({
     return `showMore:${slug}`;
   }
 
+  function setShowMoreHotspots(slug: string, next: boolean) {
+    setShowMoreHotspotsByRoom((prev) => ({ ...prev, [slug]: next }));
+    if (typeof window === "undefined") return;
+    try {
+      window.sessionStorage.setItem(getShowMoreStorageKey(slug), next ? "1" : "0");
+    } catch {}
+    if (slug === "lobby") {
+      window.dispatchEvent(new CustomEvent("emtee:lobby-room-list-state", { detail: { open: next } }));
+    }
+  }
+
   function toggleShowMoreHotspots() {
     if (!isHotspotTierPilotRoom) return;
     const slug = room.slug;
     const next = !(showMoreHotspotsByRoom[slug] ?? false);
-    setShowMoreHotspotsByRoom((prev) => ({ ...prev, [slug]: next }));
-    if (!hasHydrated || typeof window === "undefined") return;
-    try {
-      window.sessionStorage.setItem(getShowMoreStorageKey(slug), next ? "1" : "0");
-    } catch {}
+    setShowMoreHotspots(slug, next);
   }
 
   useEffect(() => {
@@ -1701,7 +1703,7 @@ export default function RoomScene({
     try {
       const raw = window.sessionStorage.getItem(getShowMoreStorageKey(room.slug));
       if (raw == null) return;
-      setShowMoreHotspotsByRoom((prev) => ({ ...prev, [room.slug]: raw === "1" }));
+      setShowMoreHotspots(room.slug, raw === "1");
     } catch {}
   }, [hasHydrated, isHotspotTierPilotRoom, room.slug]);
 

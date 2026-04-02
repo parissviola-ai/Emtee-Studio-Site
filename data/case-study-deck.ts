@@ -32,7 +32,7 @@ export const CASE_STUDY_DECK: CaseStudyDeckItem[] = [
     id: "fame-music",
     artist: "Fame Holiday",
     lane: "Music Department",
-    imageSrc: "/rooms/famecasestudymusic.png",
+    imageSrc: "/rooms/fameholidaycardstudy.png",
     imageAlt: "Fame Holiday music department case card",
     snapshot:
       "Song development and creative direction, backed with cross-department campaign support.",

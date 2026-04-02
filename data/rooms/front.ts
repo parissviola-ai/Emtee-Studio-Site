@@ -219,7 +219,7 @@ export const lobbyRoom: Room = {
         y: 50,
         modal: {
           title: "How You Start",
-          topImage: "/rooms/howyoustart1.png",
+          topImage: "/rooms/updatedhowyoustart.png",
           topImageAlt: "How you start diagram",
           body: "",
           previousLabel: "What We’ve Done",

@@ -155,7 +155,7 @@ export default function ConsultationPage() {
                 </p>
                 <div className="mt-4 overflow-hidden rounded-xl border border-black/10 bg-white">
                   <Image
-                    src="/rooms/howyoustart1.png"
+                    src="/rooms/updatedhowyoustart.png"
                     alt="Consultation process overview"
                     width={1200}
                     height={840}

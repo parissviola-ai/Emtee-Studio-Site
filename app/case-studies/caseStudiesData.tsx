@@ -175,7 +175,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: "fame-holiday",
     name: "Fame Holiday",
     roleTag: "A&R / Creative Direction",
-    imageSrc: "/rooms/famecasestudymusic.png",
+    imageSrc: "/rooms/fameholidaycardstudy.png",
     imageAlt: "Fame Holiday music case card",
     bio:
       "Award winning Mississauga rapper Fame Holiday has been establishing himself in the Canadian music scene since his first talent show at 14. His consistency and work ethic over the years has earned him a loyal fan-following that has streamed his music over one million times.",

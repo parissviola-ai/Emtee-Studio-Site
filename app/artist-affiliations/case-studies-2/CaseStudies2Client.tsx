@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { CASE_STUDY_DECK, type CaseStudyDeckItem } from "@/data/case-study-deck";
+import { useHorizontalSwipe } from "@/lib/useHorizontalSwipe";
 
 type DepartmentCaseCard = CaseStudyDeckItem & {
   yearTag: string;
@@ -54,6 +55,11 @@ export default function CaseStudies2Client() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeCard, closeCard, goToAdjacentCard]);
+
+  const activeCardSwipeHandlers = useHorizontalSwipe({
+    onSwipeLeft: () => goToAdjacentCard("next"),
+    onSwipeRight: () => goToAdjacentCard("prev"),
+  });
 
   return (
     <main className="relative min-h-[100svh] overflow-hidden bg-white text-black">
@@ -122,7 +128,11 @@ export default function CaseStudies2Client() {
           />
           <div className="relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-[900px] flex-col overflow-y-auto rounded-3xl border border-black/10 bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
             <div className="shrink-0 border-b border-black/8 p-4 sm:p-5">
-              <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_18px_48px_rgba(0,0,0,0.16)]">
+              <div
+                className="relative w-full overflow-hidden rounded-2xl shadow-[0_18px_48px_rgba(0,0,0,0.16)]"
+                style={{ touchAction: "pan-y" }}
+                {...activeCardSwipeHandlers}
+              >
                 <Image
                   src={activeCard.imageSrc}
                   alt={activeCard.imageAlt}

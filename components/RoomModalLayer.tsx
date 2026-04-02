@@ -3,7 +3,8 @@
 import { getResourceContext } from "@/data/resource-context";
 import NextImage from "next/image";
 import Link from "next/link";
-import { Fragment, useEffect, useMemo, useState, type ComponentType, type MouseEvent as ReactMouseEvent, type MutableRefObject, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState, type ComponentType, type MouseEvent as ReactMouseEvent, type MutableRefObject, type ReactNode } from "react";
+import { useHorizontalSwipe } from "@/lib/useHorizontalSwipe";
 
 type RoomModalLayerProps = {
   roomSlug: string;
@@ -118,6 +119,18 @@ export default function RoomModalLayer({
   const hasModalBody = !!currentModal.body?.trim();
   const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
   const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
+  const goToPreviousCarouselSlide = useCallback(() => {
+    if (!activeModal?.carouselSlides?.length) return;
+    setActiveCarouselIndex((prev) => (prev - 1 + activeModal.carouselSlides.length) % activeModal.carouselSlides.length);
+  }, [activeModal?.carouselSlides?.length, setActiveCarouselIndex]);
+  const goToNextCarouselSlide = useCallback(() => {
+    if (!activeModal?.carouselSlides?.length) return;
+    setActiveCarouselIndex((prev) => (prev + 1) % activeModal.carouselSlides.length);
+  }, [activeModal?.carouselSlides?.length, setActiveCarouselIndex]);
+  const carouselSwipeHandlers = useHorizontalSwipe({
+    onSwipeLeft: goToNextCarouselSlide,
+    onSwipeRight: goToPreviousCarouselSlide,
+  });
   const isPilotFoldablePackageModal =
     roomSlug === "ar-sales" && parsedModalBody.includes.length > 0;
   const modalIncludesKey = `${roomSlug}:${currentModal.title}`;
@@ -811,7 +824,11 @@ export default function RoomModalLayer({
               {!activeResourceContext ? <div className="min-w-0">
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
-                    <div className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
+                    <div
+                      className="relative w-full overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]"
+                      style={{ touchAction: "pan-y" }}
+                      {...carouselSwipeHandlers}
+                    >
                       <NextImage src={activeCarouselSlide.src} alt={activeCarouselSlide.alt} width={1600} height={900} sizes="(max-width: 900px) 100vw, 900px" className="w-full max-h-[460px] object-contain" />
                     </div>
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
@@ -821,20 +838,14 @@ export default function RoomModalLayer({
                       <div className="flex flex-wrap items-center justify-end gap-2">
                         <button
                           type="button"
-                          onClick={() => {
-                            if (!activeModal?.carouselSlides?.length) return;
-                            setActiveCarouselIndex((prev) => (prev - 1 + activeModal.carouselSlides.length) % activeModal.carouselSlides.length);
-                          }}
+                          onClick={goToPreviousCarouselSlide}
                           className={`inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 ${uniformModalButtonSizing} text-white/86 transition hover:bg-white/14 hover:text-white`}
                         >
                           ← Prev
                         </button>
                         <button
                           type="button"
-                          onClick={() => {
-                            if (!activeModal?.carouselSlides?.length) return;
-                            setActiveCarouselIndex((prev) => (prev + 1) % activeModal.carouselSlides.length);
-                          }}
+                          onClick={goToNextCarouselSlide}
                           className={`inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 ${uniformModalButtonSizing} text-white/86 transition hover:bg-white/14 hover:text-white`}
                         >
                           Next →

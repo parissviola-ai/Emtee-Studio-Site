@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { CASE_STUDIES } from "../caseStudiesData";
 import { CASE_STUDY_DECK } from "@/data/case-study-deck";
+import { useHorizontalSwipe } from "@/lib/useHorizontalSwipe";
 
 function normalizeIgUrl(url: string) {
   try {
@@ -131,6 +132,20 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
   const hasCaseCardViewer = caseCards.length > 0;
   const canGoToPreviousCaseCard = activeCaseCardIndex > 0;
   const canGoToNextCaseCard = activeCaseCardIndex < caseCards.length - 1;
+  const goToPreviousCaseCard = useCallback(() => {
+    setActiveCaseCardIndex((prev) => Math.max(0, prev - 1));
+  }, []);
+  const goToNextCaseCard = useCallback(() => {
+    setActiveCaseCardIndex((prev) => Math.min(caseCards.length - 1, prev + 1));
+  }, [caseCards.length]);
+  const caseCardSwipeHandlers = useHorizontalSwipe({
+    onSwipeLeft: () => {
+      if (canGoToNextCaseCard) goToNextCaseCard();
+    },
+    onSwipeRight: () => {
+      if (canGoToPreviousCaseCard) goToPreviousCaseCard();
+    },
+  });
 
   return (
     <main className="relative min-h-[100svh] w-full flex-1 bg-white text-black">
@@ -199,7 +214,7 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => setActiveCaseCardIndex((prev) => Math.max(0, prev - 1))}
+                          onClick={goToPreviousCaseCard}
                           disabled={!canGoToPreviousCaseCard}
                           className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-3 py-1.5 text-sm font-semibold text-black/70 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-45"
                         >
@@ -210,7 +225,7 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
                         </div>
                         <button
                           type="button"
-                          onClick={() => setActiveCaseCardIndex((prev) => Math.min(caseCards.length - 1, prev + 1))}
+                          onClick={goToNextCaseCard}
                           disabled={!canGoToNextCaseCard}
                           className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white px-3 py-1.5 text-sm font-semibold text-black/70 transition hover:border-[#d6ae66]/45 hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-45"
                         >
@@ -219,7 +234,11 @@ export default function CaseStudyClient({ slug }: { slug: string }) {
                       </div>
                     ) : null}
                   </div>
-                  <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden rounded-xl border border-black/10 bg-white sm:min-h-[440px]">
+                  <div
+                    className="relative flex min-h-[280px] items-center justify-center overflow-hidden rounded-xl border border-black/10 bg-white sm:min-h-[440px]"
+                    style={{ touchAction: "pan-y" }}
+                    {...caseCardSwipeHandlers}
+                  >
                     <Image
                       src={activeCaseCard.src}
                       alt={activeCaseCard.alt}

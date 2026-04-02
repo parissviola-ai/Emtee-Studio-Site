@@ -651,6 +651,7 @@ export default function RoomScene({
   const tiltBaselineRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltSignalSeenRef = useRef(false);
+  const tiltInputSourceRef = useRef<"orientation" | "motion" | null>(null);
   const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
@@ -1309,6 +1310,7 @@ export default function RoomScene({
     tiltBaselineRef.current = null;
     tiltFilteredReadingRef.current = null;
     tiltSignalSeenRef.current = false;
+    tiltInputSourceRef.current = null;
     setTiltPermissionNeeded(false);
     setTiltStatus("listening");
     setTiltEnabled(true);
@@ -1458,8 +1460,8 @@ export default function RoomScene({
   function animateTiltPan() {
     const target = tiltPanTargetRef.current;
     setMobileTiltPan((prev) => {
-      const nextX = prev.x + (target.x - prev.x) * 0.038;
-      const nextY = prev.y + (target.y - prev.y) * 0.038;
+      const nextX = prev.x + (target.x - prev.x) * 0.03;
+      const nextY = prev.y + (target.y - prev.y) * 0.03;
       if (Math.abs(nextX - target.x) < 0.2 && Math.abs(nextY - target.y) < 0.2) {
         tiltPanFrameRef.current = undefined;
         return { x: target.x, y: target.y };
@@ -1799,6 +1801,7 @@ export default function RoomScene({
       tiltBaselineRef.current = null;
       tiltFilteredReadingRef.current = null;
       tiltSignalSeenRef.current = false;
+      tiltInputSourceRef.current = null;
       tiltPanTargetRef.current = { x: 0, y: 0 };
       if (tiltPanFrameRef.current) {
         window.cancelAnimationFrame(tiltPanFrameRef.current);
@@ -1815,13 +1818,19 @@ export default function RoomScene({
     tiltSignalSeenRef.current = false;
     setTiltStatus("listening");
 
-    function applyTiltReading(rawReading: { beta: number; gamma: number }) {
+    function applyTiltReading(rawReading: { beta: number; gamma: number }, source: "orientation" | "motion") {
+      if (tiltInputSourceRef.current && tiltInputSourceRef.current !== source) {
+        return;
+      }
+      if (!tiltInputSourceRef.current) {
+        tiltInputSourceRef.current = source;
+      }
       tiltSignalSeenRef.current = true;
       setTiltStatus("active");
       const previousFiltered = tiltFilteredReadingRef.current ?? rawReading;
       const nextReading = {
-        beta: previousFiltered.beta + (rawReading.beta - previousFiltered.beta) * 0.12,
-        gamma: previousFiltered.gamma + (rawReading.gamma - previousFiltered.gamma) * 0.12,
+        beta: previousFiltered.beta + (rawReading.beta - previousFiltered.beta) * 0.1,
+        gamma: previousFiltered.gamma + (rawReading.gamma - previousFiltered.gamma) * 0.1,
       };
       tiltFilteredReadingRef.current = nextReading;
 
@@ -1832,7 +1841,10 @@ export default function RoomScene({
       const baseline = tiltBaselineRef.current;
       const deltaGamma = nextReading.gamma - baseline.gamma;
       const deltaBeta = nextReading.beta - baseline.beta;
-      const movementDeadzone = { gamma: 1.6, beta: 1.6 };
+      const movementDeadzone =
+        source === "motion"
+          ? { gamma: 0.4, beta: 0.4 }
+          : { gamma: 1.2, beta: 1.2 };
 
       if (Math.abs(deltaGamma) < movementDeadzone.gamma && Math.abs(deltaBeta) < movementDeadzone.beta) {
         scheduleTiltPan({ x: 0, y: 0 });
@@ -1843,14 +1855,14 @@ export default function RoomScene({
         return;
       }
 
-      const normalizedGamma = clamp(deltaGamma / 18, -1, 1);
-      const normalizedBeta = clamp(deltaBeta / 20, -1, 1);
+      const normalizedGamma = clamp(deltaGamma / (source === "motion" ? 5.4 : 12), -1, 1);
+      const normalizedBeta = clamp(deltaBeta / (source === "motion" ? 6.5 : 14), -1, 1);
       const gammaWithDeadzone = Math.abs(normalizedGamma) < 0.12 ? 0 : normalizedGamma;
       const betaWithDeadzone = Math.abs(normalizedBeta) < 0.12 ? 0 : normalizedBeta;
       const shapedGamma = Math.sign(gammaWithDeadzone) * Math.pow(Math.abs(gammaWithDeadzone), 1.08);
       const shapedBeta = Math.sign(betaWithDeadzone) * Math.pow(Math.abs(betaWithDeadzone), 1.15);
-      const xRange = Math.min(mobilePanLeftLimit, mobilePanRightLimit) * 0.62;
-      const yRange = maxPanY * 0.56;
+      const xRange = Math.min(mobilePanLeftLimit, mobilePanRightLimit) * 0.58;
+      const yRange = maxPanY * 0.48;
       const nextX = clamp(
         clamp(-shapedGamma * xRange, -xRange, xRange),
         -mobilePanLeftLimit - mobilePan.x,
@@ -1869,7 +1881,7 @@ export default function RoomScene({
       if (event.beta == null || event.gamma == null) return;
       const beta = event.beta;
       const gamma = event.gamma;
-      applyTiltReading({ beta, gamma });
+      applyTiltReading({ beta, gamma }, "orientation");
     }
 
     function handleDeviceMotion(event: DeviceMotionEvent) {
@@ -1878,12 +1890,12 @@ export default function RoomScene({
       const gravityX = gravity.x;
       const gravityY = gravity.y;
       if (gravityX == null || gravityY == null) return;
-      const derivedBeta = gravityY * 6;
-      const derivedGamma = gravityX * 6;
+      const derivedBeta = gravityY * 1.9;
+      const derivedGamma = gravityX * 1.9;
       applyTiltReading({
         beta: derivedBeta,
         gamma: derivedGamma,
-      });
+      }, "motion");
     }
 
     const blockTimer = window.setTimeout(() => {
@@ -1892,20 +1904,38 @@ export default function RoomScene({
       }
     }, 1500);
 
+    let motionListenerAttached = false;
+    let motionFallbackTimer: number | undefined;
+
+    const attachMotionListener = () => {
+      if (!hasDeviceMotion || motionListenerAttached) return;
+      motionListenerAttached = true;
+      window.addEventListener("devicemotion", handleDeviceMotion, true);
+    };
+
     if (hasDeviceOrientation) {
       window.addEventListener("deviceorientation", handleDeviceOrientation, true);
       window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
     }
-    if (hasDeviceMotion) {
-      window.addEventListener("devicemotion", handleDeviceMotion, true);
+    if (!hasDeviceOrientation && hasDeviceMotion) {
+      attachMotionListener();
+    } else if (hasDeviceMotion) {
+      motionFallbackTimer = window.setTimeout(() => {
+        if (!tiltSignalSeenRef.current && !tiltInputSourceRef.current) {
+          attachMotionListener();
+        }
+      }, 650);
     }
     return () => {
       window.clearTimeout(blockTimer);
+      if (motionFallbackTimer !== undefined) {
+        window.clearTimeout(motionFallbackTimer);
+      }
       if (hasDeviceOrientation) {
         window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
         window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
       }
-      if (hasDeviceMotion) {
+      if (motionListenerAttached) {
         window.removeEventListener("devicemotion", handleDeviceMotion, true);
       }
     };

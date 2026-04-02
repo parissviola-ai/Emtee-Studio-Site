@@ -9,8 +9,7 @@ import { RoomNavDebugCapture } from "@/components/RoomNavDebugCapture";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.emteemusicgroup.com"),
-  description:
-    "Explore EMTEE Music Group through interactive rooms, artists, resources, case studies, and creative services.",
+  description: "Explore Emtee Music Group",
   icons: {
     icon: [
       { url: "/icon.png", type: "image/png" },
@@ -20,30 +19,28 @@ export const metadata: Metadata = {
     shortcut: [{ url: "/icon.png", type: "image/png" }],
   },
   openGraph: {
-    title: "EMTEE Music Group",
-    description:
-      "Explore EMTEE Music Group through interactive rooms, artists, resources, case studies, and creative services.",
+    title: "Emtee Music Group",
+    description: "Explore Emtee Music Group",
     url: "https://www.emteemusicgroup.com",
-    siteName: "EMTEE Music Group",
+    siteName: "Emtee Music Group",
     type: "website",
     images: [
       {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "EMTEE Music Group lobby preview",
+        alt: "Emtee Music Group lobby preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "EMTEE Music Group",
-    description:
-      "Explore EMTEE Music Group through interactive rooms, artists, resources, case studies, and creative services.",
+    title: "Emtee Music Group",
+    description: "Explore Emtee Music Group",
     images: [
       {
         url: "/twitter-image.png",
-        alt: "EMTEE Music Group lobby preview",
+        alt: "Emtee Music Group lobby preview",
       },
     ],
   },

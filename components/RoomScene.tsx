@@ -1460,8 +1460,8 @@ export default function RoomScene({
   function animateTiltPan() {
     const target = tiltPanTargetRef.current;
     setMobileTiltPan((prev) => {
-      const nextX = prev.x + (target.x - prev.x) * 0.055;
-      const nextY = prev.y + (target.y - prev.y) * 0.055;
+      const nextX = prev.x + (target.x - prev.x) * 0.075;
+      const nextY = prev.y + (target.y - prev.y) * 0.075;
       if (Math.abs(nextX - target.x) < 0.2 && Math.abs(nextY - target.y) < 0.2) {
         tiltPanFrameRef.current = undefined;
         return { x: target.x, y: target.y };
@@ -1536,17 +1536,30 @@ export default function RoomScene({
     storedMobilePan,
     viewportW,
   ]);
+  const tiltRestPan = useMemo(() => {
+    if (!canUseTilt) return mobilePan;
+    if (!isLobbyRoom) return mobilePan;
+
+    const centeredX = (mobilePanRightLimit - mobilePanLeftLimit) / 2;
+    const lobbyTiltCenterBlend = isMobileViewport ? 0.75 : 0.5;
+
+    return {
+      x: mobilePan.x + (centeredX - mobilePan.x) * lobbyTiltCenterBlend,
+      y: mobilePan.y,
+    };
+  }, [canUseTilt, isLobbyRoom, isMobileViewport, mobilePan, mobilePanLeftLimit, mobilePanRightLimit]);
+  const touchBasePan = canUseTilt ? tiltRestPan : mobilePan;
   const shouldUseTouchPanOffsets = isMobileViewport || (tiltViewportEnabled && tiltEnabled);
   const displayedPan = shouldUseTouchPanOffsets
     ? {
-        x: clamp(mobilePan.x + mobileTiltPan.x, -mobilePanLeftLimit, mobilePanRightLimit),
-        y: clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
+        x: clamp(touchBasePan.x + mobileTiltPan.x, -mobilePanLeftLimit, mobilePanRightLimit),
+        y: clamp(touchBasePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
   const displayedHotspotPan = shouldUseTouchPanOffsets
     ? {
-        x: clamp(mobilePan.x + mobileTiltPan.x * 0.82, -mobilePanLeftLimit, mobilePanRightLimit),
-        y: clamp(mobilePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
+        x: clamp(touchBasePan.x + mobileTiltPan.x * 0.82, -mobilePanLeftLimit, mobilePanRightLimit),
+        y: clamp(touchBasePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
 
@@ -1824,24 +1837,24 @@ export default function RoomScene({
 
     const tiltProfile = isMobileViewport
       ? {
-          readingSmoothing: 0.18,
-          baselineDrift: 0.08,
-          orientationHorizontalDivisor: 11,
-          orientationVerticalDivisor: 13,
-          motionHorizontalDivisor: 4.3,
-          motionVerticalDivisor: 5.1,
-          rangeFactorX: 0.82,
-          rangeFactorY: 0.42,
-        }
-      : {
-          readingSmoothing: 0.22,
-          baselineDrift: 0.06,
+          readingSmoothing: 0.24,
+          baselineDrift: 0.05,
           orientationHorizontalDivisor: 8.5,
           orientationVerticalDivisor: 10.5,
-          motionHorizontalDivisor: 3.4,
-          motionVerticalDivisor: 4.1,
-          rangeFactorX: 0.96,
-          rangeFactorY: 0.48,
+          motionHorizontalDivisor: 2.8,
+          motionVerticalDivisor: 3.4,
+          rangeFactorX: 0.94,
+          rangeFactorY: 0.44,
+        }
+      : {
+          readingSmoothing: 0.28,
+          baselineDrift: 0.045,
+          orientationHorizontalDivisor: 5.8,
+          orientationVerticalDivisor: 7.6,
+          motionHorizontalDivisor: 2.2,
+          motionVerticalDivisor: 2.8,
+          rangeFactorX: 0.98,
+          rangeFactorY: 0.5,
         };
 
     const getScreenAdjustedTilt = (beta: number, gamma: number) => {
@@ -1895,8 +1908,10 @@ export default function RoomScene({
       const deltaVertical = currentAdjusted.vertical - baselineAdjusted.vertical;
       const movementDeadzone =
         source === "motion"
-          ? { horizontal: 0.28, vertical: 0.28 }
-          : { horizontal: 0.9, vertical: 0.9 };
+          ? { horizontal: 0.14, vertical: 0.14 }
+          : isMobileViewport
+            ? { horizontal: 0.65, vertical: 0.65 }
+            : { horizontal: 0.45, vertical: 0.45 };
 
       if (
         Math.abs(deltaHorizontal) < movementDeadzone.horizontal &&
@@ -1922,13 +1937,13 @@ export default function RoomScene({
         -1,
         1,
       );
-      const horizontalWithDeadzone = Math.abs(normalizedHorizontal) < 0.08 ? 0 : normalizedHorizontal;
-      const verticalWithDeadzone = Math.abs(normalizedVertical) < 0.08 ? 0 : normalizedVertical;
+      const horizontalWithDeadzone = Math.abs(normalizedHorizontal) < 0.04 ? 0 : normalizedHorizontal;
+      const verticalWithDeadzone = Math.abs(normalizedVertical) < 0.04 ? 0 : normalizedVertical;
       const shapedHorizontal =
         Math.sign(horizontalWithDeadzone) * Math.pow(Math.abs(horizontalWithDeadzone), 1.05);
       const shapedVertical = Math.sign(verticalWithDeadzone) * Math.pow(Math.abs(verticalWithDeadzone), 1.12);
-      const availableLeft = Math.max(0, mobilePanLeftLimit + mobilePan.x);
-      const availableRight = Math.max(0, mobilePanRightLimit - mobilePan.x);
+      const availableLeft = Math.max(0, mobilePanLeftLimit + touchBasePan.x);
+      const availableRight = Math.max(0, mobilePanRightLimit - touchBasePan.x);
       const xTravel =
         shapedHorizontal >= 0
           ? availableRight * tiltProfile.rangeFactorX
@@ -1941,8 +1956,8 @@ export default function RoomScene({
       );
       const nextY = clamp(
         clamp(-shapedVertical * yRange, -yRange, yRange),
-        -maxPanY - mobilePan.y,
-        maxPanY - mobilePan.y,
+        -maxPanY - touchBasePan.y,
+        maxPanY - touchBasePan.y,
       );
 
       scheduleTiltPan({ x: nextX, y: nextY });
@@ -2030,7 +2045,7 @@ export default function RoomScene({
         window.removeEventListener("devicemotion", handleDeviceMotion, true);
       }
     };
-  }, [canUseTilt, isMobileViewport, isPortraitViewport, maxPanX, maxPanY, mobilePan.x, mobilePan.y, mobilePanLeftLimit, mobilePanRightLimit, scheduleTiltPan]);
+  }, [canUseTilt, isMobileViewport, isPortraitViewport, maxPanX, maxPanY, mobilePanLeftLimit, mobilePanRightLimit, scheduleTiltPan, touchBasePan.x, touchBasePan.y]);
 
   useEffect(() => {
     return () => {

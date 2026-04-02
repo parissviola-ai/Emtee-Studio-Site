@@ -28,7 +28,7 @@ export const liveRoom: Room = {
           topImageAlt: "Ten Ten Showcase event image",
           body:
             "Ten Ten was developed by musician/entrepreneur Mississauga native, Michael \"Mike Cannz\" Cannataro and Emtee Music Group. Ten Ten prides itself in being an elite entertainment company focused on assisting artists in the development and promotion of their confidence through live performance. Ten Ten's premier services include their showcases, where artists are given a platform to grow as live entertainers. Artists also have the opportunity to build their live sets with Ten Ten, tour and throw their own Ten Ten-managed private events, release parties and performances. In 2026, Ten Ten announced a new showcase event that will also involve a networking component giving up and coming artists the ability to connect with industry professionals. Apply below for your chance to perform at our next event.",
-          primaryLabel: 'DM on IG "APPLY"',
+          primaryLabel: 'DM "APPLY"',
           primaryHref: "https://ig.me/m/tenten_ent",
           secondaryLabel: "Learn More",
           secondaryHref: "modal:ten-ten-entertainment-packages",

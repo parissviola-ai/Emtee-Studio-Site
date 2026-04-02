@@ -14,6 +14,7 @@ import {
   warmRoomAssetsByHref,
   warmRoomNeighborhoodBySlug,
 } from "@/lib/warmRoomAssets";
+import { dispatchRoomHeroReady, startRoomTransitionHold } from "@/lib/roomTransitionHold";
 
 const OrangeRoomExtras = dynamic(() => import("@/components/OrangeRoomExtras"), {
   ssr: false,
@@ -1301,6 +1302,7 @@ export default function RoomScene({
       return;
     }
     logRoomNav("nav:click", { from: `/rooms/${room.slug}`, to: href, source });
+    startRoomTransitionHold(href);
     await awaitRoomAssetsByHref(href);
     logRoomNav("nav:push", { from: `/rooms/${room.slug}`, to: href, source });
     router.push(href);
@@ -2000,9 +2002,10 @@ export default function RoomScene({
     }, 1200);
   }, [backgroundImageSrc]);
 
-  const announceLobbyHeroReady = useCallback(() => {
-    if (room.slug !== "lobby") return;
+  const announceRoomHeroReady = useCallback(() => {
     if (typeof window === "undefined") return;
+    dispatchRoomHeroReady(`/rooms/${room.slug}`);
+    if (room.slug !== "lobby") return;
     if (lobbyHeroReadyRef.current) return;
     lobbyHeroReadyRef.current = true;
     window.dispatchEvent(
@@ -2017,10 +2020,10 @@ export default function RoomScene({
     const heroNode = backgroundImageRef.current;
     if (!heroNode?.complete) return;
     const frameId = window.requestAnimationFrame(() => {
-      announceLobbyHeroReady();
+      announceRoomHeroReady();
     });
     return () => window.cancelAnimationFrame(frameId);
-  }, [announceLobbyHeroReady, backgroundImageSrc, room.slug]);
+  }, [announceRoomHeroReady, backgroundImageSrc, room.slug]);
 
   useEffect(() => {
     if (room.slug !== "EMTEEWebDesign" && room.slug !== "publishing-distribution") return;
@@ -2378,6 +2381,7 @@ export default function RoomScene({
     >
       {/* Background */}
       <div
+        data-room-hero-surface="true"
         data-moving-layer="true"
         className={[
           "absolute inset-0 transition-[filter] duration-300 ease-out",
@@ -2416,7 +2420,7 @@ export default function RoomScene({
             fetchPriority={eagerBackgroundLoad ? "high" : "auto"}
             decoding={eagerBackgroundLoad ? "sync" : "async"}
             data-lobby-hero={room.slug === "lobby" ? "true" : undefined}
-            data-room-foreground-hero={room.slug === "lobby" ? "true" : undefined}
+            data-room-foreground-hero="true"
             className={[
               "pointer-events-none absolute inset-0 h-full w-full select-none [-webkit-user-drag:none]",
               isMarketingRoom && backgroundUsesMobileLayout ? "scale-[1.16]" : "",
@@ -2435,7 +2439,7 @@ export default function RoomScene({
               userSelect: "none",
             }}
             onLoad={() => {
-              announceLobbyHeroReady();
+              announceRoomHeroReady();
               logRoomNav("room:imageLoaded", { slug: room.slug, src: backgroundImageSrc });
             }}
             draggable={false}

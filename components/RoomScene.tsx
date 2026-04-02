@@ -32,9 +32,7 @@ const RoomHotspotLayer = dynamic(() => import("@/components/RoomHotspotLayer"), 
   ssr: false,
 });
 const PIN_HELPER_ENABLED = process.env.NEXT_PUBLIC_ENABLE_PIN_HELPER === "1";
-// Temporary note: mobile tilt is intentionally disabled for now.
-// Flip this back to true when we're ready to restore it.
-const MOBILE_TILT_ENABLED = false;
+const MOBILE_TILT_ENABLED = true;
 
 export type Hotspot = {
   id: string;
@@ -599,6 +597,24 @@ export default function RoomScene({
     () => (typeof window !== "undefined" ? window.matchMedia("(max-width: 767px)").matches : false),
     () => false
   );
+  const touchCapableViewportRaw = useSyncExternalStore(
+    (onStoreChange) => {
+      if (typeof window === "undefined") return () => {};
+      const coarsePointerMedia = window.matchMedia("(any-pointer: coarse)");
+      const handler = () => onStoreChange();
+      coarsePointerMedia.addEventListener("change", handler);
+      window.addEventListener("orientationchange", handler);
+      return () => {
+        coarsePointerMedia.removeEventListener("change", handler);
+        window.removeEventListener("orientationchange", handler);
+      };
+    },
+    () =>
+      typeof window !== "undefined"
+        ? window.matchMedia("(any-pointer: coarse)").matches || navigator.maxTouchPoints > 0
+        : false,
+    () => false
+  );
   const prefersReducedMotionRaw = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -860,6 +876,7 @@ export default function RoomScene({
   const isMobileViewport = hasHydrated ? isMobileViewportRaw : false;
   const [rawViewportW] = viewportKeyRaw.split("x").map((n) => Number(n) || 0);
   const mobileStaticUi = isMobileViewportRaw || (rawViewportW > 0 && rawViewportW < 1024);
+  const tiltViewportEnabled = hasHydrated ? (touchCapableViewportRaw || mobileStaticUi) : false;
   const prefersReducedMotion = hasHydrated ? prefersReducedMotionRaw : false;
   const viewportKey = hasHydrated ? viewportKeyRaw : "0x0";
   const backgroundUsesMobileLayout = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;
@@ -1161,6 +1178,7 @@ export default function RoomScene({
         : null,
     [backgroundUsesMobileLayout, coverMetricsObjectPositionX, coverMetricsObjectPositionY, imageNaturalSize, sceneScale, viewportH, viewportW]
   );
+  const touchPanMetrics = isMobileViewport ? mobileImageMetrics : tiltViewportEnabled ? desktopCoverMetrics : null;
   const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
   const canShowPinHelper = PIN_HELPER_ENABLED && !!hotspotImageMetrics && !isModalOpen && !exploreOpen;
   const lobbyMobileHotspotsReady = !isMobileViewport || !!hotspotImageMetrics;
@@ -1220,7 +1238,7 @@ export default function RoomScene({
 
   function updatePinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
     if (!canShowPinHelper || !showPinHelper || pinHelperLockedRef.current || !hotspotImageMetrics) return;
-    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedPan.x : desktopCursorPan.x);
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (shouldUseTouchPanOffsets ? displayedPan.x : desktopCursorPan.x);
     const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedPan.y;
     const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
     const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
@@ -1236,7 +1254,7 @@ export default function RoomScene({
 
   function lockPinHelperPosition(clientX: number, clientY: number, rect: DOMRect) {
     if (!canShowPinHelper || !showPinHelper || !hotspotImageMetrics) return;
-    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (isMobileViewport ? displayedPan.x : desktopCursorPan.x);
+    const renderedLeft = rect.left + hotspotImageMetrics.offsetX + (shouldUseTouchPanOffsets ? displayedPan.x : desktopCursorPan.x);
     const renderedTop = rect.top + hotspotImageMetrics.offsetY + displayedPan.y;
     const rawX = ((clientX - renderedLeft) / hotspotImageMetrics.renderedW) * 100;
     const rawY = ((clientY - renderedTop) / hotspotImageMetrics.renderedH) * 100;
@@ -1452,7 +1470,7 @@ export default function RoomScene({
   }
 
   const canPanRoom = isMobileViewport && !tiltEnabled && !isModalOpen && !exploreOpen;
-  const canUseTilt = isMobileViewport && tiltEnabled && !isModalOpen && !exploreOpen;
+  const canUseTilt = tiltViewportEnabled && tiltEnabled && !isModalOpen && !exploreOpen;
   const canDesktopCursorPan =
     !lobbyResponsiveIsMobile &&
     hasLobbyStyleDesktopPan &&
@@ -1473,8 +1491,8 @@ export default function RoomScene({
       right: Math.min(desktopCoverMetrics.maxPanX, desktopCoverMetrics.renderedW * 0.069),
     };
   }, [desktopCoverMetrics, useCanonicalLobbyDesktopPanEndpoints]);
-  const rawMaxPanX = mobileImageMetrics?.maxPanX ?? 0;
-  const rawMaxPanY = mobileImageMetrics?.maxPanY ?? 0;
+  const rawMaxPanX = touchPanMetrics?.maxPanX ?? 0;
+  const rawMaxPanY = touchPanMetrics?.maxPanY ?? 0;
   const maxPanX = rawMaxPanX;
   const mobilePanLeftLimit = isLobbyRoom && isMobileViewport ? rawMaxPanX * 1.02 : rawMaxPanX;
   const mobilePanRightLimit = rawMaxPanX;
@@ -1501,13 +1519,14 @@ export default function RoomScene({
     storedMobilePan,
     viewportW,
   ]);
-  const displayedPan = isMobileViewport
+  const shouldUseTouchPanOffsets = isMobileViewport || (tiltViewportEnabled && tiltEnabled);
+  const displayedPan = shouldUseTouchPanOffsets
     ? {
         x: clamp(mobilePan.x + mobileTiltPan.x, -mobilePanLeftLimit, mobilePanRightLimit),
         y: clamp(mobilePan.y + mobileTiltPan.y, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
-  const displayedHotspotPan = isMobileViewport
+  const displayedHotspotPan = shouldUseTouchPanOffsets
     ? {
         x: clamp(mobilePan.x + mobileTiltPan.x * 0.82, -mobilePanLeftLimit, mobilePanRightLimit),
         y: clamp(mobilePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
@@ -2403,6 +2422,8 @@ export default function RoomScene({
                     ? room.slug === "lobby"
                       ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
                       : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                    : shouldUseTouchPanOffsets
+                      ? `calc(${baseRoomBackgroundObjectPositionX}% + ${displayedPan.x}px) calc(${baseBackgroundObjectPositionY}% + ${displayedPan.y}px)`
                     : canDesktopCursorPan
                       ? `calc(50% + ${desktopCursorPan.x}px) ${baseBackgroundObjectPositionY}%`
                       : `50% ${baseBackgroundObjectPositionY}%`,
@@ -2431,6 +2452,8 @@ export default function RoomScene({
                 ? room.slug === "lobby"
                   ? `calc(50% + ${displayedPan.x}px) calc(58% + ${displayedPan.y}px)`
                   : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                : shouldUseTouchPanOffsets
+                  ? `calc(${baseRoomBackgroundObjectPositionX}% + ${displayedPan.x}px) calc(${baseBackgroundObjectPositionY}% + ${displayedPan.y}px)`
                 : canDesktopCursorPan
                   ? `calc(50% + ${desktopCursorPan.x}px) ${baseBackgroundObjectPositionY}%`
                   : `${baseRoomBackgroundObjectPositionX}% ${baseBackgroundObjectPositionY}%`,
@@ -2499,13 +2522,12 @@ export default function RoomScene({
               }
             }}
             style={
-              isMobileViewport
+              shouldUseTouchPanOffsets
                 ? {
                     backgroundColor: isTenTenRoom ? "#000000" : undefined,
-                    objectPosition:
-                      isTenTenRoom
-                        ? `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
-                        : `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`,
+                    objectPosition: isMobileViewport
+                      ? `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`
+                      : `calc(${baseRoomBackgroundObjectPositionX}% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`,
                     WebkitTouchCallout: "none",
                     WebkitUserSelect: "none",
                     userSelect: "none",
@@ -2645,8 +2667,8 @@ export default function RoomScene({
         />
       ) : null}
 
-      {MOBILE_TILT_ENABLED && isMobileViewport && tiltAvailable && !exploreOpen && !isModalOpen ? (
-        <div className="absolute bottom-20 right-2 z-50 flex flex-col items-end gap-1.5 md:hidden" data-no-pan>
+      {MOBILE_TILT_ENABLED && tiltViewportEnabled && !exploreOpen && !isModalOpen ? (
+        <div className="absolute bottom-20 right-2 z-50 flex flex-col items-end gap-1.5" data-no-pan>
           {tiltEnabled ? (
             <button
               type="button"
@@ -2668,7 +2690,11 @@ export default function RoomScene({
               onClick={enableTiltPan}
               className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/78 backdrop-blur-md transition hover:bg-black/60 hover:text-white"
             >
-              {tiltPermissionNeeded ? "Enable Tilt" : "Tilt Off"}
+              {!tiltAvailable && tiltStatus === "blocked"
+                ? "Tilt Unavailable"
+                : tiltPermissionNeeded || tiltAvailable
+                  ? "Enable Tilt"
+                  : "Tilt Off"}
             </button>
           )}
 

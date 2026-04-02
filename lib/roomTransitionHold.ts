@@ -12,6 +12,14 @@ type RoomTransitionHoldDetail = {
   transform?: string;
 };
 
+type StaticTransitionHoldOptions = {
+  href?: string | null;
+  objectFit?: string;
+  objectPosition?: string;
+  src?: string | null;
+  transform?: string;
+};
+
 function getTargetPath(href?: string | null) {
   if (!href) return "";
   return href.split("#")[0]?.split("?")[0] ?? "";
@@ -58,6 +66,34 @@ function startTransitionHold({
   }
 
   window.dispatchEvent(new CustomEvent<RoomTransitionHoldDetail>(ROOM_TRANSITION_HOLD_START_EVENT, { detail }));
+}
+
+export function startStaticTransitionHold({
+  href,
+  objectFit = "cover",
+  objectPosition = "50% 50%",
+  src,
+  transform,
+}: StaticTransitionHoldOptions) {
+  if (typeof window === "undefined") return;
+  if (window.matchMedia("(max-width: 1023px)").matches) return;
+
+  const targetPath = getTargetPath(href);
+  if (!targetPath.startsWith("/rooms/")) return;
+  if (!src) return;
+
+  window.dispatchEvent(
+    new CustomEvent<RoomTransitionHoldDetail>(ROOM_TRANSITION_HOLD_START_EVENT, {
+      detail: {
+        objectFit,
+        objectPosition,
+        sourcePath: window.location.pathname,
+        src,
+        targetPath,
+        transform,
+      },
+    })
+  );
 }
 
 export function startRoomTransitionHold(href?: string | null) {

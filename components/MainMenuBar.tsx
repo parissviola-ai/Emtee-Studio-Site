@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { rooms } from "@/data/rooms";
+import { startStaticTransitionHold } from "@/lib/roomTransitionHold";
 import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
@@ -169,6 +170,14 @@ export default function MainMenuBar() {
 
   async function navigateToRoom(href: string) {
     logRoomNav("nav:click", { from: pathname, to: href, source: "main-menu" });
+    if (!pathname.startsWith("/rooms/") && href === "/rooms/lobby") {
+      startStaticTransitionHold({
+        href,
+        objectFit: "cover",
+        objectPosition: "50% 58%",
+        src: "/rooms/lobbynewstv-opt.jpg",
+      });
+    }
     await awaitRoomAssetsByHref(href);
     logRoomNav("nav:push", { from: pathname, to: href, source: "main-menu" });
     router.push(href);

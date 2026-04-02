@@ -43,7 +43,7 @@ export default function GlobalTransitionHoldLayer() {
       }>).detail;
 
       if (!detail?.src || !detail.targetPath) return;
-      if (detail.sourcePath !== "/") return;
+      if ((detail.sourcePath ?? "").startsWith("/rooms/")) return;
       setTransitionHold({ ...detail, fading: false });
     };
 

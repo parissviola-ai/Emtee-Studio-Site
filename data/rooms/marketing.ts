@@ -86,7 +86,6 @@ export const marketingRoom: Room = {
         body:
           "Assistance in the development of an artist's live set.",
         links: [
-          { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
           { label: "View Yanchan Case Study", href: "/case-studies/yanchan?example=yanchan-marketing" },
           ],
           primaryLabel: "Apply For A Consultation",

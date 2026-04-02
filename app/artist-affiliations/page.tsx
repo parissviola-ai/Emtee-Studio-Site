@@ -650,8 +650,6 @@ const PARTNERS: Partner[] = [
   { name: "Red Lotus Films", src: "/partners/red-lotus-films.png" },
   { name: "Netflix", src: "/partners/netflix-20260330.png", href: "https://www.netflix.com/" },
   { name: "arrambam", src: "/rooms/arrambam2.png" },
-  { name: "Power Staffing", src: "/partners/power-staffing-20260330.png", href: "https://survivornet.ca/wp-content/uploads/2025/07/Power-Staffing-Solutions-Logo.png" },
-  { name: "Arrow Group of Companies", src: "/partners/arrow-group-of-companies-20260330.jpg", href: "https://summit.canamedtechalliance.com/wp-content/uploads/2024/10/images.jpg" },
   { name: "Velour Beauty", src: "/partners/velour-beauty-transparent.png", href: "https://www.velourbeauty.com/" },
 ];
 

@@ -50,8 +50,8 @@ export const quietRoom: Room = {
       {
         id: "steeped-dreams-studio",
         label: "Steeped Dreams Studio",
-        x: 45.97,
-        y: 19.7,
+        x: 47.69,
+        y: 24.67,
         direction: "right",
         variant: "dot",
         modal: {

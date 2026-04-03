@@ -23,6 +23,8 @@ type DeviceTiltPanOptions = {
   viewportEnabled: boolean;
   suspended: boolean;
   isPortraitViewport: boolean;
+  lockFirstSource?: boolean;
+  attachMotionImmediately?: boolean;
   basePan: { x: number; y: number };
   leftLimit: number;
   rightLimit: number;
@@ -68,6 +70,8 @@ export function useDeviceTiltPan({
   viewportEnabled,
   suspended,
   isPortraitViewport,
+  lockFirstSource = true,
+  attachMotionImmediately = false,
   basePan,
   leftLimit,
   rightLimit,
@@ -218,8 +222,8 @@ export function useDeviceTiltPan({
       reading: { horizontal: number; vertical: number },
       source: "orientation" | "motion"
     ) => {
-      if (activeSourceRef.current && activeSourceRef.current !== source) return;
-      if (!activeSourceRef.current) {
+      if (lockFirstSource && activeSourceRef.current && activeSourceRef.current !== source) return;
+      if (lockFirstSource && !activeSourceRef.current) {
         activeSourceRef.current = source;
       }
       signalSeenRef.current = true;
@@ -290,18 +294,22 @@ export function useDeviceTiltPan({
 
     let motionFallbackTimer: number | undefined;
 
+    if (hasDeviceMotion) {
+      if (attachMotionImmediately) {
+        window.addEventListener("devicemotion", handleDeviceMotion, true);
+      } else {
+        motionFallbackTimer = window.setTimeout(() => {
+          if (!signalSeenRef.current) {
+            window.addEventListener("devicemotion", handleDeviceMotion, true);
+          }
+        }, 650);
+      }
+    }
+
     if (hasDeviceOrientation) {
       // Some tablets/browser shells emit only one of these orientation streams.
       window.addEventListener("deviceorientation", handleDeviceOrientation, true);
       window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
-    }
-
-    if (hasDeviceMotion) {
-      motionFallbackTimer = window.setTimeout(() => {
-        if (!signalSeenRef.current) {
-          window.addEventListener("devicemotion", handleDeviceMotion, true);
-        }
-      }, 650);
     }
 
     return () => {
@@ -339,6 +347,8 @@ export function useDeviceTiltPan({
     schedulePan,
     suspended,
     viewportEnabled,
+    lockFirstSource,
+    attachMotionImmediately,
   ]);
 
   return {

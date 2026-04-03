@@ -15,6 +15,8 @@ import {
   warmRoomNeighborhoodBySlug,
 } from "@/lib/warmRoomAssets";
 import { dispatchRoomHeroReady, startRoomTransitionHold } from "@/lib/roomTransitionHold";
+import TiltPannableRoom from "@/components/TiltPannableRoom";
+import { useDeviceTiltPan, type DeviceTiltPanProfile } from "@/lib/useDeviceTiltPan";
 
 const OrangeRoomExtras = dynamic(() => import("@/components/OrangeRoomExtras"), {
   ssr: false,
@@ -580,10 +582,6 @@ export default function RoomScene({
   const [showMoreHotspotsByRoom, setShowMoreHotspotsByRoom] = useState<Record<string, boolean>>({});
   const [expandedPackageIncludesByModal, setExpandedPackageIncludesByModal] = useState<Record<string, boolean>>({});
   const [tiltEnabled, setTiltEnabled] = useState(false);
-  const [tiltAvailable, setTiltAvailable] = useState(false);
-  const [tiltPermissionNeeded, setTiltPermissionNeeded] = useState(false);
-  const [tiltStatus, setTiltStatus] = useState<"idle" | "listening" | "active" | "blocked">("idle");
-  const [mobileTiltPan, setMobileTiltPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const prefetchedExploreRoutesRef = useRef<Set<string>>(new Set());
   const isMobileViewportRaw = useSyncExternalStore(
     (onStoreChange) => {
@@ -630,8 +628,6 @@ export default function RoomScene({
   const touchPanStartRef = useRef<{ x: number; y: number; panX: number; panY: number; dragging: boolean } | null>(null);
   const panFrameRef = useRef<number | undefined>(undefined);
   const panNextRef = useRef<{ x: number; y: number } | null>(null);
-  const tiltPanFrameRef = useRef<number | undefined>(undefined);
-  const tiltPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const desktopPanFrameRef = useRef<number | undefined>(undefined);
   const desktopPanTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageNaturalSize, setImageNaturalSize] = useState<{ w: number; h: number } | null>(null);
@@ -648,10 +644,6 @@ export default function RoomScene({
   const lobbyHeaderRef = useRef<HTMLDivElement | null>(null);
   const lobbyStartHereOpenedRef = useRef(false);
   const isClosingLobbyModalRef = useRef(false);
-  const tiltBaselineRef = useRef<{ beta: number; gamma: number } | null>(null);
-  const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
-  const tiltSignalSeenRef = useRef(false);
-  const tiltInputSourceRef = useRef<"orientation" | "motion" | null>(null);
   const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
@@ -876,7 +868,10 @@ export default function RoomScene({
   const isMobileViewport = hasHydrated ? isMobileViewportRaw : false;
   const [rawViewportW] = viewportKeyRaw.split("x").map((n) => Number(n) || 0);
   const mobileStaticUi = isMobileViewportRaw || (rawViewportW > 0 && rawViewportW < 1024);
-  const tiltViewportEnabled = hasHydrated ? (touchCapableViewportRaw || mobileStaticUi) : false;
+  const tiltViewportEnabled =
+    hasHydrated
+      ? isMobileViewportRaw || (touchCapableViewportRaw && rawViewportW > 0 && rawViewportW <= 1180)
+      : false;
   const prefersReducedMotion = hasHydrated ? prefersReducedMotionRaw : false;
   const viewportKey = hasHydrated ? viewportKeyRaw : "0x0";
   const backgroundUsesMobileLayout = isLobbyRoom ? isMobileViewportRaw : isMobileViewport;
@@ -1270,52 +1265,6 @@ export default function RoomScene({
     setPinHelperLocked(true);
   }
 
-  async function enableTiltPan() {
-    if (!MOBILE_TILT_ENABLED) return;
-    if (typeof window === "undefined") return;
-    const hasDeviceOrientation = "DeviceOrientationEvent" in window;
-    const hasDeviceMotion = "DeviceMotionEvent" in window;
-    if (!hasDeviceOrientation && !hasDeviceMotion) {
-      setTiltStatus("blocked");
-      return;
-    }
-
-    const DeviceOrientationEventWithPermission = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
-      requestPermission?: () => Promise<"granted" | "denied">;
-    };
-    const DeviceMotionEventWithPermission = DeviceMotionEvent as typeof DeviceMotionEvent & {
-      requestPermission?: () => Promise<"granted" | "denied">;
-    };
-
-    try {
-      if (typeof DeviceOrientationEventWithPermission.requestPermission === "function") {
-        const permission = await DeviceOrientationEventWithPermission.requestPermission();
-        if (permission !== "granted") {
-          setTiltStatus("blocked");
-          return;
-        }
-      }
-      if (typeof DeviceMotionEventWithPermission.requestPermission === "function") {
-        const permission = await DeviceMotionEventWithPermission.requestPermission();
-        if (permission !== "granted") {
-          setTiltStatus("blocked");
-          return;
-        }
-      }
-    } catch {
-      setTiltStatus("blocked");
-      return;
-    }
-
-    tiltBaselineRef.current = null;
-    tiltFilteredReadingRef.current = null;
-    tiltSignalSeenRef.current = false;
-    tiltInputSourceRef.current = null;
-    setTiltPermissionNeeded(false);
-    setTiltStatus("listening");
-    setTiltEnabled(true);
-  }
-
   const clickedHotspotId = clickedHotspotIdByRoom[room.slug] ?? null;
 
   const prefetchExploreRoute = useCallback((href: string) => {
@@ -1457,26 +1406,6 @@ export default function RoomScene({
     });
   }
 
-  function animateTiltPan() {
-    const target = tiltPanTargetRef.current;
-    setMobileTiltPan((prev) => {
-      const nextX = prev.x + (target.x - prev.x) * 0.066;
-      const nextY = prev.y + (target.y - prev.y) * 0.066;
-      if (Math.abs(nextX - target.x) < 0.2 && Math.abs(nextY - target.y) < 0.2) {
-        tiltPanFrameRef.current = undefined;
-        return { x: target.x, y: target.y };
-      }
-      tiltPanFrameRef.current = window.requestAnimationFrame(animateTiltPan);
-      return { x: nextX, y: nextY };
-    });
-  }
-
-  const scheduleTiltPan = useCallback((nextPan: { x: number; y: number }) => {
-    tiltPanTargetRef.current = nextPan;
-    if (tiltPanFrameRef.current) return;
-    tiltPanFrameRef.current = window.requestAnimationFrame(animateTiltPan);
-  }, []);
-
   function isInteractiveTarget(target: EventTarget | null) {
     if (!(target instanceof Element)) return false;
     return !!target.closest("a,button,input,textarea,select,iframe,[data-no-pan]");
@@ -1537,15 +1466,63 @@ export default function RoomScene({
     viewportW,
   ]);
   const tiltBasePan = useMemo(() => {
-    if (!(canUseTilt && isLobbyRoom && isMobileViewport)) return mobilePan;
-
-    const centeredX = (mobilePanRightLimit - mobilePanLeftLimit) / 2;
+    if (!canUseTilt) return mobilePan;
 
     return {
-      x: mobilePan.x + (centeredX - mobilePan.x) * 0.4,
-      y: mobilePan.y,
+      x: clamp((mobilePanRightLimit - mobilePanLeftLimit) / 2, -mobilePanLeftLimit, mobilePanRightLimit),
+      y: 0,
     };
-  }, [canUseTilt, isLobbyRoom, isMobileViewport, mobilePan, mobilePanLeftLimit, mobilePanRightLimit]);
+  }, [canUseTilt, mobilePan, mobilePanLeftLimit, mobilePanRightLimit]);
+  const tiltProfile = useMemo<DeviceTiltPanProfile>(
+    () =>
+      isMobileViewport
+        ? {
+            animationLerp: 0.12,
+            readingLerp: 0.18,
+            baselineLerp: 0.035,
+            horizontalDivisor: 7,
+            verticalDivisor: 11,
+            deadzone: 0.35,
+            normalizedDeadzone: 0.03,
+            horizontalRangeFactor: 0.92,
+            verticalRangeFactor: 0.08,
+            horizontalExponent: 1.04,
+            verticalExponent: 1.08,
+          }
+        : {
+            animationLerp: 0.11,
+            readingLerp: 0.2,
+            baselineLerp: 0.03,
+            horizontalDivisor: 5.5,
+            verticalDivisor: 9,
+            deadzone: 0.25,
+            normalizedDeadzone: 0.02,
+            horizontalRangeFactor: 0.95,
+            verticalRangeFactor: 0.08,
+            horizontalExponent: 1,
+            verticalExponent: 1.06,
+          },
+    [isMobileViewport]
+  );
+  const {
+    pan: mobileTiltPan,
+    available: tiltAvailable,
+    permissionNeeded: tiltPermissionNeeded,
+    status: tiltStatus,
+    enable: enableTiltPan,
+    disable: disableTiltPan,
+  } = useDeviceTiltPan({
+    enabled: tiltEnabled,
+    viewportEnabled: tiltViewportEnabled,
+    suspended: isModalOpen || exploreOpen || !viewportKnown || !touchPanMetrics,
+    isPortraitViewport,
+    basePan: tiltBasePan,
+    leftLimit: mobilePanLeftLimit,
+    rightLimit: mobilePanRightLimit,
+    maxVerticalPan: maxPanY,
+    profile: tiltProfile,
+    onEnabledChange: setTiltEnabled,
+  });
   const shouldUseTouchPanOffsets = isMobileViewport || (tiltViewportEnabled && tiltEnabled);
   const displayedPan = shouldUseTouchPanOffsets
     ? {
@@ -1559,6 +1536,12 @@ export default function RoomScene({
         y: clamp(tiltBasePan.y + mobileTiltPan.y * 0.86, -maxPanY, maxPanY),
       }
     : { x: 0, y: 0 };
+
+  useEffect(() => {
+    if (!tiltViewportEnabled && tiltEnabled) {
+      setTiltEnabled(false);
+    }
+  }, [tiltEnabled, tiltViewportEnabled]);
 
   function getMobileHotspotStyle(spot: Hotspot) {
     const shiftConversationBlueprintRight =
@@ -1640,9 +1623,6 @@ export default function RoomScene({
       }
       if (panFrame) {
         window.cancelAnimationFrame(panFrame);
-      }
-      if (tiltPanFrameRef.current) {
-        window.cancelAnimationFrame(tiltPanFrameRef.current);
       }
       if (desktopPanFrame) {
         window.cancelAnimationFrame(desktopPanFrame);
@@ -1784,248 +1764,10 @@ export default function RoomScene({
   }, [closeLobbyExploreHover, isLobbyExploreHoverOpen, isLobbyRoom]);
 
   useEffect(() => {
-    if (!MOBILE_TILT_ENABLED) {
+    if (!MOBILE_TILT_ENABLED && tiltEnabled) {
       setTiltEnabled(false);
-      setTiltAvailable(false);
-      setTiltPermissionNeeded(false);
-      setTiltStatus("idle");
-      return;
     }
-    if (typeof window === "undefined") return;
-    const hasDeviceOrientation = "DeviceOrientationEvent" in window;
-    const hasDeviceMotion = "DeviceMotionEvent" in window;
-    setTiltAvailable(hasDeviceOrientation || hasDeviceMotion);
-    if (!hasDeviceOrientation && !hasDeviceMotion) return;
-
-    const DeviceOrientationEventWithPermission = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
-      requestPermission?: () => Promise<"granted" | "denied">;
-    };
-    const DeviceMotionEventWithPermission = DeviceMotionEvent as typeof DeviceMotionEvent & {
-      requestPermission?: () => Promise<"granted" | "denied">;
-    };
-    setTiltPermissionNeeded(
-      typeof DeviceOrientationEventWithPermission.requestPermission === "function" ||
-      typeof DeviceMotionEventWithPermission.requestPermission === "function"
-    );
-  }, []);
-
-  useEffect(() => {
-    if (!canUseTilt) {
-      setMobileTiltPan({ x: 0, y: 0 });
-      tiltBaselineRef.current = null;
-      tiltFilteredReadingRef.current = null;
-      tiltSignalSeenRef.current = false;
-      tiltInputSourceRef.current = null;
-      tiltPanTargetRef.current = { x: 0, y: 0 };
-      if (tiltPanFrameRef.current) {
-        window.cancelAnimationFrame(tiltPanFrameRef.current);
-        tiltPanFrameRef.current = undefined;
-      }
-      setTiltStatus((prev) => (prev === "blocked" ? prev : "idle"));
-      return;
-    }
-    if (typeof window === "undefined") return;
-    const hasDeviceOrientation = "DeviceOrientationEvent" in window;
-    const hasDeviceMotion = "DeviceMotionEvent" in window;
-    if (!hasDeviceOrientation && !hasDeviceMotion) return;
-
-    tiltSignalSeenRef.current = false;
-    setTiltStatus("listening");
-
-    const getScreenAdjustedTilt = (beta: number, gamma: number) => {
-      const screenOrientation = window.screen?.orientation;
-      const rawAngle =
-        screenOrientation && typeof screenOrientation.angle === "number"
-          ? screenOrientation.angle
-          : typeof (window as typeof window & { orientation?: number }).orientation === "number"
-            ? Number((window as typeof window & { orientation?: number }).orientation)
-            : isPortraitViewport
-              ? 0
-              : 90;
-      const normalizedAngle = ((Math.round(rawAngle / 90) * 90) % 360 + 360) % 360;
-
-      switch (normalizedAngle) {
-        case 90:
-          return { horizontal: beta, vertical: -gamma };
-        case 180:
-          return { horizontal: -gamma, vertical: -beta };
-        case 270:
-          return { horizontal: -beta, vertical: gamma };
-        default:
-          return { horizontal: gamma, vertical: beta };
-      }
-    };
-
-    const tiltProfile = isMobileViewport
-      ? {
-          readingSmoothing: 0.12,
-          baselineDrift: 0.18,
-          horizontalDivisor: 14,
-          verticalDivisor: 16,
-          deadzone: 1.6,
-          rangeFactorX: 0.98,
-          rangeFactorY: 0.86,
-        }
-      : {
-          readingSmoothing: 0.14,
-          baselineDrift: 0.16,
-          horizontalDivisor: 10,
-          verticalDivisor: 12,
-          deadzone: 1.2,
-          rangeFactorX: 0.98,
-          rangeFactorY: 0.82,
-        };
-
-    function applyTiltReading(reading: { beta: number; gamma: number }, source: "orientation" | "motion") {
-      if (tiltInputSourceRef.current && tiltInputSourceRef.current !== source) return;
-      if (!tiltInputSourceRef.current) {
-        tiltInputSourceRef.current = source;
-      }
-      tiltSignalSeenRef.current = true;
-      setTiltStatus("active");
-      const adjustedReading = getScreenAdjustedTilt(reading.beta, reading.gamma);
-      const previousFiltered = tiltFilteredReadingRef.current ?? {
-        beta: adjustedReading.vertical,
-        gamma: adjustedReading.horizontal,
-      };
-      const nextReading = {
-        beta: previousFiltered.beta + (adjustedReading.vertical - previousFiltered.beta) * tiltProfile.readingSmoothing,
-        gamma: previousFiltered.gamma + (adjustedReading.horizontal - previousFiltered.gamma) * tiltProfile.readingSmoothing,
-      };
-      tiltFilteredReadingRef.current = nextReading;
-
-      if (!tiltBaselineRef.current) {
-        tiltBaselineRef.current = nextReading;
-      }
-
-      const baseline = tiltBaselineRef.current;
-      const deltaHorizontal = nextReading.gamma - baseline.gamma;
-      const deltaVertical = nextReading.beta - baseline.beta;
-
-      if (
-        Math.abs(deltaHorizontal) < tiltProfile.deadzone &&
-        Math.abs(deltaVertical) < tiltProfile.deadzone
-      ) {
-        scheduleTiltPan({ x: 0, y: 0 });
-        tiltBaselineRef.current = {
-          beta: baseline.beta + (nextReading.beta - baseline.beta) * tiltProfile.baselineDrift,
-          gamma: baseline.gamma + (nextReading.gamma - baseline.gamma) * tiltProfile.baselineDrift,
-        };
-        return;
-      }
-
-      const normalizedHorizontal = clamp(
-        deltaHorizontal / tiltProfile.horizontalDivisor,
-        -1,
-        1,
-      );
-      const normalizedVertical = clamp(
-        deltaVertical / tiltProfile.verticalDivisor,
-        -1,
-        1,
-      );
-      const horizontalWithDeadzone = Math.abs(normalizedHorizontal) < 0.12 ? 0 : normalizedHorizontal;
-      const verticalWithDeadzone = Math.abs(normalizedVertical) < 0.12 ? 0 : normalizedVertical;
-      const shapedHorizontal =
-        Math.sign(horizontalWithDeadzone) * Math.pow(Math.abs(horizontalWithDeadzone), 1.08);
-      const shapedVertical = Math.sign(verticalWithDeadzone) * Math.pow(Math.abs(verticalWithDeadzone), 1.15);
-      const availableLeft = Math.max(0, mobilePanLeftLimit + tiltBasePan.x);
-      const availableRight = Math.max(0, mobilePanRightLimit - tiltBasePan.x);
-      const xTravel =
-        shapedHorizontal >= 0
-          ? availableRight * tiltProfile.rangeFactorX
-          : availableLeft * tiltProfile.rangeFactorX;
-      const yRange = maxPanY * tiltProfile.rangeFactorY;
-      const nextX = clamp(
-        -shapedHorizontal * xTravel,
-        -availableLeft,
-        availableRight,
-      );
-      const nextY = clamp(
-        clamp(-shapedVertical * yRange, -yRange, yRange),
-        -maxPanY - tiltBasePan.y,
-        maxPanY - tiltBasePan.y,
-      );
-
-      scheduleTiltPan({ x: nextX, y: nextY });
-    }
-
-    let orientationSignalSeen = false;
-
-    function handleDeviceOrientation(event: DeviceOrientationEvent) {
-      if (event.beta == null || event.gamma == null) return;
-      orientationSignalSeen = true;
-      applyTiltReading({ beta: event.beta, gamma: event.gamma }, "orientation");
-    }
-
-    function handleDeviceMotion(event: DeviceMotionEvent) {
-      const gravity = event.accelerationIncludingGravity;
-      if (!gravity) return;
-      const gravityX = gravity.x;
-      const gravityY = gravity.y;
-      if (gravityX == null || gravityY == null) return;
-
-      applyTiltReading({ beta: gravityY * 3.1, gamma: gravityX * 3.1 }, "motion");
-    }
-
-    const blockTimer = window.setTimeout(() => {
-      if (!tiltSignalSeenRef.current) {
-        setTiltStatus("blocked");
-      }
-    }, 1500);
-
-    let orientationAbsoluteAttached = false;
-    let motionAttached = false;
-    let absoluteFallbackTimer: number | undefined;
-    let motionFallbackTimer: number | undefined;
-
-    const attachOrientationAbsolute = () => {
-      if (!hasDeviceOrientation || orientationAbsoluteAttached) return;
-      orientationAbsoluteAttached = true;
-      window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
-    };
-
-    const attachMotion = () => {
-      if (!hasDeviceMotion || motionAttached) return;
-      motionAttached = true;
-      window.addEventListener("devicemotion", handleDeviceMotion, true);
-    };
-
-    if (hasDeviceOrientation) {
-      window.addEventListener("deviceorientation", handleDeviceOrientation, true);
-      absoluteFallbackTimer = window.setTimeout(() => {
-        if (!orientationSignalSeen && !tiltSignalSeenRef.current) {
-          attachOrientationAbsolute();
-        }
-      }, 360);
-    }
-    if (hasDeviceMotion) {
-      motionFallbackTimer = window.setTimeout(() => {
-        if (!tiltSignalSeenRef.current && !tiltInputSourceRef.current) {
-          attachMotion();
-        }
-      }, 820);
-    }
-
-    return () => {
-      window.clearTimeout(blockTimer);
-      if (absoluteFallbackTimer !== undefined) {
-        window.clearTimeout(absoluteFallbackTimer);
-      }
-      if (motionFallbackTimer !== undefined) {
-        window.clearTimeout(motionFallbackTimer);
-      }
-      if (hasDeviceOrientation) {
-        window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
-      }
-      if (orientationAbsoluteAttached) {
-        window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
-      }
-      if (motionAttached) {
-        window.removeEventListener("devicemotion", handleDeviceMotion, true);
-      }
-    };
-  }, [canUseTilt, isMobileViewport, isPortraitViewport, maxPanY, mobilePan.x, mobilePan.y, mobilePanLeftLimit, mobilePanRightLimit, scheduleTiltPan, tiltBasePan.x, tiltBasePan.y]);
+  }, [tiltEnabled]);
 
   useEffect(() => {
     return () => {
@@ -2831,34 +2573,15 @@ export default function RoomScene({
         />
       ) : null}
 
-      {MOBILE_TILT_ENABLED && tiltViewportEnabled && !exploreOpen && !isModalOpen ? (
-        <div className="absolute bottom-20 right-2 z-50 flex flex-col items-end gap-1.5" data-no-pan>
-          {tiltEnabled ? (
-            <button
-              type="button"
-              onClick={() => {
-                setTiltEnabled(false);
-                setMobileTiltPan({ x: 0, y: 0 });
-                tiltBaselineRef.current = null;
-                tiltFilteredReadingRef.current = null;
-                tiltSignalSeenRef.current = false;
-                setTiltStatus("idle");
-              }}
-              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/55 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-md transition hover:bg-black/70"
-            >
-              {tiltStatus === "active" ? "Tilt On" : "Tilt Ready"}
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={enableTiltPan}
-              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/78 backdrop-blur-md transition hover:bg-black/60 hover:text-white"
-            >
-              {tiltPermissionNeeded || tiltAvailable ? "Enable Tilt" : "Tilt Off"}
-            </button>
-          )}
-        </div>
-      ) : null}
+      <TiltPannableRoom
+        showControl={MOBILE_TILT_ENABLED && tiltViewportEnabled && !exploreOpen && !isModalOpen}
+        tiltEnabled={tiltEnabled}
+        tiltStatus={tiltStatus}
+        tiltAvailable={tiltAvailable}
+        tiltPermissionNeeded={tiltPermissionNeeded}
+        onEnableTilt={enableTiltPan}
+        onDisableTilt={disableTiltPan}
+      />
 
       {isOrangeRoom ? (
         <OrangeRoomExtras

@@ -85,6 +85,7 @@ export function useDeviceTiltPan({
   const frameRef = useRef<number | undefined>(undefined);
   const targetRef = useRef({ x: 0, y: 0 });
   const signalSeenRef = useRef(false);
+  const activeSourceRef = useRef<"orientation" | "motion" | null>(null);
 
   const schedulePan = useCallback(
     (nextPan: { x: number; y: number }) => {
@@ -117,6 +118,7 @@ export function useDeviceTiltPan({
     filteredRef.current = null;
     baselineRef.current = null;
     signalSeenRef.current = false;
+    activeSourceRef.current = null;
     targetRef.current = { x: 0, y: 0 };
     if (frameRef.current) {
       window.cancelAnimationFrame(frameRef.current);
@@ -144,6 +146,16 @@ export function useDeviceTiltPan({
           return;
         }
       }
+      const DeviceMotionEventWithPermission = DeviceMotionEvent as typeof DeviceMotionEvent & {
+        requestPermission?: () => Promise<"granted" | "denied">;
+      };
+      if (typeof DeviceMotionEventWithPermission.requestPermission === "function") {
+        const permission = await DeviceMotionEventWithPermission.requestPermission();
+        if (permission !== "granted") {
+          setStatus("blocked");
+          return;
+        }
+      }
     } catch {
       setStatus("blocked");
       return;
@@ -152,6 +164,7 @@ export function useDeviceTiltPan({
     filteredRef.current = null;
     baselineRef.current = null;
     signalSeenRef.current = false;
+    activeSourceRef.current = null;
     targetRef.current = { x: 0, y: 0 };
     setPermissionNeeded(false);
     setStatus("listening");
@@ -161,13 +174,20 @@ export function useDeviceTiltPan({
   useEffect(() => {
     if (typeof window === "undefined") return;
     const hasDeviceOrientation = "DeviceOrientationEvent" in window;
-    setAvailable(hasDeviceOrientation);
-    if (!hasDeviceOrientation) return;
+    const hasDeviceMotion = "DeviceMotionEvent" in window;
+    setAvailable(hasDeviceOrientation || hasDeviceMotion);
+    if (!hasDeviceOrientation && !hasDeviceMotion) return;
 
     const DeviceOrientationEventWithPermission = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
       requestPermission?: () => Promise<"granted" | "denied">;
     };
-    setPermissionNeeded(typeof DeviceOrientationEventWithPermission.requestPermission === "function");
+    const DeviceMotionEventWithPermission = DeviceMotionEvent as typeof DeviceMotionEvent & {
+      requestPermission?: () => Promise<"granted" | "denied">;
+    };
+    setPermissionNeeded(
+      typeof DeviceOrientationEventWithPermission.requestPermission === "function" ||
+      typeof DeviceMotionEventWithPermission.requestPermission === "function"
+    );
   }, []);
 
   useEffect(() => {
@@ -176,6 +196,7 @@ export function useDeviceTiltPan({
       filteredRef.current = null;
       baselineRef.current = null;
       signalSeenRef.current = false;
+      activeSourceRef.current = null;
       targetRef.current = { x: 0, y: 0 };
       if (frameRef.current) {
         window.cancelAnimationFrame(frameRef.current);
@@ -184,20 +205,30 @@ export function useDeviceTiltPan({
       setStatus((prev) => (prev === "blocked" ? prev : "idle"));
       return;
     }
-    if (typeof window === "undefined" || !("DeviceOrientationEvent" in window)) return;
+    if (typeof window === "undefined") return;
+    const hasDeviceOrientation = "DeviceOrientationEvent" in window;
+    const hasDeviceMotion = "DeviceMotionEvent" in window;
+    if (!hasDeviceOrientation && !hasDeviceMotion) return;
 
     signalSeenRef.current = false;
+    activeSourceRef.current = null;
     setStatus("listening");
 
-    const applyTiltReading = (beta: number, gamma: number) => {
+    const applyTiltReading = (
+      reading: { horizontal: number; vertical: number },
+      source: "orientation" | "motion"
+    ) => {
+      if (activeSourceRef.current && activeSourceRef.current !== source) return;
+      if (!activeSourceRef.current) {
+        activeSourceRef.current = source;
+      }
       signalSeenRef.current = true;
       setStatus("active");
 
-      const adjustedReading = getScreenAdjustedTilt(beta, gamma, isPortraitViewport);
-      const previousFiltered = filteredRef.current ?? adjustedReading;
+      const previousFiltered = filteredRef.current ?? reading;
       const nextReading = {
-        horizontal: previousFiltered.horizontal + (adjustedReading.horizontal - previousFiltered.horizontal) * profile.readingLerp,
-        vertical: previousFiltered.vertical + (adjustedReading.vertical - previousFiltered.vertical) * profile.readingLerp,
+        horizontal: previousFiltered.horizontal + (reading.horizontal - previousFiltered.horizontal) * profile.readingLerp,
+        vertical: previousFiltered.vertical + (reading.vertical - previousFiltered.vertical) * profile.readingLerp,
       };
       filteredRef.current = nextReading;
 
@@ -239,7 +270,16 @@ export function useDeviceTiltPan({
 
     const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
       if (event.beta == null || event.gamma == null) return;
-      applyTiltReading(event.beta, event.gamma);
+      applyTiltReading(getScreenAdjustedTilt(event.beta, event.gamma, isPortraitViewport), "orientation");
+    };
+
+    const handleDeviceMotion = (event: DeviceMotionEvent) => {
+      const gravity = event.accelerationIncludingGravity;
+      if (!gravity || gravity.x == null || gravity.y == null) return;
+      applyTiltReading(
+        getScreenAdjustedTilt(gravity.y * 5.2, gravity.x * 5.2, isPortraitViewport),
+        "motion"
+      );
     };
 
     const blockTimer = window.setTimeout(() => {
@@ -248,16 +288,34 @@ export function useDeviceTiltPan({
       }
     }, 2200);
 
-    // Some tablets/browser shells emit only one of these orientation streams,
-    // and some do not start immediately. Listen to both up front so touch
-    // tablets don't get stuck in a permanent "Tilt Ready" state.
-    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
-    window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
+    let motionFallbackTimer: number | undefined;
+
+    if (hasDeviceOrientation) {
+      // Some tablets/browser shells emit only one of these orientation streams.
+      window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+      window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
+    }
+
+    if (hasDeviceMotion) {
+      motionFallbackTimer = window.setTimeout(() => {
+        if (!signalSeenRef.current) {
+          window.addEventListener("devicemotion", handleDeviceMotion, true);
+        }
+      }, 650);
+    }
 
     return () => {
       window.clearTimeout(blockTimer);
-      window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
-      window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
+      if (motionFallbackTimer !== undefined) {
+        window.clearTimeout(motionFallbackTimer);
+      }
+      if (hasDeviceOrientation) {
+        window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
+        window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
+      }
+      if (hasDeviceMotion) {
+        window.removeEventListener("devicemotion", handleDeviceMotion, true);
+      }
     };
   }, [
     basePan.x,

@@ -110,6 +110,24 @@ export default function RoomModalLayer({
       currentModal.title === "Tier 2: Growth Site" ||
       currentModal.title === "Tier 3: Artist World"
     );
+  const isMusicRoomModal = roomSlug === "music";
+  const shouldUseMobileStyleCaseStudyModalLayout =
+    isMusicRoomModal ||
+    (roomSlug === "business" &&
+      [
+        "Brand Evaluation",
+        "12 Month Career Roll Out",
+        "Grantwriting",
+      ].includes(currentModal.title)) ||
+    (roomSlug === "marketing" &&
+      [
+        "Live Performance Development",
+      ].includes(currentModal.title)) ||
+    (roomSlug === "publishing-distribution" &&
+      [
+        "Publishing/Distribution Workshop",
+        "Platform Setup Review",
+      ].includes(currentModal.title));
   const isLiveRoomModal = roomSlug === "ten-ten-entertainment" && !isPackageGridModal;
   const isTenTenCommunityModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Community";
   const isTenTenShowcaseModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Ten Ten Showcase";
@@ -637,6 +655,8 @@ export default function RoomModalLayer({
             ? "relative z-10 flex w-full max-w-[450px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isSteepedDreamsChillOutModal
             ? "relative z-10 flex w-full max-w-[560px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
+            : shouldUseMobileStyleCaseStudyModalLayout
+            ? "relative z-10 flex w-full max-w-[470px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : shouldUseCompactYanchanMusicLayout
             ? "relative z-10 flex w-full max-w-[572px] max-h-[calc(100svh-2rem)] flex-col overflow-hidden rounded-3xl backdrop-blur-2xl shadow-2xl md:max-h-[85svh]"
             : isYanchanLiveModal
@@ -1155,8 +1175,8 @@ export default function RoomModalLayer({
 
             <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : shouldUseCompactYanchanMusicLayout ? "mt-4 shrink-0 border-t border-white/10 px-4 pb-3 pt-3 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
               {isStructuredFooterModal ? (
-                <div className={["flex w-full items-end", isMobileViewport ? "flex-wrap gap-3" : "", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
-                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? (isMobileViewport ? "flex flex-wrap items-center gap-2 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end") : `${isMobileViewport ? "" : "-ml-6"} ${quietFooterWrapClass}`].join(" ")}>
+                <div className={["flex w-full items-end", (isMobileViewport || shouldUseMobileStyleCaseStudyModalLayout) ? "flex-wrap gap-3" : "", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
+                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? (isMobileViewport ? "flex flex-wrap items-center gap-2 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end") : shouldUseMobileStyleCaseStudyModalLayout ? "flex flex-wrap items-center gap-2 self-end" : `${isMobileViewport ? "" : "-ml-6"} ${quietFooterWrapClass}`].join(" ")}>
                     {shouldShowSequenceBeforeFooterActions ? nextSequenceAction : null}
                     {footerActions}
                     {shouldShowSequenceBeforeFooterActions ? null : nextSequenceAction}
@@ -1171,7 +1191,7 @@ export default function RoomModalLayer({
                     ) : null}
                   </div>
 
-                  {isTenTenShowcaseModal ? null : <div className={isMobileViewport ? "hidden" : "flex-1"} />}
+                  {isTenTenShowcaseModal || shouldUseMobileStyleCaseStudyModalLayout ? null : <div className={isMobileViewport ? "hidden" : "flex-1"} />}
 
                   {isTenTenShowcaseModal ? null : (
                     previousSequenceDismissAction ?? (

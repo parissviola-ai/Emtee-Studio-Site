@@ -25,6 +25,7 @@ type DeviceTiltPanOptions = {
   isPortraitViewport: boolean;
   lockFirstSource?: boolean;
   attachMotionImmediately?: boolean;
+  invertHorizontal?: boolean;
   basePan: { x: number; y: number };
   leftLimit: number;
   rightLimit: number;
@@ -72,6 +73,7 @@ export function useDeviceTiltPan({
   isPortraitViewport,
   lockFirstSource = true,
   attachMotionImmediately = false,
+  invertHorizontal = false,
   basePan,
   leftLimit,
   rightLimit,
@@ -260,14 +262,15 @@ export function useDeviceTiltPan({
 
       const shapedHorizontal = Math.sign(horizontal) * Math.pow(Math.abs(horizontal), profile.horizontalExponent);
       const shapedVertical = Math.sign(vertical) * Math.pow(Math.abs(vertical), profile.verticalExponent);
+      const mappedHorizontal = invertHorizontal ? -shapedHorizontal : shapedHorizontal;
 
       const availableLeft = Math.max(0, leftLimit + basePan.x);
       const availableRight = Math.max(0, rightLimit - basePan.x);
-      const xTravel = shapedHorizontal >= 0 ? availableRight * profile.horizontalRangeFactor : availableLeft * profile.horizontalRangeFactor;
+      const xTravel = mappedHorizontal >= 0 ? availableRight * profile.horizontalRangeFactor : availableLeft * profile.horizontalRangeFactor;
       const yTravel = maxVerticalPan * profile.verticalRangeFactor;
 
       schedulePan({
-        x: clamp(shapedHorizontal * xTravel, -availableLeft, availableRight),
+        x: clamp(mappedHorizontal * xTravel, -availableLeft, availableRight),
         y: clamp(-shapedVertical * yTravel, -maxVerticalPan - basePan.y, maxVerticalPan - basePan.y),
       });
     };
@@ -349,6 +352,7 @@ export function useDeviceTiltPan({
     viewportEnabled,
     lockFirstSource,
     attachMotionImmediately,
+    invertHorizontal,
   ]);
 
   return {

@@ -110,6 +110,8 @@ export default function RoomModalLayer({
       currentModal.title === "Tier 2: Growth Site" ||
       currentModal.title === "Tier 3: Artist World"
     );
+  const isLivePerformanceDevelopmentModal =
+    roomSlug === "marketing" && currentModal.title === "Live Performance Development";
   const isMusicRoomModal = roomSlug === "music";
   const shouldUseMobileStyleCaseStudyModalLayout =
     isMusicRoomModal ||
@@ -638,6 +640,13 @@ export default function RoomModalLayer({
       )
     );
   }
+
+  const livePerformanceDevelopmentTopRowActions = isLivePerformanceDevelopmentModal
+    ? footerActions.filter((_, index) => index !== 1)
+    : footerActions;
+  const livePerformanceDevelopmentBottomRowAction = isLivePerformanceDevelopmentModal
+    ? footerActions[1] ?? null
+    : null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[calc(env(safe-area-inset-bottom)+1rem)] md:p-6 pointer-events-auto">
@@ -1178,7 +1187,7 @@ export default function RoomModalLayer({
                 <div className={["flex w-full items-end", (isMobileViewport || shouldUseMobileStyleCaseStudyModalLayout) ? "flex-wrap gap-3" : "", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
                   <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? (isMobileViewport ? "flex flex-wrap items-center gap-2 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end") : shouldUseMobileStyleCaseStudyModalLayout ? "flex flex-wrap items-center gap-2 self-end" : `${isMobileViewport ? "" : "-ml-6"} ${quietFooterWrapClass}`].join(" ")}>
                     {shouldShowSequenceBeforeFooterActions ? nextSequenceAction : null}
-                    {footerActions}
+                    {livePerformanceDevelopmentTopRowActions}
                     {shouldShowSequenceBeforeFooterActions ? null : nextSequenceAction}
                     {isTenTenShowcaseModal ? (
                       <button
@@ -1194,14 +1203,29 @@ export default function RoomModalLayer({
                   {isTenTenShowcaseModal || shouldUseMobileStyleCaseStudyModalLayout ? null : <div className={isMobileViewport ? "hidden" : "flex-1"} />}
 
                   {isTenTenShowcaseModal ? null : (
-                    previousSequenceDismissAction ?? (
-                      <button
-                        type="button"
-                        onClick={handleFooterDismiss}
-                        className={dismissButtonClass}
-                      >
-                        {effectiveBackModal ? "Back" : "Close"}
-                      </button>
+                    isLivePerformanceDevelopmentModal ? (
+                      <div className="flex w-full items-center gap-2">
+                        {livePerformanceDevelopmentBottomRowAction}
+                        {previousSequenceDismissAction ?? (
+                          <button
+                            type="button"
+                            onClick={handleFooterDismiss}
+                            className={dismissButtonClass}
+                          >
+                            {effectiveBackModal ? "Back" : "Close"}
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      previousSequenceDismissAction ?? (
+                        <button
+                          type="button"
+                          onClick={handleFooterDismiss}
+                          className={dismissButtonClass}
+                        >
+                          {effectiveBackModal ? "Back" : "Close"}
+                        </button>
+                      )
                     )
                   )}
                 </div>

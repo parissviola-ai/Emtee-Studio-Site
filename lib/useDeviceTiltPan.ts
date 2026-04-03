@@ -85,7 +85,6 @@ export function useDeviceTiltPan({
   const frameRef = useRef<number | undefined>(undefined);
   const targetRef = useRef({ x: 0, y: 0 });
   const signalSeenRef = useRef(false);
-  const usedAbsoluteFallbackRef = useRef(false);
 
   const schedulePan = useCallback(
     (nextPan: { x: number; y: number }) => {
@@ -153,7 +152,6 @@ export function useDeviceTiltPan({
     filteredRef.current = null;
     baselineRef.current = null;
     signalSeenRef.current = false;
-    usedAbsoluteFallbackRef.current = false;
     targetRef.current = { x: 0, y: 0 };
     setPermissionNeeded(false);
     setStatus("listening");
@@ -189,7 +187,6 @@ export function useDeviceTiltPan({
     if (typeof window === "undefined" || !("DeviceOrientationEvent" in window)) return;
 
     signalSeenRef.current = false;
-    usedAbsoluteFallbackRef.current = false;
     setStatus("listening");
 
     const applyTiltReading = (beta: number, gamma: number) => {
@@ -249,31 +246,18 @@ export function useDeviceTiltPan({
       if (!signalSeenRef.current) {
         setStatus("blocked");
       }
-    }, 1500);
+    }, 2200);
 
-    let absoluteFallbackTimer: number | undefined;
-    const attachAbsoluteFallback = () => {
-      if (usedAbsoluteFallbackRef.current) return;
-      usedAbsoluteFallbackRef.current = true;
-      window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
-    };
-
+    // Some tablets/browser shells emit only one of these orientation streams,
+    // and some do not start immediately. Listen to both up front so touch
+    // tablets don't get stuck in a permanent "Tilt Ready" state.
     window.addEventListener("deviceorientation", handleDeviceOrientation, true);
-    absoluteFallbackTimer = window.setTimeout(() => {
-      if (!signalSeenRef.current) {
-        attachAbsoluteFallback();
-      }
-    }, 420);
+    window.addEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
 
     return () => {
       window.clearTimeout(blockTimer);
-      if (absoluteFallbackTimer !== undefined) {
-        window.clearTimeout(absoluteFallbackTimer);
-      }
       window.removeEventListener("deviceorientation", handleDeviceOrientation, true);
-      if (usedAbsoluteFallbackRef.current) {
-        window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
-      }
+      window.removeEventListener("deviceorientationabsolute", handleDeviceOrientation as EventListener, true);
     };
   }, [
     basePan.x,

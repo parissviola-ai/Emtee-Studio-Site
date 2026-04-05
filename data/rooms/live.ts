@@ -12,12 +12,6 @@ export const liveRoom: Room = {
         label: "Ten Ten Showcase",
         x: 20.37,
         y: 28.9,
-        positions: {
-          laptop: { x: 50, y: 50 },
-          tablet: { x: 50, y: 50 },
-          mobile: { x: 50, y: 50 },
-        },
-        allowLargeResponsiveShift: true,
         direction: "up",
         variant: "dot",
         modal: {
@@ -42,12 +36,6 @@ export const liveRoom: Room = {
         label: "Book Slot",
         x: 49.9,
         y: 59.04,
-        positions: {
-          laptop: { x: 50.05, y: 78 },
-          tablet: { x: 50.05, y: 78 },
-          mobile: { x: 50.05, y: 78 },
-        },
-        allowLargeResponsiveShift: true,
         direction: "up",
         variant: "dot",
         modal: {
@@ -160,10 +148,6 @@ export const liveRoom: Room = {
         label: "Live Set Performance Development",
         x: 19.59,
         y: 55.11,
-        positions: {
-          laptop: { x: 21.85, y: 63.32 },
-          tablet: { x: 21.85, y: 63.32 },
-        },
         direction: "right",
         variant: "dot",
         modal: {
@@ -181,11 +165,6 @@ export const liveRoom: Room = {
         label: "Ten Ten Community",
         x: 72.75,
         y: 54.06,
-        positions: {
-          laptop: { x: 74, y: 63.45 },
-          tablet: { x: 74, y: 63.45 },
-          mobile: { x: 74, y: 63.45 },
-        },
         direction: "up",
         variant: "dot",
         modal: {
@@ -216,11 +195,6 @@ export const liveRoom: Room = {
         label: "Mike Cannz",
         x: 78.01,
         y: 26.37,
-        positions: {
-          laptop: { x: 50, y: 35 },
-          tablet: { x: 50, y: 35 },
-          mobile: { x: 50, y: 35 },
-        },
         direction: "left",
         variant: "dot",
         modal: {

@@ -1056,7 +1056,10 @@ export default function RoomScene({
           ? 58
           : 50;
   const shouldUseFixedBaseBackgroundPosition =
-    isArSalesRoom || room.slug === "dirty-elephant-studio" || room.slug === "steeped-dreams-studio";
+    isArSalesRoom ||
+    room.slug === "dirty-elephant-studio" ||
+    room.slug === "steeped-dreams-studio" ||
+    room.slug === "ten-ten-entertainment";
   const backgroundObjectPositionY = shouldUseFixedBaseBackgroundPosition
     ? baseRoomBackgroundObjectPositionY
     : getResponsiveRoomBackgroundObjectPositionY({

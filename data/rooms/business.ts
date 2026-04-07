@@ -43,6 +43,9 @@ export const businessRoom: Room = {
         title: "Brand Evaluation",
         body:
           "Extensive brand development session to clarify vision and niche.",
+        links: [
+          { label: "Case Study: Mike Cannz", href: "/case-studies/mike-cannz?example=mike-ar-sales" },
+        ],
         primaryLabel: "Apply For A Consultation",
         primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
         secondaryLabel: "Case Study: Yanchan Produced",

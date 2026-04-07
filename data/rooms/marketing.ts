@@ -17,6 +17,9 @@ export const marketingRoom: Room = {
         title: "Content Production",
         body:
           "Brainstorming, shooting and editing while developing set content series.",
+        links: [
+          { label: "Case Study: Yanchan Produced", href: "/case-studies/yanchan?example=yanchan-marketing" },
+        ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -85,9 +88,6 @@ export const marketingRoom: Room = {
         title: "Live Performance Development",
         body:
           "Assistance in the development of an artist's live set.",
-        links: [
-          { label: "View Yanchan Case Study", href: "/case-studies/yanchan?example=yanchan-marketing" },
-          ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Case Study: KISAKI",
@@ -105,12 +105,10 @@ export const marketingRoom: Room = {
         title: "BTS Content Production",
         body:
           "Shooting, editing and scripting BTS-style reels.",
-        links: [
-          { label: "View Kisaki Case Study", href: "/case-studies/kisaki" },
-          { label: "View Yanchan Case Study", href: "/case-studies/yanchan?example=yanchan-marketing" },
-        ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
+          secondaryLabel: "Resources",
+          secondaryHref: "/resources",
         },
       },
       {
@@ -124,6 +122,9 @@ export const marketingRoom: Room = {
         title: "Brand Partnership Strategies",
         body:
           "Developing a strategy for corporate partnerships and collaborations.",
+        links: [
+          { label: "Case Study: Yanchan Produced", href: "/case-studies/yanchan?example=yanchan-marketing" },
+        ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",
@@ -158,6 +159,9 @@ export const marketingRoom: Room = {
           title: "Event Planning",
           body:
             "Assisting in the development of new events.",
+          links: [
+            { label: "Case Study: Mike Cannz", href: "/case-studies/mike-cannz?example=mike-ar-sales" },
+          ],
           primaryLabel: "Apply For A Consultation",
           primaryHref: "https://api.leadconnectorhq.com/widget/form/OCZlqiAaqvcyzZofALhy",
           secondaryLabel: "Resources",

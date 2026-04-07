@@ -144,7 +144,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     bio:
       "KISAKI is a Korean-Canadian electronic music producer, DJ, and vocalist based in Toronto, known for her electrifying fusion of dynamic vocals with hard-hitting beats and cinematic experience. Blending elements of rock, K-Pop, J-Pop and anime, her ten-ten-entertainment performances feel like stepping into the soundtrack of a cyber dream.\nA former Touhou Vocal artist with Japan's doujin circles including EastNewSound, she channels the soul of a lost android searching for freedom and love into a dark yet melodic soundscape influenced by cyberpunk and neo noir.\nSince 2024, she has taken her sound on the road, lighting up stages in over fifteen cities across North America, and earning a growing following in the Canadian underground scene.",
     bullets: [
-      "Brand Deck (Marketing Department)",
+      "Tour Management (Marketing Department)",
       "Live Performance Development (Marketing Department)",
     ],
     accomplishments: [
@@ -182,6 +182,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     bullets: [
       "Single Creation (Music Department)",
       "EP Creation (3 Songs) (Music Department)",
+      "Project Creation (5 Songs) (Music Department)",
     ],
     accomplishments: [
       "Refined song selection process with stronger creative focus",

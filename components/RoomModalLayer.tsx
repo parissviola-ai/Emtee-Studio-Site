@@ -41,6 +41,14 @@ type RoomModalLayerProps = {
   openExploreMenu: () => void;
 };
 
+const MOBILE_STYLE_FOOTER_ROOMS = new Set([
+  "business",
+  "music",
+  "marketing",
+  "publishing-distribution",
+  "ar-sales",
+]);
+
 export default function RoomModalLayer({
   roomSlug,
   isMobileViewport,
@@ -188,6 +196,20 @@ export default function RoomModalLayer({
   const hasCanonicalSequenceNav = !!(currentModal.previousHref || currentModal.nextHref);
   const effectiveBackModal = hasCanonicalSequenceNav ? null : modalBackModal;
   const shouldUseCompactFooterButtons = isResourceOnlyModal || isPackageGridModal;
+  const shouldUseMobileStyleFooterArrangement =
+    isMobileViewport || MOBILE_STYLE_FOOTER_ROOMS.has(roomSlug);
+  const shouldHideResourceActionsWhenCaseStudyPresent = MOBILE_STYLE_FOOTER_ROOMS.has(roomSlug);
+  const isCaseStudyAction = (label?: string, href?: string) =>
+    (label ?? "").startsWith("Case Study:") || (href ?? "").includes("/case-studies/");
+  const isResourcesAction = (label?: string, href?: string) =>
+    (label ?? "").trim() === "Resources" || (href ?? "") === "/resources";
+  const modalHasCaseStudyAction =
+    shouldHideResourceActionsWhenCaseStudyPresent &&
+    (
+      isCaseStudyAction(currentModal.primaryLabel, currentModal.primaryHref) ||
+      isCaseStudyAction(currentModal.secondaryLabel, currentModal.secondaryHref) ||
+      !!currentModal.links?.some((link: any) => isCaseStudyAction(link.label, link.href))
+    );
   const uniformModalButtonSizing = "px-3 py-1.5 text-[11px] font-medium";
   const isExternalActionHref = (href: string) =>
     href.startsWith("http") || href.startsWith("mailto:") || href.startsWith("tel:");
@@ -195,7 +217,7 @@ export default function RoomModalLayer({
     `inline-flex items-center justify-center rounded-full border border-white/18 bg-white/8 ${uniformModalButtonSizing} text-white/82 transition hover:border-white/28 hover:bg-white/12 hover:text-white`;
   const quietFooterWrapClass = isQuietModal
     ? "flex flex-wrap items-center gap-3 self-end"
-    : isMobileViewport
+    : shouldUseMobileStyleFooterArrangement
     ? "flex flex-wrap items-center gap-2 self-end"
     : "inline-flex flex-nowrap items-center gap-3 self-end";
   const normalizeSocialIconLabel = (label: string) => {
@@ -323,7 +345,7 @@ export default function RoomModalLayer({
   const dismissButtonClass = [
     shouldUseCompactFooterButtons
       ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition"
-      : isMobileViewport
+      : shouldUseMobileStyleFooterArrangement
       ? "inline-flex shrink-0 items-center justify-center self-end rounded-full transition"
       : "relative left-4 inline-flex shrink-0 items-center justify-center self-end rounded-full transition",
     isOrangeModal
@@ -405,6 +427,9 @@ export default function RoomModalLayer({
 
   if (!isLivePackagesModal && activeModal.links?.length) {
     activeModal.links.forEach((link: any) => {
+      if (modalHasCaseStudyAction && isResourcesAction(link.label, link.href)) {
+        return;
+      }
       const modalLinkId = link.href.startsWith("modal:") ? link.href.slice(6) : null;
       const normalizedSocialIconLabel = normalizeSocialIconLabel(link.label);
       const shouldUseIconOnlySocialLink =
@@ -564,7 +589,11 @@ export default function RoomModalLayer({
     );
   }
 
-  if (activeModal.secondaryHref && activeModal.secondaryLabel) {
+  if (
+    activeModal.secondaryHref &&
+    activeModal.secondaryLabel &&
+    !(modalHasCaseStudyAction && isResourcesAction(activeModal.secondaryLabel, activeModal.secondaryHref))
+  ) {
     footerActions.push(
       isExternalActionHref(activeModal.secondaryHref) ? (
         <a
@@ -1184,8 +1213,8 @@ export default function RoomModalLayer({
 
             <div className={[isStartHereModal ? "shrink-0 flex w-full flex-col items-stretch gap-1 px-2 pb-2 md:px-2.5 md:pb-2.5 transition-all duration-600 ease-out" : isResourceOnlyModal ? "mt-3 shrink-0 px-1 pb-1 pt-0 transition-all duration-600 ease-out" : shouldUseCompactYanchanMusicLayout ? "mt-4 shrink-0 border-t border-white/10 px-4 pb-3 pt-3 transition-all duration-600 ease-out" : "mt-7 shrink-0 border-t border-white/10 px-6 pb-3 pt-5 transition-all duration-600 ease-out", revealStep >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>
               {isStructuredFooterModal ? (
-                <div className={["flex w-full items-end", (isMobileViewport || shouldUseMobileStyleCaseStudyModalLayout) ? "flex-wrap gap-3" : "", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
-                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? (isMobileViewport ? "flex flex-wrap items-center gap-2 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end") : shouldUseMobileStyleCaseStudyModalLayout ? "flex flex-wrap items-center gap-2 self-end" : `${isMobileViewport ? "" : "-ml-6"} ${quietFooterWrapClass}`].join(" ")}>
+                <div className={["flex w-full items-end", shouldUseMobileStyleFooterArrangement ? "flex-wrap gap-3" : "", isResourceOnlyModal || isDirtyElephantAboutModal ? "max-w-[430px] mx-auto" : shouldUseCompactYanchanMusicLayout ? "max-w-[494px] mx-auto" : ""].join(" ")}>
+                  <div className={[isResourceOnlyModal ? "inline-flex flex-nowrap items-center gap-2 self-end" : shouldUseCompactYanchanMusicLayout ? "inline-flex flex-wrap items-center gap-2 self-end" : isTenTenShowcaseModal ? (isMobileViewport ? "flex flex-wrap items-center gap-2 self-end" : "inline-flex flex-nowrap items-center gap-3 self-end") : `${shouldUseMobileStyleFooterArrangement ? "" : "-ml-6"} ${quietFooterWrapClass}`].join(" ")}>
                     {shouldShowSequenceBeforeFooterActions ? nextSequenceAction : null}
                     {livePerformanceDevelopmentTopRowActions}
                     {shouldShowSequenceBeforeFooterActions ? null : nextSequenceAction}
@@ -1200,7 +1229,7 @@ export default function RoomModalLayer({
                     ) : null}
                   </div>
 
-                  {isTenTenShowcaseModal || shouldUseMobileStyleCaseStudyModalLayout ? null : <div className={isMobileViewport ? "hidden" : "flex-1"} />}
+                  {isTenTenShowcaseModal ? null : <div className={shouldUseMobileStyleFooterArrangement ? "hidden" : "flex-1"} />}
 
                   {isTenTenShowcaseModal ? null : (
                     isLivePerformanceDevelopmentModal ? (

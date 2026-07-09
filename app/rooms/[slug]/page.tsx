@@ -2,6 +2,8 @@ import Link from "next/link";
 import RoomPageShell from "@/components/RoomPageShell";
 import { getKnownRoomImageSize } from "@/components/roomSceneBackgroundConfig";
 import { rooms } from "@/data/rooms";
+import type { Metadata } from "next";
+import { ROOM_METADATA_BY_SLUG, SITE_NAME, SITE_DESCRIPTION, createPageMetadata } from "@/lib/siteMetadata";
 
 type RoomPageParams = { slug: string };
 
@@ -9,6 +11,22 @@ export const dynamicParams = false;
 
 export function generateStaticParams(): RoomPageParams[] {
   return rooms.map((room) => ({ slug: room.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<RoomPageParams>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const room = rooms.find((entry) => entry.slug === slug);
+  const roomMetadata = ROOM_METADATA_BY_SLUG[slug as keyof typeof ROOM_METADATA_BY_SLUG];
+
+  return createPageMetadata({
+    title: roomMetadata?.title ?? room?.title ?? SITE_NAME,
+    description: roomMetadata?.description ?? SITE_DESCRIPTION,
+    path: `/rooms/${slug}`,
+  });
 }
 
 function getInitialRoomPosterPosition(slug: string) {

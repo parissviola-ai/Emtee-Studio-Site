@@ -1,9 +1,12 @@
 import { Suspense } from "react";
 import CaseStudies2Client from "@/app/artist-affiliations/case-studies-2/CaseStudies2Client";
+import { PAGE_METADATA, createPageMetadata } from "@/lib/siteMetadata";
 
-export const metadata = {
-  title: "Case Studies | EMTEE Music Group",
-};
+export const metadata = createPageMetadata({
+  title: PAGE_METADATA.caseStudies.title,
+  description: PAGE_METADATA.caseStudies.description,
+  path: "/case-studies",
+});
 
 function CaseStudiesPageFallback() {
   return (

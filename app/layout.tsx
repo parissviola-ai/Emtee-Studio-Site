@@ -3,6 +3,13 @@ import ConditionalExploreBar from "@/components/ConditionalExploreBar";
 import GlobalTransitionHoldLayer from "@/components/GlobalTransitionHoldLayer";
 import ConditionalMenuBar from "@/components/ConditionalMenuBar";
 import GlobalWarmup from "@/components/GlobalWarmup";
+import {
+  BUSINESS_NAME,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  organizationStructuredData,
+} from "@/lib/siteMetadata";
 import type { Metadata } from "next";
 import "./globals.css";
 import { RoomNavDebugCapture } from "@/components/RoomNavDebugCapture";
@@ -10,8 +17,13 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.emteemusicgroup.com"),
-  description: "Explore Emtee Music Group",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
+  applicationName: BUSINESS_NAME,
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: SITE_URL,
+  },
   icons: {
     icon: [
       { url: "/icon.png", type: "image/png" },
@@ -21,10 +33,10 @@ export const metadata: Metadata = {
     shortcut: [{ url: "/icon.png", type: "image/png" }],
   },
   openGraph: {
-    title: "Emtee Music Group",
-    description: "Explore Emtee Music Group",
-    url: "https://www.emteemusicgroup.com",
-    siteName: "Emtee Music Group",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     type: "website",
     images: [
       {
@@ -37,8 +49,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Emtee Music Group",
-    description: "Explore Emtee Music Group",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     images: [
       {
         url: "/twitter-image.png",
@@ -56,6 +68,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationStructuredData),
+          }}
+        />
         <RoomNavDebugCapture />
         <GlobalWarmup />
         <GlobalTransitionHoldLayer />

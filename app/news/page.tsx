@@ -1,10 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { NEWS_ITEMS } from "./newsData";
+import { PAGE_METADATA, createPageMetadata } from "@/lib/siteMetadata";
 
-export const metadata = {
-  title: "News | EMTEE Music Group",
-};
+export const metadata = createPageMetadata({
+  title: PAGE_METADATA.news.title,
+  description: PAGE_METADATA.news.description,
+  path: "/news",
+});
 
 function NewsTile({ item }: { item: (typeof NEWS_ITEMS)[number] }) {
   return (

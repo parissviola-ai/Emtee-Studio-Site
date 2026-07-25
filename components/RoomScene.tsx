@@ -2749,7 +2749,7 @@ export default function RoomScene({
       ) : null}
 
       {isSteepedDreamsRoom && steepedDreamsFeeling && !isModalOpen && !exploreOpen ? (
-        <div className="absolute right-3 top-20 z-[110]" data-no-pan>
+        <div className="absolute right-3 top-32 z-[110] sm:top-20" data-no-pan>
           <button
             type="button"
             onClick={reopenSteepedDreamsFeelingGate}

@@ -8,9 +8,9 @@ const routes = [
   "/rooms/marketing",
   "/rooms/ar-sales",
   "/rooms/publishing-distribution",
-  "/rooms/dirty-elephant-studio",
-  "/rooms/ten-ten-entertainment",
-  "/rooms/steeped-dreams-studio",
+  "/dirtyelephantstudios",
+  "/tentenentertainment",
+  "/steepeddreamsstudio",
   "/resources",
   "/artist-affiliations",
   "/artist-affiliations/case-studies-2",
@@ -26,7 +26,7 @@ for (const route of routes) {
     });
 
     await page.goto(route, { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await expect(page.locator("body")).toBeVisible();
     expect(errors, `runtime errors on ${route}`).toEqual([]);
@@ -43,9 +43,9 @@ test("room navigation flow stays reachable", async ({ page }) => {
     "/rooms/marketing",
     "/rooms/ar-sales",
     "/rooms/publishing-distribution",
-    "/rooms/dirty-elephant-studio",
-    "/rooms/ten-ten-entertainment",
-    "/rooms/steeped-dreams-studio",
+    "/dirtyelephantstudios",
+    "/tentenentertainment",
+    "/steepeddreamsstudio",
   ];
 
   for (const route of flow) {
@@ -53,6 +53,19 @@ test("room navigation flow stays reachable", async ({ page }) => {
     await expect(page).toHaveURL(new RegExp(`${route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
   }
 });
+
+const legacyRoomRoutes = [
+  ["/rooms/dirty-elephant-studio", "/dirtyelephantstudios"],
+  ["/rooms/ten-ten-entertainment", "/tentenentertainment"],
+  ["/rooms/steeped-dreams-studio", "/steepeddreamsstudio"],
+] as const;
+
+for (const [legacyRoute, publicRoute] of legacyRoomRoutes) {
+  test(`${legacyRoute} redirects to ${publicRoute}`, async ({ page }) => {
+    await page.goto(legacyRoute, { waitUntil: "domcontentloaded" });
+    await expect(page).toHaveURL(new RegExp(`${publicRoute}$`));
+  });
+}
 
 test("lobby modal opened from query can still navigate to another modal", async ({ page }) => {
   await page.goto("/rooms/lobby?modal=About", { waitUntil: "domcontentloaded" });
@@ -141,7 +154,7 @@ test("how you start consultation opens a new tab without closing the modal", asy
 });
 
 test("custom production apply opens a new tab without closing the modal", async ({ page }) => {
-  await page.goto("/rooms/dirty-elephant-studio", { waitUntil: "domcontentloaded" });
+  await page.goto("/dirtyelephantstudios", { waitUntil: "domcontentloaded" });
   await page.waitForLoadState("networkidle");
 
   await page
@@ -156,7 +169,7 @@ test("custom production apply opens a new tab without closing the modal", async 
   const popup = await popupPromise;
 
   await expect.poll(() => popup.url() !== "about:blank").toBeTruthy();
-  await expect(page).toHaveURL(/\/rooms\/dirty-elephant-studio$/);
+  await expect(page).toHaveURL(/\/dirtyelephantstudios$/);
   await expect(page.getByRole("heading", { name: "Apply For Custom Production" })).toBeVisible();
 });
 

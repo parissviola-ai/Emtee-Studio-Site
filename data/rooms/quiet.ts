@@ -3,20 +3,34 @@ import type { Room } from "./types";
 export const quietRoom: Room = {
     slug: "steeped-dreams-studio",
     title: "Steeped Dreams\nStudio",
-    backgroundImage: "/rooms/quietroomvid-firstframe-opt.jpg",
-    backgroundVideo: "/rooms/quietroomvid-opt.mp4",
-    backgroundVideoMobile: "/rooms/quietroomvid-opt.mp4",
+    backgroundImage: "/rooms/steeped-dreams-zen-interior-poster.jpg",
+    backgroundVideo: "/rooms/steeped-dreams-zen-interior-trimmed.mp4",
+    backgroundVideoMobile: "/rooms/steeped-dreams-zen-interior-trimmed.mp4",
     hotspots: [
       { id: "next-room", label: "Lobby", href: "/rooms/lobby", x: 90, y: 17, direction: "right" },
       {
-        id: "kym-tea-music",
-        label: "Kym Tea Music",
-        x: 35.62,
-        y: 34.15,
+        id: "upcoming-events",
+        label: "Upcoming Events",
+        x: 34.41,
+        y: 30.88,
+        stimulatedPosition: { x: 89.51, y: 47.53 },
+        direction: "right",
+        variant: "dot",
+        modal: {
+          title: "Upcoming Events",
+          body: "Event posters coming soon.",
+        },
+      },
+      {
+        id: "kym-tea",
+        label: "Kym Tea",
+        x: 85.07,
+        y: 34.39,
+        stimulatedPosition: { x: 72.82, y: 33.73 },
         direction: "left",
         variant: "dot",
         modal: {
-          title: "Kym Tea Music",
+          title: "Kym Tea",
           imageGallery: [
             { src: "/rooms/kymtea4.jpg", alt: "Kym Tea portrait 1" },
             { src: "/rooms/kymtea1.jpg", alt: "Kym Tea portrait 2" },
@@ -32,14 +46,29 @@ export const quietRoom: Room = {
         },
       },
       {
+        id: "kym-tea-music",
+        label: "Kym Tea Music",
+        x: 79.15,
+        y: 60.79,
+        stimulatedPosition: { x: 9.45, y: 40.63 },
+        direction: "left",
+        variant: "dot",
+        modal: {
+          title: "Kym Tea Music",
+          body: "Spotify player coming soon.",
+        },
+      },
+      {
         id: "eight-d-mixes",
         label: "8D Mixes",
-        x: 10.5,
-        y: 41.96,
+        x: 9.45,
+        y: 40.63,
+        stimulatedPosition: { x: 37.34, y: 37.24 },
         direction: "right",
         variant: "dot",
         modal: {
           title: "8D Mixes",
+          spotifyEmbed: "https://open.spotify.com/embed/artist/5l3q6xxRsELcm2cIJNey8R?utm_source=generator&theme=0",
           body:
             "8D audio (eight-dimensional audio) is a type of spatial audio editing that makes a standard stereo song feel as if it is moving in a 360-degree circle around the listener's head. Producers create an effect by automating panning, volume shifts, and spatial reverb, making sounds travel, rotate, and change distance to the ear.\n\nThe listener's brain continues re-locating the source as it moves, making 8D immersive, trippy, and cinematic. This auditory illusion is designed specifically for headphone users, and it allows listeners to have a calming auditory experience.",
           links: [
@@ -50,8 +79,10 @@ export const quietRoom: Room = {
       {
         id: "steeped-dreams-studio",
         label: "Steeped Dreams Studio",
-        x: 47.69,
-        y: 24.67,
+        x: 44.08,
+        y: 24.74,
+        stimulatedPosition: { x: 32.45, y: 32.96 },
+        stimulatedDirection: "left",
         direction: "right",
         variant: "dot",
         modal: {
@@ -67,13 +98,17 @@ export const quietRoom: Room = {
       {
         id: "chill-out-community",
         label: "Overstimulated? Chill Out",
-        x: 50,
-        y: 50,
+        x: 45.81,
+        y: 47.32,
+        stimulatedPosition: { x: 25.27, y: 73.61 },
         direction: "left",
         variant: "dot",
         modal: {
           title: "Overstimulated? Chill Out",
-          videoEmbed: "https://www.youtube.com/embed/fPd1YHokn-4?si=34wO5SzrnnaPcdGa",
+          videoSrc: "/rooms/steeped-dreams-chill-out.mp4",
+          videoPoster: "/rooms/steeped-dreams-chill-out-poster.jpg",
+          secondaryLabel: "Watch on YouTube",
+          secondaryHref: "https://www.youtube.com/watch?v=fPd1YHokn-4",
           body: "",
         },
       },

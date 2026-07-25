@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
+import { isRoomHref } from "@/lib/roomRoutes";
 
 const EXPLORE_LINKS = [
   { label: "Start Here", href: "/rooms/lobby?modal=About" },
@@ -16,9 +17,9 @@ const EXPLORE_LINKS = [
   { label: "Marketing Department", href: "/rooms/marketing" },
   { label: "A&R / Sales Department", href: "/rooms/ar-sales" },
   { label: "Publishing / Distribution Department", href: "/rooms/publishing-distribution" },
-  { label: "Dirty Elephant Studios", href: "/rooms/dirty-elephant-studio" },
-  { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
-  { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
+  { label: "Dirty Elephant Studios", href: "/dirtyelephantstudios" },
+  { label: "Ten Ten Entertainment", href: "/tentenentertainment" },
+  { label: "Steeped Dreams Studio", href: "/steepeddreamsstudio" },
 ];
 
 function shouldDebugRoomNav() {
@@ -106,7 +107,7 @@ export default function ConditionalExploreBar() {
       return;
     }
 
-    if (!href.startsWith("/rooms/")) {
+    if (!isRoomHref(href)) {
       logRoomNav("nav:push", { from: pathname, to: href, source: "conditional-explore-bar" });
       router.push(href);
       return;
@@ -118,7 +119,7 @@ export default function ConditionalExploreBar() {
   }
 
   // Room pages already render their own explore bar in RoomScene.
-  if (pathname.startsWith("/rooms")) return null;
+  if (isRoomHref(pathname)) return null;
   if (pathname === "/") return null;
   if (pathname === "/website-design") return null;
 
@@ -225,7 +226,7 @@ export default function ConditionalExploreBar() {
                         logRoomNav("nav:new-tab", { from: pathname, to: item.href, source: "conditional-explore-bar-list" });
                         return;
                       }
-                      if (!item.href.startsWith("/rooms/")) {
+                      if (!isRoomHref(item.href)) {
                         logRoomNav("nav:push", { from: pathname, to: item.href, source: "conditional-explore-bar-list" });
                         setOpen(false);
                         return;

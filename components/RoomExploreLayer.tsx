@@ -2,6 +2,7 @@
 
 import NextImage from "next/image";
 import Link from "next/link";
+import { isRoomHref } from "@/lib/roomRoutes";
 
 type ExploreRoom = {
   label: string;
@@ -190,7 +191,7 @@ export default function RoomExploreLayer({
                       if (isConsultationLink) {
                         return;
                       }
-                      if (!item.href.startsWith("/rooms/")) {
+                      if (!isRoomHref(item.href)) {
                         setExploreOpen(false);
                         return;
                       }

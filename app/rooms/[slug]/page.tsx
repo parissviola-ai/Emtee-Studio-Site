@@ -4,6 +4,7 @@ import { getKnownRoomImageSize } from "@/components/roomSceneBackgroundConfig";
 import { rooms } from "@/data/rooms";
 import type { Metadata } from "next";
 import { ROOM_METADATA_BY_SLUG, SITE_NAME, SITE_DESCRIPTION, createPageMetadata } from "@/lib/siteMetadata";
+import { getPublicRoomHref } from "@/lib/roomRoutes";
 
 type RoomPageParams = { slug: string };
 
@@ -25,7 +26,7 @@ export async function generateMetadata({
   return createPageMetadata({
     title: roomMetadata?.title ?? room?.title ?? SITE_NAME,
     description: roomMetadata?.description ?? SITE_DESCRIPTION,
-    path: `/rooms/${slug}`,
+    path: getPublicRoomHref(slug),
   });
 }
 

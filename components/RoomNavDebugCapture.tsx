@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { isRoomHref } from "@/lib/roomRoutes";
 
 function shouldDebugRoomNav() {
   if (typeof window === "undefined") return false;
@@ -33,7 +34,7 @@ export function RoomNavDebugCapture() {
       if (anchor instanceof HTMLAnchorElement) {
         const hrefAttr = anchor.getAttribute("href");
         const href = anchor.href;
-        if (hrefAttr?.startsWith("/rooms/") || href.includes("/rooms/")) {
+        if (isRoomHref(hrefAttr) || isRoomHref(href)) {
           logRoomNav("dom:click", {
             from: pathname,
             hrefAttr,

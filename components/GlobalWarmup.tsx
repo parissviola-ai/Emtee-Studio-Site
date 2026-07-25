@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomAssetsByHref, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
+import { getPublicRoomHref, isRoomHref } from "@/lib/roomRoutes";
 
 const GLOBAL_ROUTES = [
   "/",
@@ -22,21 +23,21 @@ export default function GlobalWarmup() {
     const routeSet = new Set<string>([
       ...GLOBAL_ROUTES,
       "/rooms/business",
-      "/rooms/steeped-dreams-studio",
+      "/steepeddreamsstudio",
     ]);
     const isLandingPage = pathname === "/";
 
     const warmAll = () => {
       routeSet.forEach((href) => {
         router.prefetch(href);
-        if (isLandingPage && href.startsWith("/rooms/")) {
+        if (isLandingPage && isRoomHref(href)) {
           warmRoomAssetsByHref(href, { includeVideo: false });
         }
       });
 
       if (isLandingPage) {
         getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
-          router.prefetch(`/rooms/${slug}`);
+          router.prefetch(getPublicRoomHref(slug));
         });
         warmRoomNeighborhoodBySlug("lobby", { includeVideo: false });
         warmImageAsset("/rooms/lobbynewstv-opt.jpg");

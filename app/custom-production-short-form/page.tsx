@@ -18,7 +18,7 @@ export default async function CustomProductionShortFormPage({
       <div className="relative mx-auto max-w-3xl">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
-            href="/rooms/dirty-elephant-studio"
+            href="/dirtyelephantstudios"
             className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/15"
           >
             Back to Orange Room

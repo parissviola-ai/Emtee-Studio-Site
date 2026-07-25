@@ -13,6 +13,7 @@ import {
   startRoomTransitionHold,
 } from "@/lib/roomTransitionHold";
 import { awaitRoomAssetsByHref, getRoomWarmNeighborhoodHrefsBySlug, warmImageAsset, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
+import { getPublicRoomHref, getRoomSlugFromHref, isRoomHref } from "@/lib/roomRoutes";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -45,22 +46,22 @@ const RESOURCE_LINKS: NavLink[] = [
 ];
 
 const CASE_STUDY_LINKS: NavLink[] = [
-  { label: "Dirty Elephant Studios", href: "/rooms/dirty-elephant-studio" },
-  { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
-  { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
+  { label: "Dirty Elephant Studios", href: "/dirtyelephantstudios" },
+  { label: "Ten Ten Entertainment", href: "/tentenentertainment" },
+  { label: "Steeped Dreams Studio", href: "/steepeddreamsstudio" },
   { label: "Case Studies", href: "/case-studies" },
 ];
 
 const ROOM_HEADER_LABELS: Record<string, { kind: "ROOM" | "DEPARTMENT"; label: string }> = {
-  "/rooms/lobby": { kind: "ROOM", label: "Lobby" },
-  "/rooms/business": { kind: "ROOM", label: "Meeting Room" },
-  "/rooms/music": { kind: "ROOM", label: "Studio" },
-  "/rooms/marketing": { kind: "ROOM", label: "Photo Studio" },
-  "/rooms/publishing-distribution": { kind: "ROOM", label: "Catalog Room" },
-  "/rooms/ar-sales": { kind: "ROOM", label: "Board Room" },
-  "/rooms/dirty-elephant-studio": { kind: "ROOM", label: "Dirty Elephant Studios" },
-  "/rooms/ten-ten-entertainment": { kind: "ROOM", label: "Ten Ten Entertainment" },
-  "/rooms/steeped-dreams-studio": { kind: "ROOM", label: "Steeped Dreams Studio" },
+  lobby: { kind: "ROOM", label: "Lobby" },
+  business: { kind: "ROOM", label: "Meeting Room" },
+  music: { kind: "ROOM", label: "Studio" },
+  marketing: { kind: "ROOM", label: "Photo Studio" },
+  "publishing-distribution": { kind: "ROOM", label: "Catalog Room" },
+  "ar-sales": { kind: "ROOM", label: "Board Room" },
+  "dirty-elephant-studio": { kind: "ROOM", label: "Dirty Elephant Studios" },
+  "ten-ten-entertainment": { kind: "ROOM", label: "Ten Ten Entertainment" },
+  "steeped-dreams-studio": { kind: "ROOM", label: "Steeped Dreams Studio" },
 };
 
 function shouldDebugRoomNav() {
@@ -81,8 +82,8 @@ function logRoomNav(event: string, detail: Record<string, unknown>) {
 export default function RoomsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const router = useRouter();
-  const isLobby = pathname === "/rooms/lobby";
-  const activeRoomSlug = pathname.startsWith("/rooms/") ? pathname.slice("/rooms/".length).split("/")[0] ?? "" : "";
+  const activeRoomSlug = getRoomSlugFromHref(pathname) ?? "";
+  const isLobby = activeRoomSlug === "lobby";
   const [mobileLobbyShowRoomsOpen, setMobileLobbyShowRoomsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lobbyHeaderReady, setLobbyHeaderReady] = useState(!isLobby);
@@ -141,7 +142,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
       "/case-studies",
       "/artist-affiliations",
       "/news",
-      ...rooms.map((room) => `/rooms/${room.slug}`),
+      ...rooms.map((room) => getPublicRoomHref(room.slug)),
     ]);
     const neighborhoodHrefs = getRoomWarmNeighborhoodHrefsBySlug(activeRoomSlug);
 
@@ -163,8 +164,14 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     return () => globalThis.clearTimeout(timer);
   }, [activeRoomSlug, router]);
 
+  function isActiveHref(href: string) {
+    if (pathname === href) return true;
+    const targetRoomSlug = getRoomSlugFromHref(href);
+    return !!targetRoomSlug && targetRoomSlug === activeRoomSlug;
+  }
+
   function navLinkClass(href: string) {
-    const isActive = pathname === href;
+    const isActive = isActiveHref(href);
     return [
       "relative whitespace-nowrap px-2 py-1 text-[11px] sm:px-0 sm:py-0 sm:text-sm transition-all duration-200",
       "sm:group-hover/menu:opacity-45 sm:hover:opacity-100 sm:focus-visible:opacity-100",
@@ -195,7 +202,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
   }
 
   const prefetchRoomRoute = useCallback((href: string) => {
-    if (!href.startsWith("/rooms/")) return;
+    if (!isRoomHref(href)) return;
     if (prefetchedRoomRoutesRef.current.has(href)) return;
     prefetchedRoomRoutesRef.current.add(href);
     router.prefetch(href);
@@ -216,8 +223,8 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
     pathname === "/case-studies" ||
     pathname.startsWith("/case-studies") ||
     pathname.startsWith("/artist-affiliations") ||
-    CASE_STUDY_LINKS.some((item) => pathname === item.href);
-  const currentRoomHeader = ROOM_HEADER_LABELS[pathname];
+    CASE_STUDY_LINKS.some((item) => isActiveHref(item.href));
+  const currentRoomHeader = ROOM_HEADER_LABELS[activeRoomSlug];
   const showCurrentRoomHeader = !!currentRoomHeader && (!isLobby || lobbyHeaderReady);
 
   useEffect(() => {
@@ -480,7 +487,7 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                   onFocus={() => prefetchRoomRoute(item.href)}
                   onTouchStart={() => prefetchRoomRoute(item.href)}
                   onClick={(event) => {
-                    if (!item.href.startsWith("/rooms/")) return;
+                    if (!isRoomHref(item.href)) return;
                     event.preventDefault();
                     void navigateToRoom(item.href);
                   }}
@@ -529,13 +536,13 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                       onFocus={() => prefetchRoomRoute(item.href)}
                       onTouchStart={() => prefetchRoomRoute(item.href)}
                       onClick={(event) => {
-                        if (!item.href.startsWith("/rooms/")) return;
+                        if (!isRoomHref(item.href)) return;
                         event.preventDefault();
                         void navigateToRoom(item.href);
                       }}
                       className={[
                         "block rounded-lg px-3 py-2 text-sm transition",
-                        pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
+                        isActiveHref(item.href) ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
                         ].join(" ")}
                       >
                         {item.label}
@@ -558,13 +565,13 @@ export default function RoomsLayout({ children }: { children: ReactNode }) {
                       onFocus={() => prefetchRoomRoute(item.href)}
                       onTouchStart={() => prefetchRoomRoute(item.href)}
                       onClick={(event) => {
-                        if (!item.href.startsWith("/rooms/")) return;
+                        if (!isRoomHref(item.href)) return;
                         event.preventDefault();
                         void navigateToRoom(item.href);
                       }}
                       className={[
                         "block rounded-lg px-3 py-2 text-sm transition",
-                        pathname === item.href ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
+                        isActiveHref(item.href) ? "bg-white/14 text-white" : "text-white/80 hover:bg-white/10 hover:text-white",
                         ].join(" ")}
                       >
                         {item.label}

@@ -7,16 +7,16 @@ const forwardFlow = [
   "/rooms/marketing",
   "/rooms/ar-sales",
   "/rooms/publishing-distribution",
-  "/rooms/dirty-elephant-studio",
-  "/rooms/ten-ten-entertainment",
-  "/rooms/steeped-dreams-studio",
+  "/dirtyelephantstudios",
+  "/tentenentertainment",
+  "/steepeddreamsstudio",
   "/rooms/lobby",
 ] as const;
 
 const backwardFlow = [
-  "/rooms/steeped-dreams-studio",
-  "/rooms/ten-ten-entertainment",
-  "/rooms/dirty-elephant-studio",
+  "/steepeddreamsstudio",
+  "/tentenentertainment",
+  "/dirtyelephantstudios",
   "/rooms/publishing-distribution",
   "/rooms/ar-sales",
   "/rooms/marketing",
@@ -54,6 +54,10 @@ test.describe("room transitions", () => {
       runtimeErrors.push(error.message);
     });
 
+    await page.addInitScript(() => {
+      window.sessionStorage.setItem("steeped-dreams:feeling", "chill");
+    });
+
     await page.goto(forwardFlow[0], { waitUntil: "domcontentloaded" });
     await expectRoomStable(page, forwardFlow[0]);
 
@@ -71,6 +75,10 @@ test.describe("room transitions", () => {
 
     page.on("pageerror", (error) => {
       runtimeErrors.push(error.message);
+    });
+
+    await page.addInitScript(() => {
+      window.sessionStorage.setItem("steeped-dreams:feeling", "chill");
     });
 
     await page.goto(backwardFlow[0], { waitUntil: "domcontentloaded" });

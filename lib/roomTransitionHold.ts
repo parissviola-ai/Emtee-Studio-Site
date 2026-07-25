@@ -1,5 +1,7 @@
 "use client";
 
+import { isRoomHref } from "@/lib/roomRoutes";
+
 export const ROOM_TRANSITION_HOLD_START_EVENT = "emtee:room-transition-hold-start";
 export const ROOM_HERO_READY_EVENT = "emtee:room-hero-ready";
 
@@ -40,7 +42,7 @@ function startTransitionHold({
   if (window.matchMedia("(max-width: 1023px)").matches) return;
 
   const targetPath = getTargetPath(href);
-  if (!targetPath.startsWith("/rooms/")) return;
+  if (!isRoomHref(targetPath)) return;
 
   const hero = window.document.querySelector<HTMLImageElement>(heroSelector);
   if (!hero) return;
@@ -79,7 +81,7 @@ export function startStaticTransitionHold({
   if (window.matchMedia("(max-width: 1023px)").matches) return;
 
   const targetPath = getTargetPath(href);
-  if (!targetPath.startsWith("/rooms/")) return;
+  if (!isRoomHref(targetPath)) return;
   if (!src) return;
 
   window.dispatchEvent(

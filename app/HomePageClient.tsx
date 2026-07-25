@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { startLandingTransitionHold } from "@/lib/roomTransitionHold";
 import { awaitRoomAssetsByHref, getRoomWarmNeighborhoodBySlug, warmImageAsset, warmRoomNeighborhoodBySlug } from "@/lib/warmRoomAssets";
+import { getPublicRoomHref } from "@/lib/roomRoutes";
 
 const LANDING_DESKTOP_IMAGE = "/rooms/prelobbyphotocn.png";
 const LANDING_MOBILE_IMAGE = "/rooms/prelobbyphotocn.png";
@@ -111,7 +112,7 @@ export default function Home() {
       });
 
       getRoomWarmNeighborhoodBySlug("lobby").forEach((slug) => {
-        router.prefetch(`/rooms/${slug}`);
+        router.prefetch(getPublicRoomHref(slug));
       });
       warmRoomNeighborhoodBySlug("lobby", { includeVideo: false });
     };

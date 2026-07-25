@@ -183,17 +183,32 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/rooms/orange",
-        destination: "/rooms/dirty-elephant-studio",
+        destination: "/dirtyelephantstudios",
         permanent: true,
       },
       {
         source: "/rooms/live",
-        destination: "/rooms/ten-ten-entertainment",
+        destination: "/tentenentertainment",
         permanent: true,
       },
       {
         source: "/rooms/quiet",
-        destination: "/rooms/steeped-dreams-studio",
+        destination: "/steepeddreamsstudio",
+        permanent: true,
+      },
+      {
+        source: "/rooms/dirty-elephant-studio",
+        destination: "/dirtyelephantstudios",
+        permanent: true,
+      },
+      {
+        source: "/rooms/ten-ten-entertainment",
+        destination: "/tentenentertainment",
+        permanent: true,
+      },
+      {
+        source: "/rooms/steeped-dreams-studio",
+        destination: "/steepeddreamsstudio",
         permanent: true,
       },
       {
@@ -240,6 +255,22 @@ const nextConfig: NextConfig = {
         source: "/rooms/EMTEEWebDesignDept",
         destination: "/rooms/ar-sales",
         permanent: true,
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/dirtyelephantstudios",
+        destination: "/rooms/dirty-elephant-studio",
+      },
+      {
+        source: "/tentenentertainment",
+        destination: "/rooms/ten-ten-entertainment",
+      },
+      {
+        source: "/steepeddreamsstudio",
+        destination: "/rooms/steeped-dreams-studio",
       },
     ];
   },

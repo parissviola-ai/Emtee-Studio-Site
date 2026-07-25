@@ -1,6 +1,7 @@
 "use client";
 
 import { rooms } from "@/data/rooms";
+import { getPublicRoomHref, getRoomSlugFromHref } from "@/lib/roomRoutes";
 
 const warmedImages = new Set<string>();
 const warmedVideos = new Set<string>();
@@ -151,7 +152,7 @@ function shouldSkipRoomWarm(slug: string) {
 }
 
 function getRoomHref(slug: string) {
-  return `/rooms/${slug}`;
+  return getPublicRoomHref(slug);
 }
 
 export function getRoomWarmNeighborhoodBySlug(slug?: string | null) {
@@ -209,8 +210,8 @@ export function warmRoomAssetsBySlug(slug?: string | null, options?: WarmRoomAss
 }
 
 export function warmRoomAssetsByHref(href?: string | null, options?: WarmRoomAssetOptions) {
-  if (!href?.startsWith("/rooms/")) return;
-  const slug = href.replace("/rooms/", "").split("?")[0];
+  const slug = getRoomSlugFromHref(href);
+  if (!slug) return;
   warmRoomAssetsBySlug(slug, options);
 }
 
@@ -247,7 +248,7 @@ export async function awaitRoomAssetsBySlug(slug?: string | null) {
 }
 
 export function awaitRoomAssetsByHref(href?: string | null) {
-  if (!href?.startsWith("/rooms/")) return Promise.resolve();
-  const slug = href.replace("/rooms/", "").split("?")[0];
+  const slug = getRoomSlugFromHref(href);
+  if (!slug) return Promise.resolve();
   return awaitRoomAssetsBySlug(slug);
 }

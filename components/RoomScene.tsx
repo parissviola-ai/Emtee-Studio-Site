@@ -15,6 +15,7 @@ import {
   warmRoomNeighborhoodBySlug,
 } from "@/lib/warmRoomAssets";
 import { dispatchRoomHeroReady, startRoomTransitionHold } from "@/lib/roomTransitionHold";
+import { getPublicRoomHref, isRoomHref } from "@/lib/roomRoutes";
 
 const OrangeRoomExtras = dynamic(() => import("@/components/OrangeRoomExtras"), {
   ssr: false,
@@ -42,6 +43,8 @@ export type Hotspot = {
   hoverLabel?: string;
   x: number;
   y: number;
+  stimulatedPosition?: { x: number; y: number };
+  stimulatedDirection?: "left" | "right" | "up" | "down";
   positions?: Partial<Record<"mobile" | "tablet" | "laptop" | "desktop", { x: number; y: number }>>;
   allowLargeResponsiveShift?: boolean;
   hidden?: boolean;
@@ -87,7 +90,10 @@ export type Hotspot = {
     topImageAlt?: string;
     imageGallery?: Array<{ src: string; alt: string }>;
     image?: string;
+    videoSrc?: string;
+    videoPoster?: string;
     videoEmbed?: string;
+    spotifyEmbed?: string;
     highlightsTitle?: string;
     highlights?: string[];
   };
@@ -102,6 +108,14 @@ type Room = {
   hotspots: Hotspot[];
 };
 
+type SteepedDreamsFeeling = "chill" | "stimulated";
+
+const STEEPED_DREAMS_FEELING_SESSION_KEY = "steeped-dreams:feeling";
+const STEEPED_DREAMS_GATE_POSTER = "/rooms/steeped-dreams-feeling-gate-poster.jpg";
+const STEEPED_DREAMS_GATE_VIDEO = "/rooms/steeped-dreams-feeling-gate.mp4";
+const STEEPED_DREAMS_STIMULATED_POSTER = "/rooms/steeped-dreams-stimulated-v4-poster.jpg";
+const STEEPED_DREAMS_STIMULATED_VIDEO = "/rooms/steeped-dreams-stimulated-v4.mp4";
+
 const EXPLORE_ROOMS = [
   { label: "Start Here", href: "/rooms/lobby?modal=About" },
   { label: "Artists & Partners", href: "/artist-affiliations" },
@@ -112,11 +126,11 @@ const EXPLORE_ROOMS = [
   { label: "Marketing Department", href: "/rooms/marketing" },
   { label: "A&R / Sales Department", href: "/rooms/ar-sales" },
   { label: "Publishing / Distribution Department", href: "/rooms/publishing-distribution" },
-  { label: "Dirty Elephant Studios", href: "/rooms/dirty-elephant-studio" },
-  { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
-  { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
+  { label: "Dirty Elephant Studios", href: "/dirtyelephantstudios" },
+  { label: "Ten Ten Entertainment", href: "/tentenentertainment" },
+  { label: "Steeped Dreams Studio", href: "/steepeddreamsstudio" },
 ];
-const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => item.href.startsWith("/rooms/"));
+const ROOM_SEQUENCE = EXPLORE_ROOMS.filter((item) => isRoomHref(item.href));
 const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/finishedlobby-opt.jpg": { w: 2560, h: 1280 },
   "/rooms/lobbywithconcert-opt.jpg": { w: 2560, h: 1280 },
@@ -137,6 +151,8 @@ const KNOWN_ROOM_IMAGE_SIZES: Record<string, { w: number; h: number }> = {
   "/rooms/sdspagefinal.png": { w: 1920, h: 1080 },
   "/rooms/sdspagefinal-opt.jpg": { w: 1920, h: 1080 },
   "/rooms/quietroomvid-firstframe-opt.jpg": { w: 1920, h: 1080 },
+  [STEEPED_DREAMS_GATE_POSTER]: { w: 1920, h: 1080 },
+  [STEEPED_DREAMS_STIMULATED_POSTER]: { w: 2752, h: 1536 },
   "/rooms/dirtyelephant2-opt.jpg": { w: 3840, h: 2160 },
   "/rooms/dirtyelephantgb1.png": { w: 3840, h: 2160 },
   "/rooms/dirtyelephantgb1-opt.jpg": { w: 3840, h: 2160 },
@@ -178,8 +194,8 @@ const PREVIOUS_ROOM_LINKS: Record<string, string> = {
   "ar-sales": "/rooms/marketing",
   "publishing-distribution": "/rooms/ar-sales",
   "dirty-elephant-studio": "/rooms/publishing-distribution",
-  "ten-ten-entertainment": "/rooms/dirty-elephant-studio",
-  "steeped-dreams-studio": "/rooms/ten-ten-entertainment",
+  "ten-ten-entertainment": "/dirtyelephantstudios",
+  "steeped-dreams-studio": "/tentenentertainment",
 };
 const YANCHAN_DISCOGRAPHY_SPOTLIGHT = [
   {
@@ -563,6 +579,9 @@ export default function RoomScene({
 }) {
   const router = useRouter();
   const isLiveRoom = room.slug === "ten-ten-entertainment";
+  const isSteepedDreamsRoom = room.slug === "steeped-dreams-studio";
+  const [steepedDreamsFeeling, setSteepedDreamsFeeling] = useState<SteepedDreamsFeeling | null>(null);
+  const [hasResolvedSteepedDreamsFeeling, setHasResolvedSteepedDreamsFeeling] = useState(!isSteepedDreamsRoom);
   const hasHydrated = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -588,6 +607,23 @@ export default function RoomScene({
   const [isSecureContextState, setIsSecureContextState] = useState(false);
   const [mobileTiltPan, setMobileTiltPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const prefetchedExploreRoutesRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!isSteepedDreamsRoom) {
+      setSteepedDreamsFeeling(null);
+      setHasResolvedSteepedDreamsFeeling(true);
+      return;
+    }
+
+    let storedFeeling: SteepedDreamsFeeling | null = null;
+    try {
+      const stored = window.sessionStorage.getItem(STEEPED_DREAMS_FEELING_SESSION_KEY);
+      storedFeeling = stored === "chill" || stored === "stimulated" ? stored : null;
+    } catch {}
+
+    setSteepedDreamsFeeling(storedFeeling);
+    setHasResolvedSteepedDreamsFeeling(true);
+  }, [isSteepedDreamsRoom]);
   const isMobileViewportRaw = useSyncExternalStore(
     (onStoreChange) => {
       if (typeof window === "undefined") return () => {};
@@ -636,6 +672,31 @@ export default function RoomScene({
   const tiltBaselineRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltFilteredReadingRef = useRef<{ beta: number; gamma: number } | null>(null);
   const tiltSignalSeenRef = useRef(false);
+
+  const selectSteepedDreamsFeeling = useCallback((feeling: SteepedDreamsFeeling) => {
+    backgroundVideoShouldStayPausedRef.current = false;
+    setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: false }));
+    setSteepedDreamsFeeling(feeling);
+    try {
+      window.sessionStorage.setItem(STEEPED_DREAMS_FEELING_SESSION_KEY, feeling);
+    } catch {}
+  }, [room.slug]);
+
+  const reopenSteepedDreamsFeelingGate = useCallback(() => {
+    const video = backgroundVideoRef.current;
+    if (video) {
+      video.pause();
+      try {
+        video.currentTime = 0;
+      } catch {}
+    }
+    setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: false }));
+    setSteepedDreamsFeeling(null);
+    try {
+      window.sessionStorage.removeItem(STEEPED_DREAMS_FEELING_SESSION_KEY);
+    } catch {}
+  }, [room.slug]);
+
   const shouldLoopBackgroundVideo = room.slug !== "steeped-dreams-studio";
   const shouldFreezeAfterTwoPlays = false;
   const shouldNativeLoopBackgroundVideo = shouldLoopBackgroundVideo;
@@ -888,6 +949,18 @@ export default function RoomScene({
       url.searchParams.set("mute", shouldAutoplayMutedYoutubeEmbed ? "1" : "0");
       url.searchParams.set("playsinline", "1");
       url.searchParams.set("enablejsapi", "1");
+      if (shouldAutoplayMutedYoutubeEmbed) {
+        const videoId = url.pathname.split("/").filter(Boolean).pop();
+        url.searchParams.set("controls", "0");
+        url.searchParams.set("rel", "0");
+        url.searchParams.set("modestbranding", "1");
+        url.searchParams.set("iv_load_policy", "3");
+        url.searchParams.set("fs", "0");
+        url.searchParams.set("loop", "1");
+        if (videoId) {
+          url.searchParams.set("playlist", videoId);
+        }
+      }
       return url.toString();
     } catch {
       return shouldAutoplayMutedYoutubeEmbed
@@ -951,7 +1024,7 @@ export default function RoomScene({
   const shouldShowSteepedDreamsCornerLogo =
     !!activeModal &&
     room.slug === "steeped-dreams-studio" &&
-    activeModal.title !== "Kym Tea Music";
+    activeModal.title !== "Kym Tea";
   const resolvedCornerLogo =
     activeModal?.cornerLogo ??
     (shouldShowSteepedDreamsCornerLogo
@@ -980,6 +1053,10 @@ export default function RoomScene({
   const resolvedHotspots = useMemo(
     () =>
       room.hotspots.map((spot) => {
+        const stimulatedPosition =
+          isSteepedDreamsRoom && steepedDreamsFeeling === "stimulated"
+            ? spot.stimulatedPosition
+            : undefined;
         const breakpointPosition =
           useBaseHotspotCoordinates
             ? undefined
@@ -987,11 +1064,15 @@ export default function RoomScene({
               (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
           ...spot,
-          x: breakpointPosition?.x ?? spot.x,
-          y: breakpointPosition?.y ?? spot.y,
+          x: stimulatedPosition?.x ?? breakpointPosition?.x ?? spot.x,
+          y: stimulatedPosition?.y ?? breakpointPosition?.y ?? spot.y,
+          direction:
+            isSteepedDreamsRoom && steepedDreamsFeeling === "stimulated"
+              ? spot.stimulatedDirection ?? spot.direction
+              : spot.direction,
         };
       }),
-    [hotspotBreakpoint, room.hotspots, useBaseHotspotCoordinates]
+    [hotspotBreakpoint, isSteepedDreamsRoom, room.hotspots, steepedDreamsFeeling, useBaseHotspotCoordinates]
   );
   const lobbyStartHereAnchor = isLobbyRoom ? resolvedHotspots.find((spot) => spot.id === "start-here") : undefined;
   const lobbyStartHereSpot =
@@ -1069,11 +1150,27 @@ export default function RoomScene({
         isMobileViewport: backgroundUsesMobileLayout,
       });
   const backgroundOffsetY = isTenTenRoom ? 50 : 0;
-  const backgroundImageSrc =
-    isWebsiteDesignRoom && backgroundUsesMobileLayout ? "/rooms/websitess-mobile-v2-opt.jpg" : room.backgroundImage;
+  const backgroundImageSrc = isSteepedDreamsRoom
+    ? steepedDreamsFeeling === "stimulated"
+      ? STEEPED_DREAMS_STIMULATED_POSTER
+      : steepedDreamsFeeling === "chill"
+        ? room.backgroundImage
+        : STEEPED_DREAMS_GATE_POSTER
+    : isWebsiteDesignRoom && backgroundUsesMobileLayout
+      ? "/rooms/websitess-mobile-v2-opt.jpg"
+      : room.backgroundImage;
   const knownBackgroundImageSize = KNOWN_ROOM_IMAGE_SIZES[backgroundImageSrc];
-  const baseActiveBackgroundVideo =
-    backgroundUsesMobileLayout && room.backgroundVideoMobile ? room.backgroundVideoMobile : room.backgroundVideo;
+  const baseActiveBackgroundVideo = isSteepedDreamsRoom
+    ? steepedDreamsFeeling === "stimulated"
+      ? STEEPED_DREAMS_STIMULATED_VIDEO
+      : steepedDreamsFeeling === "chill"
+        ? backgroundUsesMobileLayout && room.backgroundVideoMobile
+          ? room.backgroundVideoMobile
+          : room.backgroundVideo
+        : undefined
+    : backgroundUsesMobileLayout && room.backgroundVideoMobile
+      ? room.backgroundVideoMobile
+      : room.backgroundVideo;
   const activeBackgroundVideo = backgroundVideoEnabled ? baseActiveBackgroundVideo : undefined;
   const useContainedBackground = false;
   const baseBackgroundObjectPositionY = shouldUseFixedBaseBackgroundPosition
@@ -1165,7 +1262,12 @@ export default function RoomScene({
     [backgroundUsesMobileLayout, coverMetricsObjectPositionX, coverMetricsObjectPositionY, imageNaturalSize, sceneScale, viewportH, viewportW]
   );
   const hotspotImageMetrics = isMobileViewport ? mobileImageMetrics : desktopCoverMetrics;
-  const canShowPinHelper = PIN_HELPER_ENABLED && !!hotspotImageMetrics && !isModalOpen && !exploreOpen;
+  const canShowPinHelper =
+    PIN_HELPER_ENABLED &&
+    !!hotspotImageMetrics &&
+    !isModalOpen &&
+    !exploreOpen &&
+    (!isSteepedDreamsRoom || !!steepedDreamsFeeling);
   const lobbyMobileHotspotsReady = !isMobileViewport || !!hotspotImageMetrics;
   const sceneReady =
     hasHydrated && viewportKnown && !!imageNaturalSize && (!requiresMetricBasedHotspots || !!hotspotImageMetrics);
@@ -1175,6 +1277,7 @@ export default function RoomScene({
   const visibleHotspots = useMemo(
     () =>
       resolvedHotspots.filter((spot) => {
+        if (isSteepedDreamsRoom && !steepedDreamsFeeling) return false;
         if (spot.hidden) return false;
         if (spot.id === "next-room") return false;
         if (isLobbyRoom && !hasHydrated && spot.id === "explore") return false;
@@ -1186,7 +1289,7 @@ export default function RoomScene({
         if (showAllRoomHotspots) return true;
         return (spot.tier ?? "core") === "core";
       }),
-    [hasHydrated, isHotspotTierPilotRoom, isLobbyRoom, lobbyResponsiveIsMobile, resolvedHotspots, showAllRoomHotspots]
+    [hasHydrated, isHotspotTierPilotRoom, isLobbyRoom, isSteepedDreamsRoom, lobbyResponsiveIsMobile, resolvedHotspots, showAllRoomHotspots, steepedDreamsFeeling]
   );
   const connectableDots = visibleHotspots.filter((spot) => spot.variant === "dot");
   const showDotConnectors =
@@ -1202,7 +1305,7 @@ export default function RoomScene({
   const nextRoomExploreEntry = nextRoomHotspotHref
     ? ROOM_SEQUENCE.find((item) => item.href === nextRoomHotspotHref)
     : null;
-  const currentRoomHref = `/rooms/${room.slug}`;
+  const currentRoomHref = getPublicRoomHref(room.slug);
   const currentExploreIndex = ROOM_SEQUENCE.findIndex((item) => item.href === currentRoomHref);
   const fallbackNextExploreEntry =
     currentExploreIndex >= 0
@@ -2008,7 +2111,7 @@ export default function RoomScene({
 
   const announceRoomHeroReady = useCallback(() => {
     if (typeof window === "undefined") return;
-    dispatchRoomHeroReady(`/rooms/${room.slug}`);
+    dispatchRoomHeroReady(getPublicRoomHref(room.slug));
     if (room.slug !== "lobby") return;
     if (lobbyHeroReadyRef.current) return;
     lobbyHeroReadyRef.current = true;
@@ -2173,25 +2276,29 @@ export default function RoomScene({
       isOrangeRoom && spot.id === "apply-custom-production" ? "translate-x-3 sm:translate-x-4" : "";
     const isChillOutCommunityDot = spot.id === "chill-out-community";
     const isQuietAccentDot =
-      room.slug === "steeped-dreams-studio" &&
-      (spot.id === "kym-tea-music" ||
-        spot.id === "eight-d-mixes" ||
-        spot.id === "steeped-dreams-studio" ||
-        spot.id === "chill-out-community");
+      room.slug === "steeped-dreams-studio" && steepedDreamsFeeling === "chill";
+    const isStimulatedAccentDot =
+      room.slug === "steeped-dreams-studio" && steepedDreamsFeeling === "stimulated";
     const isWebsiteDesignEnterDot =
       room.slug === "EMTEEWebDesign" && spot.id === "website-design-enter-website";
     const dotBase = useDirtyElephantDotAccent
       ? "rounded-full bg-[#ff9f3f] shadow-[0_0_0_2px_rgba(255,159,63,0.35),0_0_22px_rgba(255,159,63,0.7)]"
+      : isStimulatedAccentDot
+        ? "rounded-full bg-cyan-300 shadow-[0_0_0_2px_rgba(192,132,252,0.48),0_0_16px_rgba(34,211,238,0.85),0_0_28px_rgba(236,72,153,0.58)]"
       : isWebsiteDesignEnterDot
         ? "rounded-full bg-[#d6ae66] shadow-[0_0_0_2px_rgba(214,174,102,0.45),0_0_24px_rgba(214,174,102,0.8)]"
         : "rounded-full bg-white shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_18px_rgba(255,255,255,0.55)]";
     const haloBase = useDirtyElephantDotAccent
       ? "bg-[#ff9f3f]/35"
+      : isStimulatedAccentDot
+        ? "bg-fuchsia-400/45"
       : isWebsiteDesignEnterDot
         ? "bg-[#d6ae66]/40"
       : "bg-white/20";
     const ringBase = useDirtyElephantDotAccent
       ? "border-[#ff9f3f]/70"
+      : isStimulatedAccentDot
+        ? "border-violet-300/80"
       : isWebsiteDesignEnterDot
           ? "border-[#d6ae66]/85"
       : "border-white/45";
@@ -2282,8 +2389,10 @@ export default function RoomScene({
             "pointer-events-auto cursor-pointer",
             "opacity-100 translate-y-0",
             "transition-all duration-200",
-            isQuietAccentDot
-              ? "border-emerald-200/24 bg-emerald-300/8 text-emerald-50/88 shadow-[0_0_0_1px_rgba(110,231,183,0.14),0_14px_40px_rgba(0,0,0,0.52),0_0_18px_rgba(16,185,129,0.16)] group-hover:border-emerald-200/38 group-hover:bg-emerald-300/12 group-hover:text-emerald-50 group-hover:[text-shadow:0_0_8px_rgba(110,231,183,0.36)] group-hover:shadow-[0_0_0_1px_rgba(110,231,183,0.2),0_14px_40px_rgba(0,0,0,0.52),0_0_20px_rgba(16,185,129,0.24)]"
+            isStimulatedAccentDot
+              ? "border-fuchsia-300/40 bg-violet-500/14 text-cyan-50 shadow-[0_0_0_1px_rgba(192,132,252,0.24),0_14px_40px_rgba(0,0,0,0.52),0_0_18px_rgba(236,72,153,0.34),0_0_30px_rgba(34,211,238,0.18)] group-hover:border-cyan-200/65 group-hover:bg-fuchsia-400/18 group-hover:text-white group-hover:[text-shadow:0_0_9px_rgba(103,232,249,0.68)] group-hover:shadow-[0_0_0_1px_rgba(34,211,238,0.32),0_14px_40px_rgba(0,0,0,0.52),0_0_22px_rgba(236,72,153,0.48),0_0_34px_rgba(139,92,246,0.32)]"
+              : isQuietAccentDot
+                ? "border-emerald-200/24 bg-emerald-300/8 text-emerald-50/88 shadow-[0_0_0_1px_rgba(110,231,183,0.14),0_14px_40px_rgba(0,0,0,0.52),0_0_18px_rgba(16,185,129,0.16)] group-hover:border-emerald-200/38 group-hover:bg-emerald-300/12 group-hover:text-emerald-50 group-hover:[text-shadow:0_0_8px_rgba(110,231,183,0.36)] group-hover:shadow-[0_0_0_1px_rgba(110,231,183,0.2),0_14px_40px_rgba(0,0,0,0.52),0_0_20px_rgba(16,185,129,0.24)]"
               : "group-hover:border-white/40 group-hover:bg-black/72 group-hover:text-white group-hover:[text-shadow:0_0_10px_rgba(255,255,255,0.48)] group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.16),0_14px_40px_rgba(0,0,0,0.52),0_0_22px_rgba(255,255,255,0.16)]",
             isClickedLabelVisible
               ? "pointer-events-auto cursor-pointer opacity-100 translate-y-0 border-white/45 bg-black/75 text-white [text-shadow:0_0_12px_rgba(255,255,255,0.52)] shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_16px_44px_rgba(0,0,0,0.55),0_0_24px_rgba(255,255,255,0.18)]"
@@ -2450,6 +2559,7 @@ export default function RoomScene({
         ) : null}
         {activeBackgroundVideo ? (
           <video
+            key={activeBackgroundVideo}
             ref={setBackgroundVideoNode}
             className={[
               "pointer-events-none absolute inset-0 h-full w-full object-cover select-none [-webkit-user-drag:none] transition-opacity duration-150",
@@ -2461,7 +2571,11 @@ export default function RoomScene({
             playsInline
             disablePictureInPicture
             disableRemotePlayback
-            poster={room.slug === "ten-ten-entertainment" ? backgroundImageSrc : undefined}
+            poster={
+              room.slug === "ten-ten-entertainment" || activeBackgroundVideo === STEEPED_DREAMS_STIMULATED_VIDEO
+                ? backgroundImageSrc
+                : undefined
+            }
             preload={room.slug === "ten-ten-entertainment" || room.slug === "lobby" || room.slug === "steeped-dreams-studio" ? "auto" : "metadata"}
             onLoadedData={() => {
               setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: true }));
@@ -2495,6 +2609,10 @@ export default function RoomScene({
               const video = event.currentTarget;
               backgroundVideoShouldStayPausedRef.current = true;
               video.pause();
+              if (activeBackgroundVideo === STEEPED_DREAMS_STIMULATED_VIDEO) {
+                setBackgroundVideoVisibleByRoom((prev) => ({ ...prev, [room.slug]: false }));
+                return;
+              }
               if (Number.isFinite(video.duration) && video.duration > 0) {
                 try {
                   video.currentTime = Math.max(0, video.duration - 0.033);
@@ -2567,6 +2685,71 @@ export default function RoomScene({
           </div>
         ) : null}
       </div>
+
+      {isSteepedDreamsRoom && !hasResolvedSteepedDreamsFeeling ? (
+        <div className="absolute inset-0 z-40 bg-black" aria-hidden="true" />
+      ) : null}
+
+      {isSteepedDreamsRoom && hasResolvedSteepedDreamsFeeling && !steepedDreamsFeeling ? (
+        <section className="absolute inset-0 z-40 flex items-center justify-center overflow-hidden bg-black px-5" data-no-pan>
+          <video
+            src={STEEPED_DREAMS_GATE_VIDEO}
+            poster={STEEPED_DREAMS_GATE_POSTER}
+            autoPlay
+            loop
+            muted
+            playsInline
+            disablePictureInPicture
+            disableRemotePlayback
+            preload="auto"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-black/20" />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="steeped-dreams-feeling-title"
+            className="relative w-full max-w-[440px] rounded-lg border border-white/22 bg-black/70 px-5 py-6 text-center shadow-[0_24px_70px_rgba(0,0,0,0.56)] backdrop-blur-xl sm:px-7 sm:py-7"
+          >
+            <h1 id="steeped-dreams-feeling-title" className="text-balance font-serif text-[27px] font-normal leading-[1.2] text-white [text-shadow:0_2px_18px_rgba(0,0,0,0.4)] sm:text-[31px]">
+              How are you feeling today?
+            </h1>
+            <div className="mt-6 grid grid-cols-2 gap-2.5" role="group" aria-label="Choose how you are feeling">
+              <button
+                type="button"
+                onClick={() => selectSteepedDreamsFeeling("chill")}
+                className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#f5d6a0]/45 bg-[#f5d6a0]/14 px-4 py-2.5 text-sm font-semibold text-[#fff4df] shadow-[0_10px_28px_rgba(0,0,0,0.28)] transition hover:border-[#f5d6a0]/70 hover:bg-[#f5d6a0]/22 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f5d6a0]"
+              >
+                Chill
+              </button>
+              <button
+                type="button"
+                onClick={() => selectSteepedDreamsFeeling("stimulated")}
+                className="inline-flex min-h-11 items-center justify-center rounded-md border border-cyan-200/45 bg-cyan-300/14 px-4 py-2.5 text-sm font-semibold text-cyan-50 shadow-[0_10px_28px_rgba(0,0,0,0.28)] transition hover:border-cyan-100/70 hover:bg-cyan-300/22 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
+              >
+                Stimulated
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {isSteepedDreamsRoom && steepedDreamsFeeling && !isModalOpen && !exploreOpen ? (
+        <div className="absolute right-3 top-20 z-[110]" data-no-pan>
+          <button
+            type="button"
+            onClick={reopenSteepedDreamsFeelingGate}
+            className={[
+              "inline-flex items-center justify-center rounded-full border bg-black/48 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] shadow-[0_10px_28px_rgba(0,0,0,0.28)] backdrop-blur-md transition hover:bg-black/64",
+              steepedDreamsFeeling === "stimulated"
+                ? "border-fuchsia-300/35 text-cyan-50/88 shadow-[0_0_18px_rgba(236,72,153,0.2),0_10px_28px_rgba(0,0,0,0.28)] hover:border-cyan-200/58 hover:text-white"
+                : "border-emerald-200/24 text-emerald-50/82 hover:border-emerald-200/42 hover:text-emerald-50",
+            ].join(" ")}
+          >
+            Change Feeling
+          </button>
+        </div>
+      ) : null}
 
       {PIN_HELPER_ENABLED && (showPinHelper || canShowPinHelper) ? (
         <div className="absolute left-3 top-3 z-[120] flex flex-col items-start gap-2" data-no-pan>

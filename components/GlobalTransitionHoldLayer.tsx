@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ROOM_HERO_READY_EVENT, ROOM_TRANSITION_HOLD_START_EVENT } from "@/lib/roomTransitionHold";
+import { isRoomHref } from "@/lib/roomRoutes";
 
 type TransitionHoldState = {
   fading: boolean;
@@ -43,7 +44,7 @@ export default function GlobalTransitionHoldLayer() {
       }>).detail;
 
       if (!detail?.src || !detail.targetPath) return;
-      if ((detail.sourcePath ?? "").startsWith("/rooms/")) return;
+      if (isRoomHref(detail.sourcePath)) return;
       setTransitionHold({ ...detail, fading: false });
     };
 

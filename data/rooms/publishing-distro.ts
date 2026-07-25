@@ -5,7 +5,7 @@ export const publishingDistroRoom: Room = {
     title: "Catalog Room",
     backgroundImage: "/rooms/cdshop-opt.jpg",
     hotspots: [
-      { id: "next-room", label: "Artist: Yanchan Produced", href: "/rooms/dirty-elephant-studio", x: 90, y: 17, direction: "right" },
+      { id: "next-room", label: "Artist: Yanchan Produced", href: "/dirtyelephantstudios", x: 90, y: 17, direction: "right" },
       {
     id: "publishing-distribution-workshop",
     label: "Publishing/Distribution Workshop",

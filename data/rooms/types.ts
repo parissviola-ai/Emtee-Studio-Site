@@ -4,6 +4,8 @@ export type Hotspot = {
   hoverLabel?: string;
   x: number;
   y: number;
+  stimulatedPosition?: { x: number; y: number };
+  stimulatedDirection?: "left" | "right" | "up" | "down";
   positions?: Partial<Record<"mobile" | "tablet" | "laptop" | "desktop", { x: number; y: number }>>;
   allowLargeResponsiveShift?: boolean;
   hidden?: boolean;
@@ -45,7 +47,10 @@ export type Hotspot = {
     topImageAlt?: string;
     imageGallery?: Array<{ src: string; alt: string }>;
     image?: string;
+    videoSrc?: string;
+    videoPoster?: string;
     videoEmbed?: string;
+    spotifyEmbed?: string;
     highlightsTitle?: string;
     highlights?: string[];
   };

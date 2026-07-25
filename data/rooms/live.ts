@@ -6,12 +6,18 @@ export const liveRoom: Room = {
     backgroundImage: "/rooms/finaltentendone-poster-opt.png",
     backgroundVideo: "/rooms/finaltentendone.mp4",
     hotspots: [
-      { id: "next-room", label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio", x: 90, y:  17, direction: "right" },
+      { id: "next-room", label: "Steeped Dreams Studio", href: "/steepeddreamsstudio", x: 90, y:  17, direction: "right" },
       {
         id: "ten-ten-showcase",
         label: "Ten Ten Showcase",
         x: 20.37,
         y: 28.9,
+        positions: {
+          laptop: { x: 50, y: 50 },
+          tablet: { x: 50, y: 50 },
+          mobile: { x: 50, y: 50 },
+        },
+        allowLargeResponsiveShift: true,
         direction: "up",
         variant: "dot",
         modal: {
@@ -34,8 +40,13 @@ export const liveRoom: Room = {
       {
         id: "ten-ten-entertainment-packages",
         label: "Book Slot",
-        x: 49.9,
-        y: 59.04,
+        x: 19.59,
+        y: 55.11,
+        positions: {
+          laptop: { x: 21.85, y: 63.32 },
+          tablet: { x: 21.85, y: 63.32 },
+        },
+        allowLargeResponsiveShift: true,
         direction: "up",
         variant: "dot",
         modal: {
@@ -78,7 +89,6 @@ export const liveRoom: Room = {
             "Make $20 per ticket for the first 15 & 50/50 split after with no limitations",
             "Access to networking event",
             "1 song placement on Ten Ten Playlist for 7 days",
-            "Cities: Toronto, London",
           ],
           primaryLabel: 'DM "UP & COMING"',
           primaryHref: "https://ig.me/m/tenten_ent",
@@ -114,7 +124,7 @@ export const liveRoom: Room = {
             "Content Package included (Raw Performance Video + Pictures)",
             "Personal Driver (Drop off in GTA only)",
             "Free one month trial for Ten Ten Membership (valued at $35 +tax per month)",
-            "Cities: Toronto, London",
+            "Cities: Toronto, London, Barrie, Montreal, Vancouver, DC",
           ],
           primaryLabel: 'DM "RISING STAR"',
           primaryHref: "https://ig.me/m/tenten_ent",
@@ -146,8 +156,13 @@ export const liveRoom: Room = {
       {
         id: "ten-ten-entertainment-set-performance-development",
         label: "Live Set Performance Development",
-        x: 19.59,
-        y: 55.11,
+        x: 49.9,
+        y: 59.04,
+        positions: {
+          laptop: { x: 50.05, y: 78 },
+          tablet: { x: 50.05, y: 78 },
+          mobile: { x: 50.05, y: 78 },
+        },
         direction: "right",
         variant: "dot",
         modal: {
@@ -165,6 +180,11 @@ export const liveRoom: Room = {
         label: "Ten Ten Community",
         x: 72.75,
         y: 54.06,
+        positions: {
+          laptop: { x: 74, y: 63.45 },
+          tablet: { x: 74, y: 63.45 },
+          mobile: { x: 74, y: 63.45 },
+        },
         direction: "up",
         variant: "dot",
         modal: {
@@ -195,6 +215,11 @@ export const liveRoom: Room = {
         label: "Mike Cannz",
         x: 78.01,
         y: 26.37,
+        positions: {
+          laptop: { x: 50, y: 35 },
+          tablet: { x: 50, y: 35 },
+          mobile: { x: 50, y: 35 },
+        },
         direction: "left",
         variant: "dot",
         modal: {

@@ -64,7 +64,7 @@ export const musicRoom: Room = {
       y: 47.53,
       direction: "down",
       variant: "dot",
-      href: "/rooms/dirty-elephant-studio",
+      href: "/dirtyelephantstudios",
     },
     
   ],

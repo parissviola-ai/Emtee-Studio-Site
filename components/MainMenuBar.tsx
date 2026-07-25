@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react
 import { rooms } from "@/data/rooms";
 import { startStaticTransitionHold } from "@/lib/roomTransitionHold";
 import { awaitRoomAssetsByHref, warmRoomAssetsByHref } from "@/lib/warmRoomAssets";
+import { getPublicRoomHref, isRoomHref } from "@/lib/roomRoutes";
 
 type NavLink = { label: string; mobileLabel?: string; href: string };
 
@@ -37,9 +38,9 @@ const RESOURCE_LINKS: NavLink[] = [
 ];
 
 const CASE_STUDY_LINKS: NavLink[] = [
-  { label: "Dirty Elephant Studios", href: "/rooms/dirty-elephant-studio" },
-  { label: "Ten Ten Entertainment", href: "/rooms/ten-ten-entertainment" },
-  { label: "Steeped Dreams Studio", href: "/rooms/steeped-dreams-studio" },
+  { label: "Dirty Elephant Studios", href: "/dirtyelephantstudios" },
+  { label: "Ten Ten Entertainment", href: "/tentenentertainment" },
+  { label: "Steeped Dreams Studio", href: "/steepeddreamsstudio" },
   { label: "Case Studies", href: "/case-studies" },
 ];
 
@@ -99,12 +100,12 @@ export default function MainMenuBar() {
       "/case-studies",
       "/artist-affiliations",
       "/news",
-      ...rooms.map((room) => `/rooms/${room.slug}`),
+      ...rooms.map((room) => getPublicRoomHref(room.slug)),
     ]);
     const ambientRoomHrefs = new Set<string>([
       "/rooms/lobby",
       ...RESOURCE_LINKS.map((item) => item.href),
-      ...CASE_STUDY_LINKS.map((item) => item.href).filter((href) => href.startsWith("/rooms/")),
+      ...CASE_STUDY_LINKS.map((item) => item.href).filter(isRoomHref),
     ]);
 
     const warmRoutes = () => {
@@ -161,7 +162,7 @@ export default function MainMenuBar() {
   }
 
   const prefetchRoomRoute = useCallback((href: string) => {
-    if (!href.startsWith("/rooms/")) return;
+    if (!isRoomHref(href)) return;
     if (prefetchedRoomRoutesRef.current.has(href)) return;
     prefetchedRoomRoutesRef.current.add(href);
     router.prefetch(href);
@@ -170,7 +171,7 @@ export default function MainMenuBar() {
 
   async function navigateToRoom(href: string) {
     logRoomNav("nav:click", { from: pathname, to: href, source: "main-menu" });
-    if (!pathname.startsWith("/rooms/") && href === "/rooms/lobby") {
+    if (!isRoomHref(pathname) && href === "/rooms/lobby") {
       startStaticTransitionHold({
         href,
         objectFit: "cover",
@@ -263,7 +264,7 @@ export default function MainMenuBar() {
                 onFocus={() => prefetchRoomRoute(item.href)}
                 onTouchStart={() => prefetchRoomRoute(item.href)}
                 onClick={(event) => {
-                  if (!item.href.startsWith("/rooms/")) return;
+                  if (!isRoomHref(item.href)) return;
                   event.preventDefault();
                   void navigateToRoom(item.href);
                 }}
@@ -312,7 +313,7 @@ export default function MainMenuBar() {
                       onFocus={() => prefetchRoomRoute(item.href)}
                       onTouchStart={() => prefetchRoomRoute(item.href)}
                       onClick={(event) => {
-                        if (!item.href.startsWith("/rooms/")) return;
+                        if (!isRoomHref(item.href)) return;
                         event.preventDefault();
                         void navigateToRoom(item.href);
                       }}
@@ -341,7 +342,7 @@ export default function MainMenuBar() {
                       onFocus={() => prefetchRoomRoute(item.href)}
                       onTouchStart={() => prefetchRoomRoute(item.href)}
                       onClick={(event) => {
-                        if (!item.href.startsWith("/rooms/")) return;
+                        if (!isRoomHref(item.href)) return;
                         event.preventDefault();
                         void navigateToRoom(item.href);
                       }}

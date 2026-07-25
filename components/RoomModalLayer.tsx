@@ -144,6 +144,8 @@ export default function RoomModalLayer({
   const isMikeCannzModal = roomSlug === "ten-ten-entertainment" && currentModal.title === "Mike Cannz";
   const shouldUseLandscapeTopImage = isMikeCannzModal;
   const isMobileWhoWeAreVideo = isMobileViewport && currentModal.title === "Who We Are" && !!currentModal.videoEmbed;
+  const [nativeVideoControlsVisible, setNativeVideoControlsVisible] = useState(false);
+  const [nativeVideoMuted, setNativeVideoMuted] = useState(true);
   const hasModalBody = !!currentModal.body?.trim();
   const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
   const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
@@ -167,6 +169,11 @@ export default function RoomModalLayer({
     isPilotFoldablePackageModal && !isPilotModalIncludesExpanded
       ? parsedModalBody.includes.slice(0, 3)
       : parsedModalBody.includes;
+
+  useEffect(() => {
+    setNativeVideoControlsVisible(false);
+    setNativeVideoMuted(true);
+  }, [currentModal.title]);
 
   const handleModalTarget = (href: string, backModal?: any) => {
     const modalLinkId = href.slice(6);
@@ -592,6 +599,7 @@ export default function RoomModalLayer({
   if (
     activeModal.secondaryHref &&
     activeModal.secondaryLabel &&
+    !isSteepedDreamsChillOutModal &&
     !(modalHasCaseStudyAction && isResourcesAction(activeModal.secondaryLabel, activeModal.secondaryHref))
   ) {
     footerActions.push(
@@ -809,14 +817,88 @@ export default function RoomModalLayer({
           </div>
 
             <div className={["min-w-0 w-full", isSteepedDreamsChillOutModal ? "mx-auto max-w-[496px]" : isResourceOnlyModal || isDirtyElephantAboutModal ? "mx-auto max-w-[430px]" : shouldUseCompactYanchanMusicLayout ? "mx-auto max-w-[494px]" : ""].join(" ")}>
-            {activeModal.videoEmbed ? (
+            {activeModal.spotifyEmbed ? (
               <div
                 className={[
                   "mt-6 flex justify-center transition-all duration-700 ease-out",
                   revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                 ].join(" ")}
               >
-                <div className={["relative w-full overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_20px_60px_rgba(0,0,0,0.6)]", isYanchanLiveModal ? "max-w-[520px]" : "max-w-[640px]"].join(" ")}>
+                <div className="w-full max-w-[640px] overflow-hidden rounded-xl border border-emerald-200/20 bg-black/35 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+                  <iframe
+                    src={activeModal.spotifyEmbed}
+                    title={`${activeModal.title} on Spotify`}
+                    width="100%"
+                    height="352"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    className="block w-full border-0"
+                  />
+                </div>
+              </div>
+            ) : activeModal.videoSrc ? (
+              <div
+                className={[
+                  "mt-6 flex justify-center transition-all duration-700 ease-out",
+                  revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                ].join(" ")}
+              >
+                <div className={["relative w-full", isSteepedDreamsChillOutModal ? "max-w-[640px]" : "max-w-[640px]"].join(" ")}>
+                  <div
+                    className="relative overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+                    onPointerEnter={() => setNativeVideoControlsVisible(true)}
+                    onPointerLeave={() => setNativeVideoControlsVisible(false)}
+                    onFocus={() => setNativeVideoControlsVisible(true)}
+                    onBlur={() => setNativeVideoControlsVisible(false)}
+                  >
+                    <video
+                      src={activeModal.videoSrc}
+                      poster={activeModal.videoPoster}
+                      autoPlay
+                      muted={nativeVideoMuted}
+                      loop
+                      playsInline
+                      controls={nativeVideoControlsVisible}
+                      preload="metadata"
+                      tabIndex={0}
+                      className="aspect-video w-full bg-black object-cover"
+                    />
+                    {!nativeVideoControlsVisible ? (
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/25" />
+                    ) : null}
+                  </div>
+                  {isSteepedDreamsChillOutModal ? (
+                    <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => setNativeVideoMuted((muted) => !muted)}
+                        aria-label={nativeVideoMuted ? "Unmute video" : "Mute video"}
+                        className="inline-flex items-center justify-center rounded-full border border-white/24 bg-black/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white/90 transition hover:border-white/40 hover:bg-white/10 hover:text-white"
+                      >
+                        {nativeVideoMuted ? "Unmute" : "Mute"}
+                      </button>
+                      {activeModal.secondaryHref && activeModal.secondaryLabel ? (
+                        <a
+                          href={activeModal.secondaryHref}
+                          target={activeModal.secondaryHref.startsWith("http") ? "_blank" : undefined}
+                          rel={activeModal.secondaryHref.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="inline-flex items-center justify-center rounded-full border border-white/18 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-black shadow-[0_12px_32px_rgba(255,255,255,0.16)] transition hover:-translate-y-0.5 hover:bg-white/90"
+                        >
+                          {activeModal.secondaryLabel}
+                        </a>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : activeModal.videoEmbed ? (
+              <div
+                className={[
+                  "mt-6 flex justify-center transition-all duration-700 ease-out",
+                  revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+                ].join(" ")}
+              >
+                <div className={["group/video relative w-full overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_20px_60px_rgba(0,0,0,0.6)]", isYanchanLiveModal ? "max-w-[520px]" : "max-w-[640px]"].join(" ")}>
                   <div className="relative aspect-video">
                     <iframe
                       ref={iframeRef}
@@ -842,7 +924,14 @@ export default function RoomModalLayer({
                           if (nextMuted) muteYoutube();
                           else unmuteYoutube();
                         }}
-                        className={`absolute bottom-3 right-3 rounded-full border border-white/25 bg-black/50 ${uniformModalButtonSizing} text-white/85 backdrop-blur-md transition hover:bg-black/65 hover:text-white`}
+                        className={[
+                          "absolute bottom-3 right-3 rounded-full border border-white/25 bg-black/50",
+                          uniformModalButtonSizing,
+                          "text-white/85 backdrop-blur-md transition hover:bg-black/65 hover:text-white",
+                          isSteepedDreamsChillOutModal
+                            ? "opacity-0 focus:opacity-100 group-hover/video:opacity-100"
+                            : "",
+                        ].join(" ")}
                       >
                         {videoMuted ? "Unmute" : "Mute"}
                       </button>

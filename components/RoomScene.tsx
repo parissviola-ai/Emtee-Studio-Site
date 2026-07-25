@@ -2753,6 +2753,7 @@ export default function RoomScene({
           <button
             type="button"
             onClick={reopenSteepedDreamsFeelingGate}
+            aria-label="Switch between Chill and Stimulated"
             className={[
               "inline-flex items-center justify-center rounded-full border bg-black/48 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] shadow-[0_10px_28px_rgba(0,0,0,0.28)] backdrop-blur-md transition hover:bg-black/64",
               steepedDreamsFeeling === "stimulated"
@@ -2760,7 +2761,7 @@ export default function RoomScene({
                 : "border-emerald-200/24 text-emerald-50/82 hover:border-emerald-200/42 hover:text-emerald-50",
             ].join(" ")}
           >
-            Change Feeling
+            Switch Mood
           </button>
         </div>
       ) : null}

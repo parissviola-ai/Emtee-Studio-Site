@@ -2691,7 +2691,10 @@ export default function RoomScene({
       ) : null}
 
       {isSteepedDreamsRoom && hasResolvedSteepedDreamsFeeling && !steepedDreamsFeeling ? (
-        <section className="absolute inset-0 z-40 flex items-center justify-center overflow-hidden bg-black px-5" data-no-pan>
+        <section
+          className="absolute inset-0 z-40 flex items-center justify-center overflow-hidden bg-black px-5"
+          data-steeped-dreams-feeling-gate="true"
+        >
           <video
             src={STEEPED_DREAMS_GATE_VIDEO}
             poster={STEEPED_DREAMS_GATE_POSTER}
@@ -2703,6 +2706,17 @@ export default function RoomScene({
             disableRemotePlayback
             preload="auto"
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            data-steeped-dreams-feeling-background="true"
+            style={
+              isMobileViewport
+                ? {
+                    objectPosition: `calc(50% + ${displayedPan.x}px) calc(${backgroundObjectPositionY}% + ${displayedPan.y}px)`,
+                    WebkitTouchCallout: "none",
+                    WebkitUserSelect: "none",
+                    userSelect: "none",
+                  }
+                : undefined
+            }
           />
           <div className="pointer-events-none absolute inset-0 bg-black/20" />
           <div

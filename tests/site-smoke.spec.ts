@@ -185,3 +185,30 @@ test("mobile start here flow can open what we offer without closing the modal", 
   await page.getByRole("button", { name: /^What We Offer →$/ }).click();
   await expect(page.getByRole("heading", { name: "What We Offer" })).toBeVisible();
 });
+
+test("mobile Steeped Dreams feeling gate can pan across its background", async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.name.includes("mobile"), "mobile-only interaction");
+
+  await page.addInitScript(() => {
+    window.sessionStorage.removeItem("steeped-dreams:feeling");
+  });
+  await page.goto("/steepeddreamsstudio", { waitUntil: "domcontentloaded" });
+
+  const gate = page.locator('[data-steeped-dreams-feeling-gate="true"]');
+  const background = page.locator('[data-steeped-dreams-feeling-background="true"]');
+  await expect(gate).toBeVisible();
+  await expect(page.getByRole("heading", { name: "How are you feeling today?" })).toBeVisible();
+
+  const initialPosition = await background.evaluate((element) => (element as HTMLVideoElement).style.objectPosition);
+  await gate.evaluate((element) => {
+    const start = new Touch({ identifier: 1, target: element, clientX: 300, clientY: 500 });
+    const moved = new Touch({ identifier: 1, target: element, clientX: 140, clientY: 500 });
+    element.dispatchEvent(new TouchEvent("touchstart", { bubbles: true, cancelable: true, touches: [start] }));
+    element.dispatchEvent(new TouchEvent("touchmove", { bubbles: true, cancelable: true, touches: [moved] }));
+    element.dispatchEvent(new TouchEvent("touchend", { bubbles: true, cancelable: true, touches: [] }));
+  });
+
+  await expect.poll(() => background.evaluate((element) => (element as HTMLVideoElement).style.objectPosition)).not.toBe(initialPosition);
+  await expect(page.getByRole("button", { name: "Chill", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Stimulated", exact: true })).toBeVisible();
+});

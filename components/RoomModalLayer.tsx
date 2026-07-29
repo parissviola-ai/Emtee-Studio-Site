@@ -1028,7 +1028,18 @@ export default function RoomModalLayer({
                       revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                     ].join(" ")}
                   >
-                    {isTabbedImageGallery ? (
+                    {isMobileViewport && activeModal.mobileImage ? (
+                      <div className="relative overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
+                        <NextImage
+                          src={activeModal.mobileImage.src}
+                          alt={activeModal.mobileImage.alt}
+                          width={activeModal.mobileImage.width ?? 1200}
+                          height={activeModal.mobileImage.height ?? 675}
+                          sizes="calc(100vw - 4.5rem)"
+                          className="h-auto w-full object-contain"
+                        />
+                      </div>
+                    ) : isTabbedImageGallery ? (
                       <>
                         <div
                           className="mx-auto inline-flex max-w-full items-center gap-1 rounded-lg border border-white/14 bg-black/25 p-1"

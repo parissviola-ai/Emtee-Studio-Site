@@ -86,6 +86,12 @@ export const quietRoom: Room = {
         variant: "dot",
         modal: {
           title: "PERI",
+          mobileImage: {
+            src: "/rooms/peri-profile-mobile.jpg",
+            alt: "Three portraits of PERI, Canadian-Guyanese music producer, songwriter and engineer",
+            width: 1920,
+            height: 1080,
+          },
           imageGallery: [
             {
               src: "/rooms/peri-portrait-smiling.jpg",

@@ -87,8 +87,23 @@ export const quietRoom: Room = {
           body:
             "8D audio (eight-dimensional audio) is a type of spatial audio editing that makes a standard stereo song feel as if it is moving in a 360-degree circle around the listener's head. Producers create an effect by automating panning, volume shifts, and spatial reverb, making sounds travel, rotate, and change distance to the ear.\n\nThe listener's brain continues re-locating the source as it moves, making 8D immersive, trippy, and cinematic. This auditory illusion is designed specifically for headphone users, and it allows listeners to have a calming auditory experience.",
           links: [
+            { label: "PERI", href: "modal:peri" },
             { label: "8D Mixes on Spotify", href: "https://open.spotify.com/artist/5l3q6xxRsELcm2cIJNey8R" },
           ],
+        },
+      },
+      {
+        id: "peri",
+        label: "PERI",
+        x: 0,
+        y: 0,
+        hidden: true,
+        modal: {
+          title: "PERI",
+          topImage: "/rooms/peri-profile.jpg",
+          topImageAlt: "PERI, Canadian-Guyanese music producer, songwriter and engineer",
+          body:
+            "PERI is a Canadian-Guyanese music producer, songwriter and engineer. PERI currently works closely with Emtee Music Group where he previously worked as an A&R. Today, PERI works closely with Kym Tea and Steeped Dreams Studio as he develops 8D and acoustic mixes for the neuro-diverse community to enjoy with comfort. PERI is currently available for projects requiring 8D mixes.",
         },
       },
       {

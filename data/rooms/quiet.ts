@@ -132,7 +132,7 @@ export const quietRoom: Room = {
           body:
             "8D audio (eight-dimensional audio) is a type of spatial audio editing that makes a standard stereo song feel as if it is moving in a 360-degree circle around the listener's head. Producers create an effect by automating panning, volume shifts, and spatial reverb, making sounds travel, rotate, and change distance to the ear.\n\nThe listener's brain continues re-locating the source as it moves, making 8D immersive, trippy, and cinematic. This auditory illusion is designed specifically for headphone users, and it allows listeners to have a calming auditory experience.",
           links: [
-            { label: "8D Mixes on Spotify", href: "https://open.spotify.com/artist/5l3q6xxRsELcm2cIJNey8R" },
+            { label: "Spotify", href: "https://open.spotify.com/artist/5l3q6xxRsELcm2cIJNey8R" },
           ],
         },
       },

@@ -18,19 +18,21 @@ export const quietRoom: Room = {
         variant: "dot",
         modal: {
           title: "Upcoming Events",
-          imageGalleryVariant: "posters",
+          imageGalleryVariant: "tabs",
           imageGallery: [
-            {
-              src: "/rooms/steeped-dreams-after-the-almost-sunflower-sessions.jpg",
-              alt: "After the Almost: The Sunflower Sessions event flyer for August 16, 2026",
-              width: 1880,
-              height: 940,
-            },
             {
               src: "/rooms/steeped-dreams-kym-klay-session.jpg",
               alt: "Kym's Klay Session sensory art experience event flyer for March 21, 2026",
+              label: "March 2026",
               width: 894,
               height: 1071,
+            },
+            {
+              src: "/rooms/steeped-dreams-after-the-almost-sunflower-sessions.jpg",
+              alt: "After the Almost: The Sunflower Sessions event flyer for August 16, 2026",
+              label: "August 2026",
+              width: 1880,
+              height: 940,
             },
           ],
           body: "",

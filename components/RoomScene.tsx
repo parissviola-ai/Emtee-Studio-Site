@@ -88,8 +88,8 @@ export type Hotspot = {
     hideTitle?: boolean;
     topImage?: string;
     topImageAlt?: string;
-    imageGallery?: Array<{ src: string; alt: string; width?: number; height?: number }>;
-    imageGalleryVariant?: "photos" | "posters";
+    imageGallery?: Array<{ src: string; alt: string; label?: string; width?: number; height?: number }>;
+    imageGalleryVariant?: "photos" | "posters" | "tabs";
     image?: string;
     videoSrc?: string;
     videoPoster?: string;

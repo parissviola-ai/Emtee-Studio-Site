@@ -146,6 +146,11 @@ export default function RoomModalLayer({
   const isMobileWhoWeAreVideo = isMobileViewport && currentModal.title === "Who We Are" && !!currentModal.videoEmbed;
   const [nativeVideoControlsVisible, setNativeVideoControlsVisible] = useState(false);
   const [nativeVideoMuted, setNativeVideoMuted] = useState(true);
+  const [activeImageGalleryIndex, setActiveImageGalleryIndex] = useState(0);
+  const isTabbedImageGallery = currentModal.imageGalleryVariant === "tabs";
+  const activeImageGalleryItem = isTabbedImageGallery
+    ? currentModal.imageGallery?.[activeImageGalleryIndex] ?? currentModal.imageGallery?.[0]
+    : null;
   const hasModalBody = !!currentModal.body?.trim();
   const activeResourceContext = isLivePackagesModal ? null : getResourceContext(currentModal.title);
   const parsedModalBody = parseIncludesFromModalBody(currentModal.body);
@@ -173,6 +178,7 @@ export default function RoomModalLayer({
   useEffect(() => {
     setNativeVideoControlsVisible(false);
     setNativeVideoMuted(true);
+    setActiveImageGalleryIndex(0);
   }, [currentModal.title]);
 
   const handleModalTarget = (href: string, backModal?: any) => {
@@ -1016,13 +1022,55 @@ export default function RoomModalLayer({
                 ) : activeModal.imageGallery?.length ? (
                   <div
                     className={[
-                      activeModal.imageGalleryVariant === "posters"
+                      activeModal.imageGalleryVariant === "posters" || isTabbedImageGallery
                         ? "mb-4 grid gap-5 transition-all duration-700 ease-out"
                         : "mb-4 grid gap-3 sm:grid-cols-3 transition-all duration-700 ease-out",
                       revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                     ].join(" ")}
                   >
-                    {activeModal.imageGallery.map((image: any) => (
+                    {isTabbedImageGallery ? (
+                      <>
+                        <div
+                          className="mx-auto inline-flex max-w-full items-center gap-1 rounded-lg border border-white/14 bg-black/25 p-1"
+                          role="tablist"
+                          aria-label="Upcoming event dates"
+                        >
+                          {activeModal.imageGallery.map((image: any, index: number) => (
+                            <button
+                              key={image.src}
+                              type="button"
+                              role="tab"
+                              aria-selected={index === activeImageGalleryIndex}
+                              onClick={() => setActiveImageGalleryIndex(index)}
+                              className={[
+                                "inline-flex min-h-9 min-w-[118px] items-center justify-center rounded-md border px-3 py-1.5 text-xs font-medium transition",
+                                index === activeImageGalleryIndex
+                                  ? "border-emerald-200/48 bg-emerald-300/18 text-white shadow-[0_0_14px_rgba(110,231,183,0.18)]"
+                                  : "border-transparent bg-transparent text-white/68 hover:border-white/14 hover:bg-white/[0.06] hover:text-white",
+                              ].join(" ")}
+                            >
+                              {image.label}
+                            </button>
+                          ))}
+                        </div>
+                        {activeImageGalleryItem ? (
+                          <div
+                            key={activeImageGalleryItem.src}
+                            role="tabpanel"
+                            className="relative overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]"
+                          >
+                            <NextImage
+                              src={activeImageGalleryItem.src}
+                              alt={activeImageGalleryItem.alt}
+                              width={activeImageGalleryItem.width ?? 1200}
+                              height={activeImageGalleryItem.height ?? 1600}
+                              sizes="(max-width: 900px) 100vw, 900px"
+                              className="h-auto max-h-[72vh] w-full bg-black/20 object-contain"
+                            />
+                          </div>
+                        ) : null}
+                      </>
+                    ) : activeModal.imageGallery.map((image: any) => (
                       <div
                         key={image.src}
                         className="relative overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]"

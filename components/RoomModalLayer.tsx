@@ -1016,7 +1016,9 @@ export default function RoomModalLayer({
                 ) : activeModal.imageGallery?.length ? (
                   <div
                     className={[
-                      "mb-4 grid gap-3 sm:grid-cols-3 transition-all duration-700 ease-out",
+                      activeModal.imageGalleryVariant === "posters"
+                        ? "mb-4 grid gap-5 transition-all duration-700 ease-out"
+                        : "mb-4 grid gap-3 sm:grid-cols-3 transition-all duration-700 ease-out",
                       revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                     ].join(" ")}
                   >
@@ -1028,10 +1030,14 @@ export default function RoomModalLayer({
                         <NextImage
                           src={image.src}
                           alt={image.alt}
-                          width={1200}
-                          height={1600}
-                          sizes="(max-width: 640px) 100vw, 33vw"
-                          className="h-full max-h-[320px] w-full object-cover"
+                          width={image.width ?? 1200}
+                          height={image.height ?? 1600}
+                          sizes={activeModal.imageGalleryVariant === "posters" ? "(max-width: 900px) 100vw, 900px" : "(max-width: 640px) 100vw, 33vw"}
+                          className={
+                            activeModal.imageGalleryVariant === "posters"
+                              ? "h-auto max-h-[72vh] w-full bg-black/20 object-contain"
+                              : "h-full max-h-[320px] w-full object-cover"
+                          }
                         />
                       </div>
                     ))}

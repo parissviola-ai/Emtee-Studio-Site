@@ -449,6 +449,7 @@ export default function RoomModalLayer({
         (
           isYanchanMusicModal ||
           isTenTenCommunityModal ||
+          (roomSlug === "steeped-dreams-studio" && currentModal.title === "PERI") ||
           roomSlug === "ten-ten-entertainment"
         ) &&
         ["Instagram", "TikTok", "YouTube", "Spotify", "Facebook", "Wikipedia"].includes(normalizedSocialIconLabel) &&

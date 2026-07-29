@@ -85,8 +85,26 @@ export const quietRoom: Room = {
         variant: "dot",
         modal: {
           title: "PERI",
-          topImage: "/rooms/peri-profile.jpg",
-          topImageAlt: "PERI, Canadian-Guyanese music producer, songwriter and engineer",
+          imageGallery: [
+            {
+              src: "/rooms/peri-portrait-smiling.jpg",
+              alt: "PERI smiling and holding the brim of his hat",
+              width: 1365,
+              height: 2048,
+            },
+            {
+              src: "/rooms/peri-portrait-standing.jpg",
+              alt: "PERI standing against a warm yellow backdrop",
+              width: 1365,
+              height: 2048,
+            },
+            {
+              src: "/rooms/peri-portrait-jacket.jpg",
+              alt: "PERI with a leather jacket over his shoulder",
+              width: 1365,
+              height: 2048,
+            },
+          ],
           body:
             "PERI is a Canadian-Guyanese music producer, songwriter and engineer. PERI currently works closely with Emtee Music Group where he previously worked as an A&R. Today, PERI works closely with Kym Tea and Steeped Dreams Studio as he develops 8D and acoustic mixes for the neuro-diverse community to enjoy with comfort. PERI is currently available for projects requiring 8D mixes.",
           links: [

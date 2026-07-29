@@ -72,7 +72,8 @@ export const quietRoom: Room = {
         variant: "dot",
         modal: {
           title: "Kym Tea Music",
-          body: "Spotify player coming soon.",
+          spotifyEmbed: "https://open.spotify.com/embed/artist/2Q0QjQdYdGZMHNFcpbpH6o?utm_source=generator&si=eaf79c46e33149ab",
+          body: "",
         },
       },
       {

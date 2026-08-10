@@ -93,6 +93,8 @@ export default function RoomModalLayer({
   const isYanchanDiscographyModal = currentModal.title === "Discography";
   const isJoinCommunityModal = currentModal.title === "Join Community";
   const isSteepedDreamsChillOutModal = currentModal.title === "Overstimulated? Chill Out";
+  const isSteepedDreamsEightDMixesModal =
+    roomSlug === "steeped-dreams-studio" && currentModal.title === "8D Mixes";
   const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
   const isCustomProductionModal = currentModal.title === "Apply For Custom Production";
   const isDirtyElephantAboutModal =
@@ -794,9 +796,9 @@ export default function RoomModalLayer({
                   <NextImage
                     src={resolvedCornerLogo}
                     alt={resolvedCornerLogoAlt ?? activeModal.title}
-                    width={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 144 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 120 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 120 : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? 96 : 66}
-                    height={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 72 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 48 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 48 : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? 96 : 26}
-                    sizes={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? "144px" : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? "120px" : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "120px" : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? "96px" : "66px"}
+                    width={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 144 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 120 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 96 : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? 96 : 66}
+                    height={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? 72 : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? 48 : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? 38 : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? 96 : 26}
+                    sizes={resolvedCornerLogo === "/rooms/TenTenlogo.png" ? "144px" : resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ? "120px" : resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "96px" : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png" ? "96px" : "66px"}
                     className={[
                       resolvedCornerLogo === "/rooms/TenTenlogo.png"
                         ? "h-auto w-auto max-w-[132px] object-contain"
@@ -804,8 +806,8 @@ export default function RoomModalLayer({
                         ? "h-auto w-auto max-w-[110px] object-contain"
                         : resolvedCornerLogo === "/rooms/sdslogoforcard.png"
                         ? shouldOverlayCornerLogo
-                          ? "h-auto w-auto max-w-[88px] object-contain"
-                          : "h-auto w-auto max-w-[110px] object-contain"
+                          ? "h-auto w-auto max-w-[72px] object-contain"
+                          : "h-auto w-auto max-w-[88px] object-contain"
                         : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png"
                           ? "h-auto w-auto max-w-[84px] object-contain"
                         : "h-auto w-auto max-w-[60px] object-contain",
@@ -974,7 +976,7 @@ export default function RoomModalLayer({
               </div>
             ) : null}
 
-            <div className={[isSteepedDreamsChillOutModal && !hasModalBody ? "mt-0 grid gap-0" : isSteepedDreamsChillOutModal ? "mt-4 grid gap-4" : shouldUseCompactYanchanMusicLayout ? "mt-3 grid gap-2.5" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
+            <div className={[isSteepedDreamsChillOutModal && !hasModalBody ? "mt-0 grid gap-0" : isSteepedDreamsChillOutModal ? "mt-4 grid gap-4" : isSteepedDreamsEightDMixesModal ? "mt-8 grid gap-4" : shouldUseCompactYanchanMusicLayout ? "mt-3 grid gap-2.5" : "mt-4 grid gap-4", activeResourceContext ? "md:grid-cols-1" : ""].join(" ")}>
               {!activeResourceContext ? <div className="min-w-0">
                 {isCarouselModal && activeCarouselSlide ? (
                   <div className={["mb-4 transition-all duration-700 ease-out", revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"].join(" ")}>

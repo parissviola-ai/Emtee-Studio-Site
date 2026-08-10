@@ -1,6 +1,8 @@
 export type Hotspot = {
   id: string;
   label: string;
+  stimulatedLabel?: string;
+  stimulatedModalTitle?: string;
   hoverLabel?: string;
   x: number;
   y: number;

@@ -160,6 +160,8 @@ export const quietRoom: Room = {
       {
         id: "chill-out-community",
         label: "Overstimulated? Chill Out",
+        stimulatedLabel: "Understimulated? Get Hyped",
+        stimulatedModalTitle: "Understimulated? Get Hyped",
         x: 45.81,
         y: 47.32,
         stimulatedPosition: { x: 25.27, y: 73.61 },

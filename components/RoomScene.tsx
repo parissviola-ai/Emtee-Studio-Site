@@ -40,6 +40,8 @@ const MOBILE_TILT_ENABLED = false;
 export type Hotspot = {
   id: string;
   label: string;
+  stimulatedLabel?: string;
+  stimulatedModalTitle?: string;
   hoverLabel?: string;
   x: number;
   y: number;
@@ -1059,6 +1061,8 @@ export default function RoomScene({
           isSteepedDreamsRoom && steepedDreamsFeeling === "stimulated"
             ? spot.stimulatedPosition
             : undefined;
+        const useStimulatedContent =
+          isSteepedDreamsRoom && steepedDreamsFeeling === "stimulated";
         const breakpointPosition =
           useBaseHotspotCoordinates
             ? undefined
@@ -1066,6 +1070,11 @@ export default function RoomScene({
               (hotspotBreakpoint === "desktop" ? undefined : spot.positions?.desktop);
         return {
           ...spot,
+          label: useStimulatedContent ? spot.stimulatedLabel ?? spot.label : spot.label,
+          modal:
+            useStimulatedContent && spot.stimulatedModalTitle && spot.modal
+              ? { ...spot.modal, title: spot.stimulatedModalTitle }
+              : spot.modal,
           x: stimulatedPosition?.x ?? breakpointPosition?.x ?? spot.x,
           y: stimulatedPosition?.y ?? breakpointPosition?.y ?? spot.y,
           direction:

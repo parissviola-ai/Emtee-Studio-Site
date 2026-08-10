@@ -92,7 +92,9 @@ export default function RoomModalLayer({
   const isYanchanMusicModal = currentModal.title === "Yanchan Produced Music";
   const isYanchanDiscographyModal = currentModal.title === "Discography";
   const isJoinCommunityModal = currentModal.title === "Join Community";
-  const isSteepedDreamsChillOutModal = currentModal.title === "Overstimulated? Chill Out";
+  const isSteepedDreamsChillOutModal =
+    roomSlug === "steeped-dreams-studio" &&
+    ["Overstimulated? Chill Out", "Understimulated? Get Hyped"].includes(currentModal.title);
   const isSteepedDreamsEightDMixesModal =
     roomSlug === "steeped-dreams-studio" && currentModal.title === "8D Mixes";
   const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
@@ -181,10 +183,10 @@ export default function RoomModalLayer({
 
   useEffect(() => {
     setNativeVideoControlsVisible(false);
-    setNativeVideoMuted(currentModal.title !== "Overstimulated? Chill Out");
+    setNativeVideoMuted(!isSteepedDreamsChillOutModal);
     setActiveImageGalleryIndex(currentModal.defaultImageGalleryIndex ?? 0);
     setExpandedImageGalleryItem(null);
-  }, [currentModal.title]);
+  }, [currentModal.title, isSteepedDreamsChillOutModal]);
 
   useEffect(() => {
     if (!expandedImageGalleryItem) return;

@@ -180,7 +180,7 @@ export default function RoomModalLayer({
   useEffect(() => {
     setNativeVideoControlsVisible(false);
     setNativeVideoMuted(currentModal.title !== "Overstimulated? Chill Out");
-    setActiveImageGalleryIndex(0);
+    setActiveImageGalleryIndex(currentModal.defaultImageGalleryIndex ?? 0);
   }, [currentModal.title]);
 
   const handleModalTarget = (href: string, backModal?: any) => {

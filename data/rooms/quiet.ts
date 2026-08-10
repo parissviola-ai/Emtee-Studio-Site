@@ -10,15 +10,16 @@ export const quietRoom: Room = {
       { id: "next-room", label: "Lobby", href: "/rooms/lobby", x: 90, y: 17, direction: "right" },
       {
         id: "upcoming-events",
-        label: "Upcoming Events",
+        label: "Event",
         x: 34.41,
         y: 30.88,
         stimulatedPosition: { x: 89.51, y: 47.53 },
         direction: "right",
         variant: "dot",
         modal: {
-          title: "Upcoming Events",
+          title: "Event",
           imageGalleryVariant: "tabs",
+          defaultImageGalleryIndex: 1,
           imageGallery: [
             {
               src: "/rooms/steeped-dreams-kym-klay-session.jpg",

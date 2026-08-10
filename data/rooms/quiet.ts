@@ -92,6 +92,7 @@ export const quietRoom: Room = {
           links: [
             { label: "Spotify", href: "https://open.spotify.com/artist/5l3q6xxRsELcm2cIJNey8R" },
             { label: "About The Engineer", href: "modal:peri" },
+            { label: "Request an 8D Mix", href: "mailto:contact@EmteeMusicGroup.com?subject=8D%20Mix%20Request" },
           ],
         },
       },
@@ -133,6 +134,7 @@ export const quietRoom: Room = {
             "PERI is a Canadian-Guyanese music producer, songwriter and engineer. PERI currently works closely with Emtee Music Group where he previously worked as an A&R. Today, PERI works closely with Kym Tea and Steeped Dreams Studio as he develops 8D and acoustic mixes for the neuro-diverse community to enjoy with comfort. PERI is currently available for projects requiring 8D mixes.",
           links: [
             { label: "Spotify", href: "https://open.spotify.com/artist/5l3q6xxRsELcm2cIJNey8R" },
+            { label: "Request an 8D Mix", href: "mailto:contact@EmteeMusicGroup.com?subject=8D%20Mix%20Request" },
           ],
         },
       },

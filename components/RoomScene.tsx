@@ -41,7 +41,6 @@ export type Hotspot = {
   id: string;
   label: string;
   stimulatedLabel?: string;
-  stimulatedModalTitle?: string;
   hoverLabel?: string;
   x: number;
   y: number;
@@ -100,6 +99,12 @@ export type Hotspot = {
     spotifyEmbed?: string;
     highlightsTitle?: string;
     highlights?: string[];
+  };
+  stimulatedModal?: {
+    title: string;
+    body: string;
+    videoSrc?: string;
+    videoPoster?: string;
   };
 };
 
@@ -716,7 +721,9 @@ export default function RoomScene({
   const shouldStartVideoMuted = useCallback(
     (modal: Hotspot["modal"]) => {
       const shouldAllowSoundOnOpen =
-        modal?.title === "Who We Are" || modal?.title === "Yanchan Produced Live";
+        modal?.title === "Who We Are" ||
+        modal?.title === "Yanchan Produced Live" ||
+        modal?.title === "Understimulated? Get Hyped";
       return !shouldAllowSoundOnOpen;
     },
     []
@@ -1072,8 +1079,8 @@ export default function RoomScene({
           ...spot,
           label: useStimulatedContent ? spot.stimulatedLabel ?? spot.label : spot.label,
           modal:
-            useStimulatedContent && spot.stimulatedModalTitle && spot.modal
-              ? { ...spot.modal, title: spot.stimulatedModalTitle }
+            useStimulatedContent && spot.stimulatedModal
+              ? spot.stimulatedModal
               : spot.modal,
           x: stimulatedPosition?.x ?? breakpointPosition?.x ?? spot.x,
           y: stimulatedPosition?.y ?? breakpointPosition?.y ?? spot.y,

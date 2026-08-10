@@ -2,7 +2,6 @@ export type Hotspot = {
   id: string;
   label: string;
   stimulatedLabel?: string;
-  stimulatedModalTitle?: string;
   hoverLabel?: string;
   x: number;
   y: number;
@@ -58,6 +57,12 @@ export type Hotspot = {
     spotifyEmbed?: string;
     highlightsTitle?: string;
     highlights?: string[];
+  };
+  stimulatedModal?: {
+    title: string;
+    body: string;
+    videoSrc?: string;
+    videoPoster?: string;
   };
 };
 

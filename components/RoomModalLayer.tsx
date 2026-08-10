@@ -95,6 +95,8 @@ export default function RoomModalLayer({
   const isSteepedDreamsChillOutModal =
     roomSlug === "steeped-dreams-studio" &&
     ["Overstimulated? Chill Out", "Understimulated? Get Hyped"].includes(currentModal.title);
+  const isSteepedDreamsNativeChillOutModal =
+    roomSlug === "steeped-dreams-studio" && currentModal.title === "Overstimulated? Chill Out";
   const isSteepedDreamsEightDMixesModal =
     roomSlug === "steeped-dreams-studio" && currentModal.title === "8D Mixes";
   const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
@@ -624,7 +626,7 @@ export default function RoomModalLayer({
   if (
     activeModal.secondaryHref &&
     activeModal.secondaryLabel &&
-    !isSteepedDreamsChillOutModal &&
+    !isSteepedDreamsNativeChillOutModal &&
     !(modalHasCaseStudyAction && isResourcesAction(activeModal.secondaryLabel, activeModal.secondaryHref))
   ) {
     footerActions.push(
@@ -828,6 +830,7 @@ export default function RoomModalLayer({
                           ? "h-auto w-auto max-w-[84px] object-contain"
                         : "h-auto w-auto max-w-[60px] object-contain",
                       resolvedCornerLogo === "/logotransparent.png" ? "invert" : "",
+                      resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "translate-x-1 -translate-y-1" : "",
                       resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ||
                       resolvedCornerLogo === "/rooms/TenTenlogo.png" ||
                       resolvedCornerLogo === "/rooms/sdslogoforcard.png" ||

@@ -47,7 +47,7 @@ export type Hotspot = {
     topImageAlt?: string;
     mobileImage?: { src: string; alt: string; width?: number; height?: number };
     imageGallery?: Array<{ src: string; alt: string; label?: string; width?: number; height?: number }>;
-    imageGalleryVariant?: "photos" | "posters" | "tabs";
+    imageGalleryVariant?: "photos" | "posters" | "tabs" | "event-grid";
     defaultImageGalleryIndex?: number;
     image?: string;
     videoSrc?: string;

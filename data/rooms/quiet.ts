@@ -18,8 +18,7 @@ export const quietRoom: Room = {
         variant: "dot",
         modal: {
           title: "Event",
-          imageGalleryVariant: "tabs",
-          defaultImageGalleryIndex: 1,
+          imageGalleryVariant: "event-grid",
           imageGallery: [
             {
               src: "/rooms/steeped-dreams-kym-klay-session.jpg",

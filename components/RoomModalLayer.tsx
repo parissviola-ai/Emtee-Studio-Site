@@ -149,7 +149,9 @@ export default function RoomModalLayer({
   const [nativeVideoControlsVisible, setNativeVideoControlsVisible] = useState(false);
   const [nativeVideoMuted, setNativeVideoMuted] = useState(true);
   const [activeImageGalleryIndex, setActiveImageGalleryIndex] = useState(0);
+  const [expandedImageGalleryItem, setExpandedImageGalleryItem] = useState<any>(null);
   const isTabbedImageGallery = currentModal.imageGalleryVariant === "tabs";
+  const isEventImageGrid = currentModal.imageGalleryVariant === "event-grid";
   const activeImageGalleryItem = isTabbedImageGallery
     ? currentModal.imageGallery?.[activeImageGalleryIndex] ?? currentModal.imageGallery?.[0]
     : null;
@@ -181,7 +183,19 @@ export default function RoomModalLayer({
     setNativeVideoControlsVisible(false);
     setNativeVideoMuted(currentModal.title !== "Overstimulated? Chill Out");
     setActiveImageGalleryIndex(currentModal.defaultImageGalleryIndex ?? 0);
+    setExpandedImageGalleryItem(null);
   }, [currentModal.title]);
+
+  useEffect(() => {
+    if (!expandedImageGalleryItem) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setExpandedImageGalleryItem(null);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [expandedImageGalleryItem]);
 
   const handleModalTarget = (href: string, backModal?: any) => {
     const modalLinkId = href.slice(6);
@@ -1025,13 +1039,36 @@ export default function RoomModalLayer({
                 ) : activeModal.imageGallery?.length ? (
                   <div
                     className={[
-                      activeModal.imageGalleryVariant === "posters" || isTabbedImageGallery
+                      isEventImageGrid
+                        ? "mb-4 grid grid-cols-2 gap-3 transition-all duration-700 ease-out sm:gap-5"
+                        : activeModal.imageGalleryVariant === "posters" || isTabbedImageGallery
                         ? "mb-4 grid gap-5 transition-all duration-700 ease-out"
                         : "mb-4 grid gap-3 sm:grid-cols-3 transition-all duration-700 ease-out",
                       revealStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
                     ].join(" ")}
                   >
-                    {isMobileViewport && activeModal.mobileImage ? (
+                    {isEventImageGrid ? activeModal.imageGallery.map((image: any) => (
+                      <button
+                        key={image.src}
+                        type="button"
+                        onClick={() => setExpandedImageGalleryItem(image)}
+                        aria-label={`View ${image.label ?? "event"} flyer`}
+                        className="group/flyer min-w-0 overflow-hidden rounded-lg border border-white/14 bg-black/25 text-left shadow-[0_16px_38px_rgba(0,0,0,0.38)] transition hover:-translate-y-0.5 hover:border-emerald-200/42 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200/70"
+                      >
+                        <span className="relative block aspect-[4/5] overflow-hidden bg-black/30">
+                          <NextImage
+                            src={image.src}
+                            alt={image.alt}
+                            fill
+                            sizes="(max-width: 640px) 45vw, 400px"
+                            className="object-contain transition duration-300 group-hover/flyer:scale-[1.02]"
+                          />
+                        </span>
+                        <span className="block px-3 py-2 text-center text-xs font-medium text-white/82 sm:text-sm">
+                          {image.label}
+                        </span>
+                      </button>
+                    )) : isMobileViewport && activeModal.mobileImage ? (
                       <div className="relative overflow-hidden rounded-2xl shadow-[0_22px_60px_rgba(0,0,0,0.55)]">
                         <NextImage
                           src={activeModal.mobileImage.src}
@@ -1443,6 +1480,41 @@ export default function RoomModalLayer({
           </div>
         </div>
       </div>
+      {expandedImageGalleryItem ? (
+        <div
+          className="fixed inset-0 z-20 flex items-center justify-center p-3 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${expandedImageGalleryItem.label ?? "Event"} flyer`}
+        >
+          <button
+            type="button"
+            aria-label="Close expanded flyer"
+            onClick={() => setExpandedImageGalleryItem(null)}
+            className="absolute inset-0 bg-black/88 backdrop-blur-sm"
+          />
+          <div className="relative z-10 flex max-h-[calc(100svh-1.5rem)] max-w-[min(96vw,1100px)] items-center justify-center sm:max-h-[calc(100svh-3rem)]">
+            <button
+              type="button"
+              onClick={() => setExpandedImageGalleryItem(null)}
+              aria-label="Close expanded flyer"
+              title="Close"
+              className="absolute right-2 top-2 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/28 bg-black/70 text-base font-semibold text-white transition hover:border-white/50 hover:bg-black/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            >
+              X
+            </button>
+            <NextImage
+              src={expandedImageGalleryItem.src}
+              alt={expandedImageGalleryItem.alt}
+              width={expandedImageGalleryItem.width ?? 1600}
+              height={expandedImageGalleryItem.height ?? 1200}
+              sizes="96vw"
+              priority
+              className="max-h-[calc(100svh-1.5rem)] w-auto max-w-full rounded-lg object-contain shadow-[0_28px_90px_rgba(0,0,0,0.72)] sm:max-h-[calc(100svh-3rem)]"
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

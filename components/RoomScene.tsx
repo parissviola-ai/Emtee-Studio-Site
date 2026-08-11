@@ -105,6 +105,8 @@ export type Hotspot = {
     body: string;
     videoSrc?: string;
     videoPoster?: string;
+    secondaryLabel?: string;
+    secondaryHref?: string;
   };
 };
 

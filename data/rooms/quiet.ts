@@ -165,6 +165,8 @@ export const quietRoom: Room = {
           title: "Understimulated? Get Hyped",
           videoSrc: "/rooms/steeped-dreams-get-hyped.mp4",
           videoPoster: "/rooms/steeped-dreams-get-hyped-poster.jpg",
+          secondaryLabel: "Watch on YouTube",
+          secondaryHref: "https://www.youtube.com/watch?v=Ojnr3EuNCc8",
           body: "",
         },
         x: 45.81,

@@ -95,8 +95,6 @@ export default function RoomModalLayer({
   const isSteepedDreamsChillOutModal =
     roomSlug === "steeped-dreams-studio" &&
     ["Overstimulated? Chill Out", "Understimulated? Get Hyped"].includes(currentModal.title);
-  const isSteepedDreamsNativeChillOutModal =
-    roomSlug === "steeped-dreams-studio" && currentModal.title === "Overstimulated? Chill Out";
   const isSteepedDreamsEightDMixesModal =
     roomSlug === "steeped-dreams-studio" && currentModal.title === "8D Mixes";
   const shouldOverlayCornerLogo = isSteepedDreamsChillOutModal && resolvedCornerLogo === "/rooms/sdslogoforcard.png";
@@ -626,7 +624,7 @@ export default function RoomModalLayer({
   if (
     activeModal.secondaryHref &&
     activeModal.secondaryLabel &&
-    !isSteepedDreamsNativeChillOutModal &&
+    !isSteepedDreamsChillOutModal &&
     !(modalHasCaseStudyAction && isResourcesAction(activeModal.secondaryLabel, activeModal.secondaryHref))
   ) {
     footerActions.push(

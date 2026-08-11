@@ -26,6 +26,7 @@ export const quietRoom: Room = {
               label: "March 2026",
               width: 894,
               height: 1071,
+              fit: "cover",
             },
             {
               src: "/rooms/steeped-dreams-after-the-almost-august-2026.jpg",

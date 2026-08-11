@@ -1064,7 +1064,10 @@ export default function RoomModalLayer({
                             alt={image.alt}
                             fill
                             sizes="(max-width: 640px) 45vw, 400px"
-                            className="object-contain transition duration-300 group-hover/flyer:scale-[1.02]"
+                            className={[
+                              image.fit === "cover" ? "object-cover" : "object-contain",
+                              "transition duration-300 group-hover/flyer:scale-[1.02]",
+                            ].join(" ")}
                           />
                         </span>
                         <span className="block px-3 py-2 text-center text-xs font-medium text-white/82 sm:text-sm">

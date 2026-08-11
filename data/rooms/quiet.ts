@@ -34,6 +34,7 @@ export const quietRoom: Room = {
               label: "August 2026",
               width: 1236,
               height: 1600,
+              fit: "cover",
             },
           ],
           body: "",

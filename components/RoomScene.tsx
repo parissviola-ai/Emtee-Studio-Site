@@ -2744,7 +2744,7 @@ export default function RoomScene({
             className="relative w-full max-w-[440px] rounded-lg border border-white/22 bg-black/70 px-5 py-6 text-center shadow-[0_24px_70px_rgba(0,0,0,0.56)] backdrop-blur-xl sm:px-7 sm:py-7"
           >
             <h1 id="steeped-dreams-feeling-title" className="text-balance font-serif text-[27px] font-normal leading-[1.2] text-white [text-shadow:0_2px_18px_rgba(0,0,0,0.4)] sm:text-[31px]">
-              How are you feeling today?
+              How are you feeling?
             </h1>
             <div className="mt-6 grid grid-cols-2 gap-2.5" role="group" aria-label="Choose how you are feeling">
               <button
@@ -2752,14 +2752,14 @@ export default function RoomScene({
                 onClick={() => selectSteepedDreamsFeeling("chill")}
                 className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#f5d6a0]/45 bg-[#f5d6a0]/14 px-4 py-2.5 text-sm font-semibold text-[#fff4df] shadow-[0_10px_28px_rgba(0,0,0,0.28)] transition hover:border-[#f5d6a0]/70 hover:bg-[#f5d6a0]/22 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f5d6a0]"
               >
-                Chill
+                Overstimulated
               </button>
               <button
                 type="button"
                 onClick={() => selectSteepedDreamsFeeling("stimulated")}
                 className="inline-flex min-h-11 items-center justify-center rounded-md border border-cyan-200/45 bg-cyan-300/14 px-4 py-2.5 text-sm font-semibold text-cyan-50 shadow-[0_10px_28px_rgba(0,0,0,0.28)] transition hover:border-cyan-100/70 hover:bg-cyan-300/22 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
               >
-                Stimulated
+                Understimulated
               </button>
             </div>
           </div>
@@ -2771,7 +2771,7 @@ export default function RoomScene({
           <button
             type="button"
             onClick={reopenSteepedDreamsFeelingGate}
-            aria-label="Switch between Chill and Stimulated"
+            aria-label="Switch between Overstimulated and Understimulated"
             className={[
               "inline-flex items-center justify-center rounded-full border bg-black/48 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] shadow-[0_10px_28px_rgba(0,0,0,0.28)] backdrop-blur-md transition hover:bg-black/64",
               steepedDreamsFeeling === "stimulated"

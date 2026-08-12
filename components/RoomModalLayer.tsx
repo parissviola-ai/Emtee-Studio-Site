@@ -828,7 +828,7 @@ export default function RoomModalLayer({
                           ? "h-auto w-auto max-w-[84px] object-contain"
                         : "h-auto w-auto max-w-[60px] object-contain",
                       resolvedCornerLogo === "/logotransparent.png" ? "invert" : "",
-                      resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "translate-x-1 -translate-y-1" : "",
+                      resolvedCornerLogo === "/rooms/sdslogoforcard.png" ? "translate-x-1" : "",
                       resolvedCornerLogo === "/rooms/yanchanblack6-removebg.png" ||
                       resolvedCornerLogo === "/rooms/TenTenlogo.png" ||
                       resolvedCornerLogo === "/rooms/sdslogoforcard.png" ||

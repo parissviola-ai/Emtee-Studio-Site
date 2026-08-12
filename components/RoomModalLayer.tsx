@@ -822,8 +822,8 @@ export default function RoomModalLayer({
                         ? "h-auto w-auto max-w-[110px] object-contain"
                         : resolvedCornerLogo === "/rooms/sdslogoforcard.png"
                         ? shouldOverlayCornerLogo
-                          ? "h-auto w-auto max-w-[72px] object-contain"
-                          : "h-auto w-auto max-w-[88px] object-contain"
+                          ? "h-auto w-auto max-w-[64px] object-contain"
+                          : "h-auto w-auto max-w-[80px] object-contain"
                         : resolvedCornerLogo === "/rooms/dirtyelephantlogo.png"
                           ? "h-auto w-auto max-w-[84px] object-contain"
                         : "h-auto w-auto max-w-[60px] object-contain",

@@ -10,7 +10,7 @@ export const quietRoom: Room = {
       { id: "next-room", label: "Lobby", href: "/rooms/lobby", x: 90, y: 17, direction: "right" },
       {
         id: "upcoming-events",
-        label: "Event",
+        label: "Events",
         x: 34.41,
         y: 30.88,
         stimulatedPosition: { x: 89.51, y: 47.53 },

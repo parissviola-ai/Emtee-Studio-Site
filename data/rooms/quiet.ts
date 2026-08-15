@@ -17,7 +17,7 @@ export const quietRoom: Room = {
         direction: "right",
         variant: "dot",
         modal: {
-          title: "Event",
+          title: "Events",
           imageGalleryVariant: "event-grid",
           imageGallery: [
             {
